@@ -90,15 +90,17 @@ const Router = () => {
         {/* Main Link for redirection purpose
           if user is logged in then redirect to defaultRoute else redirect to login page
         */}
-        {/*}
         <Route
           exact
-          path='/'
+          path="/"
           render={() => {
-            return isUserLoggedIn() ? <Redirect to={DefaultRoute} /> : <Redirect to='/login' />
+            return isUserLoggedIn() ? (
+              <Redirect to={DefaultRoute} />
+            ) : (
+              <Redirect to="/login" />
+            )
           }}
         />
-    */}
         {/* This route is for not authorized pages */}
         <Route
           exact
