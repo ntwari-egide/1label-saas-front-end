@@ -1,0 +1,86 @@
+/*================================================================================
+	Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+	Version: 2.0
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+// .navigation {
+//   font-family: "Gotham Book", sans-serif;
+// }
+
+@font-face {
+  font-family: "Gotham-Book";
+  src: url("../fonts/Gotham-Book.woff") format("woff"),
+    url("../fonts/Gotham-Book.woff2") format("woff2"),
+    url("../fonts/Gotham-Book.ttf") format("truetype"),
+    url("../fonts/Gotham-Book.otf") format("opentype"),
+    url("../fonts/Gotham-BookItalic.otf") format("opentype"),
+    url("../fonts/Gotham-Book.svg") format("svg"),
+    url("../fonts/Gotham-Book.eot") format("eot");
+}
+
+.navigation {
+  font-family: "Gotham-Book", sans-serif;
+}
+
+body {
+  font-family: "Gotham-Book", sans-serif;
+}
+
+.main-menu .navbar-header .navbar-brand .brand-text {
+  color: #6fc055;
+}
+
+.vertical-layout.vertical-menu-modern .toggle-icon {
+  color: #6e6b7b !important;
+}
+
+.avatar img {
+  height: 40px;
+  width: 40px;
+}
+
+.avatar .avatar-content {
+  height: 40px;
+  width: 40px;
+}
+
+.navbar-light {
+  background-color: #6fc055 !important;
+}
+
+// .header-navbar .navbar-container ul.navbar-nav li i.ficon,
+// .header-navbar .navbar-container ul.navbar-nav li svg.ficon {
+//   color: #fff !important;
+// }
+.nav-link svg.ficon{
+  color: white !important;
+}
+
+.nav-link.disabled svg.ficon{
+  color: #ffffff !important;
+  opacity: 45% !important;
+}
+
+.header-navbar
+  .navbar-container
+  ul.navbar-nav
+  li
+  a.dropdown-user-link
+  .user-name {
+  color: #fff !important;
+}
+
+.selected-language {
+  color: #fff !important;
+}
+
+.dx-datagrid-summary-item {
+  text-align: left !important;
+}

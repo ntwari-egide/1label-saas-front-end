@@ -1,0 +1,112 @@
+.dx-button-mode-contained {
+  background-color: #6fc055 !important;
+  color: #fff !important;
+}
+
+.dx-button-mode-contained:active {
+  background-color: #80bd41 !important;
+  box-shadow: none;
+}
+
+.dx-button-mode-contained:hover:not(.disabled):not(:disabled) {
+  box-shadow: 0 8px 25px -8px #8dc454;
+}
+.dx-button-mode-contained:focus {
+  background-color: #80bd41 !important;
+}
+
+.dx-icon.dx-icon-edit-button-addrow {
+  color: #fff !important;
+}
+
+.dx-icon.dx-icon-edit-button-save {
+  color: #fff !important;
+}
+
+.dx-icon.dx-icon-edit-button-cancel {
+  color: #fff !important;
+}
+
+.dx-icon.dx-icon-column-chooser {
+  color: #fff !important;
+}
+
+.dx-datebox-calendar .dx-dropdowneditor-icon {
+  color: #fff !important;
+}
+.dx-pager .dx-page-sizes .dx-selection {
+  background-color: #6fc055 !important;
+}
+
+.dx-pager .dx-pages .dx-selection {
+  background-color: #6fc055 !important;
+}
+
+.dx-treelist-rowsview .dx-row-focused.dx-data-row:not(.dx-row-lines) > td {
+  background-color: #6fc055 !important;
+}
+
+.dx-treelist-rowsview
+  .dx-row-focused.dx-data-row
+  .dx-command-edit:not(.dx-focused)
+  .dx-link {
+  background-color: #6fc055 !important;
+}
+
+.dx-treelist .dx-link {
+  color: #6fc055 !important;
+}
+.dx-treelist-rowsview
+  .dx-row-focused.dx-data-row
+  .dx-command-edit:not(.dx-focused)
+  .dx-link {
+  color: #fff !important;
+}
+
+.dx-datagrid-rowsview .dx-row-focused.dx-data-row > td:not(.dx-focused) {
+  background-color: #6fc055 !important;
+}
+.dx-datagrid-rowsview
+  .dx-row-focused.dx-data-row
+  .dx-command-edit:not(.dx-focused)
+  .dx-link {
+  color: #fff !important;
+}
+
+.dx-datagrid .dx-link {
+  color: #6fc055 !important;
+}
+
+.dx-datagrid-rowsview
+  .dx-row-focused.dx-data-row
+  .dx-command-edit:not(.dx-focused)
+  .dx-link {
+  color: #fff !important;
+  background-color: #6fc055 !important;
+}
+
+.dx-calendar-cell.dx-calendar-selected-date.dx-calendar-contoured-date,
+[dir]
+  .dx-calendar-cell.dx-calendar-selected-date.dx-calendar-today.dx-calendar-contoured-date {
+  box-shadow: inset 0 0 0 1px #bebebe, inset 0 0 0 1000px #6fc055;
+}
+
+.dx-calendar-navigator
+  .dx-calendar-caption-button.dx-button
+  .dx-button-content {
+  color: #fff !important;
+}
+
+.dx-calendar-navigator-previous-month.dx-button .dx-icon,
+.dx-calendar-navigator-previous-view.dx-button .dx-icon {
+  color: #fff !important;
+}
+
+.dx-calendar-navigator-next-month.dx-button .dx-icon,
+.dx-calendar-navigator-next-view.dx-button .dx-icon {
+  color: #fff !important;
+}
+
+.dx-calendar-cell.dx-calendar-selected-date.dx-calendar-contoured-date {
+  box-shadow: inset 0 0 0 1px #bebebe, inset 0 0 0 1000px #6fc055;
+}

@@ -1,0 +1,100 @@
+.collapse-title.card-title {
+  color: blue;
+}
+.MuiPickersToolbar-toolbar {
+  background-color: #8dc454;
+}
+.MuiPickersDay-daySelected {
+  background: #8dc454;
+  border-color: #8dc454;
+  &:hover {
+    background: #8dc454;
+  }
+}
+.MuiButton-textPrimary {
+  color: #8dc454 !important;
+  outline: none !important;
+  border: none !important;
+  &:focus {
+    outline: none !important;
+  }
+}
+.MuiInput-underline:after {
+  border-bottom: none !important;
+}
+.MuiInput-underline:before {
+  border-bottom: none !important;
+}
+.MuiInputBase-input {
+  padding: 0;
+  font-family: 'Montserrat', Helvetica, Arial, serif !important;
+  color: #6e6b7b !important;
+  font-weight: 400 !important;
+}
+.MuiFormControl-root {
+  flex-direction: inherit !important;
+}
+.MuiPaper-root {
+  margin-left: 58px !important;
+  @media (max-width: 767px) {
+    margin-left: 30px !important;
+  }
+}
+.MuiPopover-paper {
+  left: 320px;
+}
+@media (max-width: 575px) {
+  .col-12 {
+    margin-top: 1rem;
+    &:first-child {
+      margin-top: 0rem;
+    }
+  }
+}
+.MuiRadio-colorPrimary.Mui-checked {
+  color: #8dc454 !important;
+}
+.PrivateRadioButtonIcon-root-5.PrivateRadioButtonIcon-checked-7
+  .PrivateRadioButtonIcon-layer-6 {
+  transform: scale(2) !important;
+}
+.target-location {
+  display: flex;
+  @media (max-width: 767px) {
+    display: block;
+  }
+}
+.custom-file-input,
+.custom-file-label {
+  z-index: 0 !important;
+}
+.download-btn {
+  color: #8dc454;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1.1rem;
+}
+
+//for datagrid overlapping issue
+.dx-datagrid {
+  z-index: 0 !important;
+}
+
+//for toggle color same as theme
+.react-toggle--checked .react-toggle-track {
+  background-color: #8dc454 !important;
+}
+.dhruvika {
+  color: #3399ff !important;
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+
+.breadcrumb {
+  padding-left: 0 !important;
+}
+
+//custom month selector design
+.react-datepicker__month-text--keyboard-selected {
+  background-color: #8dc454 !important;
+}
