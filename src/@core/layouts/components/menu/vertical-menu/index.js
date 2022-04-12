@@ -2,15 +2,20 @@
 import { Fragment, useState, useRef, useEffect } from "react"
 import { connect, useDispatch } from "react-redux"
 // ** Vertical Menu Items Array
-import navigation from "@src/redux/navigation/vertical"
+// import navigation from "@src/redux/navigation/vertical"
+// import { one_print } from "@src/redux/navigation/vertical/index"
 import { fetchVerticalMenuItems } from "../../../../../redux/navigation/vertical/actions/index"
 // ** Third Party Components
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
+import { Label } from "reactstrap"
+
 // ** Vertical Menu Components
 import VerticalMenuHeader from "./VerticalMenuHeader"
 import VerticalNavMenuItems from "./VerticalNavMenuItems"
+
+import { home, one_print, admin } from "@src/redux/navigation/vertical/index"
 
 const Sidebar = (props) => {
   const dispatch = useDispatch()
@@ -86,6 +91,63 @@ const Sidebar = (props) => {
             >
               <ul className="navigation navigation-main">
                 <VerticalNavMenuItems
+                  items={home}
+                  groupActive={groupActive}
+                  setGroupActive={setGroupActive}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                  groupOpen={groupOpen}
+                  setGroupOpen={setGroupOpen}
+                  routerProps={routerProps}
+                  menuCollapsed={menuCollapsed}
+                  menuHover={menuHover}
+                  currentActiveItem={currentActiveItem}
+                />
+                <div
+                  style={{
+                    marginLeft: "10%",
+                    marginTop: "5%"
+                  }}
+                >
+                  <Label>ONE & PRINT</Label>
+                </div>
+                <VerticalNavMenuItems
+                  items={one_print}
+                  groupActive={groupActive}
+                  setGroupActive={setGroupActive}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                  groupOpen={groupOpen}
+                  setGroupOpen={setGroupOpen}
+                  routerProps={routerProps}
+                  menuCollapsed={menuCollapsed}
+                  menuHover={menuHover}
+                  currentActiveItem={currentActiveItem}
+                />
+                <div
+                  style={{
+                    marginLeft: "10%",
+                    marginTop: "5%"
+                  }}
+                >
+                  <Label>ADMIN</Label>
+                </div>
+                <VerticalNavMenuItems
+                  items={admin}
+                  groupActive={groupActive}
+                  setGroupActive={setGroupActive}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                  groupOpen={groupOpen}
+                  setGroupOpen={setGroupOpen}
+                  routerProps={routerProps}
+                  menuCollapsed={menuCollapsed}
+                  menuHover={menuHover}
+                  currentActiveItem={currentActiveItem}
+                />
+
+                {/*}
+                <VerticalNavMenuItems
                   items={props.menuItems}
                   groupActive={groupActive}
                   setGroupActive={setGroupActive}
@@ -98,6 +160,7 @@ const Sidebar = (props) => {
                   menuHover={menuHover}
                   currentActiveItem={currentActiveItem}
                 />
+          */}
               </ul>
             </PerfectScrollbar>
           </Fragment>

@@ -8,7 +8,8 @@ import { Badge } from "reactstrap"
 import classnames from "classnames"
 
 // ** Vertical Menu Array Of Items
-import navigation from "@src/redux/navigation/vertical"
+// import navigation from "@src/redux/navigation/vertical"
+import { home, one_print, admin } from "@src/redux/navigation/vertical"
 
 // ** Utils
 import { isNavLinkActive, search, getAllParents } from "@layouts/utils"
@@ -26,6 +27,7 @@ const VerticalNavMenuLink = ({
   routerProps,
   currentActiveItem
 }) => {
+  const navigation = [...home, ...one_print, ...admin]
   // ** Conditional Link Tag, if item has newTab or externalLink props use <a> tag else use NavLink
   const LinkTag = item.externalLink ? "a" : NavLink
   const { t } = useTranslation()

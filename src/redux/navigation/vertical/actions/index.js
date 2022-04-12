@@ -13,7 +13,7 @@ import {
 } from "react-feather"
 import axios from "@axios"
 
-import staticMenu from "../index"
+import { home, one_print, admin } from "../index"
 
 const menuIconsDict = {
   AccountEnquiry: <Grid />,
@@ -29,6 +29,7 @@ const menuIconsDict = {
 
 // ** Get dynamic menu
 export const fetchVerticalMenuItems = (params) => (dispatch) => {
+  const staticMenu = [...home, ...one_print, ...admin]
   // const menuData = []
   // return axios.get("Home/getMenu", { params }).then(
   //   (res) => {
