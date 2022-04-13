@@ -1,93 +1,59 @@
-import {
-  Home,
-  Circle,
-  Grid,
-  Database,
-  Globe,
-  PieChart,
-  Aperture,
-  Settings,
-  Package,
-  Users,
-  LifeBuoy
-} from "react-feather"
+import { Home, Circle, FileMinus, Briefcase, Grid } from "react-feather"
 import axios from "@axios"
 
-import { home, one_print, admin } from "../index"
-
 const menuIconsDict = {
-  AccountEnquiry: <Grid />,
-  TransactionEnquiry: <Database />,
-  AccountClosing: <Globe />,
-  FinancialReports: <PieChart />,
-  "(Custom)FinancialReports": <Aperture />,
-  GlobalMaintenance: <Settings />,
-  AccountSubLedger: <Package />,
-  AccountSecurity: <Users />,
-  HelpDesk: <LifeBuoy />
+  Print: <FileMinus />,
+  Order: <Grid size={20} />,
+  "Invoice / Online Payment": <Briefcase />
 }
 
 // ** Get dynamic menu
-export const fetchVerticalMenuItems = (params) => (dispatch) => {
-  const staticMenu = [...home, ...one_print, ...admin]
-  // const menuData = []
-  // return axios.get("Home/getMenu", { params }).then(
-  //   (res) => {
-  //     if (res.status === 200) {
-  //       console.log("menu", res.data.Data[0])
-  //       dispatch({
-  //         type: "SET_ACCESS_RIGHTS",
-  //         payload: res.data.Data[0]
-  //       })
-  //       res?.data?.Data[0]?.map((menuItem) => {
-  //         // initialize childmenu
-  //         const childMenu = []
-  //
-  //         // initialize menu item obj
-  //         let item = {
-  //           id: menuItem.funcId,
-  //           title: menuItem.funcName,
-  //           icon: menuIconsDict[menuItem.funcId],
-  //           navLink: menuItem.reactRoute
-  //         }
-  //
-  //         // push to childMenu if exists and update menuItem likewise
-  //         if (menuItem.child_menu) {
-  //           menuItem.child_menu.map((childItem) => {
-  //             childMenu.push({
-  //               id: childItem.funcId,
-  //               title: childItem.funcName,
-  //               icon: <Circle size={10} />,
-  //               navLink: childItem.reactRoute
-  //             })
-  //           })
-  //           item = { ...item, children: childMenu }
-  //         }
-  //
-  //         // finally push to menuData array
-  //
-  //         menuData.push(item)
-  //       })
-  //
-  //       menuData.unshift({
-  //         id: "home",
-  //         title: "Home",
-  //         icon: <Home size={20} />,
-  //         navLink: "/home"
-  //       })
-  //
-  //       dispatch({
-  //         type: "FETCH_MENU_ITEMS",
-  //         data: menuData
-  //       })
-  //     }
-  //   },
-  //   (err) => {
-  //     console.log("err:", err)
-  //   }
-  // )
-  dispatch({
-    type: "FETCH_MENU_ITEMS",
-    data: staticMenu
+export const fetchVerticalMenuItems = () => (dispatch) => {
+  const body = {
+    menu_type: "front"
+  }
+  let menuItems = []
+  menuItems.push({
+    id: "home",
+    title: "Home",
+    icon: <Home size={20} />,
+    navLink: "/home"
   })
+  return axios.post("/GetMenuList", body).then(
+    (res) => {
+      if (res.status === 200) {
+        console.log("menu data", res)
+        res.data.map((item) => {
+          let menuItem = {}
+          let childList = []
+          if (item.child_menu) {
+            item.child_menu.map((ch) => {
+              childList.push({
+                id: ch.name,
+                title: ch.name,
+                icon: <Circle size={15} />,
+                navLink: ch.route
+              })
+            })
+          }
+          menuItem = {
+            ...menuItem,
+            id: "name",
+            title: item.name,
+            icon: menuIconsDict[item.name],
+            navLink: "/",
+            children: childList
+          }
+          menuItems = [...menuItems, menuItem]
+        })
+        dispatch({
+          type: "FETCH_MENU_ITEMS",
+          payload: menuItems
+        })
+      }
+    },
+    (err) => {
+      console.log("err:", err)
+    }
+  )
 }
