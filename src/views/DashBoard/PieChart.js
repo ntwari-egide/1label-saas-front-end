@@ -54,8 +54,8 @@ const OrderSummaryChart = (props) => {
   // const [series, setSeries] = useState([1, 3, 3])
 
   return (
-    <div style={{ height: "90%" }}>
-      <Card style={{ height: "100%" }}>
+    <div style={{ height: "100%" }}>
+      <Card style={{ height: "95%", minHeight: "95%" }}>
         <CardHeader>
           <CardTitle>Summary</CardTitle>
           {/*}
@@ -80,7 +80,7 @@ const OrderSummaryChart = (props) => {
               height={485}
             />
           ) : (
-            <div style={{ height: "75%" }}></div>
+            <div style={{ minHeight: "550px" }}></div>
           )}
         </CardBody>
         <ListGroup flush>

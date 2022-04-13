@@ -107,7 +107,7 @@ const Home = () => {
   }, [])
 
   return (
-    <div style={{ minHeight: "100vh" }}>
+    <div>
       <p className="lead">Dashboard</p>
       <Row>
         <Col sm="12" md="4" lg="4">
@@ -122,22 +122,22 @@ const Home = () => {
           />
         </Col>
         <Col sm="12" md="8" lg="8">
-          <Card style={{ height: "90%" }}>
+          <Card style={{ height: "95%" }}>
             <CardHeader>
               <CardTitle>Listing</CardTitle>
             </CardHeader>
             <CardBody>
-              <Row style={{ minHeight: "550px" }}>
+              <Row style={{ minHeight: "90%" }}>
                 {ordersData.length > 0 ? (
                   <DataTable
                     data={ordersData}
                     columns={orderListCol}
                     noHeader
                     fixedHeader
-                    fixedHeaderScrollHeight="475px"
+                    fixedHeaderScrollHeight="430px"
                   />
                 ) : (
-                  <div style={{ minHeight: "550px" }}></div>
+                  <div style={{ minHeight: "500px" }}></div>
                 )}
               </Row>
             </CardBody>
