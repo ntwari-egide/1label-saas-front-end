@@ -6,11 +6,11 @@ export const handleLogin = (data) => {
   return (dispatch) => {
     dispatch({ type: "SERVER_ERROR", data: "" })
     console.log("in action")
+    // dummy token to escape isUserLoggedIn()
     document.cookie = "Token=dummy"
     // axios.post('Logined/logined', data).then((res) => {
     //   if (res.data.Code === 200) {
     //     const uData = { username: data.username, legalEntity: data.legalentity }
-    //     // document.cookie = `Token=${res.data.Data}`
     //     localStorage.setItem('userData', JSON.stringify(uData))
     //     dispatch({ type: 'LOGIN', data: res.data })
     //   } else {
