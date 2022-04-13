@@ -91,63 +91,6 @@ const Sidebar = (props) => {
             >
               <ul className="navigation navigation-main">
                 <VerticalNavMenuItems
-                  items={home}
-                  groupActive={groupActive}
-                  setGroupActive={setGroupActive}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                  groupOpen={groupOpen}
-                  setGroupOpen={setGroupOpen}
-                  routerProps={routerProps}
-                  menuCollapsed={menuCollapsed}
-                  menuHover={menuHover}
-                  currentActiveItem={currentActiveItem}
-                />
-                <div
-                  style={{
-                    marginLeft: "10%",
-                    marginTop: "5%"
-                  }}
-                >
-                  <Label>ONE & PRINT</Label>
-                </div>
-                <VerticalNavMenuItems
-                  items={one_print}
-                  groupActive={groupActive}
-                  setGroupActive={setGroupActive}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                  groupOpen={groupOpen}
-                  setGroupOpen={setGroupOpen}
-                  routerProps={routerProps}
-                  menuCollapsed={menuCollapsed}
-                  menuHover={menuHover}
-                  currentActiveItem={currentActiveItem}
-                />
-                <div
-                  style={{
-                    marginLeft: "10%",
-                    marginTop: "5%"
-                  }}
-                >
-                  <Label>ADMIN</Label>
-                </div>
-                <VerticalNavMenuItems
-                  items={admin}
-                  groupActive={groupActive}
-                  setGroupActive={setGroupActive}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                  groupOpen={groupOpen}
-                  setGroupOpen={setGroupOpen}
-                  routerProps={routerProps}
-                  menuCollapsed={menuCollapsed}
-                  menuHover={menuHover}
-                  currentActiveItem={currentActiveItem}
-                />
-
-                {/*}
-                <VerticalNavMenuItems
                   items={props.menuItems}
                   groupActive={groupActive}
                   setGroupActive={setGroupActive}
@@ -160,7 +103,6 @@ const Sidebar = (props) => {
                   menuHover={menuHover}
                   currentActiveItem={currentActiveItem}
                 />
-          */}
               </ul>
             </PerfectScrollbar>
           </Fragment>
