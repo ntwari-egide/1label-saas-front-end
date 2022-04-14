@@ -15,7 +15,7 @@ import { ChevronDown } from "react-feather"
 import Chart from "react-apexcharts"
 
 const OrderSummaryChart = (props) => {
-  const seq = ["primary", "warning", "danger"]
+  const seq = ["primary-chart", "warning", "danger"]
   const options = {
     chart: {
       dropShadow: {
@@ -77,7 +77,7 @@ const OrderSummaryChart = (props) => {
               options={options}
               series={props.data.map((ord) => ord.total)}
               type="pie"
-              height={485}
+              // height={485}
             />
           ) : (
             <div style={{ minHeight: "550px" }}></div>

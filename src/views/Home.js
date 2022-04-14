@@ -110,7 +110,7 @@ const Home = () => {
     <div>
       <p className="lead">Dashboard</p>
       <Row>
-        <Col sm="12" md="4" lg="4">
+        <Col sm="12" md="6" lg="4" xl="4">
           <OrderSummaryChart
             data={pieChartData}
             primaryLight={$primary_light}
@@ -121,13 +121,13 @@ const Home = () => {
             warning={$warning}
           />
         </Col>
-        <Col sm="12" md="8" lg="8">
+        <Col sm="12" md="6" lg="8">
           <Card style={{ height: "95%" }}>
             <CardHeader>
               <CardTitle>Listing</CardTitle>
             </CardHeader>
             <CardBody>
-              <Row style={{ minHeight: "90%" }}>
+              <Row>
                 {ordersData.length > 0 ? (
                   <DataTable
                     data={ordersData}
@@ -142,40 +142,38 @@ const Home = () => {
               </Row>
             </CardBody>
             <CardFooter>
-              <Row>
-                <Col>
+              <Row style={{ display: "flex", justifyContent: "space-between" }}>
+                <Col xs="6" sm="6" md="4" lg="2">
                   <Row>
-                    <Col sm="4" md="3" lg="3">
-                      <div style={{ display: "flex" }}>
-                        <div
-                          style={{
-                            minWidth: "120px",
-                            paddingRight: "2%",
-                            paddingTop: "10px"
-                          }}
-                        >
-                          <Label>Records Per Page</Label>
-                        </div>
-                        <div style={{ minWidth: "70px" }}>
-                          <Select
-                            classNamePrefix="select"
-                            defaultValue={recordsPerPageOptions[1]}
-                            name="clear"
-                            menuPlacement={"auto"}
-                            options={recordsPerPageOptions}
-                            onChange={(e) => {
-                              console.log("changed")
-                              setRecordsPerPage(e)
-                              debounceFetch(currentPage, e)
-                            }}
-                          />
-                        </div>
+                    <div style={{ display: "flex" }}>
+                      <div
+                        style={{
+                          minWidth: "120px",
+                          paddingRight: "2%",
+                          paddingTop: "10px"
+                        }}
+                      >
+                        <Label>Records Per Page</Label>
                       </div>
-                    </Col>
+                      <div style={{ minWidth: "70px" }}>
+                        <Select
+                          classNamePrefix="select"
+                          defaultValue={recordsPerPageOptions[1]}
+                          name="clear"
+                          menuPlacement={"auto"}
+                          options={recordsPerPageOptions}
+                          onChange={(e) => {
+                            console.log("changed")
+                            setRecordsPerPage(e)
+                            debounceFetch(currentPage, e)
+                          }}
+                        />
+                      </div>
+                    </div>
                   </Row>
                 </Col>
-                <Col sm="4" md="2" lg="2">
-                  <div style={{ display: "flex" }}>
+                <Col xs="6" sm="6" md="4" lg="2">
+                  <div style={{ display: "flex", float: "right" }}>
                     <div>
                       <Button
                         color="primary"
