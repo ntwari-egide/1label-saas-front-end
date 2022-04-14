@@ -21,6 +21,10 @@ const Routes = [
     path: "/error",
     component: lazy(() => import("../../views/Error")),
     layout: "BlankLayout"
+  },
+  {
+    path: "/Order",
+    component: lazy(() => import("../../views/Order/Order/Order.js"))
   }
 ]
 
