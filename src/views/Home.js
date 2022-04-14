@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { Row, Col } from "reactstrap"
 import axios from "@axios"
-import Chart from "react-apexcharts"
 import DataTable from "react-data-table-component"
 import OrderSummaryChart from "./DashBoard/PieChart"
 import Select from "react-select"
@@ -17,18 +16,23 @@ import {
 } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
 
+// Debounce Implementation
 let timerId = null
 
 const Home = () => {
+  // APP states
   const [pieChartData, setPieChartData] = useState([])
   const [ordersData, setOrdersData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
+
+  // APP constants
   const recordsPerPageOptions = [
     { value: 5, label: 5 },
     { value: 10, label: 10 },
     { value: 20, label: 20 }
   ]
+
   let $primary = "#6fc055",
     $success = "#28C76F",
     $danger = "#EA5455",
@@ -38,6 +42,7 @@ const Home = () => {
     $danger_light = "#f29292",
     $stroke_color = "#b9c3cd",
     $label_color = "#e7eef7"
+
   const orderListCol = [
     {
       name: "Order No",
@@ -66,6 +71,7 @@ const Home = () => {
     }
   ]
 
+  // Other Functions
   const debounceFetch = (currPage, recPerPage) => {
     if (timerId) {
       return
@@ -76,6 +82,7 @@ const Home = () => {
     }, 400)
   }
 
+  // API servics
   const fetchOrdersList = (currPage, recPerPage) => {
     const body = {
       order_user: "innoa",

@@ -14,7 +14,9 @@ import {
 import { ChevronDown } from "react-feather"
 import Chart from "react-apexcharts"
 
+// Pie Chart component for dashboard
 const OrderSummaryChart = (props) => {
+  // APP Constants
   const seq = ["primary-chart", "warning", "danger"]
   const options = {
     chart: {
