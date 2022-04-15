@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react"
 import { Row, Col } from "reactstrap"
-import { Check } from "react-feather"
+import { Check, FileMinus } from "react-feather"
 import axios from "@axios"
 import Chart from "react-apexcharts"
 import DataTable from "react-data-table-component"
 import CheckBox from "@components/CheckBox/CheckBox"
 import Select from "react-select"
+import SelectItem from "./SelectItem"
+import OrderForm from "./OrderForm"
+import PreviewAndSummary from "./PreviewAndSummary"
+import InvoiceAndDelivery from "./InvoiceAndDeliveryDate"
+import Payment from "./Payment"
+import DirectPrint from "./DirectPrint"
+import { Link } from "react-router-dom"
 import {
   Card,
   CardHeader,
@@ -32,6 +39,7 @@ const Order = () => {
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [checkedList, setCheckedList] = useState([])
   const [loader, setLoader] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
 
   const handleCheckListChange = (id) => {
     let tempList = checkedList
@@ -48,7 +56,7 @@ const Order = () => {
     const body = {
       order_user: "innoa"
     }
-    axios.post("/GetBrandListByClient", body).then((res) => {
+    axios.post("/Brand/GetBrandListByClient", body).then((res) => {
       if (res.status === 200) {
         setBrandOptions(
           res.data.map((br) => ({ value: br.guid_key, label: br.brand_name }))
@@ -58,7 +66,7 @@ const Order = () => {
   }
 
   const fetchItemTypeOptions = () => {
-    axios.post("/GetItemTypeList").then((res) => {
+    axios.post("/Item/GetItemTypeList").then((res) => {
       if (res.status === 200) {
         setItemTypeOptions(
           res.data.map((itm) => ({
@@ -79,7 +87,7 @@ const Order = () => {
       brand_key: brand?.value,
       item_ref_type: item_type?.value
     }
-    axios.post("/GetItemRefList", body).then((res) => {
+    axios.post("/Item/GetItemRefList", body).then((res) => {
       if (res.status === 200) {
         setLoader(false)
         setItemList(res.data)
@@ -95,116 +103,224 @@ const Order = () => {
 
   return (
     <div>
-      <Card>
-        <CardHeader style={{ flexGrow: 1 }}>
-          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-            <Select
-              className="React"
-              classNamePrefix="select"
-              placeholder="BRAND"
-              value={brand}
-              options={brandOptions}
-              onChange={(e) => {
-                setBrand(e)
-                fetchItemList(e, itemType)
-              }}
-              isClearable={true}
-            />
-          </Col>
-          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-            <Input placeholder="ITEM" />
-          </Col>
-          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-            <Select
-              className="React"
-              classNamePrefix="select"
-              placeholder="ITEM TYPE"
-              value={itemType}
-              options={itemTypeOptions}
-              onChange={(e) => {
-                setItemType(e)
-                fetchItemList(brand, e)
-              }}
-              isClearable={true}
-            />
-          </Col>
-        </CardHeader>
-        <CardBody style={{ minHeight: "520px" }}>
-          <Row style={{ margin: "0rem" }}>
-            {!loader ? (
-              itemList
-                .slice(visibleCardIndex, visibleCardIndex + 6)
-                .map((item, index) => (
-                  <Col xs="12" sm="6" md="2" lg="2">
-                    <Card style={{ minHeight: "490px" }}>
-                      <CardHeader>
-                        <div>{item.brand_name}</div>
-                        <div>{visibleCardIndex + index}</div>
-                      </CardHeader>
-                      <CardBody>{item.item_ref_desc}</CardBody>
-                      <CardFooter>
-                        <CheckBox
-                          color="primary"
-                          icon={<Check className="vx-icon" size={16} />}
-                          checked={checkedList.includes(item.guid_key)}
-                          onChange={() => handleCheckListChange(item.guid_key)}
-                        />
-                      </CardFooter>
-                    </Card>
-                  </Col>
-                ))
-            ) : (
-              <CardBody style={{ minHeight: "520px" }}>
-                <div style={{ textAlign: "center", padding: "15% 0" }}>
-                  <Spinner color="primary" />
-                </div>
-              </CardBody>
-            )}
-          </Row>
-        </CardBody>
-        <CardFooter>
-          <Row>
-            <Col>
-              <Button
-                color="primary"
-                onClick={() => {
-                  if (visibleCardIndex > 0) {
-                    setVisibleCardIndex(visibleCardIndex - 1)
-                  }
-                }}
-                disabled={visibleCardIndex === 0}
+      <div style={{ display: "flex" }}>
+        <h2>Order</h2>
+        <div
+          style={{
+            borderRight: "thin solid",
+            marginLeft: "10px",
+            marginBottom: "10px"
+          }}
+        ></div>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/home">Home</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/Order">Order</Link>
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+      <div style={{ paddingBottom: "10px" }}>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <div className="custom-stepper" onClick={() => setCurrentStep(1)}>
+              <div
+                id="selectItemIcon"
+                className={
+                  currentStep === 1
+                    ? "stepper-active-icon"
+                    : currentStep > 1
+                    ? "stepper-passed-icon"
+                    : "stepper-pending-icon"
+                }
               >
-                <div style={{ display: "flex" }}>
-                  <div>
-                    <ArrowLeft size={15} />
-                  </div>
-                  <div style={{ marginTop: "2px" }}>{"Previous  "}</div>
-                </div>
-              </Button>
-            </Col>
-            <Col>
-              <div style={{ float: "right" }}>
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    if (visibleCardIndex < itemList.length - 1) {
-                      setVisibleCardIndex(visibleCardIndex + 1)
-                    }
-                  }}
-                  disabled={visibleCardIndex === itemList.length - 1}
-                >
-                  <div style={{ display: "flex" }}>
-                    <div style={{ marginTop: "2px" }}>{"Next  "}</div>
-                    <div>
-                      <ArrowRight size={15} />
-                    </div>
-                  </div>
-                </Button>
+                <FileMinus size={25} />
               </div>
-            </Col>
-          </Row>
-        </CardFooter>
-      </Card>
+              <div>
+                <h5
+                  className={
+                    currentStep === 1
+                      ? "stepper-active-text"
+                      : currentStep > 1
+                      ? "stepper-passed-text"
+                      : "stepper-pending-text"
+                  }
+                >
+                  Select Item
+                </h5>
+              </div>
+            </div>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <div className="custom-stepper" onClick={() => setCurrentStep(2)}>
+              <div
+                id="selectItemIcon"
+                className={
+                  currentStep === 2
+                    ? "stepper-active-icon"
+                    : currentStep > 2
+                    ? "stepper-passed-icon"
+                    : "stepper-pending-icon"
+                }
+              >
+                <FileMinus size={25} />
+              </div>
+              <div>
+                <h5
+                  className={
+                    currentStep === 2
+                      ? "stepper-active-text"
+                      : currentStep > 2
+                      ? "stepper-passed-text"
+                      : "stepper-pending-text"
+                  }
+                >
+                  Order Form
+                </h5>
+              </div>
+            </div>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <div className="custom-stepper" onClick={() => setCurrentStep(3)}>
+              <div
+                id="selectItemIcon"
+                className={
+                  currentStep === 3
+                    ? "stepper-active-icon"
+                    : currentStep > 3
+                    ? "stepper-passed-icon"
+                    : "stepper-pending-icon"
+                }
+              >
+                <FileMinus size={25} />
+              </div>
+              <div>
+                <h5
+                  className={
+                    currentStep === 3
+                      ? "stepper-active-text"
+                      : currentStep > 3
+                      ? "stepper-passed-text"
+                      : "stepper-pending-text"
+                  }
+                >
+                  Preview Item & Summary Size Table
+                </h5>
+              </div>
+            </div>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <div className="custom-stepper" onClick={() => setCurrentStep(4)}>
+              <div
+                id="selectItemIcon"
+                className={
+                  currentStep === 4
+                    ? "stepper-active-icon"
+                    : currentStep > 4
+                    ? "stepper-passed-icon"
+                    : "stepper-pending-icon"
+                }
+              >
+                <FileMinus size={25} />
+              </div>
+              <div>
+                <h5
+                  className={
+                    currentStep === 4
+                      ? "stepper-active-text"
+                      : currentStep > 4
+                      ? "stepper-passed-text"
+                      : "stepper-pending-text"
+                  }
+                >
+                  Invoice & Delivery Date
+                </h5>
+              </div>
+            </div>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <div className="custom-stepper" onClick={() => setCurrentStep(5)}>
+              <div
+                id="selectItemIcon"
+                className={
+                  currentStep === 5
+                    ? "stepper-active-icon"
+                    : currentStep > 5
+                    ? "stepper-passed-icon"
+                    : "stepper-pending-icon"
+                }
+              >
+                <FileMinus size={25} />
+              </div>
+              <div>
+                <h5
+                  className={
+                    currentStep === 5
+                      ? "stepper-active-text"
+                      : currentStep > 5
+                      ? "stepper-passed-text"
+                      : "stepper-pending-text"
+                  }
+                >
+                  Payment
+                </h5>
+              </div>
+            </div>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <div className="custom-stepper" onClick={() => setCurrentStep(6)}>
+              <div
+                id="selectItemIcon"
+                className={
+                  currentStep === 6
+                    ? "stepper-active-icon"
+                    : currentStep > 6
+                    ? "stepper-passed-icon"
+                    : "stepper-pending-icon"
+                }
+              >
+                <FileMinus size={25} />
+              </div>
+              <div>
+                <h5
+                  className={
+                    currentStep === 6
+                      ? "stepper-active-text"
+                      : currentStep > 6
+                      ? "stepper-passed-text"
+                      : "stepper-pending-text"
+                  }
+                >
+                  Direct Print
+                </h5>
+              </div>
+            </div>
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+      {currentStep === 1 ? (
+        <SelectItem setCurrentStep={setCurrentStep} currentStep={currentStep} />
+      ) : currentStep === 2 ? (
+        <OrderForm setCurrentStep={setCurrentStep} currentStep={currentStep} />
+      ) : currentStep === 3 ? (
+        <PreviewAndSummary
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+        />
+      ) : currentStep === 4 ? (
+        <InvoiceAndDelivery
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+        />
+      ) : currentStep === 5 ? (
+        <Payment setCurrentStep={setCurrentStep} currentStep={currentStep} />
+      ) : currentStep === 6 ? (
+        <DirectPrint
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+        />
+      ) : null}
     </div>
   )
 }
