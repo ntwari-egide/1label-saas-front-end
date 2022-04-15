@@ -188,7 +188,7 @@ body {
   box-shadow: 0 4px 24px 0 rgba(34, 41, 47, 0.1) !important;
 }
 
-// styles for form stepper
+// styles for custom form stepper
 .custom-stepper {
   display: flex;
   cursor: pointer;
@@ -220,7 +220,7 @@ body {
 
 .stepper-pending-icon {
   color: white;
-  background-color: #82868b;
+  background-color: #dadada;
   border-radius: 5px;
   padding: 5px;
 }
