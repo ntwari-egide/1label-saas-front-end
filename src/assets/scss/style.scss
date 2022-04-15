@@ -187,3 +187,45 @@ body {
 .card .card {
   box-shadow: 0 4px 24px 0 rgba(34, 41, 47, 0.1) !important;
 }
+
+// styles for form stepper
+.custom-stepper {
+  display: flex;
+  cursor: pointer;
+}
+.stepper-active-icon {
+  color: white;
+  background-color: #304961;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.stepper-active-text {
+  color: #304961;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.stepper-passed-icon {
+  color: #304961;
+  background-color: #cad6e0;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.stepper-passed-text {
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.stepper-pending-icon {
+  color: white;
+  background-color: #82868b;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.stepper-pending-text {
+  padding-top: 10px;
+  padding-left: 10px;
+}
