@@ -19,7 +19,7 @@ export const fetchVerticalMenuItems = () => (dispatch) => {
     icon: <Home size={20} />,
     navLink: "/home"
   })
-  return axios.post("/GetMenuList", body).then(
+  return axios.post("/menu/GetMenuList", body).then(
     (res) => {
       if (res.status === 200) {
         console.log("menu data", res)
