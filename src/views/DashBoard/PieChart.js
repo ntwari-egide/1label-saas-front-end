@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import {
   Card,
   CardHeader,
+  Row,
+  Spinner,
   CardTitle,
   CardBody,
   UncontrolledDropdown,
@@ -82,7 +84,17 @@ const OrderSummaryChart = (props) => {
               // height={485}
             />
           ) : (
-            <div style={{ minHeight: "550px" }}></div>
+            <Row
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "505px"
+              }}
+            >
+              <div style={{ width: "50px", height: "50px" }}>
+                <Spinner color="primary" />
+              </div>
+            </Row>
           )}
         </CardBody>
         <ListGroup flush>

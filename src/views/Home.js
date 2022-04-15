@@ -7,6 +7,7 @@ import Select from "react-select"
 import {
   Card,
   CardHeader,
+  Spinner,
   CardBody,
   CardTitle,
   CardFooter,
@@ -25,6 +26,7 @@ const Home = () => {
   const [ordersData, setOrdersData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
+  const [orderListLoader, setOrderListLoader] = useState(false)
 
   // APP constants
   const recordsPerPageOptions = [
@@ -84,14 +86,16 @@ const Home = () => {
 
   // API servics
   const fetchOrdersList = (currPage, recPerPage) => {
+    setOrderListLoader(true)
     const body = {
       order_user: "innoa",
       page_index: currPage,
       page_size: recPerPage.value
     }
-    axios.post("/OrderListPaginationQuery", body).then((res) => {
+    axios.post("/Order/OrderListPaginationQuery", body).then((res) => {
       if (res.status === 200) {
         console.log(res)
+        setOrderListLoader(false)
         setOrdersData(res.data.orders)
       }
     })
@@ -101,7 +105,7 @@ const Home = () => {
     const body = {
       order_user: "innoa"
     }
-    axios.post("/OrderTotalQuery", body).then((res) => {
+    axios.post("/Order/OrderTotalQuery", body).then((res) => {
       if (res.status === 200) {
         setPieChartData(res.data)
       }
@@ -134,8 +138,8 @@ const Home = () => {
               <CardTitle>Listing</CardTitle>
             </CardHeader>
             <CardBody>
-              <Row>
-                {ordersData.length > 0 ? (
+              {!orderListLoader ? (
+                <Row>
                   <DataTable
                     data={ordersData}
                     columns={orderListCol}
@@ -143,10 +147,20 @@ const Home = () => {
                     fixedHeader
                     fixedHeaderScrollHeight="430px"
                   />
-                ) : (
-                  <div style={{ minHeight: "500px" }}></div>
-                )}
-              </Row>
+                </Row>
+              ) : (
+                <Row
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "505px"
+                  }}
+                >
+                  <div style={{ width: "50px", height: "50px" }}>
+                    <Spinner color="primary" />
+                  </div>
+                </Row>
+              )}
             </CardBody>
             <CardFooter>
               <Row style={{ display: "flex", justifyContent: "space-between" }}>
