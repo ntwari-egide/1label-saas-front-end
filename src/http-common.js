@@ -10,7 +10,7 @@ const gotoLogin = () => {
   window.location.reload(true)
 }
 
-axios.defaults.baseURL = "https://gateway.siia.group/portalUat"
+axios.defaults.baseURL = "https://portaldev.1-label.com/api"
 
 // axios.defaults.headers.common = {
 //   // "Authorization": "Bearer "+process.env.VUE_APP_TOKEN,
