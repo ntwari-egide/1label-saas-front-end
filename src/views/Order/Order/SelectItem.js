@@ -6,6 +6,7 @@ import Chart from "react-apexcharts"
 import DataTable from "react-data-table-component"
 import CheckBox from "@components/CheckBox/CheckBox"
 import Select from "react-select"
+import Footer from "./CommonFooter"
 import { Link } from "react-router-dom"
 import {
   Card,
@@ -193,36 +194,10 @@ const SelectItem = (props) => {
         </Row>
       </CardBody>
       <CardFooter>
-        <Row>
-          <Col>
-            <Button color="primary" disabled={props.currentStep === 1}>
-              <div style={{ display: "flex" }}>
-                <div>
-                  <ArrowLeft size={15} />
-                </div>
-                <div style={{ marginTop: "2px" }}>{"Previous  "}</div>
-              </div>
-            </Button>
-          </Col>
-          <Col>
-            <div style={{ float: "right" }}>
-              <Button
-                color="primary"
-                onClick={() => {
-                  props.setCurrentStep(props.currentStep + 1)
-                }}
-                disabled={visibleCardIndex === itemList.length - 1}
-              >
-                <div style={{ display: "flex" }}>
-                  <div style={{ marginTop: "2px" }}>{"Next  "}</div>
-                  <div>
-                    <ArrowRight size={15} />
-                  </div>
-                </div>
-              </Button>
-            </div>
-          </Col>
-        </Row>
+        <Footer
+          currentStep={props.currentStep}
+          setCurrentStep={props.setCurrentStep}
+        />
       </CardFooter>
     </Card>
   )
