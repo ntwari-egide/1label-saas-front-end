@@ -159,19 +159,43 @@ const SelectItem = (props) => {
             </CardBody>
           )}
         </Row>
-      </CardBody>
-      <CardFooter>
         <Row>
           <Col>
             <Button
               color="primary"
+              style={{ padding: "5px" }}
               onClick={() => {
                 if (visibleCardIndex > 0) {
                   setVisibleCardIndex(visibleCardIndex - 1)
                 }
               }}
-              disabled={props.currentStep === 1}
+              disabled={visibleCardIndex === 0}
             >
+              <ArrowLeft size={20} />
+            </Button>
+          </Col>
+          <Col>
+            <div style={{ float: "right" }}>
+              <Button
+                color="primary"
+                style={{ padding: "5px" }}
+                onClick={() => {
+                  if (visibleCardIndex < itemList.length - 1) {
+                    setVisibleCardIndex(visibleCardIndex + 1)
+                  }
+                }}
+                disabled={visibleCardIndex === itemList.length - 1}
+              >
+                <ArrowRight size={20} />
+              </Button>
+            </div>
+          </Col>
+        </Row>
+      </CardBody>
+      <CardFooter>
+        <Row>
+          <Col>
+            <Button color="primary" disabled={props.currentStep === 1}>
               <div style={{ display: "flex" }}>
                 <div>
                   <ArrowLeft size={15} />
@@ -185,9 +209,6 @@ const SelectItem = (props) => {
               <Button
                 color="primary"
                 onClick={() => {
-                  if (visibleCardIndex < itemList.length - 1) {
-                    setVisibleCardIndex(visibleCardIndex + 1)
-                  }
                   props.setCurrentStep(props.currentStep + 1)
                 }}
                 disabled={visibleCardIndex === itemList.length - 1}
