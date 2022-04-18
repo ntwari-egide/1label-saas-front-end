@@ -11,6 +11,7 @@ import OrderForm from "./OrderForm"
 import PreviewAndSummary from "./PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDeliveryDate"
 import Payment from "./Payment"
+import Stepper from "./Stepper"
 import DirectPrint from "./DirectPrint"
 import { Link } from "react-router-dom"
 import {
@@ -31,11 +32,8 @@ import { ArrowRight, ArrowLeft } from "react-feather"
 const Order = () => {
   // APP states
   const [brandOptions, setBrandOptions] = useState([])
-  const [brand, setBrand] = useState(null)
   const [itemTypeOptions, setItemTypeOptions] = useState([])
-  const [itemType, setItemType] = useState(null)
   const [itemList, setItemList] = useState([])
-  const [item, setItem] = useState(null)
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [checkedList, setCheckedList] = useState([])
   const [loader, setLoader] = useState(false)
@@ -121,184 +119,7 @@ const Order = () => {
           </BreadcrumbItem>
         </Breadcrumb>
       </div>
-      <div style={{ paddingBottom: "10px" }}>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <div className="custom-stepper" onClick={() => setCurrentStep(1)}>
-              <div
-                id="selectItemIcon"
-                className={
-                  currentStep === 1
-                    ? "stepper-active-icon"
-                    : currentStep > 1
-                    ? "stepper-passed-icon"
-                    : "stepper-pending-icon"
-                }
-              >
-                <FileMinus size={25} />
-              </div>
-              <div>
-                <h5
-                  className={
-                    currentStep === 1
-                      ? "stepper-active-text"
-                      : currentStep > 1
-                      ? "stepper-passed-text"
-                      : "stepper-pending-text"
-                  }
-                >
-                  Select Item
-                </h5>
-              </div>
-            </div>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <div className="custom-stepper" onClick={() => setCurrentStep(2)}>
-              <div
-                id="selectItemIcon"
-                className={
-                  currentStep === 2
-                    ? "stepper-active-icon"
-                    : currentStep > 2
-                    ? "stepper-passed-icon"
-                    : "stepper-pending-icon"
-                }
-              >
-                <FileMinus size={25} />
-              </div>
-              <div>
-                <h5
-                  className={
-                    currentStep === 2
-                      ? "stepper-active-text"
-                      : currentStep > 2
-                      ? "stepper-passed-text"
-                      : "stepper-pending-text"
-                  }
-                >
-                  Order Form
-                </h5>
-              </div>
-            </div>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <div className="custom-stepper" onClick={() => setCurrentStep(3)}>
-              <div
-                id="selectItemIcon"
-                className={
-                  currentStep === 3
-                    ? "stepper-active-icon"
-                    : currentStep > 3
-                    ? "stepper-passed-icon"
-                    : "stepper-pending-icon"
-                }
-              >
-                <FileMinus size={25} />
-              </div>
-              <div>
-                <h5
-                  className={
-                    currentStep === 3
-                      ? "stepper-active-text"
-                      : currentStep > 3
-                      ? "stepper-passed-text"
-                      : "stepper-pending-text"
-                  }
-                >
-                  Preview Item & Summary Size Table
-                </h5>
-              </div>
-            </div>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <div className="custom-stepper" onClick={() => setCurrentStep(4)}>
-              <div
-                id="selectItemIcon"
-                className={
-                  currentStep === 4
-                    ? "stepper-active-icon"
-                    : currentStep > 4
-                    ? "stepper-passed-icon"
-                    : "stepper-pending-icon"
-                }
-              >
-                <FileMinus size={25} />
-              </div>
-              <div>
-                <h5
-                  className={
-                    currentStep === 4
-                      ? "stepper-active-text"
-                      : currentStep > 4
-                      ? "stepper-passed-text"
-                      : "stepper-pending-text"
-                  }
-                >
-                  Invoice & Delivery Date
-                </h5>
-              </div>
-            </div>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <div className="custom-stepper" onClick={() => setCurrentStep(5)}>
-              <div
-                id="selectItemIcon"
-                className={
-                  currentStep === 5
-                    ? "stepper-active-icon"
-                    : currentStep > 5
-                    ? "stepper-passed-icon"
-                    : "stepper-pending-icon"
-                }
-              >
-                <FileMinus size={25} />
-              </div>
-              <div>
-                <h5
-                  className={
-                    currentStep === 5
-                      ? "stepper-active-text"
-                      : currentStep > 5
-                      ? "stepper-passed-text"
-                      : "stepper-pending-text"
-                  }
-                >
-                  Payment
-                </h5>
-              </div>
-            </div>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <div className="custom-stepper" onClick={() => setCurrentStep(6)}>
-              <div
-                id="selectItemIcon"
-                className={
-                  currentStep === 6
-                    ? "stepper-active-icon"
-                    : currentStep > 6
-                    ? "stepper-passed-icon"
-                    : "stepper-pending-icon"
-                }
-              >
-                <FileMinus size={25} />
-              </div>
-              <div>
-                <h5
-                  className={
-                    currentStep === 6
-                      ? "stepper-active-text"
-                      : currentStep > 6
-                      ? "stepper-passed-text"
-                      : "stepper-pending-text"
-                  }
-                >
-                  Direct Print
-                </h5>
-              </div>
-            </div>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </div>
+      <Stepper currentStep={currentStep} setCurrentStep={setCurrentStep}/>
       {currentStep === 1 ? (
         <SelectItem setCurrentStep={setCurrentStep} currentStep={currentStep} />
       ) : currentStep === 2 ? (
