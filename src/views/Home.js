@@ -35,7 +35,7 @@ const Home = () => {
     { value: 20, label: 20 }
   ]
 
-  let $primary = "#6fc055",
+  const $primary = "#6fc055",
     $success = "#28C76F",
     $danger = "#EA5455",
     $warning = "#FF9F43",
