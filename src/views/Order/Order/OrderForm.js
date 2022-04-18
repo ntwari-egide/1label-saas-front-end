@@ -210,7 +210,56 @@ const OrderForm = (props) => {
                 </div>
               </CardHeader>
               <Collapse isOpen={washCareCollapse}>
-                <CardBody>Content</CardBody>
+                <CardBody>
+                  <Row>
+                    <Col xs="12" s="12" md="2" lg="2" xl="2">
+                      <Label style={{ marginTop: "12px" }}>Wash:</Label>
+                    </Col>
+                    <Col xs="12" s="12" md="8" lg="8" xl="8">
+                      <Input />
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: "10px" }}>
+                    <Col xs="12" s="12" md="2" lg="2" xl="2">
+                      <Label style={{ marginTop: "12px" }}>Bleach:</Label>
+                    </Col>
+                    <Col xs="12" s="12" md="8" lg="8" xl="8">
+                      <Input />
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: "10px" }}>
+                    <Col xs="12" s="12" md="2" lg="2" xl="2">
+                      <Label style={{ marginTop: "12px" }}>Dry:</Label>
+                    </Col>
+                    <Col xs="12" s="12" md="8" lg="8" xl="8">
+                      <Input />
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: "10px" }}>
+                    <Col xs="12" s="12" md="2" lg="2" xl="2">
+                      <Label style={{ marginTop: "12px" }}>Natural Dry:</Label>
+                    </Col>
+                    <Col xs="12" s="12" md="8" lg="8" xl="8">
+                      <Input />
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: "10px" }}>
+                    <Col xs="12" s="12" md="2" lg="2" xl="2">
+                      <Label style={{ marginTop: "12px" }}>Iron:</Label>
+                    </Col>
+                    <Col xs="12" s="12" md="8" lg="8" xl="8">
+                      <Input />
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: "10px" }}>
+                    <Col xs="12" s="12" md="2" lg="2" xl="2">
+                      <Label style={{ marginTop: "12px" }}>Dry Clean:</Label>
+                    </Col>
+                    <Col xs="12" s="12" md="8" lg="8" xl="8">
+                      <Input />
+                    </Col>
+                  </Row>
+                </CardBody>
               </Collapse>
             </Card>
           </Col>
