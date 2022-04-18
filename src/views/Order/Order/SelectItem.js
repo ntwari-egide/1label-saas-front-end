@@ -33,6 +33,16 @@ const SelectItem = (props) => {
   const [checkedList, setCheckedList] = useState([])
   const [loader, setLoader] = useState(false)
 
+  const handleCheckListChange = (id) => {
+    let tempList = checkedList
+    if (checkedList.includes(id)) {
+      tempList.splice(tempList.indexOf(id), 1)
+      setCheckedList([...tempList])
+    } else {
+      setCheckedList([...tempList, id])
+    }
+  }
+
   const fetchBrandList = () => {
     const body = {
       order_user: "innoa"
@@ -143,7 +153,7 @@ const SelectItem = (props) => {
               ))
           ) : (
             <CardBody style={{ minHeight: "520px" }}>
-              <div style={{ textAlign: "center", padding: "15% 0" }}>
+              <div style={{ textAlign: "center", padding: "14% 0" }}>
                 <Spinner color="primary" />
               </div>
             </CardBody>
