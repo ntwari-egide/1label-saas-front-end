@@ -153,7 +153,7 @@ const Home = () => {
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
-                    minHeight: "505px"
+                    minHeight: "486px"
                   }}
                 >
                   <div style={{ width: "50px", height: "50px" }}>
