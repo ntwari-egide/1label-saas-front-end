@@ -13,6 +13,87 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 // .navigation {
 //   font-family: "Gotham Book", sans-serif;
 // }
+@import "variables/_variables.scss";
+
+/* Vuexy Custom Radio */
+.vx-radio-con {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0.25rem 0;
+  input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 200;
+    cursor: pointer;
+    &:checked {
+      ~ .vx-radio {
+        transform: rotate(0deg);
+        outline: 0;
+        .vx-radio--circle {
+          background: rgba($primary, 1);
+          box-shadow: 0 3px 12px 0 rgba($primary, 0.4);
+          opacity: 1;
+          transform: scale(1);
+        }
+        .vx-radio--border {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+      }
+    }
+    &:disabled {
+      cursor: default;
+      pointer-events: none;
+      + .vx-radio {
+        cursor: default;
+        opacity: 0.5;
+      }
+    }
+    &:active {
+      ~ .vx-radio {
+        transform: scale(1.1);
+      }
+    }
+  }
+  .vx-radio {
+    cursor: pointer;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    transition: all 0.2s ease;
+    margin-right: 0.5rem;
+    &.vx-radio-sm {
+      width: 13px;
+      height: 13px;
+    }
+    &.vx-radio-lg {
+      width: 22px;
+      height: 22px;
+    }
+    .vx-radio--border,
+    .vx-radio--circle {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      transition: all 0.25s ease;
+      top: 0;
+      border-radius: 50%;
+    }
+    .vx-radio--border {
+      background: transparent;
+      border: 2px solid #b8c2cc;
+    }
+    .vx-radio--circle {
+      opacity: 0;
+      transform: scale(0.1);
+    }
+  }
+}
 
 /* Vuexy Custom Checkbox */
 .vx-checkbox-con {
