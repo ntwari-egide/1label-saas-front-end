@@ -271,32 +271,52 @@ const Payment = (props) => {
                 >
                   <Col>
                     <Row>
-                      <Col style={{ display: "flex" }}>
-                        <Radio name="paymentMethod" />
-                        <img
-                          src={stripe}
-                          style={{ width: "60%", height: "100%" }}
-                        />
-                      </Col>
-                      <Col>
-                        <img
-                          src={visaMasterCard}
-                          style={{ width: "60%", height: "100%" }}
-                        />
-                      </Col>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          justifyContent: "space-between"
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            width: "20%",
+                            height: "100%"
+                          }}
+                        >
+                          <Radio name="paymentMethod" />
+                          <img
+                            src={stripe}
+                            style={{ width: "100%", height: "100%" }}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            width: "20%",
+                            height: "100%",
+                            marginRight: "5%"
+                          }}
+                        >
+                          <img
+                            src={visaMasterCard}
+                            style={{ width: "100%", height: "100%" }}
+                          />
+                        </div>
+                      </div>
                     </Row>
                     <Row>
                       <Radio name="paymentMethod" />
                       <img
                         src={alipay}
-                        style={{ width: "30%", height: "100%" }}
+                        style={{ width: "18%", height: "100%" }}
                       />
                     </Row>
                     <Row style={{ marginTop: "15px" }}>
                       <Radio name="paymentMethod" />
                       <img
                         src={wechat}
-                        style={{ width: "30%", height: "100%" }}
+                        style={{ width: "18%", height: "100%" }}
                       />
                     </Row>
                     <Row style={{ marginTop: "20px" }}>
