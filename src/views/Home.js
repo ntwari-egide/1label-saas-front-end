@@ -94,7 +94,6 @@ const Home = () => {
     }
     axios.post("/Order/OrderListPaginationQuery", body).then((res) => {
       if (res.status === 200) {
-        console.log(res)
         setOrderListLoader(false)
         setOrdersData(res.data.orders)
       }
