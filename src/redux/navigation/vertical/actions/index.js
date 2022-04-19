@@ -26,7 +26,7 @@ export const fetchVerticalMenuItems = () => (dispatch) => {
         res.data.map((item) => {
           let menuItem = {}
           let childList = []
-          if (item.child_menu) {
+          if (item?.child_menu?.length > 0) {
             item.child_menu.map((ch) => {
               childList.push({
                 id: ch.name,
@@ -41,13 +41,15 @@ export const fetchVerticalMenuItems = () => (dispatch) => {
             id: "name",
             title: item.name,
             icon: menuIconsDict[item.name],
-            navLink: "/",
-            children: childList
+            navLink: "/"
+          }
+          if (childList.length > 0) {
+            menuItem.children = childList
           }
           menuItems = [...menuItems, menuItem]
         })
         dispatch({
-          type: "FETCH_MENU_ITEMS",
+          type: "SET_MENU_ITEMS",
           payload: menuItems
         })
       }
