@@ -10,7 +10,7 @@ import {
 } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
 import DataTable from "react-data-table-component"
-import Footer from "./CommonFooter"
+import Footer from "../../CommonFooter"
 
 const PreviewAndSummary = (props) => {
   const orderListCol = [
@@ -203,6 +203,7 @@ const PreviewAndSummary = (props) => {
         <Footer
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
+          lastStep={props.lastStep}
         />
       </CardFooter>
     </Card>

@@ -11,7 +11,7 @@ import {
 } from "reactstrap"
 import { ArrowRight, ArrowLeft, Printer } from "react-feather"
 import DataTable from "react-data-table-component"
-import Footer from "./CommonFooter"
+import Footer from "../../CommonFooter"
 
 const DirectPrint = (props) => {
   const orderListCol = [
@@ -134,6 +134,7 @@ const DirectPrint = (props) => {
         <Footer
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
+          lastStep={props.lastStep}
         />
       </CardFooter>
     </Card>

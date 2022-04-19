@@ -1,23 +1,16 @@
 import { useState, useEffect } from "react"
 import { Row, Col } from "reactstrap"
-import { Check, FileMinus } from "react-feather"
+import { Check } from "react-feather"
 import axios from "@axios"
-import Chart from "react-apexcharts"
-import DataTable from "react-data-table-component"
 import CheckBox from "@components/CheckBox/CheckBox"
 import Select from "react-select"
-import Footer from "./CommonFooter"
-import { Link } from "react-router-dom"
+import Footer from "../../CommonFooter"
 import {
   Card,
   CardHeader,
   Spinner,
   CardBody,
-  CardTitle,
   CardFooter,
-  Breadcrumb,
-  BreadcrumbItem,
-  Label,
   Input,
   Button
 } from "reactstrap"
@@ -197,6 +190,7 @@ const SelectItem = (props) => {
         <Footer
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
+          lastStep={props.lastStep}
         />
       </CardFooter>
     </Card>

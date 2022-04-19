@@ -11,7 +11,7 @@ import {
   Button
 } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
-import Footer from "./CommonFooter"
+import Footer from "../../CommonFooter"
 
 const InvoiceAndDelivery = (props) => {
   return (
@@ -188,6 +188,7 @@ const InvoiceAndDelivery = (props) => {
         <Footer
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
+          lastStep={props.lastStep}
         />
       </CardFooter>
     </Card>

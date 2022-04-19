@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import axios from "@axios"
+import Select from "react-select"
 import {
   Card,
   Label,
@@ -11,13 +13,20 @@ import {
   Input,
   Button
 } from "reactstrap"
-import { ArrowRight, ArrowLeft, X, Plus } from "react-feather"
-import Footer from "./CommonFooter"
+import { X, Plus } from "react-feather"
+import Footer from "../../CommonFooter"
+
+let dummyOptions = []
+for (let i = 0; i < 300; i++) {
+  dummyOptions.push({ label: `label${i}`, value: `value${i}` })
+}
 
 const OrderForm = (props) => {
   const [itemInfoCollapse, setItemInfoCollapse] = useState(false)
   const [careContentCollapse, setCareContentCollapse] = useState(false)
   const [washCareCollapse, setWashCareCollapse] = useState(false)
+  // const [dummyOptions, setDummyOptions] = useState([])
+
   return (
     <Card>
       <CardHeader>
@@ -92,7 +101,11 @@ const OrderForm = (props) => {
                       <Row>
                         <Col xs="12" sm="12" md="4" lg="4" xl="4">
                           <Label>Component</Label>
-                          <Input />
+                          <Select
+                            className="React"
+                            classNamePrefix="select"
+                            options={dummyOptions}
+                          />
                         </Col>
                         <Col xs="12" sm="12" md="2" lg="2" xl="2">
                           <Label>Fabric</Label>
@@ -270,6 +283,7 @@ const OrderForm = (props) => {
         <Footer
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
+          lastStep={props.lastStep}
         />
       </CardFooter>
     </Card>

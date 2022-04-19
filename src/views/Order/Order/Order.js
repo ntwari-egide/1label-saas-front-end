@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SelectItem from "./SelectItem"
 import OrderForm from "./OrderForm"
 import PreviewAndSummary from "./PreviewAndSummary"
@@ -8,6 +8,7 @@ import Stepper from "../../Stepper"
 import DirectPrint from "./DirectPrint"
 import { Link } from "react-router-dom"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
+import { XMLParser } from "fast-xml-parser"
 
 const stepperMenu = [
   "Select Item",
@@ -21,6 +22,23 @@ const stepperMenu = [
 const Order = () => {
   // APP states
   const [currentStep, setCurrentStep] = useState(0)
+  const [lastStep] = useState(stepperMenu.length - 1)
+
+  // const xmlToObj = () => {
+  //   const xml = "<SizeMatrix>".concat(
+  //     "<Table> <Column0>TITLE</Column0> <Column1>size</Column1> <Column2>s</Column2> <Column3>m</Column3> <Column4>l</Column4> </Table>".repeat(
+  //       500
+  //     ),
+  //     "</SizeMatrix>"
+  //   )
+  //   console.log("xml", xml)
+  //   const parser = new XMLParser()
+  //   console.log(parser.parse(xml))
+  // }
+  //
+  // useEffect(() => {
+  //   xmlToObj()
+  // }, [])
 
   return (
     <div>
@@ -48,25 +66,40 @@ const Order = () => {
         setCurrentStep={setCurrentStep}
       />
       {currentStep === 0 ? (
-        <SelectItem setCurrentStep={setCurrentStep} currentStep={currentStep} />
+        <SelectItem
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+          lastStep={lastStep}
+        />
       ) : currentStep === 1 ? (
-        <OrderForm setCurrentStep={setCurrentStep} currentStep={currentStep} />
+        <OrderForm
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+          lastStep={lastStep}
+        />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
+          lastStep={lastStep}
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
+          lastStep={lastStep}
         />
       ) : currentStep === 4 ? (
-        <Payment setCurrentStep={setCurrentStep} currentStep={currentStep} />
+        <Payment
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+          lastStep={lastStep}
+        />
       ) : currentStep === 5 ? (
         <DirectPrint
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
+          lastStep={lastStep}
         />
       ) : null}
     </div>
