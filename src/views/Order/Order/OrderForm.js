@@ -15,6 +15,7 @@ import {
 } from "reactstrap"
 import { X, Plus } from "react-feather"
 import Footer from "../../CommonFooter"
+import { XMLParser } from "fast-xml-parser"
 
 let dummyOptions = []
 for (let i = 0; i < 300; i++) {
@@ -25,7 +26,184 @@ const OrderForm = (props) => {
   const [itemInfoCollapse, setItemInfoCollapse] = useState(false)
   const [careContentCollapse, setCareContentCollapse] = useState(false)
   const [washCareCollapse, setWashCareCollapse] = useState(false)
+  const [sizeTableDetails, setSizeTableDetails] = useState([])
+  const [itemInfoFields, setItemInfoFields] = useState([])
   // const [dummyOptions, setDummyOptions] = useState([])
+
+  // API services
+  const fetchItemInfoData = () => {
+    const body = {
+      guid_key: "204681f9-c63a-435c-96e9-e6838ed56775"
+    }
+    axios.post("/Item/GetItemRefDetail", body).then((res) => console.log(res))
+  }
+
+  const fetchItemInfoFields = () => {
+    const body = {
+      brand_key: props.brand.value,
+      show_status: "Y"
+    }
+    axios.post("/Brand/GetDynamicFieldList", body).then((res) => {
+      if (res.status === 200) {
+        setItemInfoFields(res.data)
+      }
+    })
+  }
+
+  const fetchSizeTableList = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      item_key: props.selectedItems ? props.selectedItems : [],
+      query_str: ""
+    }
+
+    axios
+      .post("/SizeTable/GetSizeTableList", body)
+      .then((res) => console.log("sizetablelist", res))
+      .catch((err) => console.log(err))
+  }
+
+  const fetchSizeTableDetails = () => {
+    const body = {
+      guid_key: "134023"
+    }
+    axios
+      .post("/SizeTable/GetSizeTableDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          // preprocessing
+          const nRows = Object.keys(res.data[0].size_content[0]).length - 2 // gets the no of rows
+          let data = [] // initialized data to fill row by row
+          let currentRow = 0 + 2 // because actual data begins at Column2
+          for (let i = 0; i < nRows; i++) {
+            let row = {} // initialise empty row
+            res.data[0].size_content.map((col) => {
+              row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
+            })
+            data.push(row) // push the row to data
+            currentRow += 1 // increment row count
+          }
+          console.log("processed data", data)
+        }
+      })
+      .then((err) => console.log(err))
+  }
+
+  const fetchContentNumberList = () => {
+    const body = {
+      order_user: "innoa",
+      brand_key: props.brand?.value,
+      content_group: "A"
+    }
+    axios
+      .post("/ContentNumber/GetContentNumberList", body)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+  }
+
+  const fetchIconSequenceList = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      icon_group: "A",
+      icon_key: ""
+    }
+
+    axios
+      .post("/ContentNumber/GetIconSequence", body)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+  }
+
+  const fetchContentTranslationList = () => {
+    // page types: content, part, care, icon
+    const body = {
+      brand_key: props.brand ? props.brand?.value : "",
+      page_type: "content",
+      query_sr: "",
+      icon_type_key: "",
+      product_line_key: ""
+    }
+
+    axios
+      .post("/Translation/GetTranslationList", body)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+  }
+
+  const fetchProductLocationList = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      order_user: "innoa",
+      order_no: ""
+    }
+
+    axios
+      .post("/Order/GetLocationList", body)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+  }
+
+  const renderSwitch = (field) => {
+    switch (field.type) {
+      case "select":
+        return (
+          <Row style={{ margin: "5px" }}>
+            <Col
+              xs="12"
+              sm="12"
+              md="3"
+              lg="2"
+              xl="2"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}
+            >
+              <Label>{field?.props?.title}</Label>
+            </Col>
+            <Col xs="12" sm="12" md="6" lg="5" xl="5">
+              <Select />
+            </Col>
+          </Row>
+        )
+      case "input":
+        return (
+          <Row style={{ margin: "5px" }}>
+            <Col
+              xs="12"
+              sm="12"
+              md="3"
+              lg="2"
+              xl="2"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}
+            >
+              <Label>{field?.props?.title}</Label>
+            </Col>
+            <Col xs="12" sm="12" md="6" lg="5" xl="5">
+              <Input />
+            </Col>
+          </Row>
+        )
+      default:
+        return null
+    }
+  }
+
+  useEffect(() => {
+    fetchSizeTableList()
+    fetchItemInfoData()
+    fetchSizeTableDetails()
+    fetchItemInfoFields()
+    fetchContentNumberList()
+    fetchIconSequenceList()
+    fetchContentTranslationList()
+    fetchProductLocationList()
+  }, [])
 
   return (
     <Card>
@@ -59,7 +237,13 @@ const OrderForm = (props) => {
                 </div>
               </CardHeader>
               <Collapse isOpen={itemInfoCollapse}>
-                <CardBody>Content</CardBody>
+                <CardBody>
+                  {itemInfoFields.map((field) => {
+                    {
+                      return renderSwitch(field)
+                    }
+                  })}
+                </CardBody>
               </Collapse>
             </Card>
           </Col>
