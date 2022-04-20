@@ -18,22 +18,19 @@ import { ArrowRight, ArrowLeft } from "react-feather"
 
 const SelectItem = (props) => {
   const [brandOptions, setBrandOptions] = useState([])
-  const [brand, setBrand] = useState(null)
   const [itemTypeOptions, setItemTypeOptions] = useState([])
-  const [itemType, setItemType] = useState(null)
-  const [itemList, setItemList] = useState([])
   const [item, setItem] = useState(null)
+  const [itemList, setItemList] = useState([])
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
-  const [checkedList, setCheckedList] = useState([])
   const [loader, setLoader] = useState(false)
 
   const handleCheckListChange = (id) => {
-    let tempList = checkedList
-    if (checkedList.includes(id)) {
+    let tempList = props.selectedItems
+    if (props.selectedItems.includes(id)) {
       tempList.splice(tempList.indexOf(id), 1)
-      setCheckedList([...tempList])
+      props.setSelectedItems([...tempList])
     } else {
-      setCheckedList([...tempList, id])
+      props.setSelectedItems([...tempList, id])
     }
   }
 
@@ -41,27 +38,33 @@ const SelectItem = (props) => {
     const body = {
       order_user: "innoa"
     }
-    axios.post("/Brand/GetBrandListByClient", body).then((res) => {
-      if (res.status === 200) {
-        setBrandOptions(
-          res.data.map((br) => ({ value: br.guid_key, label: br.brand_name }))
-        )
-      }
-    })
+    axios
+      .post("/Brand/GetBrandListByClient", body)
+      .then((res) => {
+        if (res.status === 200) {
+          setBrandOptions(
+            res.data.map((br) => ({ value: br.guid_key, label: br.brand_name }))
+          )
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   const fetchItemTypeOptions = () => {
-    axios.post("/Item/GetItemTypeList").then((res) => {
-      if (res.status === 200) {
-        setItemTypeOptions(
-          res.data.map((itm) => ({
-            value: itm.id,
-            label: itm.item_type_name,
-            parent_id: itm.parent_id
-          }))
-        )
-      }
-    })
+    axios
+      .post("/Item/GetItemTypeList")
+      .then((res) => {
+        if (res.status === 200) {
+          setItemTypeOptions(
+            res.data.map((itm) => ({
+              value: itm.id,
+              label: itm.item_type_name,
+              parent_id: itm.parent_id
+            }))
+          )
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   const fetchItemList = (brand = "", item_type = "") => {
@@ -69,15 +72,18 @@ const SelectItem = (props) => {
     setVisibleCardIndex(0)
     const body = {
       order_user: "innoa",
-      brand_key: brand?.value,
-      item_ref_type: item_type?.value
+      brand_key: brand ? brand?.value : "",
+      item_ref_type: item_type ? item_type?.value : ""
     }
-    axios.post("/Item/GetItemRefList", body).then((res) => {
-      if (res.status === 200) {
-        setLoader(false)
-        setItemList(res.data)
-      }
-    })
+    axios
+      .post("/Item/GetItemRefList", body)
+      .then((res) => {
+        if (res.status === 200) {
+          setLoader(false)
+          setItemList(res.data)
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   useEffect(() => {
@@ -94,11 +100,11 @@ const SelectItem = (props) => {
             className="React"
             classNamePrefix="select"
             placeholder="BRAND"
-            value={brand}
+            value={props.brand}
             options={brandOptions}
             onChange={(e) => {
-              setBrand(e)
-              fetchItemList(e, itemType)
+              props.setBrand(e)
+              fetchItemList(e, props.itemType)
             }}
             isClearable={true}
           />
@@ -111,18 +117,18 @@ const SelectItem = (props) => {
             className="React"
             classNamePrefix="select"
             placeholder="ITEM TYPE"
-            value={itemType}
+            value={props.itemType}
             options={itemTypeOptions}
             onChange={(e) => {
-              setItemType(e)
-              fetchItemList(brand, e)
+              props.setItemType(e)
+              fetchItemList(props.brand, e)
             }}
             isClearable={true}
           />
         </Col>
       </CardHeader>
       <CardBody style={{ minHeight: "520px" }}>
-        <Row style={{ margin: "0rem" }}>
+        <Row style={{ margin: "0rem", minHeight: "520px" }}>
           {!loader ? (
             itemList
               .slice(visibleCardIndex, visibleCardIndex + 6)
@@ -138,7 +144,7 @@ const SelectItem = (props) => {
                       <CheckBox
                         color="primary"
                         icon={<Check className="vx-icon" size={16} />}
-                        checked={checkedList.includes(item.guid_key)}
+                        checked={props.selectedItems.includes(item.guid_key)}
                         onChange={() => handleCheckListChange(item.guid_key)}
                       />
                     </CardFooter>

@@ -23,6 +23,9 @@ const Order = () => {
   // APP states
   const [currentStep, setCurrentStep] = useState(0)
   const [lastStep] = useState(stepperMenu.length - 1)
+  const [brand, setBrand] = useState("")
+  const [itemType, setItemType] = useState("")
+  const [selectedItems, setSelectedItems] = useState([])
 
   // const xmlToObj = () => {
   //   const xml = "<SizeMatrix>".concat(
@@ -39,6 +42,10 @@ const Order = () => {
   // useEffect(() => {
   //   xmlToObj()
   // }, [])
+
+  useEffect(() => {
+    console.log("brand", brand, "itemType", itemType)
+  }, [brand, itemType])
 
   return (
     <div>
@@ -70,12 +77,22 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
+          brand={brand}
+          setBrand={setBrand}
+          itemType={itemType}
+          setItemType={setItemType}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
         />
       ) : currentStep === 1 ? (
         <OrderForm
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
+          brand={brand}
+          itemType={itemType}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
