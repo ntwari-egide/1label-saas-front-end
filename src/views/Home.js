@@ -16,11 +16,13 @@ import {
   Button
 } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
+import { useTranslation } from "react-i18next"
 
 // Debounce Implementation
 let timerId = null
 
 const Home = () => {
+  const { t } = useTranslation()
   // APP states
   const [pieChartData, setPieChartData] = useState([])
   const [ordersData, setOrdersData] = useState([])
@@ -116,9 +118,13 @@ const Home = () => {
     fetchTotalOrdersData()
   }, [])
 
+  useEffect(() => {
+    console.log(t)
+  }, [])
+
   return (
     <div>
-      <p className="lead">Dashboard</p>
+      <p className="lead">{t("Dashboard")}</p>
       <Row>
         <Col sm="12" md="6" lg="4" xl="4">
           <OrderSummaryChart
@@ -134,7 +140,7 @@ const Home = () => {
         <Col sm="12" md="6" lg="8">
           <Card style={{ height: "95%" }}>
             <CardHeader>
-              <CardTitle>Listing</CardTitle>
+              <CardTitle>{t("Listing")}</CardTitle>
             </CardHeader>
             <CardBody>
               {!orderListLoader ? (
@@ -173,7 +179,7 @@ const Home = () => {
                           paddingTop: "10px"
                         }}
                       >
-                        <Label>Records Per Page</Label>
+                        <Label>{t("Records Per Page")}</Label>
                       </div>
                       <div style={{ minWidth: "70px" }}>
                         <Select

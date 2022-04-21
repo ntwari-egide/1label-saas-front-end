@@ -15,9 +15,11 @@ import {
 } from "reactstrap"
 import { ChevronDown } from "react-feather"
 import Chart from "react-apexcharts"
+import { useTranslation } from "react-i18next"
 
 // Pie Chart component for dashboard
 const OrderSummaryChart = (props) => {
+  const { t } = useTranslation()
   // APP Constants
   const seq = ["primary-chart", "warning", "danger"]
   const options = {
@@ -61,7 +63,7 @@ const OrderSummaryChart = (props) => {
     <div style={{ height: "100%" }}>
       <Card style={{ height: "95%", minHeight: "95%" }}>
         <CardHeader>
-          <CardTitle>Summary</CardTitle>
+          <CardTitle>{t("Summary")}</CardTitle>
           {/*}
         <UncontrolledDropdown>
           <DropdownToggle tag="small" className="text-bold-500 cursor-pointer">
@@ -111,7 +113,9 @@ const OrderSummaryChart = (props) => {
                     margin: "0 5px"
                   }}
                 />
-                <span className="text-bold-600">{ord.order_status}</span>
+                <span className="text-bold-600">
+                  {t(`${ord.order_status}`)}
+                </span>
               </div>
               <div className="product-result">
                 <span>{ord.total}</span>
