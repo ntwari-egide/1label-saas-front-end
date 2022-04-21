@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import axios from "@axios"
-import { default as ax } from "axios"
-import Select from "react-select"
+import Select, { components } from "react-select"
 import {
   Card,
   Label,
@@ -16,7 +15,6 @@ import {
 } from "reactstrap"
 import { X, Plus } from "react-feather"
 import Footer from "../../CommonFooter"
-import { XMLParser } from "fast-xml-parser"
 
 let dummyOptions = []
 for (let i = 0; i < 300; i++) {
@@ -143,8 +141,8 @@ const OrderForm = (props) => {
   const fetchContentTranslationList = () => {
     // page types: content, part, care, icon
     const pageTypesDataDict = {
-      content: setComponentOptions,
-      part: setFabricOptions,
+      content: setFabricOptions,
+      part: setComponentOptions,
       care: setAdditionalCareOptions
     }
 
@@ -394,7 +392,18 @@ const OrderForm = (props) => {
                             <Select
                               className="React"
                               classNamePrefix="select"
-                              options={fabricOptions}
+                              options={componentOptions}
+                              value={componentOptions.filter(
+                                (opt) => opt.value === rec.component
+                              )}
+                              onChange={(e) => {
+                                const tempData = fibreInstructionData
+                                tempData[index] = {
+                                  ...fibreInstructionData[index],
+                                  component: e.value
+                                }
+                                setFibreInstructionData([...tempData])
+                              }}
                             />
                           </Col>
                           <Col xs="12" sm="12" md="3" lg="3" xl="3">
@@ -402,7 +411,18 @@ const OrderForm = (props) => {
                             <Select
                               className="React"
                               classNamePrefix="select"
-                              options={componentOptions}
+                              options={fabricOptions}
+                              value={fabricOptions.filter(
+                                (opt) => opt.value === rec.fabric
+                              )}
+                              onChange={(e) => {
+                                const tempData = fibreInstructionData
+                                tempData[index] = {
+                                  ...fibreInstructionData[index],
+                                  fabric: e.value
+                                }
+                                setFibreInstructionData([...tempData])
+                              }}
                             />
                           </Col>
                           <Col xs="12" sm="12" md="2" lg="2" xl="2">
@@ -425,6 +445,7 @@ const OrderForm = (props) => {
                                 const tempFibreInstructions =
                                   fibreInstructionData
                                 tempFibreInstructions.splice(index, 1)
+                                console.log(tempFibreInstructions)
                                 setFibreInstructionData([
                                   ...tempFibreInstructions
                                 ])
@@ -485,26 +506,32 @@ const OrderForm = (props) => {
                       <h5>Care</h5>
                     </CardHeader>
                     <CardBody>
+                      <Row>
+                        <Col>
+                          <Label>Additional Care & Mandatory Statements </Label>
+                        </Col>
+                      </Row>
                       {careData.map((rec, index) => (
                         <Row style={{ marginBottom: "7px" }}>
                           <Col xs="12" sm="12" md="8" lg="8" xl="8">
-                            <Label>
-                              Additional Care & Mandatory Statements{" "}
-                            </Label>
                             <Select
                               className="React"
                               classNamePrefix="select"
                               options={additionalCareOptions}
+                              value={additionalCareOptions.filter(
+                                (opt) => opt.value === rec.addCare
+                              )}
+                              onChange={(e) => {
+                                const tempData = careData
+                                careData[index] = {
+                                  ...careData[index],
+                                  addCare: e.value
+                                }
+                                setCareData([...tempData])
+                              }}
                             />
                           </Col>
-                          <Col
-                            xs="12"
-                            sm="12"
-                            md="1"
-                            lg="1"
-                            xl="1"
-                            style={{ marginTop: "23px" }}
-                          >
+                          <Col xs="12" sm="12" md="1" lg="1" xl="1">
                             <Button
                               style={{ padding: "7px" }}
                               outline
