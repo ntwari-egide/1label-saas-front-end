@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import axios from "@axios"
+import { default as ax } from "axios"
 import Select from "react-select"
 import {
   Card,
@@ -22,20 +23,34 @@ for (let i = 0; i < 300; i++) {
   dummyOptions.push({ label: `label${i}`, value: `value${i}` })
 }
 
+let globItemInfoData = {}
+
 const OrderForm = (props) => {
-  const [itemInfoCollapse, setItemInfoCollapse] = useState(false)
-  const [careContentCollapse, setCareContentCollapse] = useState(false)
-  const [washCareCollapse, setWashCareCollapse] = useState(false)
+  // states for Collapse component
+  const [itemInfoCollapse, setItemInfoCollapse] = useState(true)
+  const [careContentCollapse, setCareContentCollapse] = useState(true)
+  const [washCareCollapse, setWashCareCollapse] = useState(true)
+  // Data
   const [sizeTableDetails, setSizeTableDetails] = useState([])
   const [itemInfoFields, setItemInfoFields] = useState([])
-  // const [dummyOptions, setDummyOptions] = useState([])
+  const [fibreInstructionData, setFibreInstructionData] = useState([{}])
+  const [careData, setCareData] = useState([{}])
+  const [itemInfoOptions, setItemInfoOptions] = useState({})
+  // select options
+  const [fabricOptions, setFabricOptions] = useState([])
+  const [componentOptions, setComponentOptions] = useState([])
+  const [additionalCareOptions, setAdditionalCareOptions] = useState([])
+  const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
+  const [contentNumberOptions, setContentNumberOptions] = useState([])
 
   // API services
   const fetchItemInfoData = () => {
     const body = {
       guid_key: "204681f9-c63a-435c-96e9-e6838ed56775"
     }
-    axios.post("/Item/GetItemRefDetail", body).then((res) => console.log(res))
+    axios.post("/Item/GetItemRefDetail", body).then((res) => {
+      // console.log(res)
+    })
   }
 
   const fetchItemInfoFields = () => {
@@ -59,7 +74,9 @@ const OrderForm = (props) => {
 
     axios
       .post("/SizeTable/GetSizeTableList", body)
-      .then((res) => console.log("sizetablelist", res))
+      .then((res) => {
+        // console.log("sizetablelist", res)
+      })
       .catch((err) => console.log(err))
   }
 
@@ -97,7 +114,14 @@ const OrderForm = (props) => {
     }
     axios
       .post("/ContentNumber/GetContentNumberList", body)
-      .then((res) => console.log(res))
+      .then((res) => {
+        setContentNumberOptions(
+          res.data.map((opt) => ({
+            value: opt.guid_key,
+            label: opt.style_number
+          }))
+        )
+      })
       .catch((err) => console.log(err))
   }
 
@@ -110,24 +134,41 @@ const OrderForm = (props) => {
 
     axios
       .post("/ContentNumber/GetIconSequence", body)
-      .then((res) => console.log(res))
+      .then((res) => {
+        // console.log(res)
+      })
       .catch((err) => console.log(err))
   }
 
   const fetchContentTranslationList = () => {
     // page types: content, part, care, icon
-    const body = {
-      brand_key: props.brand ? props.brand?.value : "",
-      page_type: "content",
-      query_sr: "",
-      icon_type_key: "",
-      product_line_key: ""
+    const pageTypesDataDict = {
+      content: setComponentOptions,
+      part: setFabricOptions,
+      care: setAdditionalCareOptions
     }
 
-    axios
-      .post("/Translation/GetTranslationList", body)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err))
+    Object.keys(pageTypesDataDict).map((pageType) => {
+      const body = {
+        brand_key: props.brand ? props.brand?.value : "",
+        page_type: `${pageType}`,
+        query_sr: "",
+        icon_type_key: "",
+        product_line_key: ""
+      }
+
+      axios
+        .post("/Translation/GetTranslationList", body)
+        .then((res) => {
+          pageTypesDataDict[pageType](
+            res.data.map((opt) => ({
+              value: opt.guid_key,
+              label: opt.gb_translation
+            }))
+          )
+        })
+        .catch((err) => console.log(err))
+    })
   }
 
   const fetchProductLocationList = () => {
@@ -139,7 +180,11 @@ const OrderForm = (props) => {
 
     axios
       .post("/Order/GetLocationList", body)
-      .then((res) => console.log(res))
+      .then((res) => {
+        setProjectionLocationOptions(
+          res.data.map((loc) => ({ value: loc.erp_id, label: loc.erp_name }))
+        )
+      })
       .catch((err) => console.log(err))
   }
 
@@ -160,10 +205,14 @@ const OrderForm = (props) => {
                 justifyContent: "center"
               }}
             >
-              <Label>{field?.props?.title}</Label>
+              <Label>{field?.title}</Label>
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
-              <Select />
+              <Select
+                options={itemInfoOptions[field.title]}
+                className="React"
+                classNamePrefix="select"
+              />
             </Col>
           </Row>
         )
@@ -182,7 +231,7 @@ const OrderForm = (props) => {
                 justifyContent: "center"
               }}
             >
-              <Label>{field?.props?.title}</Label>
+              <Label>{field?.title}</Label>
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
               <Input />
@@ -191,6 +240,47 @@ const OrderForm = (props) => {
         )
       default:
         return null
+    }
+  }
+
+  const assignStateToItemInfo = (fields) => {
+    if (fields.length > 0) {
+      fields.map((field) => {
+        const tempState = {}
+        fetch(field?.effect?.fetch?.action, {
+          method: field?.effect?.fetch?.method,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            ...field?.effect?.fetch?.json_key_name,
+            order_user: "innoa"
+          })
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data[0].field_value) {
+              tempState[field.title] = data.map((opt) => ({
+                value: opt.field_value,
+                label: opt.field_value
+              }))
+              globItemInfoData = { ...globItemInfoData, ...tempState }
+              setItemInfoOptions({ ...globItemInfoData })
+            } else if (data[0].guid_key) {
+              tempState[field.title] = data.map((opt) => ({
+                value: opt.guid_key,
+                label: opt.style_number
+                  ? opt.style_number
+                  : opt.gb_translation
+                  ? opt.gb_translation
+                  : null
+              }))
+              globItemInfoData = { ...globItemInfoData, ...tempState }
+              setItemInfoOptions({ ...globItemInfoData })
+            }
+          })
+          .catch((err) => console.log(err))
+      })
     }
   }
 
@@ -204,6 +294,14 @@ const OrderForm = (props) => {
     fetchContentTranslationList()
     fetchProductLocationList()
   }, [])
+
+  useEffect(() => {
+    assignStateToItemInfo(itemInfoFields)
+  }, [itemInfoFields])
+
+  useEffect(() => {
+    console.log("itemInfoOptions", itemInfoOptions)
+  }, [itemInfoOptions])
 
   return (
     <Card>
@@ -221,7 +319,12 @@ const OrderForm = (props) => {
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           <Label>Projection Location</Label>
           <span className="text-danger">*</span>
-          <Input style={{ margin: "5px" }} />
+          <Select
+            className="React"
+            classNamePrefix="select"
+            options={projectionLocationOptions}
+            style={{ margin: "5px" }}
+          />
         </Col>
       </CardHeader>
       <CardBody>
@@ -239,9 +342,7 @@ const OrderForm = (props) => {
               <Collapse isOpen={itemInfoCollapse}>
                 <CardBody>
                   {itemInfoFields.map((field) => {
-                    {
-                      return renderSwitch(field)
-                    }
+                    return renderSwitch(field)
                   })}
                 </CardBody>
               </Collapse>
@@ -266,7 +367,11 @@ const OrderForm = (props) => {
                       <Label style={{ marginTop: "12px" }}>Content#</Label>
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Input />
+                      <Select
+                        className="React"
+                        classNamePrefix="select"
+                        options={contentNumberOptions}
+                      />
                     </Col>
                   </Row>
                   <Row style={{ marginBottom: "10px" }}>
@@ -282,46 +387,68 @@ const OrderForm = (props) => {
                       <h5>Fibre Instructions</h5>
                     </CardHeader>
                     <CardBody>
-                      <Row>
-                        <Col xs="12" sm="12" md="4" lg="4" xl="4">
-                          <Label>Component</Label>
-                          <Select
-                            className="React"
-                            classNamePrefix="select"
-                            options={dummyOptions}
-                          />
-                        </Col>
-                        <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                          <Label>Fabric</Label>
-                          <Input />
-                        </Col>
-                        <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                          <Label>%</Label>
-                          <Input />
-                        </Col>
-                        <Col
-                          xs="12"
-                          sm="12"
-                          md="1"
-                          lg="1"
-                          xl="1"
-                          style={{ marginTop: "23px" }}
-                        >
-                          <Button
-                            style={{ padding: "7px" }}
-                            outline
-                            className="btn btn-outline-danger"
+                      {fibreInstructionData.map((rec, index) => (
+                        <Row style={{ marginBottom: "5px" }}>
+                          <Col xs="12" sm="12" md="4" lg="4" xl="4">
+                            <Label>Component</Label>
+                            <Select
+                              className="React"
+                              classNamePrefix="select"
+                              options={fabricOptions}
+                            />
+                          </Col>
+                          <Col xs="12" sm="12" md="3" lg="3" xl="3">
+                            <Label>Fabric</Label>
+                            <Select
+                              className="React"
+                              classNamePrefix="select"
+                              options={componentOptions}
+                            />
+                          </Col>
+                          <Col xs="12" sm="12" md="2" lg="2" xl="2">
+                            <Label>%</Label>
+                            <Input />
+                          </Col>
+                          <Col
+                            xs="12"
+                            sm="12"
+                            md="1"
+                            lg="1"
+                            xl="1"
+                            style={{ marginTop: "23px" }}
                           >
-                            <div style={{ display: "flex" }}>
-                              <X />
-                              <div style={{ marginTop: "5px" }}>Delete</div>
-                            </div>
-                          </Button>
-                        </Col>
-                      </Row>
+                            <Button
+                              style={{ padding: "7px" }}
+                              outline
+                              className="btn btn-outline-danger"
+                              onClick={() => {
+                                const tempFibreInstructions =
+                                  fibreInstructionData
+                                tempFibreInstructions.splice(index, 1)
+                                setFibreInstructionData([
+                                  ...tempFibreInstructions
+                                ])
+                              }}
+                            >
+                              <div style={{ display: "flex" }}>
+                                <X />
+                                <div style={{ marginTop: "5px" }}>Delete</div>
+                              </div>
+                            </Button>
+                          </Col>
+                        </Row>
+                      ))}
                     </CardBody>
                     <CardFooter>
-                      <Button color="primary" style={{ padding: "10px" }}>
+                      <Button
+                        onClick={() => {
+                          const tempFibreInstructions = fibreInstructionData
+                          tempFibreInstructions.push({})
+                          setFibreInstructionData([...tempFibreInstructions])
+                        }}
+                        color="primary"
+                        style={{ padding: "10px" }}
+                      >
                         <Plus />
                         Add New
                       </Button>
@@ -355,37 +482,58 @@ const OrderForm = (props) => {
                   </Row>
                   <Card>
                     <CardHeader>
-                      <h5>Additional Care & Mandatory Statements</h5>
+                      <h5>Care</h5>
                     </CardHeader>
                     <CardBody>
-                      <Row>
-                        <Col xs="12" sm="12" md="8" lg="8" xl="8">
-                          <Label>Component</Label>
-                          <Input />
-                        </Col>
-                        <Col
-                          xs="12"
-                          sm="12"
-                          md="1"
-                          lg="1"
-                          xl="1"
-                          style={{ marginTop: "23px" }}
-                        >
-                          <Button
-                            style={{ padding: "7px" }}
-                            outline
-                            className="btn btn-outline-danger"
+                      {careData.map((rec, index) => (
+                        <Row style={{ marginBottom: "7px" }}>
+                          <Col xs="12" sm="12" md="8" lg="8" xl="8">
+                            <Label>
+                              Additional Care & Mandatory Statements{" "}
+                            </Label>
+                            <Select
+                              className="React"
+                              classNamePrefix="select"
+                              options={additionalCareOptions}
+                            />
+                          </Col>
+                          <Col
+                            xs="12"
+                            sm="12"
+                            md="1"
+                            lg="1"
+                            xl="1"
+                            style={{ marginTop: "23px" }}
                           >
-                            <div style={{ display: "flex" }}>
-                              <X />
-                              <div style={{ marginTop: "5px" }}>Delete</div>
-                            </div>
-                          </Button>
-                        </Col>
-                      </Row>
+                            <Button
+                              style={{ padding: "7px" }}
+                              outline
+                              className="btn btn-outline-danger"
+                              onClick={() => {
+                                const tempCare = careData
+                                tempCare.splice(index, 1)
+                                setCareData([...tempCare])
+                              }}
+                            >
+                              <div style={{ display: "flex" }}>
+                                <X />
+                                <div style={{ marginTop: "5px" }}>Delete</div>
+                              </div>
+                            </Button>
+                          </Col>
+                        </Row>
+                      ))}
                     </CardBody>
                     <CardFooter>
-                      <Button color="primary" style={{ padding: "10px" }}>
+                      <Button
+                        onClick={() => {
+                          const tempCare = careData
+                          tempCare.push({})
+                          setCareData([...tempCare])
+                        }}
+                        color="primary"
+                        style={{ padding: "10px" }}
+                      >
                         <Plus />
                         Add New Row
                       </Button>
