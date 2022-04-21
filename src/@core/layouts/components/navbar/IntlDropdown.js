@@ -1,9 +1,9 @@
 // ** Third Party Components
 import { useTranslation } from "react-i18next"
 import { useEffect } from "react"
-const us = require("@src/assets/data/us.svg").default
-const cn = require("@src/assets/data/cn.svg").default
-const de = require("@src/assets/data/de.svg").default
+const us = require("@src/assets/images/flags/us.svg").default
+const cn = require("@src/assets/images/flags/cn.svg").default
+const de = require("@src/assets/images/flags/de.svg").default
 // ** Reactstrap Imports
 import {
   UncontrolledDropdown,
