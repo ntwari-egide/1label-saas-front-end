@@ -11,72 +11,74 @@ import {
 import { ArrowRight, ArrowLeft } from "react-feather"
 import DataTable from "react-data-table-component"
 import Footer from "../../CommonFooter"
+import { useTranslation } from "react-i18next"
 
 const PreviewAndSummary = (props) => {
+  const { t } = useTranslation()
   const orderListCol = [
     {
-      name: "SIZE DESCRIPTION",
+      name: t("SIZE DESCRIPTION"),
       selector: "size_description",
       sortable: true
     },
     {
-      name: "SIZE",
+      name: t("SIZE"),
       selector: "size",
       sortable: true
     },
     {
-      name: "SUPPLIER REF",
+      name: t("SUPPLIER REF"),
       selector: "supplier_ref",
       sortable: true
     },
     {
-      name: "SUPPLIER COLOR",
+      name: t("SUPPLIER COLOR"),
       selector: "supplier_color",
       sortable: true
     },
     {
-      name: "OPTION ID",
+      name: t("OPTION ID"),
       selector: "option_id",
       sortable: true
     },
     {
-      name: "BUYING GROUP ID",
+      name: t("BUYING GROUP ID"),
       selector: "buying_group_id",
       sortable: true
     },
     {
-      name: "PRODUCT GROUP DESCRIPTION",
+      name: t("PRODUCT GROUP DESCRIPTION"),
       selector: "product_group_description"
     },
     {
-      name: "SKU CODE",
+      name: t("SKU CODE"),
       selector: "sku_code",
       Sortable: true
     },
     {
-      name: "STYLE NUMBER",
+      name: t("STYLE NUMBER"),
       selector: "style_number",
       Sortable: true
     },
     {
-      name: "BARCODE",
+      name: t("BARCODE"),
       selector: "barcode",
       Sortable: true
     },
     {
-      name: "ASBAR1",
+      name: t("ASBAR1"),
       selector: "asbar1"
     },
     {
-      name: "QTY ITEM REF 2",
+      name: t("QTY ITEM REF 2"),
       selector: "ref2"
     },
     {
-      name: "QTY ITEM REF 3",
+      name: t("QTY ITEM REF 3"),
       selector: "ref3"
     },
     {
-      name: "QTY ITEM REF 4",
+      name: t("QTY ITEM REF 4"),
       selector: "ref4"
     }
   ]
@@ -134,7 +136,6 @@ const PreviewAndSummary = (props) => {
 
   return (
     <Card>
-      <CardHeader>Preview And Summary</CardHeader>
       <CardBody>
         <Row>
           <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">

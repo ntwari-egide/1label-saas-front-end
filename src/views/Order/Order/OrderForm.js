@@ -16,6 +16,7 @@ import {
 import { X, Plus } from "react-feather"
 import Footer from "../../CommonFooter"
 import Flatpickr from "react-flatpickr"
+import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 let dummyOptions = []
@@ -26,6 +27,7 @@ for (let i = 0; i < 300; i++) {
 let globItemInfoData = {}
 
 const OrderForm = (props) => {
+  const { t } = useTranslation()
   // states for Collapse component
   const [itemInfoCollapse, setItemInfoCollapse] = useState(true)
   const [careContentCollapse, setCareContentCollapse] = useState(true)
@@ -307,12 +309,12 @@ const OrderForm = (props) => {
     <Card>
       <CardHeader>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          <Label>Customer Order Reference</Label>
+          <Label>{t("Customer Order Reference")}</Label>
           <span className="text-danger">*</span>
           <Input style={{ margin: "5px" }} />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          <Label>Expected Delivery Date</Label>
+          <Label>{t("Expected Delivery Date")}</Label>
           <span className="text-danger">*</span>
           <Flatpickr
             className="form-control"
@@ -325,7 +327,7 @@ const OrderForm = (props) => {
           />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          <Label>Projection Location</Label>
+          <Label>{t("Projection Location")}</Label>
           <span className="text-danger">*</span>
           <div style={{ margin: "5px" }}>
             <Select
@@ -345,7 +347,7 @@ const OrderForm = (props) => {
                 onClick={() => setItemInfoCollapse(!itemInfoCollapse)}
               >
                 <div>
-                  <h4 className="text-primary">Item Info</h4>
+                  <h4 className="text-primary">{t("Item Info")}</h4>
                 </div>
               </CardHeader>
               <Collapse isOpen={itemInfoCollapse}>
@@ -366,7 +368,7 @@ const OrderForm = (props) => {
                 onClick={() => setCareContentCollapse(!careContentCollapse)}
               >
                 <div>
-                  <h4 className="text-primary">Care And Content</h4>
+                  <h4 className="text-primary">{t("Care And Content")}</h4>
                 </div>
               </CardHeader>
               <Collapse isOpen={careContentCollapse}>
@@ -393,7 +395,7 @@ const OrderForm = (props) => {
                   </Row>
                   <Card>
                     <CardHeader>
-                      <h5>Fibre Instructions</h5>
+                      <h5>{t("Fibre Instructions")}</h5>
                     </CardHeader>
                     <CardBody>
                       {fibreInstructionData.map((rec, index) => (
@@ -514,7 +516,7 @@ const OrderForm = (props) => {
                   </Row>
                   <Card>
                     <CardHeader>
-                      <h5>Care</h5>
+                      <h5>{t("Care")}</h5>
                     </CardHeader>
                     <CardBody>
                       <Row>
@@ -590,7 +592,7 @@ const OrderForm = (props) => {
                 onClick={() => setWashCareCollapse(!washCareCollapse)}
               >
                 <div>
-                  <h4 className="text-primary">Wash Care Symbol</h4>
+                  <h4 className="text-primary">{t("Wash Care Symbol")} </h4>
                 </div>
               </CardHeader>
               <Collapse isOpen={washCareCollapse}>

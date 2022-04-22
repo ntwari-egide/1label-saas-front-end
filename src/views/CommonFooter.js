@@ -1,7 +1,9 @@
 import { Button, Row, Col } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
+import { useTranslation } from "react-i18next"
 
 const Footer = (props) => {
+  const { t } = useTranslation()
   return (
     <Row>
       <Col>
@@ -18,7 +20,7 @@ const Footer = (props) => {
             <div>
               <ArrowLeft size={15} />
             </div>
-            <div style={{ marginTop: "2px" }}>{"Previous  "}</div>
+            <div style={{ marginTop: "2px" }}>{t("Previous")}</div>
           </div>
         </Button>
       </Col>
@@ -34,7 +36,7 @@ const Footer = (props) => {
             disabled={props.currentStep === props.lastStep}
           >
             <div style={{ display: "flex" }}>
-              <div style={{ marginTop: "2px" }}>{"Next  "}</div>
+              <div style={{ marginTop: "2px" }}>{t("Next")}</div>
               <div>
                 <ArrowRight size={15} />
               </div>

@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react"
 import { Check, FileMinus } from "react-feather"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
+import { useTranslation } from "react-i18next"
 
 const Stepper = (props) => {
+  const { t } = useTranslation()
   return (
     <div style={{ paddingBottom: "10px" }}>
       <Breadcrumb>
@@ -34,7 +36,7 @@ const Stepper = (props) => {
                       : "stepper-pending-text"
                   }
                 >
-                  {item}
+                  {t(`${item}`)}
                 </h5>
               </div>
             </div>

@@ -12,34 +12,12 @@ import { ArrowRight, ArrowLeft, Users } from "react-feather"
 import DataTable from "react-data-table-component"
 import Footer from "../../CommonFooter"
 import Radio from "@components/Radio/Radio"
+import { useTranslation } from "react-i18next"
 const visaMasterCard =
   require("@src/assets/images/logo/visa-mastercard-logo.png").default
 const stripe = require("@src/assets/images/logo/stripe-logo-blue.png").default
 const alipay = require("@src/assets/images/logo/alipay-logo.png").default
 const wechat = require("@src/assets/images/logo/wechat-logo.png").default
-
-const orderListCol = [
-  {
-    name: "ITEM CODE",
-    selector: "item_code",
-    sortable: true
-  },
-  {
-    name: "UNIT PRICE",
-    selector: "unit_price",
-    sortable: true
-  },
-  {
-    name: "OTY",
-    selector: "quantity",
-    sortable: true
-  },
-  {
-    name: "TOTAL",
-    selector: "total",
-    sortable: true
-  }
-]
 
 const dummyData = [
   {
@@ -63,6 +41,30 @@ const dummyData = [
 ]
 
 const Payment = (props) => {
+  const { t } = useTranslation()
+  const orderListCol = [
+    {
+      name: t("ITEM CODE"),
+      selector: "item_code",
+      sortable: true
+    },
+    {
+      name: t("UNIT PRICE"),
+      selector: "unit_price",
+      sortable: true
+    },
+    {
+      name: t("QTY"),
+      selector: "quantity",
+      sortable: true
+    },
+    {
+      name: t("TOTAL"),
+      selector: "total",
+      sortable: true
+    }
+  ]
+
   return (
     <Card>
       <CardBody>
@@ -71,9 +73,9 @@ const Payment = (props) => {
             <Card>
               <CardHeader>
                 <Col xs="10" sm="10" md="10" lg="11" xl="11">
-                  <h4>Payment Options</h4>
+                  <h4>{t("Payment Options")}</h4>
                   <p className="text-muted">
-                    Be sure to click on correct payment option
+                    {t("Be sure to click on correct payment option")}
                   </p>
                 </Col>
                 <Col xs="2" sm="2" md="2" lg="1" xl="1">
@@ -96,9 +98,9 @@ const Payment = (props) => {
                   </Col>
                   <Col xs="4" sm="4" md="2" lg="2" xl="2">
                     <h4> Invoice #3492</h4>
-                    <h6> Date Issued: </h6>
+                    <h6> {t("Date Issued")}: </h6>
                     <h6> 31/10/2021</h6>
-                    <h6> Due Date:</h6>
+                    <h6> {t("Due Date")}:</h6>
                     <h6> 31/10/2021</h6>
                   </Col>
                 </Row>
@@ -118,7 +120,7 @@ const Payment = (props) => {
                   >
                     <Row>
                       <Col>
-                        <h5>Invoice Detail:</h5>
+                        <h5>{t("Invoice Detail")}:</h5>
                       </Col>
                     </Row>
                     <Row style={{ marginBotom: "2px" }}>
@@ -147,7 +149,7 @@ const Payment = (props) => {
                   >
                     <Row>
                       <Col>
-                        <h5>Delivery Detail:</h5>
+                        <h5>{t("Delivery Detail")}:</h5>
                       </Col>
                     </Row>
                     <Row style={{ marginBotom: "2px" }}>
@@ -178,7 +180,7 @@ const Payment = (props) => {
                   <Col xs="12" sm="12" md="6" lg="4" xl="4">
                     <Row>
                       <Col>
-                        <h5>Payment Details:</h5>
+                        <h5>{t("Payment Details")}:</h5>
                       </Col>
                     </Row>
                     <Row style={{ marginBotom: "2px" }}>
@@ -210,20 +212,20 @@ const Payment = (props) => {
                 </Row>
                 <Row style={{ marginTop: "10px" }}>
                   <Col>
-                    <p>Sales Person: Alfie Solomons</p>
+                    <p>{t("Sales Person")}: Alfie Solomons</p>
                   </Col>
                   <Col>
                     <div style={{ float: "right", marginRight: "10%" }}>
                       <Row>
-                        <Col style={{ minWidth: "95px" }}>Subtotal:</Col>
+                        <Col style={{ minWidth: "95px" }}>{t("Subtotal")}:</Col>
                         <Col> $3.00</Col>
                       </Row>
                       <Row>
-                        <Col style={{ minWidth: "95px" }}>Tax:</Col>
+                        <Col style={{ minWidth: "95px" }}>{t("Tax")}:</Col>
                         <Col> 21%</Col>
                       </Row>
                       <Row>
-                        <Col style={{ minWidth: "95px" }}>Total:</Col>
+                        <Col style={{ minWidth: "95px" }}>{t("Total")}:</Col>
                         <Col> $15.73</Col>
                       </Row>
                     </div>
@@ -231,9 +233,9 @@ const Payment = (props) => {
                 </Row>
               </CardBody>
               <CardFooter>
-                Note: It was a pleasure working with you and your team. We hope
-                you will keep us in mind for future freelance projects. Thank
-                You!
+                {t(
+                  "Note: It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank You!"
+                )}
               </CardFooter>
             </Card>
           </Col>
@@ -244,22 +246,22 @@ const Payment = (props) => {
               <CardHeader>
                 <div>
                   <div>
-                    <h4>Payment Options</h4>
+                    <h4>{t("Payment Options")}</h4>
                   </div>
                   <div>
                     <p className="text-muted">
-                      Be sure to click on correct payment option
+                      {t("Be sure to click on correct payment option")}
                     </p>
                   </div>
                 </div>
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col>Invoice No:</Col>
+                  <Col>{t("Invoice No")}:</Col>
                   <Col>#3492</Col>
                 </Row>
                 <Row>
-                  <Col>Total Amount:</Col>
+                  <Col>{t("Total Amount")}:</Col>
                   <Col>15.73</Col>
                 </Row>
                 <Row
@@ -321,11 +323,15 @@ const Payment = (props) => {
                     </Row>
                     <Row style={{ marginTop: "20px" }}>
                       <Radio name="paymentMethod" />
-                      <div style={{ marginTop: "2px" }}>Monthly Payment</div>
+                      <div style={{ marginTop: "2px" }}>
+                        {t("Monthly Payment")}
+                      </div>
                     </Row>
                     <Row style={{ marginTop: "20px" }}>
                       <Radio name="paymentMethod" />
-                      <div style={{ marginTop: "2px" }}>Balance Deduction</div>
+                      <div style={{ marginTop: "2px" }}>
+                        {t("Balance Deduction")}
+                      </div>
                     </Row>
                   </Col>
                 </Row>

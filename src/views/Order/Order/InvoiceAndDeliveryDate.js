@@ -10,10 +10,11 @@ import {
   Col,
   Button
 } from "reactstrap"
-import { ArrowRight, ArrowLeft } from "react-feather"
 import Footer from "../../CommonFooter"
+import { useTranslation } from "react-i18next"
 
 const InvoiceAndDelivery = (props) => {
+  const { t } = useTranslation()
   return (
     <Card>
       <CardBody>
@@ -23,56 +24,59 @@ const InvoiceAndDelivery = (props) => {
               <CardBody>
                 <Row>
                   <Col>
-                    <h4>Add New Invoice Address</h4>
+                    <h4>{t("Add New Invoice Address")}</h4>
                     <p className="text-muted">
-                      Be sure to check "Deliver to this address" when you have
-                      finished
+                      {t(
+                        'Be sure to check "Deliver to this address" when you have finished'
+                      )}
                     </p>
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Full Name</Label>
+                    <Label>{t("Full Name")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Mobile Number</Label>
-                    <Input style={{ marginBottom: "15px" }} />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Flat, House No</Label>
-                    <Input style={{ marginBottom: "15px" }} />
-                  </Col>
-                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Landmark e.g. near apollo hospital</Label>
+                    <Label>{t("Mobile Number")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Town/City</Label>
+                    <Label>{t("Flat, House No")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Pincode</Label>
+                    <Label>{t("Landmark e.g. near apollo hospital")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>State</Label>
+                    <Label>{t("Town/City")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Address Type</Label>
+                    <Label>{t("Pincode")}</Label>
+                    <Input style={{ marginBottom: "15px" }} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
+                    <Label>{t("State")}</Label>
+                    <Input style={{ marginBottom: "15px" }} />
+                  </Col>
+                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
+                    <Label>{t("Address Type")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                 </Row>
                 <Row>
                   <Col>
-                    <Button color="primary">Save and Deliver Here</Button>
+                    <Button color="primary">
+                      {t("Save and Deliver Here")}
+                    </Button>
                   </Col>
                 </Row>
               </CardBody>
@@ -91,7 +95,7 @@ const InvoiceAndDelivery = (props) => {
                   <p>(86) 0755-8215 5991</p>
                   <div>
                     <Button style={{ width: "100%" }} color="primary">
-                      Invoice This Address
+                      {t("Invoice This Address")}
                     </Button>
                   </div>
                 </div>
@@ -106,56 +110,59 @@ const InvoiceAndDelivery = (props) => {
               <CardBody>
                 <Row>
                   <Col>
-                    <h4>Add New Delivery Address</h4>
+                    <h4>{t("Add New Delivery Address")}</h4>
                     <p className="text-muted">
-                      Be sure to check "Deliver to this address" when you have
-                      finished
+                      {t(
+                        'Be sure to check "Deliver to this address" when you have finished'
+                      )}
                     </p>
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Full Name</Label>
+                    <Label>{t("Full Name")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Mobile Number</Label>
-                    <Input style={{ marginBottom: "15px" }} />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Flat, House No</Label>
-                    <Input style={{ marginBottom: "15px" }} />
-                  </Col>
-                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Landmark e.g. near apollo hospital</Label>
+                    <Label>{t("Mobile Number")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Town/City</Label>
+                    <Label>{t("Flat, House No")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Pincode</Label>
+                    <Label>{t("Landmark e.g. near apollo hospital")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>State</Label>
+                    <Label>{t("Town/City")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>Address Type</Label>
+                    <Label>{t("Pincode")}</Label>
+                    <Input style={{ marginBottom: "15px" }} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
+                    <Label>{t("State")}</Label>
+                    <Input style={{ marginBottom: "15px" }} />
+                  </Col>
+                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
+                    <Label>{t("Address Type")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                 </Row>
                 <Row>
                   <Col>
-                    <Button color="primary">Save and Deliver Here</Button>
+                    <Button color="primary">
+                      {t("Save and Deliver Here")}
+                    </Button>
                   </Col>
                 </Row>
               </CardBody>
@@ -174,7 +181,7 @@ const InvoiceAndDelivery = (props) => {
                   <p>(86) 0755-8215 5991</p>
                   <div>
                     <Button style={{ width: "100%" }} color="primary">
-                      Delivery To This Address
+                      {t("Delivery To This Address")}
                     </Button>
                   </div>
                 </div>

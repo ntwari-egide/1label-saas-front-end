@@ -12,43 +12,45 @@ import {
 import { ArrowRight, ArrowLeft, Printer } from "react-feather"
 import DataTable from "react-data-table-component"
 import Footer from "../../CommonFooter"
+import { useTranslation } from "react-i18next"
 
 const DirectPrint = (props) => {
+  const { t } = useTranslation()
   const orderListCol = [
     {
-      name: "ITEM REF.",
+      name: t("ITEM REF."),
       selector: "item_ref",
       sortable: true,
       cell: (row) => <p>{row.item_ref}</p>,
       minWidth: "250px"
     },
     {
-      name: "SIZE",
+      name: t("SIZE"),
       selector: "size",
       sortable: true
     },
     {
-      name: "SIZE 1",
+      name: t("SIZE 1"),
       selector: "size1",
       sortable: true
     },
     {
-      name: "SIZE 2",
+      name: t("SIZE 2"),
       selector: "size2",
       sortable: true
     },
     {
-      name: "SIZE 3",
+      name: t("SIZE 3"),
       selector: "size3",
       sortable: true
     },
     {
-      name: "SIZE 4",
+      name: t("SIZE 4"),
       selector: "size4",
       sortable: true
     },
     {
-      name: "TEST PRINT",
+      name: t("TEST PRINT"),
       button: true,
       cell: (row) => (
         <Button style={{ padding: "5px" }} color="primary">
@@ -57,32 +59,32 @@ const DirectPrint = (props) => {
       )
     },
     {
-      name: "ORDER QTY",
+      name: t("ORDER QTY"),
       selector: "order_qty",
       Sortable: true
     },
     {
-      name: "WASTAGE ALLOWANCE",
+      name: t("WASTAGE ALLOWANCE"),
       selector: "wastage_allowance",
       Sortable: true
     },
     {
-      name: "PRINTED QTY",
+      name: t("PRINTED QTY"),
       selector: "printed_quantity",
       Sortable: true
     },
     {
-      name: "START SEQ NO.",
+      name: t("START SEQ NO."),
       cell: (row) => (
         <Input value={row.start_seq_no} onChange={(e) => console.log(row)} />
       )
     },
     {
-      name: "END SEQ NO.",
+      name: t("END SEQ NO."),
       cell: (row) => <Input value={row.end_seq_no} />
     },
     {
-      name: "PRINT",
+      name: t("PRINT"),
       cell: (row) => (
         <Button style={{ padding: "5px" }} color="primary">
           <Printer />
@@ -122,7 +124,6 @@ const DirectPrint = (props) => {
 
   return (
     <Card>
-      <CardHeader>Direct Print</CardHeader>
       <CardBody>
         <Card>
           <CardBody>

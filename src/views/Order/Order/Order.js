@@ -9,6 +9,7 @@ import DirectPrint from "./DirectPrint"
 import { Link } from "react-router-dom"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { XMLParser } from "fast-xml-parser"
+import { useTranslation } from "react-i18next"
 
 const stepperMenu = [
   "Select Item",
@@ -20,6 +21,7 @@ const stepperMenu = [
 ]
 
 const Order = () => {
+  const { t } = useTranslation()
   // APP states
   const [currentStep, setCurrentStep] = useState(0)
   const [lastStep] = useState(stepperMenu.length - 1)
@@ -50,7 +52,7 @@ const Order = () => {
   return (
     <div>
       <div style={{ display: "flex" }}>
-        <h2>Order</h2>
+        <h2>{t("Order")}</h2>
         <div
           style={{
             borderRight: "thin solid",
@@ -60,10 +62,10 @@ const Order = () => {
         ></div>
         <Breadcrumb>
           <BreadcrumbItem>
-            <Link to="/home">Home</Link>
+            <Link to="/home">{t("Home")}</Link>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <Link to="/Order">Order</Link>
+            <Link to="/Order">{t("Order")}</Link>
           </BreadcrumbItem>
         </Breadcrumb>
       </div>

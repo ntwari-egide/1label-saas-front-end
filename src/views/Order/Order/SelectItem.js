@@ -15,8 +15,10 @@ import {
   Button
 } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
+import { useTranslation } from "react-i18next"
 
 const SelectItem = (props) => {
+  const { t } = useTranslation()
   const [brandOptions, setBrandOptions] = useState([])
   const [itemTypeOptions, setItemTypeOptions] = useState([])
   const [item, setItem] = useState(null)
@@ -99,7 +101,7 @@ const SelectItem = (props) => {
           <Select
             className="React"
             classNamePrefix="select"
-            placeholder="BRAND"
+            placeholder={t("BRAND")}
             value={props.brand}
             options={brandOptions}
             onChange={(e) => {
@@ -110,13 +112,13 @@ const SelectItem = (props) => {
           />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Input placeholder="ITEM" />
+          <Input placeholder={t("ITEM")} />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
           <Select
             className="React"
             classNamePrefix="select"
-            placeholder="ITEM TYPE"
+            placeholder={t("ITEM TYPE")}
             value={props.itemType}
             options={itemTypeOptions}
             onChange={(e) => {
