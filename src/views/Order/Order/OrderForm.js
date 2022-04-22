@@ -295,6 +295,10 @@ const OrderForm = (props) => {
   }
 
   useEffect(() => {
+    assignStateToItemInfo(itemInfoFields)
+  }, [itemInfoFields])
+
+  useEffect(() => {
     fetchSizeTableList()
     fetchItemInfoData()
     fetchSizeTableDetails()

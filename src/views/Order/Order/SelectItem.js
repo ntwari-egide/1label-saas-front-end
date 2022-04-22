@@ -91,7 +91,7 @@ const SelectItem = (props) => {
   useEffect(() => {
     fetchBrandList()
     fetchItemTypeOptions()
-    fetchItemList()
+    fetchItemList(props.brand, props.item_type)
   }, [])
 
   return (
@@ -102,7 +102,7 @@ const SelectItem = (props) => {
             className="React"
             classNamePrefix="select"
             placeholder={t("BRAND")}
-            value={props.brand}
+            value={brandOptions.filter((br) => br.value === props.brand.value)}
             options={brandOptions}
             onChange={(e) => {
               props.setBrand(e)
@@ -196,6 +196,7 @@ const SelectItem = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
+          selectedItems={props.selectedItems}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}
