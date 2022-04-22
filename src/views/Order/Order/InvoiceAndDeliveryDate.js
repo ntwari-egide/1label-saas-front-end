@@ -1,4 +1,5 @@
 import { useSate, useEffect } from "react"
+import axios from "@axios"
 import {
   Label,
   Card,
@@ -15,6 +16,44 @@ import { useTranslation } from "react-i18next"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
+
+  //API Services
+  const fetchUserInfo = () => {
+    const body = {
+      order_user: "innoa"
+    }
+    axios.post("/Client/GetClientDetail", body).then((res) => {})
+  }
+
+  const fetchClientAddressList = () => {
+    const addressTypes = ["invoice", "delivery", "contact"]
+    addressTypes.map((addType) => {
+      const body = {
+        order_user: "innoa",
+        address_type: addType
+      }
+      axios.post("/Client/GetClientAddressList", body).then((res) => {})
+    })
+  }
+
+  const fetchAddressDetail = () => {
+    const addressTypes = ["invoice", "delivery", "contact"]
+    addressTypes.map((addType) => {
+      const body = {
+        order_user: "innoa",
+        address_type: addType,
+        address_id: "000024663"
+      }
+      axios.post("/Client/GetClientAddressDetail", body).then((res) => {})
+    })
+  }
+
+  useEffect(() => {
+    fetchUserInfo()
+    fetchClientAddressList()
+    fetchAddressDetail()
+  }, [])
+
   return (
     <Card>
       <CardBody>
