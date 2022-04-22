@@ -19,11 +19,6 @@ import Flatpickr from "react-flatpickr"
 import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 
-let dummyOptions = []
-for (let i = 0; i < 300; i++) {
-  dummyOptions.push({ label: `label${i}`, value: `value${i}` })
-}
-
 let globItemInfoData = {}
 
 const OrderForm = (props) => {
@@ -38,6 +33,7 @@ const OrderForm = (props) => {
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
   const [careData, setCareData] = useState([{}])
   const [itemInfoOptions, setItemInfoOptions] = useState({})
+  const [minExpectedDeliveryDate, setMinExpectedDeliveryDate] = useState("")
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
@@ -65,6 +61,18 @@ const OrderForm = (props) => {
         setItemInfoFields(res.data)
       }
     })
+  }
+
+  const fetchMinDeliveryDate = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      erp_id: 8,
+      item_key: props.selectedItems ? props.selectedItems : null
+    }
+
+    axios
+      .post("/Order/GetMinExpectedDeliveryDate", body)
+      .then((res) => setMinExpectedDeliveryDate(res.data.min_delivery_date))
   }
 
   const fetchSizeTableList = () => {
@@ -295,15 +303,8 @@ const OrderForm = (props) => {
     fetchIconSequenceList()
     fetchContentTranslationList()
     fetchProductLocationList()
+    fetchMinDeliveryDate()
   }, [])
-
-  useEffect(() => {
-    assignStateToItemInfo(itemInfoFields)
-  }, [itemInfoFields])
-
-  useEffect(() => {
-    console.log("itemInfoOptions", itemInfoOptions)
-  }, [itemInfoOptions])
 
   return (
     <Card>
@@ -320,6 +321,9 @@ const OrderForm = (props) => {
             className="form-control"
             value={new Date()}
             style={{ margin: "5px" }}
+            options={{
+              minDate: minExpectedDeliveryDate
+            }}
             onChange={(e) => {
               console.log(e)
             }}
