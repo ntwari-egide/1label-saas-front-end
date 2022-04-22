@@ -29,10 +29,6 @@ const Footer = (props) => {
           <Button
             color="primary"
             onClick={() => {
-              console.log("items", props.selectedItems)
-              if (!props.selectedItems) {
-                return
-              }
               if (props.selectedItems && props.selectedItems.length > 0) {
                 if (props.currentStep < props.lastStep) {
                   props.setCurrentStep(props.currentStep + 1)
