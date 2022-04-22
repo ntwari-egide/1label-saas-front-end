@@ -12,7 +12,13 @@ const Stepper = (props) => {
           <BreadcrumbItem>
             <div
               className="custom-stepper"
-              onClick={() => props.setCurrentStep(index)}
+              onClick={() => {
+                if (props.selectedItems && props.selectedItems.length > 0) {
+                  props.setCurrentStep(index)
+                } else {
+                  alert("Please select items to proceed")
+                }
+              }}
             >
               <div
                 id="selectItemIcon"

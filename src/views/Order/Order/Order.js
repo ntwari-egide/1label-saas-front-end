@@ -70,6 +70,7 @@ const Order = () => {
         </Breadcrumb>
       </div>
       <Stepper
+        selectedItems={selectedItems}
         stepperMenu={stepperMenu}
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
