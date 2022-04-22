@@ -15,6 +15,8 @@ import {
 } from "reactstrap"
 import { X, Plus } from "react-feather"
 import Footer from "../../CommonFooter"
+import Flatpickr from "react-flatpickr"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 let dummyOptions = []
 for (let i = 0; i < 300; i++) {
@@ -312,17 +314,26 @@ const OrderForm = (props) => {
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           <Label>Expected Delivery Date</Label>
           <span className="text-danger">*</span>
-          <Input style={{ margin: "5px" }} />
+          <Flatpickr
+            className="form-control"
+            value={new Date()}
+            style={{ margin: "5px" }}
+            onChange={(e) => {
+              console.log(e)
+            }}
+            disabled={false}
+          />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           <Label>Projection Location</Label>
           <span className="text-danger">*</span>
-          <Select
-            className="React"
-            classNamePrefix="select"
-            options={projectionLocationOptions}
-            style={{ margin: "5px" }}
-          />
+          <div style={{ margin: "5px" }}>
+            <Select
+              className="React"
+              classNamePrefix="select"
+              options={projectionLocationOptions}
+            />
+          </div>
         </Col>
       </CardHeader>
       <CardBody>
