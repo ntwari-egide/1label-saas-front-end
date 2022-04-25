@@ -102,7 +102,11 @@ const SelectItem = (props) => {
             className="React"
             classNamePrefix="select"
             placeholder={t("BRAND")}
-            value={brandOptions.filter((br) => br.value === props.brand.value)}
+            value={
+              props.brand
+                ? brandOptions.filter((br) => br.value === props.brand.value)
+                : ""
+            }
             options={brandOptions}
             onChange={(e) => {
               props.setBrand(e)
