@@ -474,7 +474,7 @@ const OrderForm = (props) => {
                               classNamePrefix="select"
                               options={componentOptions}
                               value={componentOptions.filter(
-                                (opt) => opt.value === rec.component
+                                (opt) => opt.value === rec.part_key
                               )}
                               onChange={(e) => {
                                 const tempData = fibreInstructionData
@@ -493,7 +493,7 @@ const OrderForm = (props) => {
                               classNamePrefix="select"
                               options={fabricOptions}
                               value={fabricOptions.filter(
-                                (opt) => opt.value === rec.fabric
+                                (opt) => opt.value === rec.cont_key
                               )}
                               onChange={(e) => {
                                 const tempData = fibreInstructionData
@@ -605,7 +605,7 @@ const OrderForm = (props) => {
                               classNamePrefix="select"
                               options={additionalCareOptions}
                               value={additionalCareOptions.filter(
-                                (opt) => opt.value === rec.addCare
+                                (opt) => opt.value === rec.care_key
                               )}
                               onChange={(e) => {
                                 const tempData = careData
