@@ -19,8 +19,6 @@ import Flatpickr from "react-flatpickr"
 import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 
-let globItemInfoData = {}
-
 const OrderForm = (props) => {
   const { t } = useTranslation()
   // states for Collapse component
@@ -34,12 +32,16 @@ const OrderForm = (props) => {
   const [careData, setCareData] = useState([{}])
   const [itemInfoOptions, setItemInfoOptions] = useState({})
   const [minExpectedDeliveryDate, setMinExpectedDeliveryDate] = useState("")
+  const [iconSequence, setIconSequence] = useState([])
+  const [washCareData, setWashCareData] = useState([])
+  const [defaultContentData, setDefaultContentData] = useState({})
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
   const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
   const [contentNumberOptions, setContentNumberOptions] = useState([])
+  const [washCareOptions, setWashCareOptions] = useState({})
 
   // API services
   const fetchItemInfoData = () => {
@@ -125,29 +127,83 @@ const OrderForm = (props) => {
     axios
       .post("/ContentNumber/GetContentNumberList", body)
       .then((res) => {
-        setContentNumberOptions(
-          res.data.map((opt) => ({
-            value: opt.guid_key,
-            label: opt.style_number
-          }))
-        )
+        if (res.status === 200) {
+          setContentNumberOptions(
+            res.data.map((opt) => ({
+              value: opt.guid_key,
+              label: opt.style_number
+            }))
+          )
+        }
       })
       .catch((err) => console.log(err))
   }
 
   const fetchIconSequenceList = () => {
-    const body = {
-      brand_key: props.brand ? props.brand.value : "",
-      icon_group: "A",
-      icon_key: ""
-    }
+    const iconGroups = ["A", "B"]
+    let tempIconSeq = []
+    let tempIconTranslation = {}
+    iconGroups.map((iconGroup) => {
+      const body = {
+        brand_key: props.brand ? props.brand.value : "",
+        icon_group: iconGroup,
+        icon_key: ""
+      }
 
-    axios
-      .post("/ContentNumber/GetIconSequence", body)
-      .then((res) => {
-        // console.log(res)
+      axios
+        .post("/ContentNumber/GetIconSequence", body)
+        .then((res) => {
+          if (res.status === 200) {
+            // data not garunteed for B group
+            if (res?.data?.length > 0) {
+              console.log("res", res)
+              fetchIconTranslationList(res.data, tempIconTranslation, iconGroup)
+              tempIconSeq = [...tempIconSeq, ...res.data]
+              setIconSequence([...tempIconSeq])
+            }
+          }
+        })
+        .catch((err) => console.log(err))
+    })
+  }
+
+  const fetchIconTranslationList = (
+    iconSeq,
+    tempIconTranslation,
+    iconGroup
+  ) => {
+    if (iconSeq && iconSeq.length > 0) {
+      iconSeq.map((icon) => {
+        const body = {
+          brand_key: props.brand ? props.brand.value : "",
+          page_type: "icon",
+          query_str: "",
+          icon_type_key: icon.icon_type_id,
+          product_line_key: ""
+        }
+        axios
+          .post("/Translation/GetTranslationList", body)
+          .then((res) => {
+            if (res.status === 200) {
+              tempIconTranslation[icon.sys_icon_name] = res.data.map((opt) => ({
+                value: opt.guid_key,
+                label: opt.gb_translation,
+                icon: (
+                  <img
+                    src={
+                      "https://portalpredeploy.1-label.com/upload/layout_file/icon/Icon_A_9f215010-c75f-4257-b27f-7cbf74740274.jpg"
+                    }
+                  />
+                ),
+                iconGroup,
+                iconTypeId: icon.icon_type_id
+              }))
+              setWashCareOptions({ ...washCareOptions, ...tempIconTranslation })
+            }
+          })
+          .catch((err) => console.log(err))
       })
-      .catch((err) => console.log(err))
+    }
   }
 
   const fetchContentTranslationList = () => {
@@ -170,12 +226,15 @@ const OrderForm = (props) => {
       axios
         .post("/Translation/GetTranslationList", body)
         .then((res) => {
-          pageTypesDataDict[pageType](
-            res.data.map((opt) => ({
-              value: opt.guid_key,
-              label: opt.gb_translation
-            }))
-          )
+          if (res.status === 200) {
+            pageTypesDataDict[pageType](
+              res.data.map((opt) => ({
+                value: opt?.guid_key,
+                label: opt?.gb_translation,
+                percent: opt?.ist_percentage
+              }))
+            )
+          }
         })
         .catch((err) => console.log(err))
     })
@@ -191,9 +250,11 @@ const OrderForm = (props) => {
     axios
       .post("/Order/GetLocationList", body)
       .then((res) => {
-        setProjectionLocationOptions(
-          res.data.map((loc) => ({ value: loc.erp_id, label: loc.erp_name }))
-        )
+        if (res.status === 200) {
+          setProjectionLocationOptions(
+            res.data.map((loc) => ({ value: loc.erp_id, label: loc.erp_name }))
+          )
+        }
       })
       .catch((err) => console.log(err))
   }
@@ -254,9 +315,9 @@ const OrderForm = (props) => {
   }
 
   const assignStateToItemInfo = (fields) => {
+    let tempItemInfoData = {}
     if (fields.length > 0) {
       fields.map((field) => {
-        const tempState = {}
         fetch(field?.effect?.fetch?.action, {
           method: field?.effect?.fetch?.method,
           headers: {
@@ -269,25 +330,11 @@ const OrderForm = (props) => {
         })
           .then((res) => res.json())
           .then((data) => {
-            if (data[0].field_value) {
-              tempState[field.title] = data.map((opt) => ({
-                value: opt.field_value,
-                label: opt.field_value
-              }))
-              globItemInfoData = { ...globItemInfoData, ...tempState }
-              setItemInfoOptions({ ...globItemInfoData })
-            } else if (data[0].guid_key) {
-              tempState[field.title] = data.map((opt) => ({
-                value: opt.guid_key,
-                label: opt.style_number
-                  ? opt.style_number
-                  : opt.gb_translation
-                  ? opt.gb_translation
-                  : null
-              }))
-              globItemInfoData = { ...globItemInfoData, ...tempState }
-              setItemInfoOptions({ ...globItemInfoData })
-            }
+            tempItemInfoData[field.title] = data.map((opt) => ({
+              value: opt[field?.effect?.fetch?.json_value_key],
+              label: opt[field?.effect?.fetch?.json_label_key]
+            }))
+            setItemInfoOptions({ ...tempItemInfoData })
           })
           .catch((err) => console.log(err))
       })
@@ -295,8 +342,20 @@ const OrderForm = (props) => {
   }
 
   useEffect(() => {
+    console.log("washCareData", washCareData)
+  }, [washCareData])
+
+  useEffect(() => {
     assignStateToItemInfo(itemInfoFields)
   }, [itemInfoFields])
+
+  useEffect(() => {
+    console.log("fibreInstructionData", fibreInstructionData)
+  }, [fibreInstructionData])
+
+  useEffect(() => {
+    console.log("washCareOptions", washCareOptions)
+  }, [washCareOptions])
 
   useEffect(() => {
     fetchSizeTableList()
@@ -421,7 +480,7 @@ const OrderForm = (props) => {
                                 const tempData = fibreInstructionData
                                 tempData[index] = {
                                   ...fibreInstructionData[index],
-                                  component: e.value
+                                  part_key: e.value
                                 }
                                 setFibreInstructionData([...tempData])
                               }}
@@ -440,7 +499,7 @@ const OrderForm = (props) => {
                                 const tempData = fibreInstructionData
                                 tempData[index] = {
                                   ...fibreInstructionData[index],
-                                  fabric: e.value
+                                  cont_key: e.value
                                 }
                                 setFibreInstructionData([...tempData])
                               }}
@@ -448,7 +507,17 @@ const OrderForm = (props) => {
                           </Col>
                           <Col xs="12" sm="12" md="2" lg="2" xl="2">
                             <Label>%</Label>
-                            <Input />
+                            <Input
+                              value={fibreInstructionData[index].percentage}
+                              onChange={(e) => {
+                                const tempData = fibreInstructionData
+                                tempData[index] = {
+                                  ...fibreInstructionData[index],
+                                  percentage: e.target.value
+                                }
+                                setFibreInstructionData([...tempData])
+                              }}
+                            />
                           </Col>
                           <Col
                             xs="12"
@@ -463,13 +532,9 @@ const OrderForm = (props) => {
                               outline
                               className="btn btn-outline-danger"
                               onClick={() => {
-                                const tempFibreInstructions =
-                                  fibreInstructionData
-                                tempFibreInstructions.splice(index, 1)
-                                console.log(tempFibreInstructions)
-                                setFibreInstructionData([
-                                  ...tempFibreInstructions
-                                ])
+                                const tempData = fibreInstructionData
+                                tempData.splice(index, 1)
+                                setFibreInstructionData([...tempData])
                               }}
                             >
                               <div style={{ display: "flex" }}>
@@ -546,7 +611,7 @@ const OrderForm = (props) => {
                                 const tempData = careData
                                 careData[index] = {
                                   ...careData[index],
-                                  addCare: e.value
+                                  care_key: e.value
                                 }
                                 setCareData([...tempData])
                               }}
@@ -605,54 +670,39 @@ const OrderForm = (props) => {
               </CardHeader>
               <Collapse isOpen={washCareCollapse}>
                 <CardBody>
-                  <Row>
-                    <Col xs="12" s="12" md="2" lg="2" xl="2">
-                      <Label style={{ marginTop: "12px" }}>Wash:</Label>
-                    </Col>
-                    <Col xs="12" s="12" md="8" lg="8" xl="8">
-                      <Input />
-                    </Col>
-                  </Row>
-                  <Row style={{ marginTop: "10px" }}>
-                    <Col xs="12" s="12" md="2" lg="2" xl="2">
-                      <Label style={{ marginTop: "12px" }}>Bleach:</Label>
-                    </Col>
-                    <Col xs="12" s="12" md="8" lg="8" xl="8">
-                      <Input />
-                    </Col>
-                  </Row>
-                  <Row style={{ marginTop: "10px" }}>
-                    <Col xs="12" s="12" md="2" lg="2" xl="2">
-                      <Label style={{ marginTop: "12px" }}>Dry:</Label>
-                    </Col>
-                    <Col xs="12" s="12" md="8" lg="8" xl="8">
-                      <Input />
-                    </Col>
-                  </Row>
-                  <Row style={{ marginTop: "10px" }}>
-                    <Col xs="12" s="12" md="2" lg="2" xl="2">
-                      <Label style={{ marginTop: "12px" }}>Natural Dry:</Label>
-                    </Col>
-                    <Col xs="12" s="12" md="8" lg="8" xl="8">
-                      <Input />
-                    </Col>
-                  </Row>
-                  <Row style={{ marginTop: "10px" }}>
-                    <Col xs="12" s="12" md="2" lg="2" xl="2">
-                      <Label style={{ marginTop: "12px" }}>Iron:</Label>
-                    </Col>
-                    <Col xs="12" s="12" md="8" lg="8" xl="8">
-                      <Input />
-                    </Col>
-                  </Row>
-                  <Row style={{ marginTop: "10px" }}>
-                    <Col xs="12" s="12" md="2" lg="2" xl="2">
-                      <Label style={{ marginTop: "12px" }}>Dry Clean:</Label>
-                    </Col>
-                    <Col xs="12" s="12" md="8" lg="8" xl="8">
-                      <Input />
-                    </Col>
-                  </Row>
+                  {iconSequence.map((iconObj) => {
+                    return (
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" s="12" md="2" lg="2" xl="2">
+                          <Label style={{ marginTop: "12px" }}>
+                            {iconObj.sys_icon_name}
+                          </Label>
+                        </Col>
+                        <Col xs="12" s="12" md="8" lg="8" xl="8">
+                          <Select
+                            options={washCareOptions[iconObj?.sys_icon_name]}
+                            onChange={(e) => {
+                              const tempData = {}
+                              tempData[iconObj.sys_icon_name] = {
+                                icon_key: e.value,
+                                icon_type_id: e.iconTypeId,
+                                icon_group: e.iconGroup
+                              }
+                              setWashCareData({ ...washCareData, ...tempData })
+                            }}
+                            className="React"
+                            classNamePrefix="select"
+                            getOptionLabel={(e) => (
+                              <div>
+                                {e.icon}
+                                {e.label}
+                              </div>
+                            )}
+                          />
+                        </Col>
+                      </Row>
+                    )
+                  })}
                 </CardBody>
               </Collapse>
             </Card>
