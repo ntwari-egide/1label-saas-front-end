@@ -19,6 +19,7 @@ import Flatpickr from "react-flatpickr"
 import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 
+let timerId = null
 const OrderForm = (props) => {
   const { t } = useTranslation()
   // states for Collapse component
@@ -35,13 +36,27 @@ const OrderForm = (props) => {
   const [iconSequence, setIconSequence] = useState([])
   const [washCareData, setWashCareData] = useState([])
   const [defaultContentData, setDefaultContentData] = useState({})
+  const [contentNumberData, setContentNumberData] = useState([])
+  const [contentNumberSettings, setContentNumberSettings] = useState({})
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
   const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
-  const [contentNumberOptions, setContentNumberOptions] = useState([])
+  const [contentGroupOptions, setContentGroupOptions] = useState({})
   const [washCareOptions, setWashCareOptions] = useState({})
+
+  // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change
+  const debounceFun = () => {
+    if (timerId !== null) {
+      clearTimeout(timerId)
+    }
+
+    timerId = setTimeout(() => {
+      matchContentNumber()
+      timerId = null
+    }, 400)
+  }
 
   // API services
   const fetchItemInfoData = () => {
@@ -54,18 +69,22 @@ const OrderForm = (props) => {
   }
 
   const fetchItemInfoFields = () => {
+    // fetches dynamic fields under Item Info
     const body = {
       brand_key: props.brand.value,
       show_status: "Y"
     }
     axios.post("/Brand/GetDynamicFieldList", body).then((res) => {
       if (res.status === 200) {
+        // sets dynamic item info fields which will trigger assignStateToItemInfo()
+        // also is used to render fields
         setItemInfoFields(res.data)
       }
     })
   }
 
   const fetchMinDeliveryDate = () => {
+    // min delivery date for Expected Delivery Date field
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       erp_id: 8,
@@ -118,28 +137,124 @@ const OrderForm = (props) => {
       .then((err) => console.log(err))
   }
 
-  const fetchContentNumberList = () => {
+  const fetchContentNumberSettings = () => {
+    // fetches content model either of: "ABC" or "A/BC"
     const body = {
-      order_user: "innoa",
-      brand_key: props.brand?.value,
-      content_group: "A"
+      brand_key: props.brand ? props.brand.value : ""
     }
+
     axios
-      .post("/ContentNumber/GetContentNumberList", body)
+      .post("/Brand/GetContentNumberSetting", body)
       .then((res) => {
         if (res.status === 200) {
-          setContentNumberOptions(
-            res.data.map((opt) => ({
-              value: opt.guid_key,
-              label: opt.style_number
-            }))
-          )
+          setContentNumberSettings(res.data[0])
+          fetchContentNumberList(res.data[0].content_model.split("/")) // passes content_group as an array
         }
       })
       .catch((err) => console.log(err))
   }
 
+  const fetchContentNumberList = (contentGroup) => {
+    // fetches options for content and care select fields.
+    const tempData = {}
+    contentGroup.map((content_group) => {
+      const body = {
+        order_user: "innoa",
+        brand_key: props.brand?.value,
+        content_group
+      }
+      axios
+        .post("/ContentNumber/GetContentNumberList", body)
+        .then((res) => {
+          if (res.status === 200) {
+            tempData[content_group] = res.data.map((opt) => ({
+              value: opt.guid_key,
+              label: opt.style_number
+            }))
+            setContentGroupOptions({ ...tempData })
+          }
+        })
+        .catch((err) => console.log(err))
+    })
+  }
+
+  const fetchContentNumberDetail = (
+    content_number_key,
+    style_number,
+    group
+  ) => {
+    // fetches fibreInstructionData and careData for a selected content and care select fields respectively.
+    const body = {
+      order_user: "innoa",
+      content_number_key,
+      brand_key: props.brand ? props.brand.value : "",
+      style_number
+    }
+    axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
+      if (res.status === 200) {
+        if (group === "A") {
+          res?.data?.content
+            ? setFibreInstructionData(res?.data?.content)
+            : setFibreInstructionData([{}])
+        } else if (group === "BC") {
+          res?.data?.care ? setCareData(res?.data?.care) : setCareData([{}])
+          res?.data?.icon
+            ? setWashCareData(res?.data?.icon)
+            : setWashCareData([{}])
+        }
+      }
+    })
+  }
+
+  const fetchDefaultContentData = (contKey) => {
+    // fetches default Content Data as per option selected in fabric select field.
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      cont_key: contKey,
+      page_type: "content"
+    }
+
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("default content", res)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const matchContentNumber = () => {
+    // fetches content and care option value as per change in fibreInstructionData and careData
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      order_user: "innoa",
+      custom_number: "Test Number-jia",
+      content_group: "A",
+      content: fibreInstructionData.map((data, index) => ({
+        ...data,
+        seqno: (index + 1) * 10
+      })),
+      default_content: [],
+      care: careData.map((data, index) => ({
+        ...data,
+        seqno: (index + 1) * 10
+      })),
+      icon: Object.values(washCareData).map((obj, index) => ({
+        ...obj,
+        seqno: (index + 1) * 10
+      }))
+    }
+    console.log("match body", body)
+    axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
+      if (res.status === 200) {
+        console.log("match content", res)
+      }
+    })
+  }
+
   const fetchIconSequenceList = () => {
+    // fetched icon sequence list
     const iconGroups = ["A", "B"]
     let tempIconSeq = []
     let tempIconTranslation = {}
@@ -172,6 +287,7 @@ const OrderForm = (props) => {
     tempIconTranslation,
     iconGroup
   ) => {
+    // fetches options for fields in wash care symbol
     if (iconSeq && iconSeq.length > 0) {
       iconSeq.map((icon) => {
         const body = {
@@ -207,6 +323,7 @@ const OrderForm = (props) => {
   }
 
   const fetchContentTranslationList = () => {
+    // fetches options for below stated select fields.
     // page types: content, part, care, icon
     const pageTypesDataDict = {
       content: setFabricOptions,
@@ -241,6 +358,7 @@ const OrderForm = (props) => {
   }
 
   const fetchProductLocationList = () => {
+    // fetches options for projection location select field.
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       order_user: "innoa",
@@ -260,6 +378,7 @@ const OrderForm = (props) => {
   }
 
   const renderSwitch = (field) => {
+    // renders dynamic fields under Item Info
     switch (field.type) {
       case "select":
         return (
@@ -315,6 +434,7 @@ const OrderForm = (props) => {
   }
 
   const assignStateToItemInfo = (fields) => {
+    // assign state for options in select fields for dynamic fields of Item Info
     let tempItemInfoData = {}
     if (fields.length > 0) {
       fields.map((field) => {
@@ -341,28 +461,44 @@ const OrderForm = (props) => {
     }
   }
 
-  useEffect(() => {
-    console.log("washCareData", washCareData)
-  }, [washCareData])
+  // useEffect(() => {
+  //   console.log("washCareData", washCareData)
+  // }, [washCareData])
+  //
+  // useEffect(() => {
+  //   console.log("careData", careData)
+  // }, [careData])
+
+  // useEffect(() => {
+  //   console.log("additionalCareOptions", additionalCareOptions)
+  // }, [additionalCareOptions])
 
   useEffect(() => {
     assignStateToItemInfo(itemInfoFields)
   }, [itemInfoFields])
 
-  useEffect(() => {
-    console.log("fibreInstructionData", fibreInstructionData)
-  }, [fibreInstructionData])
+  // useEffect(() => {
+  //   console.log("contentGroupOptions", contentGroupOptions)
+  // }, [contentGroupOptions])
+  //
+  // useEffect(() => {
+  //   console.log("componentOptions", componentOptions)
+  // }, [componentOptions])
+  //
+  // useEffect(() => {
+  //   console.log("fibreInstructionData", fibreInstructionData)
+  // }, [fibreInstructionData])
+  //
+  // useEffect(() => {
+  //   console.log("contentNumberSettings", contentNumberSettings)
+  // }, [contentNumberSettings])
 
   useEffect(() => {
-    console.log("washCareOptions", washCareOptions)
-  }, [washCareOptions])
-
-  useEffect(() => {
+    fetchContentNumberSettings()
     fetchSizeTableList()
     fetchItemInfoData()
     fetchSizeTableDetails()
     fetchItemInfoFields()
-    fetchContentNumberList()
     fetchIconSequenceList()
     fetchContentTranslationList()
     fetchProductLocationList()
@@ -448,7 +584,14 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
-                        options={contentNumberOptions}
+                        value={contentGroupOptions["A"]?.filter(
+                          (opt) => opt.label === contentNumberData.label
+                        )}
+                        options={contentGroupOptions["A"]}
+                        onChange={(e) => {
+                          setContentNumberData(e)
+                          fetchContentNumberDetail(e.value, e.label, "A")
+                        }}
                       />
                     </Col>
                   </Row>
@@ -465,86 +608,94 @@ const OrderForm = (props) => {
                       <h5>{t("Fibre Instructions")}</h5>
                     </CardHeader>
                     <CardBody>
-                      {fibreInstructionData.map((rec, index) => (
-                        <Row style={{ marginBottom: "5px" }}>
-                          <Col xs="12" sm="12" md="4" lg="4" xl="4">
-                            <Label>Component</Label>
-                            <Select
-                              className="React"
-                              classNamePrefix="select"
-                              options={componentOptions}
-                              value={componentOptions.filter(
-                                (opt) => opt.value === rec.part_key
-                              )}
-                              onChange={(e) => {
-                                const tempData = fibreInstructionData
-                                tempData[index] = {
-                                  ...fibreInstructionData[index],
-                                  part_key: e.value
-                                }
-                                setFibreInstructionData([...tempData])
-                              }}
-                            />
-                          </Col>
-                          <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                            <Label>Fabric</Label>
-                            <Select
-                              className="React"
-                              classNamePrefix="select"
-                              options={fabricOptions}
-                              value={fabricOptions.filter(
-                                (opt) => opt.value === rec.cont_key
-                              )}
-                              onChange={(e) => {
-                                const tempData = fibreInstructionData
-                                tempData[index] = {
-                                  ...fibreInstructionData[index],
-                                  cont_key: e.value
-                                }
-                                setFibreInstructionData([...tempData])
-                              }}
-                            />
-                          </Col>
-                          <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                            <Label>%</Label>
-                            <Input
-                              value={fibreInstructionData[index].percentage}
-                              onChange={(e) => {
-                                const tempData = fibreInstructionData
-                                tempData[index] = {
-                                  ...fibreInstructionData[index],
-                                  percentage: e.target.value
-                                }
-                                setFibreInstructionData([...tempData])
-                              }}
-                            />
-                          </Col>
-                          <Col
-                            xs="12"
-                            sm="12"
-                            md="1"
-                            lg="1"
-                            xl="1"
-                            style={{ marginTop: "23px" }}
-                          >
-                            <Button
-                              style={{ padding: "7px" }}
-                              outline
-                              className="btn btn-outline-danger"
-                              onClick={() => {
-                                const tempData = fibreInstructionData
-                                tempData.splice(index, 1)
-                                setFibreInstructionData([...tempData])
-                              }}
-                            >
-                              <div style={{ display: "flex" }}>
-                                <X />
-                                <div style={{ marginTop: "5px" }}>Delete</div>
-                              </div>
-                            </Button>
-                          </Col>
-                        </Row>
-                      ))}
+                      {fibreInstructionData
+                        ? fibreInstructionData.map((rec, index) => (
+                            <Row style={{ marginBottom: "5px" }}>
+                              <Col xs="12" sm="12" md="4" lg="4" xl="4">
+                                <Label>Component</Label>
+                                <Select
+                                  className="React"
+                                  classNamePrefix="select"
+                                  options={componentOptions}
+                                  value={componentOptions.filter(
+                                    (opt) => opt.value === rec?.part_key
+                                  )}
+                                  onChange={(e) => {
+                                    const tempData = fibreInstructionData
+                                    tempData[index] = {
+                                      ...fibreInstructionData[index],
+                                      part_key: e.value
+                                    }
+                                    setFibreInstructionData([...tempData])
+                                  }}
+                                />
+                              </Col>
+                              <Col xs="12" sm="12" md="3" lg="3" xl="3">
+                                <Label>Fabric</Label>
+                                <Select
+                                  className="React"
+                                  classNamePrefix="select"
+                                  options={fabricOptions}
+                                  value={fabricOptions.filter(
+                                    (opt) => opt.value === rec?.cont_key
+                                  )}
+                                  onChange={(e) => {
+                                    const tempData = fibreInstructionData
+                                    tempData[index] = {
+                                      ...fibreInstructionData[index],
+                                      cont_key: e.value
+                                    }
+                                    setFibreInstructionData([...tempData])
+                                    fetchDefaultContentData(e.value)
+                                  }}
+                                />
+                              </Col>
+                              <Col xs="12" sm="12" md="2" lg="2" xl="2">
+                                <Label>%</Label>
+                                <Input
+                                  value={
+                                    fibreInstructionData[index]?.en_percent
+                                  }
+                                  onChange={(e) => {
+                                    const tempData = fibreInstructionData
+                                    tempData[index] = {
+                                      ...fibreInstructionData[index],
+                                      en_percent: e.target.value
+                                    }
+                                    setFibreInstructionData([...tempData])
+                                    debounceFun()
+                                  }}
+                                />
+                              </Col>
+                              <Col
+                                xs="12"
+                                sm="12"
+                                md="1"
+                                lg="1"
+                                xl="1"
+                                style={{ marginTop: "23px" }}
+                              >
+                                <Button
+                                  style={{ padding: "7px" }}
+                                  outline
+                                  className="btn btn-outline-danger"
+                                  onClick={() => {
+                                    const tempData = fibreInstructionData
+                                    tempData.splice(index, 1)
+                                    setFibreInstructionData([...tempData])
+                                  }}
+                                >
+                                  <div style={{ display: "flex" }}>
+                                    <X />
+                                    <div style={{ marginTop: "5px" }}>
+                                      Delete
+                                    </div>
+                                  </div>
+                                </Button>
+                              </Col>
+                            </Row>
+                          ))
+                        : null}
                     </CardBody>
                     <CardFooter>
                       <Button
@@ -576,7 +727,14 @@ const OrderForm = (props) => {
                       <Label style={{ marginTop: "12px" }}>Care:</Label>
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Input />
+                      <Select
+                        className="React"
+                        classNamePrefix="select"
+                        options={contentGroupOptions["BC"]}
+                        onChange={(e) => {
+                          fetchContentNumberDetail(e.value, e.lable, "BC")
+                        }}
+                      />
                     </Col>
                   </Row>
                   <Row style={{ marginBottom: "10px" }}>
@@ -605,13 +763,13 @@ const OrderForm = (props) => {
                               classNamePrefix="select"
                               options={additionalCareOptions}
                               value={additionalCareOptions.filter(
-                                (opt) => opt.value === rec.care_key
+                                (opt) => opt.value === rec.cont_key
                               )}
                               onChange={(e) => {
                                 const tempData = careData
                                 careData[index] = {
                                   ...careData[index],
-                                  care_key: e.value
+                                  cont_key: e.value
                                 }
                                 setCareData([...tempData])
                               }}
