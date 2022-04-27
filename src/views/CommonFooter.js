@@ -29,12 +29,13 @@ const Footer = (props) => {
           <Button
             color="primary"
             onClick={() => {
-              if (props.selectedItems && props.selectedItems.length > 0) {
-                if (props.currentStep < props.lastStep) {
-                  props.setCurrentStep(props.currentStep + 1)
-                }
-              } else {
+              console.log("selectedItems", props.selectedItems)
+              if (props.selectedItems && props.selectedItems.length <= 0) {
                 alert("Please Select Item/s to proceed")
+                return
+              }
+              if (props.currentStep < props.lastStep) {
+                props.setCurrentStep(props.currentStep + 1)
               }
             }}
             disabled={props.currentStep === props.lastStep}
