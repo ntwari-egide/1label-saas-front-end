@@ -1,4 +1,4 @@
-import { useSate, useEffect } from "react"
+import { useState, useEffect } from "react"
 import axios from "@axios"
 import {
   Label,
@@ -16,42 +16,77 @@ import { useTranslation } from "react-i18next"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
+  const [clientDetails, setClientDetails] = useState({})
+  const [invoiceAddressList, setInvoiceAddressList] = useState({})
+  const [deliveryAddressList, setDeiveryAddresList] = useState({})
+  const [invoiceAddressDetails, setInvoiceAddressDetails] = useState({})
+  const [deliveryAddressDetails, setDeliveryAddressDetails] = useState({})
+  const [contactInfo, setContactInfo] = useState({})
+  const [contactInfoDetails, setContactInfoDetails] = useState({})
 
   //API Services
   const fetchUserInfo = () => {
     const body = {
       order_user: "innoa"
     }
-    axios.post("/Client/GetClientDetail", body).then((res) => {})
+    axios
+      .post("/Client/GetClientDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          setClientDetails(res?.data)
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   const fetchClientAddressList = () => {
-    const addressTypes = ["invoice", "delivery", "contact"]
-    addressTypes.map((addType) => {
+    const addressTypes = {
+      invoice: setInvoiceAddressList,
+      delivery: setDeiveryAddresList,
+      contact: setContactInfo
+    }
+
+    Object.keys(addressTypes).map((addType) => {
       const body = {
         order_user: "innoa",
         address_type: addType
       }
-      axios.post("/Client/GetClientAddressList", body).then((res) => {})
+      axios
+        .post("/Client/GetClientAddressList", body)
+        .then((res) => {
+          if (res.status === 200) {
+            addressTypes[addType](res?.data)
+            fetchAddressDetail(addType, res?.data[0])
+          }
+        })
+        .catch((err) => console.log(err))
     })
   }
 
-  const fetchAddressDetail = () => {
-    const addressTypes = ["invoice", "delivery", "contact"]
-    addressTypes.map((addType) => {
-      const body = {
-        order_user: "innoa",
-        address_type: addType,
-        address_id: "000024663"
-      }
-      axios.post("/Client/GetClientAddressDetail", body).then((res) => {})
-    })
+  const fetchAddressDetail = (addType, add) => {
+    const addressTypes = {
+      invoice: setInvoiceAddressDetails,
+      delivery: setDeliveryAddressDetails,
+      contact: setContactInfoDetails
+    }
+    const body = {
+      order_user: "innoa",
+      address_type: addType,
+      address_id: add.address_id
+    }
+    axios
+      .post("/Client/GetClientAddressDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          addressTypes[addType](res?.data[0])
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   useEffect(() => {
     fetchUserInfo()
     fetchClientAddressList()
-    fetchAddressDetail()
   }, [])
 
   return (
@@ -74,31 +109,49 @@ const InvoiceAndDelivery = (props) => {
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Full Name")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={invoiceAddressDetails.name}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Mobile Number")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={contactInfoDetails.phone}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Flat, House No")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={invoiceAddressDetails?.address?.split("|")[0]}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Landmark e.g. near apollo hospital")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={invoiceAddressDetails?.address?.split("|")[1]}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Town/City")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={invoiceAddressDetails.city}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Pincode")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={invoiceAddressDetails.post_code}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                 </Row>
                 <Row>
@@ -160,31 +213,49 @@ const InvoiceAndDelivery = (props) => {
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Full Name")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={deliveryAddressDetails.name}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Mobile Number")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={contactInfoDetails.phone}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Flat, House No")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={deliveryAddressDetails?.address?.split("|")[0]}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Landmark e.g. near apollo hospital")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={deliveryAddressDetails?.address?.split("|")[1]}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Town/City")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={deliveryAddressDetails.city}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Pincode")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      value={deliveryAddressDetails.post_code}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                 </Row>
                 <Row>
