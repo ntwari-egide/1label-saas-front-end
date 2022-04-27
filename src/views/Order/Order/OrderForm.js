@@ -35,7 +35,7 @@ const OrderForm = (props) => {
   const [minExpectedDeliveryDate, setMinExpectedDeliveryDate] = useState("")
   const [iconSequence, setIconSequence] = useState([])
   const [washCareData, setWashCareData] = useState([])
-  const [defaultContentData, setDefaultContentData] = useState({})
+  const [defaultContentData, setDefaultContentData] = useState([""])
   const [contentNumberData, setContentNumberData] = useState([])
   const [contentNumberSettings, setContentNumberSettings] = useState({})
   // select options
@@ -184,6 +184,7 @@ const OrderForm = (props) => {
     group
   ) => {
     // fetches fibreInstructionData and careData for a selected content and care select fields respectively.
+    console.log("called")
     const body = {
       order_user: "innoa",
       content_number_key,
@@ -197,16 +198,25 @@ const OrderForm = (props) => {
             ? setFibreInstructionData(res?.data?.content)
             : setFibreInstructionData([{}])
         } else if (group === "BC") {
+          console.log("detail", res)
           res?.data?.care ? setCareData(res?.data?.care) : setCareData([{}])
-          res?.data?.icon
-            ? setWashCareData(res?.data?.icon)
-            : setWashCareData([{}])
+          if (res?.data?.icon.length > 0) {
+            const tempData = {}
+            res?.data?.icon.map((icon) => {
+              tempData[icon.icon_type_id] = {
+                icon_group: icon.icon_group,
+                icon_type_id: icon.icon_type_id,
+                sys_icon_key: icon.sys_icon_key
+              }
+            })
+            setWashCareData({ ...tempData })
+          }
         }
       }
     })
   }
 
-  const fetchDefaultContentData = (contKey) => {
+  const fetchDefaultContentData = (contKey, index) => {
     // fetches default Content Data as per option selected in fabric select field.
     const body = {
       brand_key: props.brand ? props.brand.value : "",
@@ -219,6 +229,9 @@ const OrderForm = (props) => {
       .then((res) => {
         if (res.status === 200) {
           console.log("default content", res)
+          const tempData = defaultContentData
+          tempData[index] = `test${index}`
+          setDefaultContentData([...tempData])
         }
       })
       .catch((err) => console.log(err))
@@ -232,12 +245,14 @@ const OrderForm = (props) => {
       custom_number: "Test Number-jia",
       content_group: "A",
       content: fibreInstructionData.map((data, index) => ({
-        ...data,
+        cont_key: data.cont_key,
+        part_key: data.part_key,
+        percentage: data.en_percent,
         seqno: (index + 1) * 10
       })),
       default_content: [],
       care: careData.map((data, index) => ({
-        ...data,
+        care_key: data.cont_key,
         seqno: (index + 1) * 10
       })),
       icon: Object.values(washCareData).map((obj, index) => ({
@@ -301,7 +316,7 @@ const OrderForm = (props) => {
           .post("/Translation/GetTranslationList", body)
           .then((res) => {
             if (res.status === 200) {
-              tempIconTranslation[icon.sys_icon_name] = res.data.map((opt) => ({
+              tempIconTranslation[icon.icon_type_id] = res.data.map((opt) => ({
                 value: opt.guid_key,
                 label: opt.gb_translation,
                 icon: (
@@ -464,10 +479,10 @@ const OrderForm = (props) => {
   // useEffect(() => {
   //   console.log("washCareData", washCareData)
   // }, [washCareData])
-  //
-  // useEffect(() => {
-  //   console.log("careData", careData)
-  // }, [careData])
+
+  useEffect(() => {
+    console.log("careData", careData)
+  }, [careData])
 
   // useEffect(() => {
   //   console.log("additionalCareOptions", additionalCareOptions)
@@ -477,6 +492,14 @@ const OrderForm = (props) => {
     assignStateToItemInfo(itemInfoFields)
   }, [itemInfoFields])
 
+  useEffect(() => {
+    console.log("washCareOptions", washCareOptions)
+  }, [washCareOptions])
+
+  useEffect(() => {
+    console.log("washCareData", washCareData)
+  }, [washCareData])
+
   // useEffect(() => {
   //   console.log("contentGroupOptions", contentGroupOptions)
   // }, [contentGroupOptions])
@@ -484,14 +507,18 @@ const OrderForm = (props) => {
   // useEffect(() => {
   //   console.log("componentOptions", componentOptions)
   // }, [componentOptions])
-  //
-  // useEffect(() => {
-  //   console.log("fibreInstructionData", fibreInstructionData)
-  // }, [fibreInstructionData])
-  //
+
+  useEffect(() => {
+    console.log("fibreInstructionData", fibreInstructionData)
+  }, [fibreInstructionData])
+
   // useEffect(() => {
   //   console.log("contentNumberSettings", contentNumberSettings)
   // }, [contentNumberSettings])
+
+  useEffect(() => {
+    console.log("iconSequence", iconSequence)
+  }, [iconSequence])
 
   useEffect(() => {
     fetchContentNumberSettings()
@@ -646,7 +673,7 @@ const OrderForm = (props) => {
                                       cont_key: e.value
                                     }
                                     setFibreInstructionData([...tempData])
-                                    fetchDefaultContentData(e.value)
+                                    fetchDefaultContentData(e.value, index)
                                   }}
                                 />
                               </Col>
@@ -680,9 +707,12 @@ const OrderForm = (props) => {
                                   outline
                                   className="btn btn-outline-danger"
                                   onClick={() => {
-                                    const tempData = fibreInstructionData
+                                    let tempData = fibreInstructionData
                                     tempData.splice(index, 1)
                                     setFibreInstructionData([...tempData])
+                                    tempData = defaultContentData
+                                    tempData.splice(index, 1)
+                                    setDefaultContentData([...tempData])
                                   }}
                                 >
                                   <div style={{ display: "flex" }}>
@@ -703,6 +733,9 @@ const OrderForm = (props) => {
                           const tempFibreInstructions = fibreInstructionData
                           tempFibreInstructions.push({})
                           setFibreInstructionData([...tempFibreInstructions])
+                          const tempDefaultContent = defaultContentData
+                          tempDefaultContent.push("")
+                          setDefaultContentData([...tempDefaultContent])
                         }}
                         color="primary"
                         style={{ padding: "10px" }}
@@ -712,16 +745,20 @@ const OrderForm = (props) => {
                       </Button>
                     </CardFooter>
                   </Card>
-                  <Row style={{ marginBottom: "10px" }}>
-                    <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                  <Row>
+                    <Col>
                       <Label style={{ marginTop: "12px" }}>
                         Default Content:
                       </Label>
                     </Col>
-                    <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Input />
-                    </Col>
                   </Row>
+                  {defaultContentData.map((data) => (
+                    <Row style={{ marginBottom: "10px" }}>
+                      <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                        <Input value={data} />
+                      </Col>
+                    </Row>
+                  ))}
                   <Row style={{ marginBottom: "10px" }}>
                     <Col xs="12" sm="12" md="1" lg="1" xl="1">
                       <Label style={{ marginTop: "12px" }}>Care:</Label>
@@ -838,10 +875,20 @@ const OrderForm = (props) => {
                         </Col>
                         <Col xs="12" s="12" md="8" lg="8" xl="8">
                           <Select
-                            options={washCareOptions[iconObj?.sys_icon_name]}
+                            options={washCareOptions[iconObj?.icon_type_id]}
+                            value={
+                              washCareOptions[iconObj?.icon_type_id]
+                                ? washCareOptions[iconObj?.icon_type_id].filter(
+                                    (opt) =>
+                                      opt.value ===
+                                      washCareData[iconObj?.icon_type_id]
+                                        ?.sys_icon_key
+                                  )
+                                : ""
+                            }
                             onChange={(e) => {
                               const tempData = {}
-                              tempData[iconObj.sys_icon_name] = {
+                              tempData[iconObj.icon_type_id] = {
                                 icon_key: e.value,
                                 icon_type_id: e.iconTypeId,
                                 icon_group: e.iconGroup
