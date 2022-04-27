@@ -1,24 +1,39 @@
 // ** Handle User Login
 import axios from "@axios"
+import history from "@src/history"
 import { deleteCookie } from "@utils"
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
+const MySwal = withReactContent(Swal)
 
 export const handleLogin = (data) => {
   return (dispatch) => {
     dispatch({ type: "SERVER_ERROR", data: "" })
-    console.log("in action")
-    // dummy token to escape isUserLoggedIn()
-    document.cookie = "Token=dummy"
-    // axios.post('Logined/logined', data).then((res) => {
-    //   if (res.data.Code === 200) {
-    //     const uData = { username: data.username, legalEntity: data.legalentity }
-    //     localStorage.setItem('userData', JSON.stringify(uData))
-    //     dispatch({ type: 'LOGIN', data: res.data })
-    //   } else {
-    //     dispatch({ type: 'SERVER_ERROR', data: res.data.InternalMsg })
-    //   }
-    // }).catch((e) => {
-    //   dispatch({ type: 'SERVER_ERROR', data: 'Internal Server Error' })
-    // })
+    const params = {
+      user_name: data.username,
+      password: data.password
+    }
+    axios.get("/Login/Login", { params }).then((res) => {
+      if (res.status === 200) {
+        console.log("login", res)
+        if (res?.data?.status === "fail") {
+          MySwal.fire({
+            title: "Incorrect Username or Password",
+            icon: "error",
+            customClass: {
+              confirmButton: "btn btn-danger"
+            },
+            buttonStyling: false
+          })
+        } else {
+          // dummy cookie for now is checked in router.js through isUserLoggedIn()
+          document.cookie = "Token=dummy"
+          localStorage.setItem("userData", JSON.stringify(res?.data[0]))
+          history.push("/home")
+          window.location.reload(true)
+        }
+      }
+    })
   }
 }
 
@@ -28,6 +43,6 @@ export const handleLogout = () => {
     dispatch({ type: "LOGOUT" })
     // ** Remove user from localStorage
     deleteCookie("Token")
-    localStorage.removeItem("userData")
+    localStorage.removeItem("loginInfo")
   }
 }

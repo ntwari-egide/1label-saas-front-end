@@ -18,7 +18,6 @@ import {
   ModalBody,
   ModalFooter
 } from "reactstrap"
-import Select from "react-select"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 const MySwal = withReactContent(Swal)
@@ -26,14 +25,13 @@ import { DefaultRoute } from "../router/routes"
 import "@styles/base/pages/page-auth.scss"
 import { useDispatch, connect } from "react-redux"
 import { handleLogin, handleLogout } from "@store/actions/auth"
-// import axios from 'axios'
-import axios from "axios"
 
 // import PrivacyPolicyPage from '../views/PrivacyPolicyPage'
 // ** Configs
 import themeConfig from "@configs/themeConfig"
 
 const Login = ({ serverError, userData }) => {
+  console.log("userData", userData)
   const [skin] = useSkin()
   const history = useHistory()
   const illustration = skin === "dark" ? "login-v2-dark.svg" : "login-v2.svg",
@@ -45,16 +43,15 @@ const Login = ({ serverError, userData }) => {
   const [password, setPassword] = useState("")
   const [entity, setEntity] = useState("")
   const [isopen, setIsopen] = useState(false)
-  const [branchCode, setBranchCode] = useState([])
   const [isRemember, setIsRemember] = useState(false)
 
   useEffect(() => {
     if (Object.keys(userData).length > 0) {
+      console.log("already logged in")
       if (isRemember) {
         const userData = {
           username,
-          userpwd: password,
-          legalentity: entity
+          userpwd: password
         }
         localStorage.setItem("isRemember", JSON.stringify(userData))
       } else {
@@ -62,19 +59,16 @@ const Login = ({ serverError, userData }) => {
           localStorage.removeItem("isRemember")
         }
       }
-
-      history.push(DefaultRoute)
-      // }
+      // history.push(DefaultRoute)
     }
-  })
+  }, [])
 
   useEffect(() => {
     if (localStorage.getItem("isRemember")) {
       const getdata = JSON.parse(localStorage.getItem("isRemember"))
       setIsRemember(true)
       setUsername(getdata.username)
-      setPassword(getdata.userpwd)
-      setEntity(getdata.legalentity)
+      setPassword(getdata.password)
     }
   }, [])
 
@@ -86,12 +80,17 @@ const Login = ({ serverError, userData }) => {
 
   function handleSubmit(e) {
     e.preventDefault()
+    let userData = null
     if (username && password) {
-      const userData = {
+      userData = {
         username,
-        userpwd: password
+        password
       }
-      history.push("/home")
+
+      if (isRemember && userData) {
+        localStorage.setItem("isRemember", JSON.stringify(userData))
+      }
+      // history.push("/home")
       dispatch(handleLogin(userData))
     } else {
       return MySwal.fire({
@@ -104,6 +103,7 @@ const Login = ({ serverError, userData }) => {
       })
     }
   }
+
   return (
     <div className="auth-wrapper auth-v2">
       <Row className="auth-inner m-0">

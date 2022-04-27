@@ -66,7 +66,7 @@ const UserDropdown = () => {
           <Avatar
             className="mr-1"
             color="gray-300"
-            content={getDisplayName(userData ? userData["username"] : "")}
+            // content={getDisplayName(userData ? userData["username"] : "")}
           />
         )}
       </DropdownToggle>

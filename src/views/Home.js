@@ -118,10 +118,6 @@ const Home = () => {
     fetchTotalOrdersData()
   }, [])
 
-  useEffect(() => {
-    console.log(t)
-  }, [])
-
   return (
     <div>
       <p className="lead">{t("Dashboard")}</p>

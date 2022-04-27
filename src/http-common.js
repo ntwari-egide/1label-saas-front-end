@@ -1,7 +1,7 @@
 import axios from "axios"
 import { getCookie, deleteCookie } from "@utils"
 import history from "@src/history"
-const userdata = JSON.parse(localStorage.getItem("userData"))
+// const userdata = JSON.parse(localStorage.getItem("userData"))
 const token = getCookie("Token")
 
 const gotoLogin = () => {
