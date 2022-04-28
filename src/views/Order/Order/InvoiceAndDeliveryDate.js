@@ -25,6 +25,97 @@ const InvoiceAndDelivery = (props) => {
   const [contactInfoDetails, setContactInfoDetails] = useState({})
 
   //API Services
+
+  const saveOrder = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      order_user: "innoa",
+      order_no: "",
+      num: "",
+      order_status: "Draft",
+      is_copy_order: "N",
+      po_number: "",
+      factory_code: "",
+      location_code: "",
+      draft_order_email: clientDetails.draft_email,
+      order_expected_delivery_date: "",
+      invoice_address: [
+        {
+          invoice_address_id: invoiceAddressDetails.dyn_address_id,
+          invoice_contact_id: contactInfoDetails.dyn_customer_id,
+          invoice_cpyname: invoiceAddressDetails.name,
+          invoice_contact: contactInfoDetails.name,
+          invoice_phone: contactInfoDetails.phone,
+          invoice_fax: contactInfoDetails.fax,
+          invoice_email: contactInfoDetails.email,
+          invoice_addr: invoiceAddressDetails.address,
+          invoice_addr2: invoiceAddressDetails.address2,
+          invoice_addr3: invoiceAddressDetails.address3
+        }
+      ],
+      delivery_address: [
+        {
+          delivery_address_id: deliveryAddressDetails.dyn_address_id,
+          delivery_contact_id: deliveryAddressDetails.dyn_customer_id,
+          delivery_cpyname: deliveryAddressDetails.name,
+          delivery_contact: contactInfoDetails.name,
+          delivery_phone: contactInfoDetails.phone,
+          delivery_fax: contactInfoDetails.fax,
+          delivery_email: contactInfoDetails.email,
+          delivery_city: deliveryAddressDetails.city,
+          delivery_country: deliveryAddressDetails.country,
+          delivery_post_code: deliveryAddressDetails.post_code,
+          delivery_addr: deliveryAddressDetails.address,
+          delivery_addr2: deliveryAddressDetails.address2,
+          delivery_addr3: deliveryAddressDetails.address3
+        }
+      ],
+      dynamic_field: [],
+      size_matrix_type: "",
+      size_content: "",
+      default_size_content: "",
+      size_pointer: "",
+      coo: "",
+      shrinkage_percentage: "",
+      item_ref: [],
+      is_wastage: "",
+      update_user: "innoa",
+      update_date: "",
+      contents: [
+        {
+          brand_key: props.brand ? props.brand.value : "",
+          order_user: "innoa",
+          content_custom_number: "Content-jia",
+          content_number: "",
+          content_number_key: "",
+          care_custom_number: "Care-jia",
+          care_number: "",
+          care_number_key: "",
+          content_group: "A/BC",
+          content: props.fibreInstructionData.map((data, index) => ({
+            cont_key: data.cont_key,
+            part_key: data.part_key,
+            percentage: data.en_percent,
+            seqno: (index + 1) * 10
+          })),
+          default_content: props.defaultContentData.map((cont, index) => ({
+            cont_key: cont,
+            seqno: (index + 1) * 10
+          })),
+          care: props.careData.map((data, index) => ({
+            care_key: data.cont_key,
+            seqno: (index + 1) * 10
+          })),
+          icon: Object.values(props.washCareData).map((obj, index) => ({
+            ...obj,
+            seqno: (index + 1) * 10
+          }))
+        }
+      ]
+    }
+    console.log("save Order", body)
+  }
+
   const fetchUserInfo = () => {
     const body = {
       order_user: "innoa"
@@ -186,7 +277,11 @@ const InvoiceAndDelivery = (props) => {
                   <p>Guangdong Province</p>
                   <p>(86) 0755-8215 5991</p>
                   <div>
-                    <Button style={{ width: "100%" }} color="primary">
+                    <Button
+                      onClick={() => saveOrder()}
+                      style={{ width: "100%" }}
+                      color="primary"
+                    >
                       {t("Invoice This Address")}
                     </Button>
                   </div>

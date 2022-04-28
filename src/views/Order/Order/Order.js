@@ -31,6 +31,7 @@ const Order = () => {
   const [careData, setCareData] = useState([{}])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
   const [washCareData, setWashCareData] = useState([])
+  const [defaultContentData, setDefaultContentData] = useState([""])
 
   // const xmlToObj = () => {
   //   const xml = "<SizeMatrix>".concat(
@@ -105,6 +106,8 @@ const Order = () => {
           setFibreInstructionData={setFibreInstructionData}
           washCareData={washCareData}
           setWashCareData={setWashCareData}
+          defaultContentData={defaultContentData}
+          setDefaultContentData={setDefaultContentData}
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
@@ -119,6 +122,11 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
+          brand={brand}
+          fibreInstructionData={fibreInstructionData}
+          careData={careData}
+          washCareData={washCareData}
+          defaultContentData={defaultContentData}
         />
       ) : currentStep === 4 ? (
         <Payment

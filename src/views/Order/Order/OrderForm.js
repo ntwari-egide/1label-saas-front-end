@@ -32,7 +32,6 @@ const OrderForm = (props) => {
   const [itemInfoOptions, setItemInfoOptions] = useState({})
   const [minExpectedDeliveryDate, setMinExpectedDeliveryDate] = useState("")
   const [iconSequence, setIconSequence] = useState([])
-  const [defaultContentData, setDefaultContentData] = useState([""])
   const [contentNumberData, setContentNumberData] = useState([])
   const [contentNumberSettings, setContentNumberSettings] = useState({})
   // select options
@@ -166,8 +165,8 @@ const OrderForm = (props) => {
       if (res.status === 200) {
         if (group === "A") {
           res?.data?.content
-            ? setFibreInstructionData(res?.data?.content)
-            : setFibreInstructionData([{}])
+            ? props.setFibreInstructionData(res?.data?.content)
+            : props.setFibreInstructionData([{}])
         } else if (group === "BC") {
           console.log("detail", res)
           res?.data?.care
@@ -202,9 +201,9 @@ const OrderForm = (props) => {
       .then((res) => {
         if (res.status === 200) {
           console.log("default content", res)
-          const tempData = defaultContentData
+          const tempData = props.defaultContentData
           tempData[index] = `test${index}`
-          setDefaultContentData([...tempData])
+          props.setDefaultContentData([...tempData])
         }
       })
       .catch((err) => console.log(err))
@@ -223,7 +222,10 @@ const OrderForm = (props) => {
         percentage: data.en_percent,
         seqno: (index + 1) * 10
       })),
-      default_content: [],
+      default_content: props.defaultContentData.map((cont, index) => ({
+        cont_key: cont,
+        seqno: (index + 1) * 10
+      })),
       care: props.careData.map((data, index) => ({
         care_key: data.cont_key,
         seqno: (index + 1) * 10
@@ -625,7 +627,7 @@ const OrderForm = (props) => {
                                       ...props.fibreInstructionData[index],
                                       part_key: e.value
                                     }
-                                    setFibreInstructionData([...tempData])
+                                    props.setFibreInstructionData([...tempData])
                                   }}
                                 />
                               </Col>
@@ -644,7 +646,7 @@ const OrderForm = (props) => {
                                       ...props.fibreInstructionData[index],
                                       cont_key: e.value
                                     }
-                                    setFibreInstructionData([...tempData])
+                                    props.setFibreInstructionData([...tempData])
                                     fetchDefaultContentData(e.value, index)
                                   }}
                                 />
@@ -662,7 +664,7 @@ const OrderForm = (props) => {
                                       ...props.fibreInstructionData[index],
                                       en_percent: e.target.value
                                     }
-                                    setFibreInstructionData([...tempData])
+                                    props.setFibreInstructionData([...tempData])
                                     debounceFun()
                                   }}
                                 />
@@ -682,10 +684,10 @@ const OrderForm = (props) => {
                                   onClick={() => {
                                     let tempData = props.fibreInstructionData
                                     tempData.splice(index, 1)
-                                    setFibreInstructionData([...tempData])
-                                    tempData = defaultContentData
+                                    props.setFibreInstructionData([...tempData])
+                                    tempData = props.defaultContentData
                                     tempData.splice(index, 1)
-                                    setDefaultContentData([...tempData])
+                                    props.setDefaultContentData([...tempData])
                                   }}
                                 >
                                   <div style={{ display: "flex" }}>
@@ -706,10 +708,12 @@ const OrderForm = (props) => {
                           const tempFibreInstructions =
                             props.fibreInstructionData
                           tempFibreInstructions.push({})
-                          setFibreInstructionData([...tempFibreInstructions])
-                          const tempDefaultContent = defaultContentData
+                          props.setFibreInstructionData([
+                            ...tempFibreInstructions
+                          ])
+                          const tempDefaultContent = props.defaultContentData
                           tempDefaultContent.push("")
-                          setDefaultContentData([...tempDefaultContent])
+                          props.setDefaultContentData([...tempDefaultContent])
                         }}
                         color="primary"
                         style={{ padding: "10px" }}
@@ -726,7 +730,7 @@ const OrderForm = (props) => {
                       </Label>
                     </Col>
                   </Row>
-                  {defaultContentData.map((data) => (
+                  {props.defaultContentData.map((data) => (
                     <Row style={{ marginBottom: "10px" }}>
                       <Col xs="12" sm="12" md="9" lg="9" xl="9">
                         <Input value={data} />
