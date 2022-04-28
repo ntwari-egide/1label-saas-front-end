@@ -21,7 +21,6 @@ const SelectItem = (props) => {
   const { t } = useTranslation()
   const [brandOptions, setBrandOptions] = useState([])
   const [itemTypeOptions, setItemTypeOptions] = useState([])
-  const [item, setItem] = useState(null)
   const [itemList, setItemList] = useState([])
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [loader, setLoader] = useState(false)
@@ -145,7 +144,14 @@ const SelectItem = (props) => {
                       <div>{item.brand_name}</div>
                       <div>{visibleCardIndex + index}</div>
                     </CardHeader>
-                    <CardBody>{item.item_ref_desc}</CardBody>
+                    <CardBody>
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col>{item.item_ref}</Col>
+                      </Row>
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col>{item.item_ref_desc}</Col>
+                      </Row>
+                    </CardBody>
                     <CardFooter>
                       <CheckBox
                         color="primary"
