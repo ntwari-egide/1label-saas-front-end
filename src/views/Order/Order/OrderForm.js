@@ -111,32 +111,6 @@ const OrderForm = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchSizeTableDetails = () => {
-    const body = {
-      guid_key: "134023"
-    }
-    axios
-      .post("/SizeTable/GetSizeTableDetail", body)
-      .then((res) => {
-        if (res.status === 200) {
-          // preprocessing
-          const nRows = Object.keys(res.data[0].size_content[0]).length - 2 // gets the no of rows
-          let data = [] // initialized data to fill row by row
-          let currentRow = 0 + 2 // because actual data begins at Column2
-          for (let i = 0; i < nRows; i++) {
-            let row = {} // initialise empty row
-            res.data[0].size_content.map((col) => {
-              row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
-            })
-            data.push(row) // push the row to data
-            currentRow += 1 // increment row count
-          }
-          console.log("processed data", data)
-        }
-      })
-      .then((err) => console.log(err))
-  }
-
   const fetchContentNumberSettings = () => {
     // fetches content model either of: "ABC" or "A/BC"
     const body = {
@@ -524,7 +498,6 @@ const OrderForm = (props) => {
     fetchContentNumberSettings()
     fetchSizeTableList()
     fetchItemInfoData()
-    fetchSizeTableDetails()
     fetchItemInfoFields()
     fetchIconSequenceList()
     fetchContentTranslationList()
