@@ -8,7 +8,6 @@ import Stepper from "../../Stepper"
 import DirectPrint from "./DirectPrint"
 import { Link } from "react-router-dom"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
-import { XMLParser } from "fast-xml-parser"
 import { useTranslation } from "react-i18next"
 
 const stepperMenu = [
@@ -102,6 +101,8 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
+          brand={brand}
+          selectedItems={selectedItems}
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
