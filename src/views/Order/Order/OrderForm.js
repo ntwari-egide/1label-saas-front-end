@@ -29,12 +29,9 @@ const OrderForm = (props) => {
   // Data
   const [sizeTableDetails, setSizeTableDetails] = useState([])
   const [itemInfoFields, setItemInfoFields] = useState([])
-  const [fibreInstructionData, setFibreInstructionData] = useState([{}])
-  const [careData, setCareData] = useState([{}])
   const [itemInfoOptions, setItemInfoOptions] = useState({})
   const [minExpectedDeliveryDate, setMinExpectedDeliveryDate] = useState("")
   const [iconSequence, setIconSequence] = useState([])
-  const [washCareData, setWashCareData] = useState([])
   const [defaultContentData, setDefaultContentData] = useState([""])
   const [contentNumberData, setContentNumberData] = useState([])
   const [contentNumberSettings, setContentNumberSettings] = useState({})
@@ -157,7 +154,7 @@ const OrderForm = (props) => {
     style_number,
     group
   ) => {
-    // fetches fibreInstructionData and careData for a selected content and care select fields respectively.
+    // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
     console.log("called")
     const body = {
       order_user: "innoa",
@@ -173,7 +170,9 @@ const OrderForm = (props) => {
             : setFibreInstructionData([{}])
         } else if (group === "BC") {
           console.log("detail", res)
-          res?.data?.care ? setCareData(res?.data?.care) : setCareData([{}])
+          res?.data?.care
+            ? props.setCareData(res?.data?.care)
+            : props.setCareData([{}])
           if (res?.data?.icon.length > 0) {
             const tempData = {}
             res?.data?.icon.map((icon) => {
@@ -183,7 +182,7 @@ const OrderForm = (props) => {
                 sys_icon_key: icon.sys_icon_key
               }
             })
-            setWashCareData({ ...tempData })
+            props.setWashCareData({ ...tempData })
           }
         }
       }
@@ -212,24 +211,24 @@ const OrderForm = (props) => {
   }
 
   const matchContentNumber = () => {
-    // fetches content and care option value as per change in fibreInstructionData and careData
+    // fetches content and care option value as per change in props.fibreInstructionData and props.careData
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       order_user: "innoa",
       custom_number: "Test Number-jia",
       content_group: "A",
-      content: fibreInstructionData.map((data, index) => ({
+      content: props.fibreInstructionData.map((data, index) => ({
         cont_key: data.cont_key,
         part_key: data.part_key,
         percentage: data.en_percent,
         seqno: (index + 1) * 10
       })),
       default_content: [],
-      care: careData.map((data, index) => ({
+      care: props.careData.map((data, index) => ({
         care_key: data.cont_key,
         seqno: (index + 1) * 10
       })),
-      icon: Object.values(washCareData).map((obj, index) => ({
+      icon: Object.values(props.washCareData).map((obj, index) => ({
         ...obj,
         seqno: (index + 1) * 10
       }))
@@ -451,12 +450,12 @@ const OrderForm = (props) => {
   }
 
   // useEffect(() => {
-  //   console.log("washCareData", washCareData)
-  // }, [washCareData])
+  //   console.log("props.washCareData", props.washCareData)
+  // }, [props.washCareData])
 
   useEffect(() => {
-    console.log("careData", careData)
-  }, [careData])
+    console.log("props.careData", props.careData)
+  }, [props.careData])
 
   // useEffect(() => {
   //   console.log("additionalCareOptions", additionalCareOptions)
@@ -471,8 +470,8 @@ const OrderForm = (props) => {
   }, [washCareOptions])
 
   useEffect(() => {
-    console.log("washCareData", washCareData)
-  }, [washCareData])
+    console.log("props.washCareData", props.washCareData)
+  }, [props.washCareData])
 
   // useEffect(() => {
   //   console.log("contentGroupOptions", contentGroupOptions)
@@ -483,8 +482,8 @@ const OrderForm = (props) => {
   // }, [componentOptions])
 
   useEffect(() => {
-    console.log("fibreInstructionData", fibreInstructionData)
-  }, [fibreInstructionData])
+    console.log("props.fibreInstructionData", props.fibreInstructionData)
+  }, [props.fibreInstructionData])
 
   // useEffect(() => {
   //   console.log("contentNumberSettings", contentNumberSettings)
@@ -608,8 +607,8 @@ const OrderForm = (props) => {
                       <h5>{t("Fibre Instructions")}</h5>
                     </CardHeader>
                     <CardBody>
-                      {fibreInstructionData
-                        ? fibreInstructionData.map((rec, index) => (
+                      {props.fibreInstructionData
+                        ? props.fibreInstructionData.map((rec, index) => (
                             <Row style={{ marginBottom: "5px" }}>
                               <Col xs="12" sm="12" md="4" lg="4" xl="4">
                                 <Label>Component</Label>
@@ -621,9 +620,9 @@ const OrderForm = (props) => {
                                     (opt) => opt.value === rec?.part_key
                                   )}
                                   onChange={(e) => {
-                                    const tempData = fibreInstructionData
+                                    const tempData = props.fibreInstructionData
                                     tempData[index] = {
-                                      ...fibreInstructionData[index],
+                                      ...props.fibreInstructionData[index],
                                       part_key: e.value
                                     }
                                     setFibreInstructionData([...tempData])
@@ -640,9 +639,9 @@ const OrderForm = (props) => {
                                     (opt) => opt.value === rec?.cont_key
                                   )}
                                   onChange={(e) => {
-                                    const tempData = fibreInstructionData
+                                    const tempData = props.fibreInstructionData
                                     tempData[index] = {
-                                      ...fibreInstructionData[index],
+                                      ...props.fibreInstructionData[index],
                                       cont_key: e.value
                                     }
                                     setFibreInstructionData([...tempData])
@@ -654,12 +653,13 @@ const OrderForm = (props) => {
                                 <Label>%</Label>
                                 <Input
                                   value={
-                                    fibreInstructionData[index]?.en_percent
+                                    props.fibreInstructionData[index]
+                                      ?.en_percent
                                   }
                                   onChange={(e) => {
-                                    const tempData = fibreInstructionData
+                                    const tempData = props.fibreInstructionData
                                     tempData[index] = {
-                                      ...fibreInstructionData[index],
+                                      ...props.fibreInstructionData[index],
                                       en_percent: e.target.value
                                     }
                                     setFibreInstructionData([...tempData])
@@ -680,7 +680,7 @@ const OrderForm = (props) => {
                                   outline
                                   className="btn btn-outline-danger"
                                   onClick={() => {
-                                    let tempData = fibreInstructionData
+                                    let tempData = props.fibreInstructionData
                                     tempData.splice(index, 1)
                                     setFibreInstructionData([...tempData])
                                     tempData = defaultContentData
@@ -703,7 +703,8 @@ const OrderForm = (props) => {
                     <CardFooter>
                       <Button
                         onClick={() => {
-                          const tempFibreInstructions = fibreInstructionData
+                          const tempFibreInstructions =
+                            props.fibreInstructionData
                           tempFibreInstructions.push({})
                           setFibreInstructionData([...tempFibreInstructions])
                           const tempDefaultContent = defaultContentData
@@ -765,7 +766,7 @@ const OrderForm = (props) => {
                           <Label>Additional Care & Mandatory Statements </Label>
                         </Col>
                       </Row>
-                      {careData.map((rec, index) => (
+                      {props.careData.map((rec, index) => (
                         <Row style={{ marginBottom: "7px" }}>
                           <Col xs="12" sm="12" md="8" lg="8" xl="8">
                             <Select
@@ -776,12 +777,12 @@ const OrderForm = (props) => {
                                 (opt) => opt.value === rec.cont_key
                               )}
                               onChange={(e) => {
-                                const tempData = careData
-                                careData[index] = {
-                                  ...careData[index],
+                                const tempData = props.careData
+                                props.careData[index] = {
+                                  ...props.careData[index],
                                   cont_key: e.value
                                 }
-                                setCareData([...tempData])
+                                props.setCareData([...tempData])
                               }}
                             />
                           </Col>
@@ -791,9 +792,9 @@ const OrderForm = (props) => {
                               outline
                               className="btn btn-outline-danger"
                               onClick={() => {
-                                const tempCare = careData
+                                const tempCare = props.careData
                                 tempCare.splice(index, 1)
-                                setCareData([...tempCare])
+                                props.setCareData([...tempCare])
                               }}
                             >
                               <div style={{ display: "flex" }}>
@@ -808,9 +809,9 @@ const OrderForm = (props) => {
                     <CardFooter>
                       <Button
                         onClick={() => {
-                          const tempCare = careData
+                          const tempCare = props.careData
                           tempCare.push({})
-                          setCareData([...tempCare])
+                          props.setCareData([...tempCare])
                         }}
                         color="primary"
                         style={{ padding: "10px" }}
@@ -854,7 +855,7 @@ const OrderForm = (props) => {
                                 ? washCareOptions[iconObj?.icon_type_id].filter(
                                     (opt) =>
                                       opt.value ===
-                                      washCareData[iconObj?.icon_type_id]
+                                      props.washCareData[iconObj?.icon_type_id]
                                         ?.sys_icon_key
                                   )
                                 : ""
@@ -866,7 +867,10 @@ const OrderForm = (props) => {
                                 icon_type_id: e.iconTypeId,
                                 icon_group: e.iconGroup
                               }
-                              setWashCareData({ ...washCareData, ...tempData })
+                              props.setWashCareData({
+                                ...props.washCareData,
+                                ...tempData
+                              })
                             }}
                             className="React"
                             classNamePrefix="select"

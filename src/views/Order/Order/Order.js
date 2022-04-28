@@ -27,6 +27,10 @@ const Order = () => {
   const [brand, setBrand] = useState("")
   const [itemType, setItemType] = useState("")
   const [selectedItems, setSelectedItems] = useState([])
+  // data of OrderForm component
+  const [careData, setCareData] = useState([{}])
+  const [fibreInstructionData, setFibreInstructionData] = useState([{}])
+  const [washCareData, setWashCareData] = useState([])
 
   // const xmlToObj = () => {
   //   const xml = "<SizeMatrix>".concat(
@@ -95,6 +99,12 @@ const Order = () => {
           itemType={itemType}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
+          careData={careData}
+          setCareData={setCareData}
+          fibreInstructionData={fibreInstructionData}
+          setFibreInstructionData={setFibreInstructionData}
+          washCareData={washCareData}
+          setWashCareData={setWashCareData}
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
