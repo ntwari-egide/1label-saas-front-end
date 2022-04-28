@@ -1,7 +1,8 @@
-import { useSate, useEffect } from "react"
+import { useState, useEffect } from "react"
 import {
   Card,
   CardHeader,
+  Spinner,
   CardBody,
   CardFooter,
   Row,
@@ -11,10 +12,16 @@ import {
 import { ArrowRight, ArrowLeft } from "react-feather"
 import DataTable from "react-data-table-component"
 import Footer from "../../CommonFooter"
+import { XMLParser } from "fast-xml-parser"
+import axios from "@axios"
 import { useTranslation } from "react-i18next"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
+  // App States
+  const [sizeData, setSizeData] = useState([])
+  const [defaultSizeData, setDefaultSizeData] = useState(null)
+
   const orderListCol = [
     {
       name: t("SIZE DESCRIPTION"),
@@ -83,56 +90,112 @@ const PreviewAndSummary = (props) => {
     }
   ]
 
-  const dummyData = [
+  const sizeCols = [
     {
-      size_description: "UK 4",
-      size: "4",
-      supplier_ref: "21S4341",
-      supplier_color: "Black",
-      option_id: "11994405",
-      buying_group_id: 102,
-      product_group_description: "Jersey Tops",
-      sku_code: "112053894",
-      style_number: "500114013",
-      barcode: "",
-      asbar1: 48,
-      ref2: "",
-      ref3: "",
-      ref4: ""
+      name: t("Sr No."),
+      selector: "Sequence",
+      sortable: true
     },
     {
-      size_description: "UK 6",
-      size: "6",
-      supplier_ref: "21S4341",
-      supplier_color: "Black",
-      option_id: "11994405",
-      buying_group_id: 102,
-      product_group_description: "Jersey Tops",
-      sku_code: "112053894",
-      style_number: "500114013",
-      barcode: "",
-      asbar1: 240,
-      ref2: "",
-      ref3: "",
-      ref4: ""
+      name: t("SIZE"),
+      selector: "SIZE",
+      sortable: true
     },
     {
-      size_description: "UK 8",
-      size: "8",
-      supplier_ref: "21S4341",
-      supplier_color: "Black",
-      option_id: "11994405",
-      buying_group_id: 102,
-      product_group_description: "Jersey Tops",
-      sku_code: "112053894",
-      style_number: "500114013",
-      barcode: "",
-      asbar1: 210,
-      ref2: "",
-      ref3: "",
-      ref4: ""
+      name: t("QTY ITEM REF 0"),
+      selector: "QTY ITEM REF 0"
+    },
+    {
+      name: t("QTY ITEM REF 1"),
+      selector: "QTY ITEM REF 1"
+    },
+    {
+      name: t("QTY ITEM REF 2"),
+      selector: "QTY ITEM REF 2"
+    },
+    {
+      name: t("UPC/EAN CODE"),
+      selector: "UPC/EAN CODE"
     }
   ]
+
+  // Other Functions
+  const formatColToRow = (xmlStr) => {
+    const parser = new XMLParser()
+    const jsObj = parser.parse(xmlStr)
+    console.log("jsObj", jsObj)
+    const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
+    let data = [] // initialized data to fill row by row
+    let currentRow = 0 + 2 // because actual data begins at Column2
+    for (let i = 0; i < nRows; i++) {
+      let row = {} // initialise empty row
+      jsObj?.SizeMatrix?.Table.map((col) => {
+        row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
+      })
+      data.push(row) // push the row to data
+      currentRow += 1 // increment row count
+    }
+    return data
+  }
+
+  // API Sevices
+  const fetchSizeTableList = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      item_key: props.selectedItems ? props.selectedItems : [],
+      query_str: ""
+    }
+    axios
+      .post("/SizeTable/GetSizeTableList", body)
+      .then((res) => {
+        if (res.status === 200) {
+          fetchSizeTableDetails(res?.data[0]?.guid_key)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const fetchSizeTableDetails = (guid_key) => {
+    const body = {
+      guid_key
+    }
+    axios
+      .post("/SizeTable/GetSizeTableDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          // preprocessing
+          if (res?.data[0]?.size_content) {
+            setSizeData(formatColToRow(res?.data[0]?.size_content))
+            console.log(
+              "processed data",
+              formatColToRow(res?.data[0]?.size_content)
+            )
+          } else {
+            setSizeData([])
+          }
+          if (res?.data[0]?.default_size_content) {
+            setDefaultSizeData(
+              formatColToRow(res?.data[0]?.default_size_content)
+            )
+            console.log(
+              "processed data",
+              formatColToRow(res?.data[0]?.default_size_content)
+            )
+          } else {
+            setDefaultSizeData([])
+          }
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    fetchSizeTableList()
+  }, [])
+
+  useEffect(() => {
+    console.log("sizeData", sizeData)
+  }, [sizeData])
 
   return (
     <Card>
@@ -196,7 +259,22 @@ const PreviewAndSummary = (props) => {
         </Row>
         <Row>
           <Col>
-            <DataTable data={dummyData} columns={orderListCol} noHeader />
+            <DataTable
+              data={sizeData ? sizeData : []}
+              columns={sizeCols}
+              noHeader
+            />
+            {sizeData.length <= 0 ? (
+              <div
+                style={{
+                  display: "flex",
+                  minHeight: "200px",
+                  justifyContent: "center"
+                }}
+              >
+                <div>No Data To Display</div>
+              </div>
+            ) : null}
           </Col>
         </Row>
       </CardBody>
