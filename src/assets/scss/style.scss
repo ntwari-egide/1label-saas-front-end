@@ -310,3 +310,21 @@ body {
   padding-top: 10px;
   padding-left: 10px;
 }
+
+// react-datatable-component custom styles
+
+.sc-AxiKw.cTEQON.rdt_TableHeadRow {
+  background-color: #304961;
+}
+
+.sc-AxhCb.sc-AxhUy.sc-fzplWN.HWHoi.rdt_TableCol {
+  color: white;
+  font-weight: 600;
+}
+.sc-fznyAO.lgkeMn.rdt_TableCol_Sortable {
+  color: white;
+}
+
+.cxtWCz:hover {
+  color: white !important;
+}
