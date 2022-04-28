@@ -451,9 +451,9 @@ const OrderForm = (props) => {
     }
   }
 
-  // useEffect(() => {
-  //   console.log("props.washCareData", props.washCareData)
-  // }, [props.washCareData])
+  useEffect(() => {
+    console.log("props.washCareData", props.washCareData)
+  }, [props.washCareData])
 
   useEffect(() => {
     console.log("props.careData", props.careData)
@@ -867,7 +867,7 @@ const OrderForm = (props) => {
                             onChange={(e) => {
                               const tempData = {}
                               tempData[iconObj.icon_type_id] = {
-                                icon_key: e.value,
+                                sys_icon_key: e.value,
                                 icon_type_id: e.iconTypeId,
                                 icon_group: e.iconGroup
                               }

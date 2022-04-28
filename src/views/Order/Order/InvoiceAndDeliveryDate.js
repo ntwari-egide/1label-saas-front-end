@@ -107,7 +107,9 @@ const InvoiceAndDelivery = (props) => {
             seqno: (index + 1) * 10
           })),
           icon: Object.values(props.washCareData).map((obj, index) => ({
-            ...obj,
+            icon_group: obj.icon_group,
+            icon_type_id: obj.icon_type_id,
+            icon_key: obj.sys_icon_key,
             seqno: (index + 1) * 10
           }))
         }
