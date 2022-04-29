@@ -73,10 +73,7 @@ const InvoiceAndDelivery = (props) => {
           delivery_addr3: deliveryAddressDetails.address3
         }
       ],
-      dynamic_field: Object.keys(props.dynamicFieldData).map((key) => ({
-        field_id: key,
-        field_value: props.dynamicFieldData[key]
-      })),
+      dynamic_field: Object.values(props.dynamicFieldData),
       size_matrix_type: "",
       size_content: props.sizeTable,
       default_size_content: props.defaultSizeTable,

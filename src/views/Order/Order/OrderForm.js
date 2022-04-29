@@ -393,18 +393,25 @@ const OrderForm = (props) => {
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
               <Select
-                options={itemInfoOptions[field.field]}
+                options={itemInfoOptions[field.title]}
                 className="React"
                 classNamePrefix="select"
-                value={itemInfoOptions[field.field]?.filter(
-                  (opt) => opt.value === props.dynamicFieldData[field.field]
+                value={itemInfoOptions[field.title]?.filter(
+                  (opt) =>
+                    opt.value ===
+                    props.dynamicFieldData[field.title].field_value
                 )}
                 onChange={(e) => {
+                  // set coo to use later in invoice and delivery component
                   if (field.field === "F3") {
                     props.setCoo(e.label)
                   }
                   const tempState = props.dynamicFieldData
-                  tempState[field.field] = e.value
+                  tempState[field.title] = {
+                    ...tempState[field.title],
+                    field_value: e.value,
+                    field_label: e.label
+                  }
                   props.setDynamicFieldData({ ...tempState })
                 }}
               />
@@ -430,10 +437,13 @@ const OrderForm = (props) => {
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
               <Input
-                value={props.dynamicFieldData[field.field]}
+                value={props.dynamicFieldData[field.title]?.field_value}
                 onChange={(e) => {
                   const tempState = props.dynamicFieldData
-                  tempState[field.field] = e.target.value
+                  tempState[field.title] = {
+                    ...tempState[field.title],
+                    field_value: e.target.value
+                  }
                   props.setDynamicFieldData({ ...tempState })
                 }}
               />
@@ -447,12 +457,16 @@ const OrderForm = (props) => {
 
   const assignStateToItemInfo = (fields) => {
     // assign state for options in select fields for dynamic fields of Item Info
-    let tempItemInfoData = {}
+    let tempItemInfoOptions = {}
     let tempItemInfoState = {}
     if (fields.length > 0) {
       fields.map((field) => {
         // assigns initial state to dynamic fields data.
-        tempItemInfoState[field.field] = ""
+        tempItemInfoState[field.title] = {
+          field_id: field.field,
+          field_value: "",
+          field_label: ""
+        }
         fetch(field?.effect?.fetch?.action, {
           method: field?.effect?.fetch?.method,
           headers: {
@@ -465,11 +479,11 @@ const OrderForm = (props) => {
         })
           .then((res) => res.json())
           .then((data) => {
-            tempItemInfoData[field.field] = data.map((opt) => ({
+            tempItemInfoOptions[field.title] = data.map((opt) => ({
               value: opt[field?.effect?.fetch?.json_value_key],
               label: opt[field?.effect?.fetch?.json_label_key]
             }))
-            setItemInfoOptions({ ...tempItemInfoData })
+            setItemInfoOptions({ ...tempItemInfoOptions })
           })
           .catch((err) => console.log(err))
       })
@@ -532,10 +546,6 @@ const OrderForm = (props) => {
   // useEffect(() => {
   //   console.log("iconSequence", iconSequence)
   // }, [iconSequence])
-
-  // useEffect(() => {
-  //   console.log("dynamicFieldData", props.dynamicFieldData)
-  // }, [props.dynamicFieldData])
 
   useEffect(() => {
     fetchContentNumberSettings()
@@ -797,7 +807,7 @@ const OrderForm = (props) => {
                         classNamePrefix="select"
                         options={contentGroupOptions["BC"]}
                         onChange={(e) => {
-                          fetchContentNumberDetail(e.value, e.lable, "BC")
+                          fetchContentNumberDetail(e.value, e.label, "BC")
                         }}
                       />
                     </Col>
