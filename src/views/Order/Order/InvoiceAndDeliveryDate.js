@@ -13,6 +13,7 @@ import {
 } from "reactstrap"
 import Footer from "../../CommonFooter"
 import { useTranslation } from "react-i18next"
+import { formatDateYMD } from "@utils"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
@@ -38,7 +39,9 @@ const InvoiceAndDelivery = (props) => {
       factory_code: "",
       location_code: "",
       draft_order_email: clientDetails.draft_email,
-      order_expected_delivery_date: "",
+      order_expected_delivery_date: formatDateYMD(
+        new Date(props.expectedDeliveryDate)
+      ),
       invoice_address: [
         {
           invoice_address_id: invoiceAddressDetails.dyn_address_id,
@@ -70,17 +73,17 @@ const InvoiceAndDelivery = (props) => {
           delivery_addr3: deliveryAddressDetails.address3
         }
       ],
-      dynamic_field: [],
+      dynamic_field: props.dynamicFieldData ? props.dynamicFieldData : {},
       size_matrix_type: "",
-      size_content: "",
-      default_size_content: "",
+      size_content: props.sizeTable,
+      default_size_content: props.defaultSizeTable,
       size_pointer: "",
-      coo: "",
+      coo: props.coo,
       shrinkage_percentage: "",
       item_ref: [],
       is_wastage: "",
       update_user: "innoa",
-      update_date: "",
+      update_date: formatDateYMD(new Date()),
       contents: [
         {
           brand_key: props.brand ? props.brand.value : "",
@@ -115,7 +118,13 @@ const InvoiceAndDelivery = (props) => {
         }
       ]
     }
-    console.log("save Order", body)
+    axios
+      .post("Order/SaveOrder", body)
+      .then((res) => {
+        if (res.status === 200) {
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   const fetchUserInfo = () => {
