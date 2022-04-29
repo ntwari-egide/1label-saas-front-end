@@ -193,7 +193,6 @@ const OrderForm = (props) => {
     group
   ) => {
     // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
-    console.log("called")
     const body = {
       order_user: "innoa",
       content_number_key,
@@ -394,18 +393,18 @@ const OrderForm = (props) => {
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
               <Select
-                options={itemInfoOptions[field.title]}
+                options={itemInfoOptions[field.field]}
                 className="React"
                 classNamePrefix="select"
-                value={itemInfoOptions[field.title]?.filter(
-                  (opt) => opt.value === props.dynamicFieldData[field.title]
+                value={itemInfoOptions[field.field]?.filter(
+                  (opt) => opt.value === props.dynamicFieldData[field.field]
                 )}
                 onChange={(e) => {
-                  if (field.title === "COO") {
+                  if (field.field === "F3") {
                     props.setCoo(e.label)
                   }
                   const tempState = props.dynamicFieldData
-                  tempState[field.title] = e.value
+                  tempState[field.field] = e.value
                   props.setDynamicFieldData({ ...tempState })
                 }}
               />
@@ -431,10 +430,10 @@ const OrderForm = (props) => {
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
               <Input
-                value={props.dynamicFieldData[field.title]}
+                value={props.dynamicFieldData[field.field]}
                 onChange={(e) => {
                   const tempState = props.dynamicFieldData
-                  tempState[field.title] = e.target.value
+                  tempState[field.field] = e.target.value
                   props.setDynamicFieldData({ ...tempState })
                 }}
               />
@@ -453,7 +452,7 @@ const OrderForm = (props) => {
     if (fields.length > 0) {
       fields.map((field) => {
         // assigns initial state to dynamic fields data.
-        tempItemInfoState[field.title] = ""
+        tempItemInfoState[field.field] = ""
         fetch(field?.effect?.fetch?.action, {
           method: field?.effect?.fetch?.method,
           headers: {
@@ -466,7 +465,7 @@ const OrderForm = (props) => {
         })
           .then((res) => res.json())
           .then((data) => {
-            tempItemInfoData[field.title] = data.map((opt) => ({
+            tempItemInfoData[field.field] = data.map((opt) => ({
               value: opt[field?.effect?.fetch?.json_value_key],
               label: opt[field?.effect?.fetch?.json_label_key]
             }))
@@ -498,13 +497,13 @@ const OrderForm = (props) => {
   //   assignStateToItemInfo(itemInfoFields)
   // }, [itemInfoFields])
 
-  // useEffect(() => {
-  //   console.log("dynamicFieldData", props.dynamicFieldData)
-  // }, [props.dynamicFieldData])
+  useEffect(() => {
+    console.log("dynamicFieldData", props.dynamicFieldData)
+  }, [props.dynamicFieldData])
 
-  // useEffect(() => {
-  //   console.log("itemInfoOptions", itemInfoOptions)
-  // }, [itemInfoOptions])
+  useEffect(() => {
+    console.log("itemInfoOptions", itemInfoOptions)
+  }, [itemInfoOptions])
 
   // useEffect(() => {
   //   console.log("washCareOptions", washCareOptions)

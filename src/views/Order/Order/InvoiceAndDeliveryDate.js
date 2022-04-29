@@ -73,14 +73,17 @@ const InvoiceAndDelivery = (props) => {
           delivery_addr3: deliveryAddressDetails.address3
         }
       ],
-      dynamic_field: props.dynamicFieldData ? props.dynamicFieldData : {},
+      dynamic_field: Object.keys(props.dynamicFieldData).map((key) => ({
+        field_id: key,
+        field_value: props.dynamicFieldData[key]
+      })),
       size_matrix_type: "",
       size_content: props.sizeTable,
       default_size_content: props.defaultSizeTable,
       size_pointer: "",
       coo: props.coo,
       shrinkage_percentage: "",
-      item_ref: [],
+      item_ref: [{}],
       is_wastage: "",
       update_user: "innoa",
       update_date: formatDateYMD(new Date()),
