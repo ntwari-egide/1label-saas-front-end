@@ -97,6 +97,7 @@ const PreviewAndSummary = (props) => {
         if (res.status === 200) {
           // preprocessing
           if (res?.data[0]?.size_content) {
+            props.setSizeTable(res?.data[0]?.size_content)
             setSizeData(formatColToRow(res?.data[0]?.size_content))
             console.log(
               "processed data",
@@ -106,6 +107,7 @@ const PreviewAndSummary = (props) => {
             setSizeData([])
           }
           if (res?.data[0]?.default_size_content) {
+            props.setDefaultSizeTable(res?.data[0]?.default_size_content)
             setDefaultSizeData(
               formatColToRow(res?.data[0]?.default_size_content)
             )

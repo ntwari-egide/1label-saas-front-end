@@ -34,6 +34,7 @@ const OrderForm = (props) => {
   const [iconSequence, setIconSequence] = useState([])
   const [contentNumberData, setContentNumberData] = useState([])
   const [contentNumberSettings, setContentNumberSettings] = useState({})
+  // const [props.expectedDeliveryDate, props.setExpectedDeliveryDate] = useState()
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
@@ -42,7 +43,7 @@ const OrderForm = (props) => {
   const [contentGroupOptions, setContentGroupOptions] = useState({})
   const [washCareOptions, setWashCareOptions] = useState({})
 
-  // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change
+  // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
   const debounceFun = () => {
     if (timerId !== null) {
       clearTimeout(timerId)
@@ -52,6 +53,40 @@ const OrderForm = (props) => {
       matchContentNumber()
       timerId = null
     }, 400)
+  }
+
+  const matchContentNumber = () => {
+    // fetches content and care option value as per change in props.fibreInstructionData and props.careData
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      order_user: "innoa",
+      custom_number: "Test Number-jia",
+      content_group: "A",
+      content: props.fibreInstructionData.map((data, index) => ({
+        cont_key: data.cont_key,
+        part_key: data.part_key,
+        percentage: data.en_percent,
+        seqno: (index + 1) * 10
+      })),
+      default_content: props.defaultContentData.map((cont, index) => ({
+        cont_key: cont,
+        seqno: (index + 1) * 10
+      })),
+      care: props.careData.map((data, index) => ({
+        care_key: data.cont_key,
+        seqno: (index + 1) * 10
+      })),
+      icon: Object.values(props.washCareData).map((obj, index) => ({
+        ...obj,
+        seqno: (index + 1) * 10
+      }))
+    }
+    console.log("match body", body)
+    axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
+      if (res.status === 200) {
+        console.log("match content", res)
+      }
+    })
   }
 
   // API services
@@ -70,13 +105,17 @@ const OrderForm = (props) => {
       brand_key: props.brand.value,
       show_status: "Y"
     }
-    axios.post("/Brand/GetDynamicFieldList", body).then((res) => {
-      if (res.status === 200) {
-        // sets dynamic item info fields which will trigger assignStateToItemInfo()
-        // also is used to render fields
-        setItemInfoFields(res.data)
-      }
-    })
+    axios
+      .post("/Brand/GetDynamicFieldList", body)
+      .then((res) => {
+        if (res.status === 200) {
+          // sets dynamic item info fields which will trigger assignStateToItemInfo()
+          // also is used to render fields
+          setItemInfoFields(res.data)
+          assignStateToItemInfo(res.data)
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   const fetchMinDeliveryDate = () => {
@@ -207,40 +246,6 @@ const OrderForm = (props) => {
         }
       })
       .catch((err) => console.log(err))
-  }
-
-  const matchContentNumber = () => {
-    // fetches content and care option value as per change in props.fibreInstructionData and props.careData
-    const body = {
-      brand_key: props.brand ? props.brand.value : "",
-      order_user: "innoa",
-      custom_number: "Test Number-jia",
-      content_group: "A",
-      content: props.fibreInstructionData.map((data, index) => ({
-        cont_key: data.cont_key,
-        part_key: data.part_key,
-        percentage: data.en_percent,
-        seqno: (index + 1) * 10
-      })),
-      default_content: props.defaultContentData.map((cont, index) => ({
-        cont_key: cont,
-        seqno: (index + 1) * 10
-      })),
-      care: props.careData.map((data, index) => ({
-        care_key: data.cont_key,
-        seqno: (index + 1) * 10
-      })),
-      icon: Object.values(props.washCareData).map((obj, index) => ({
-        ...obj,
-        seqno: (index + 1) * 10
-      }))
-    }
-    console.log("match body", body)
-    axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
-      if (res.status === 200) {
-        console.log("match content", res)
-      }
-    })
   }
 
   const fetchIconSequenceList = () => {
@@ -392,6 +397,17 @@ const OrderForm = (props) => {
                 options={itemInfoOptions[field.title]}
                 className="React"
                 classNamePrefix="select"
+                value={itemInfoOptions[field.title]?.filter(
+                  (opt) => opt.value === props.dynamicFieldData[field.title]
+                )}
+                onChange={(e) => {
+                  if (field.title === "COO") {
+                    props.setCoo(e.label)
+                  }
+                  const tempState = props.dynamicFieldData
+                  tempState[field.title] = e.value
+                  props.setDynamicFieldData({ ...tempState })
+                }}
               />
             </Col>
           </Row>
@@ -414,7 +430,14 @@ const OrderForm = (props) => {
               <Label>{field?.title}</Label>
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
-              <Input />
+              <Input
+                value={props.dynamicFieldData[field.title]}
+                onChange={(e) => {
+                  const tempState = props.dynamicFieldData
+                  tempState[field.title] = e.target.value
+                  props.setDynamicFieldData({ ...tempState })
+                }}
+              />
             </Col>
           </Row>
         )
@@ -426,8 +449,11 @@ const OrderForm = (props) => {
   const assignStateToItemInfo = (fields) => {
     // assign state for options in select fields for dynamic fields of Item Info
     let tempItemInfoData = {}
+    let tempItemInfoState = {}
     if (fields.length > 0) {
       fields.map((field) => {
+        // assigns initial state to dynamic fields data.
+        tempItemInfoState[field.title] = ""
         fetch(field?.effect?.fetch?.action, {
           method: field?.effect?.fetch?.method,
           headers: {
@@ -448,32 +474,45 @@ const OrderForm = (props) => {
           })
           .catch((err) => console.log(err))
       })
+      // initialises only if not previously set,
+      // important for when the component is revisited.
+      if (Object.keys(props.dynamicFieldData).length <= 0) {
+        props.setDynamicFieldData({ ...tempItemInfoState })
+      }
     }
   }
 
-  useEffect(() => {
-    console.log("props.washCareData", props.washCareData)
-  }, [props.washCareData])
-
-  useEffect(() => {
-    console.log("props.careData", props.careData)
-  }, [props.careData])
-
+  // useEffect(() => {
+  //   console.log("props.washCareData", props.washCareData)
+  // }, [props.washCareData])
+  //
+  // useEffect(() => {
+  //   console.log("props.careData", props.careData)
+  // }, [props.careData])
+  //
   // useEffect(() => {
   //   console.log("additionalCareOptions", additionalCareOptions)
   // }, [additionalCareOptions])
 
-  useEffect(() => {
-    assignStateToItemInfo(itemInfoFields)
-  }, [itemInfoFields])
+  // useEffect(() => {
+  //   assignStateToItemInfo(itemInfoFields)
+  // }, [itemInfoFields])
 
-  useEffect(() => {
-    console.log("washCareOptions", washCareOptions)
-  }, [washCareOptions])
+  // useEffect(() => {
+  //   console.log("dynamicFieldData", props.dynamicFieldData)
+  // }, [props.dynamicFieldData])
 
-  useEffect(() => {
-    console.log("props.washCareData", props.washCareData)
-  }, [props.washCareData])
+  // useEffect(() => {
+  //   console.log("itemInfoOptions", itemInfoOptions)
+  // }, [itemInfoOptions])
+
+  // useEffect(() => {
+  //   console.log("washCareOptions", washCareOptions)
+  // }, [washCareOptions])
+  //
+  // useEffect(() => {
+  //   console.log("props.washCareData", props.washCareData)
+  // }, [props.washCareData])
 
   // useEffect(() => {
   //   console.log("contentGroupOptions", contentGroupOptions)
@@ -483,17 +522,21 @@ const OrderForm = (props) => {
   //   console.log("componentOptions", componentOptions)
   // }, [componentOptions])
 
-  useEffect(() => {
-    console.log("props.fibreInstructionData", props.fibreInstructionData)
-  }, [props.fibreInstructionData])
+  // useEffect(() => {
+  //   console.log("props.fibreInstructionData", props.fibreInstructionData)
+  // }, [props.fibreInstructionData])
 
   // useEffect(() => {
   //   console.log("contentNumberSettings", contentNumberSettings)
   // }, [contentNumberSettings])
 
-  useEffect(() => {
-    console.log("iconSequence", iconSequence)
-  }, [iconSequence])
+  // useEffect(() => {
+  //   console.log("iconSequence", iconSequence)
+  // }, [iconSequence])
+
+  // useEffect(() => {
+  //   console.log("dynamicFieldData", props.dynamicFieldData)
+  // }, [props.dynamicFieldData])
 
   useEffect(() => {
     fetchContentNumberSettings()
@@ -519,13 +562,13 @@ const OrderForm = (props) => {
           <span className="text-danger">*</span>
           <Flatpickr
             className="form-control"
-            value={new Date()}
+            value={props.expectedDeliveryDate ? props.expectedDeliveryDate : ""}
             style={{ margin: "5px" }}
             options={{
               minDate: minExpectedDeliveryDate
             }}
             onChange={(e) => {
-              console.log(e)
+              props.setExpectedDeliveryDate(e)
             }}
             disabled={false}
           />

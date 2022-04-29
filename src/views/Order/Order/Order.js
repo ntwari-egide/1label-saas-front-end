@@ -32,6 +32,12 @@ const Order = () => {
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
   const [washCareData, setWashCareData] = useState([])
   const [defaultContentData, setDefaultContentData] = useState([""])
+  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
+  const [dynamicFieldData, setDynamicFieldData] = useState({})
+  const [coo, setCoo] = useState("")
+  // data of Preview and Summary component
+  const [sizeTable, setSizeTable] = useState("")
+  const [defaultSizeTable, setDefaultSizeTable] = useState("")
 
   // const xmlToObj = () => {
   //   const xml = "<SizeMatrix>".concat(
@@ -108,6 +114,12 @@ const Order = () => {
           setWashCareData={setWashCareData}
           defaultContentData={defaultContentData}
           setDefaultContentData={setDefaultContentData}
+          expectedDeliveryDate={expectedDeliveryDate}
+          setExpectedDeliveryDate={setExpectedDeliveryDate}
+          dynamicFieldData={dynamicFieldData}
+          setDynamicFieldData={setDynamicFieldData}
+          setExpectedDeliveryDate={setExpectedDeliveryDate}
+          setCoo={setCoo}
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
@@ -116,6 +128,9 @@ const Order = () => {
           lastStep={lastStep}
           brand={brand}
           selectedItems={selectedItems}
+          setSizeTable={setSizeTable}
+          setDefaultSizeTable={setDefaultSizeTable}
+          defaultSizeTable={defaultSizeTable}
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
@@ -127,6 +142,11 @@ const Order = () => {
           careData={careData}
           washCareData={washCareData}
           defaultContentData={defaultContentData}
+          expectedDeliveryDate={expectedDeliveryDate}
+          dynamicFieldData={dynamicFieldData}
+          sizeTable={sizeTable}
+          defaultSizeTable={defaultSizeTable}
+          coo={coo}
         />
       ) : currentStep === 4 ? (
         <Payment
