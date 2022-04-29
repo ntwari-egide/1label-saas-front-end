@@ -3,16 +3,17 @@ import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 const MySwal = withReactContent(Swal)
 
-export const isObjEmpty = obj => Object.keys(obj).length === 0
+export const isObjEmpty = (obj) => Object.keys(obj).length === 0
 
 // ** Returns K format from a number
-export const kFormatter = num => (num > 999 ? `${(num / 1000).toFixed(1)}k` : num)
+export const kFormatter = (num) =>
+  num > 999 ? `${(num / 1000).toFixed(1)}k` : num
 
 // ** Converts HTML to string
-export const htmlToString = html => html.replace(/<\/?[^>]+(>|$)/g, '')
+export const htmlToString = (html) => html.replace(/<\/?[^>]+(>|$)/g, "")
 
 // ** Checks if the passed date is today
-const isToday = date => {
+const isToday = (date) => {
   const today = new Date()
   return (
     /* eslint-disable operator-linebreak */
@@ -27,10 +28,10 @@ export const getDisplayName = (name) => {
   const str = name
   if (str.length) {
     const matches = str.match(/\b(\w)/g) // ['J','S','O','N']
-    const acronym = matches.join('') // JSON
+    const acronym = matches.join("") // JSON
     return acronym.toUpperCase()
   }
-  return ''
+  return ""
 }
 
 /**
@@ -40,21 +41,40 @@ export const getDisplayName = (name) => {
  * @param {String} value date to format
  * @param {Object} formatting Intl object to format with
  */
-export const formatDate = (value, formatting = { month: 'short', day: 'numeric', year: 'numeric' }) => {
+export const formatDate = (
+  value,
+  formatting = { month: "short", day: "numeric", year: "numeric" }
+) => {
   if (!value) return value
-  return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
+  return new Intl.DateTimeFormat("en-US", formatting).format(new Date(value))
+}
+
+/** @params date type new Date()
+ */
+export const formatDateYMD = (date) => {
+  let month = date.getMonth() + 1
+  console.log("month", month)
+  let d = date.getDate()
+  console.log("month", month)
+  if (month < 10) {
+    month = `0${month}`
+  }
+  if (d < 10) {
+    d = `0${d}`
+  }
+  return `${date.getFullYear()}-${month}-${d}`
 }
 
 // ** Returns short month of passed date
 export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
   const date = new Date(value)
-  let formatting = { month: 'short', day: 'numeric' }
+  let formatting = { month: "short", day: "numeric" }
 
   if (toTimeForCurrentDay && isToday(date)) {
-    formatting = { hour: 'numeric', minute: 'numeric' }
+    formatting = { hour: "numeric", minute: "numeric" }
   }
 
-  return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
+  return new Intl.DateTimeFormat("en-US", formatting).format(new Date(value))
 }
 
 /**
@@ -63,9 +83,9 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
  *  ? e.g. If you are using cookies to store the application please update this function
  */
 export const isUserLoggedIn = () => {
-  return getCookie('Token')
+  return getCookie("Token")
 }
-export const getUserData = () => JSON.parse(localStorage.getItem('userData'))
+export const getUserData = () => JSON.parse(localStorage.getItem("userData"))
 
 /**
  ** This function is used for demo purpose route navigation
@@ -75,33 +95,32 @@ export const getUserData = () => JSON.parse(localStorage.getItem('userData'))
  * ? NOTE: If you have different pages to navigate based on user ability then this function can be useful. However, you need to update it.
  * @param {String} userRole Role of user
  */
-export const getHomeRouteForLoggedInUser = userRole => {
-  if (userRole === 'admin') return '/'
-  if (userRole === 'client') return '/access-control'
-  return '/login'
+export const getHomeRouteForLoggedInUser = (userRole) => {
+  if (userRole === "admin") return "/"
+  if (userRole === "client") return "/access-control"
+  return "/login"
 }
 
 // ** React Select Theme Colors
-export const selectThemeColors = theme => ({
+export const selectThemeColors = (theme) => ({
   ...theme,
   colors: {
     ...theme.colors,
-    primary25: '#7367f01a', // for option hover bg-color
-    primary: '#7367f0', // for selected option bg-color
-    neutral10: '#7367f0', // for tags bg-color
-    neutral20: '#ededed', // for input border-color
-    neutral30: '#ededed' // for input hover border-color
+    primary25: "#7367f01a", // for option hover bg-color
+    primary: "#7367f0", // for selected option bg-color
+    neutral10: "#7367f0", // for tags bg-color
+    neutral20: "#ededed", // for input border-color
+    neutral30: "#ededed" // for input hover border-color
   }
 })
 
-
-export const getCookie = cname => {
+export const getCookie = (cname) => {
   let name = `${cname}=`
   let decodedCookie = decodeURIComponent(document.cookie)
-  let ca = decodedCookie.split(';')
+  let ca = decodedCookie.split(";")
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i]
-    while (c.charAt(0) === ' ') {
+    while (c.charAt(0) === " ") {
       c = c.substring(1)
     }
     if (c.indexOf(name) === 0) {
@@ -114,7 +133,6 @@ export const getCookie = cname => {
 export const deleteCookie = (name) => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/`
 }
-
 
 export const showSuccessMsg = (title) => {
   MySwal.fire({
