@@ -35,6 +35,8 @@ const Order = () => {
   const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
   const [dynamicFieldData, setDynamicFieldData] = useState({})
   const [coo, setCoo] = useState("")
+  const [projectionLocation, setProjectionLocation] = useState("")
+  const [orderReference, setOrderReference] = useState("")
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
@@ -120,6 +122,10 @@ const Order = () => {
           setDynamicFieldData={setDynamicFieldData}
           setExpectedDeliveryDate={setExpectedDeliveryDate}
           setCoo={setCoo}
+          projectionLocation={projectionLocation}
+          setProjectionLocation={setProjectionLocation}
+          orderReference={orderReference}
+          setOrderReference={setOrderReference}
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
@@ -147,6 +153,9 @@ const Order = () => {
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
           coo={coo}
+          selectedItems={selectedItems}
+          projectionLocation={projectionLocation}
+          orderReference={orderReference}
         />
       ) : currentStep === 4 ? (
         <Payment

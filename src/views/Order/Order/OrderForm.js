@@ -123,7 +123,7 @@ const OrderForm = (props) => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       erp_id: 8,
-      item_key: props.selectedItems ? props.selectedItems : null
+      item_key: props.selectedItems.map((item) => item.guid_key)
     }
 
     axios
@@ -134,7 +134,7 @@ const OrderForm = (props) => {
   const fetchSizeTableList = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
-      item_key: props.selectedItems ? props.selectedItems : [],
+      item_key: props.selectedItems.map((item) => item.guid_key),
       query_str: ""
     }
 
@@ -554,7 +554,11 @@ const OrderForm = (props) => {
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           <Label>{t("Customer Order Reference")}</Label>
           <span className="text-danger">*</span>
-          <Input style={{ margin: "5px" }} />
+          <Input
+            value={props.orderReference}
+            onChange={(e) => props.setOrderReference(e.target.value)}
+            style={{ margin: "5px" }}
+          />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           <Label>{t("Expected Delivery Date")}</Label>
@@ -580,6 +584,10 @@ const OrderForm = (props) => {
               className="React"
               classNamePrefix="select"
               options={projectionLocationOptions}
+              value={projectionLocationOptions.filter(
+                (opt) => opt.value === props.projectionLocation
+              )}
+              onChange={(e) => props.setProjectionLocation(e.value)}
             />
           </div>
         </Col>

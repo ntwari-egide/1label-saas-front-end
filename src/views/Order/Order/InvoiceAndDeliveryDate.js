@@ -35,9 +35,9 @@ const InvoiceAndDelivery = (props) => {
       num: "",
       order_status: "Draft",
       is_copy_order: "N",
-      po_number: "",
+      po_number: props.orderReference,
       factory_code: "",
-      location_code: "",
+      location_code: props.projectionLoation ? props.projectionLocation : "",
       draft_order_email: clientDetails.draft_email,
       order_expected_delivery_date: formatDateYMD(
         new Date(props.expectedDeliveryDate)
@@ -83,7 +83,13 @@ const InvoiceAndDelivery = (props) => {
       size_pointer: "",
       coo: props.coo,
       shrinkage_percentage: "",
-      item_ref: [{}],
+      item_ref: props.selectedItems.map((item) => ({
+        item_key: item.guid_key,
+        item_ref: item.item_ref,
+        quantity: item.quantity,
+        price: item.price,
+        currency: item.currency
+      })),
       is_wastage: "",
       update_user: "innoa",
       update_date: formatDateYMD(new Date()),
