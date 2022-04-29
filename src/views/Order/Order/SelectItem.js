@@ -25,13 +25,18 @@ const SelectItem = (props) => {
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [loader, setLoader] = useState(false)
 
-  const handleCheckListChange = (id) => {
+  const handleCheckListChange = (item) => {
     let tempList = props.selectedItems
-    if (props.selectedItems.includes(id)) {
-      tempList.splice(tempList.indexOf(id), 1)
+    if (
+      props.selectedItems.map((item) => item.guid_key).includes(item.guid_key)
+    ) {
+      tempList.splice(
+        props.selectedItems.map((item) => item.guid_key).indexOf(item.guid_key),
+        1
+      )
       props.setSelectedItems([...tempList])
     } else {
-      props.setSelectedItems([...tempList, id])
+      props.setSelectedItems([...tempList, item])
     }
   }
 
@@ -92,6 +97,10 @@ const SelectItem = (props) => {
     fetchItemTypeOptions()
     fetchItemList(props.brand, props.item_type)
   }, [])
+
+  useEffect(() => {
+    console.log("selectedItems", props.selectedItems)
+  }, [props.selectedItems])
 
   return (
     <Card>
@@ -156,8 +165,10 @@ const SelectItem = (props) => {
                       <CheckBox
                         color="primary"
                         icon={<Check className="vx-icon" size={16} />}
-                        checked={props.selectedItems.includes(item.guid_key)}
-                        onChange={() => handleCheckListChange(item.guid_key)}
+                        checked={props.selectedItems
+                          .map((item) => item.guid_key)
+                          .includes(item.guid_key)}
+                        onChange={() => handleCheckListChange(item)}
                       />
                     </CardFooter>
                   </Card>

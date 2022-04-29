@@ -74,7 +74,7 @@ const PreviewAndSummary = (props) => {
   const fetchSizeTableList = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
-      item_key: props.selectedItems ? props.selectedItems : [],
+      item_key: props.selectedItems.map((item) => item.guid_key),
       query_str: ""
     }
     axios
