@@ -37,9 +37,15 @@ const Order = () => {
   const [coo, setCoo] = useState("")
   const [projectionLocation, setProjectionLocation] = useState("")
   const [orderReference, setOrderReference] = useState("")
+  const [contentGroup, setContentGroup] = useState("")
+  const [contentNumberData, setContentNumberData] = useState({})
+  const [careNumberData, setCareNumberData] = useState({})
+  const [contentCustomNumber, setContentCustomNumber] = useState("")
+  const [careCustomNumber, setCareCustomNumber] = useState("")
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
+  const [sizeMatrixType, setSizeMatrixType] = useState("")
 
   // const xmlToObj = () => {
   //   const xml = "<SizeMatrix>".concat(
@@ -120,12 +126,20 @@ const Order = () => {
           setExpectedDeliveryDate={setExpectedDeliveryDate}
           dynamicFieldData={dynamicFieldData}
           setDynamicFieldData={setDynamicFieldData}
-          setExpectedDeliveryDate={setExpectedDeliveryDate}
           setCoo={setCoo}
           projectionLocation={projectionLocation}
           setProjectionLocation={setProjectionLocation}
           orderReference={orderReference}
           setOrderReference={setOrderReference}
+          setContentGroup={setContentGroup}
+          setContentNumberData={setContentNumberData}
+          contentNumberData={contentNumberData}
+          careNumberData={careNumberData}
+          setCareNumberData={setCareNumberData}
+          contentCustomNumber={contentCustomNumber}
+          setContentCustomNumber={setContentCustomNumber}
+          careCustomNumber={careCustomNumber}
+          setCareCustomNumber={setCareCustomNumber}
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
@@ -137,6 +151,7 @@ const Order = () => {
           setSizeTable={setSizeTable}
           setDefaultSizeTable={setDefaultSizeTable}
           defaultSizeTable={defaultSizeTable}
+          setSizeMatrixType={setSizeMatrixType}
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
@@ -156,6 +171,12 @@ const Order = () => {
           selectedItems={selectedItems}
           projectionLocation={projectionLocation}
           orderReference={orderReference}
+          sizeMatrixType={sizeMatrixType}
+          contentGroup={contentGroup}
+          contentNumberData={contentNumberData}
+          contentCustomNumber={contentCustomNumber}
+          careCustomNumber={careCustomNumber}
+          careNumberData={careNumberData}
         />
       ) : currentStep === 4 ? (
         <Payment
