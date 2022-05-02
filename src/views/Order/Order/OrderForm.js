@@ -27,14 +27,11 @@ const OrderForm = (props) => {
   const [careContentCollapse, setCareContentCollapse] = useState(true)
   const [washCareCollapse, setWashCareCollapse] = useState(true)
   // Data
-  const [sizeTableDetails, setSizeTableDetails] = useState([])
   const [itemInfoFields, setItemInfoFields] = useState([])
   const [itemInfoOptions, setItemInfoOptions] = useState({})
   const [minExpectedDeliveryDate, setMinExpectedDeliveryDate] = useState("")
   const [iconSequence, setIconSequence] = useState([])
-  const [contentNumberData, setContentNumberData] = useState([])
   const [contentNumberSettings, setContentNumberSettings] = useState({})
-  // const [props.expectedDeliveryDate, props.setExpectedDeliveryDate] = useState()
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
@@ -156,8 +153,9 @@ const OrderForm = (props) => {
       .post("/Brand/GetContentNumberSetting", body)
       .then((res) => {
         if (res.status === 200) {
+          props.setContentGroup(res.data[0]?.content_model) // to send to invoice and delivery for save order api
           setContentNumberSettings(res.data[0])
-          fetchContentNumberList(res.data[0].content_model.split("/")) // passes content_group as an array
+          fetchContentNumberList(res.data[0]?.content_model.split("/")) // passes content_group as an array
         }
       })
       .catch((err) => console.log(err))
@@ -205,8 +203,11 @@ const OrderForm = (props) => {
           res?.data?.content
             ? props.setFibreInstructionData(res?.data?.content)
             : props.setFibreInstructionData([{}])
+          res?.data?.content?.map((cont, index) => {
+            // fetches default content data for fabric
+            fetchDefaultContentData(cont.cont_key, index)
+          })
         } else if (group === "BC") {
-          console.log("detail", res)
           res?.data?.care
             ? props.setCareData(res?.data?.care)
             : props.setCareData([{}])
@@ -265,7 +266,6 @@ const OrderForm = (props) => {
           if (res.status === 200) {
             // data not garunteed for B group
             if (res?.data?.length > 0) {
-              console.log("res", res)
               fetchIconTranslationList(res.data, tempIconTranslation, iconGroup)
               tempIconSeq = [...tempIconSeq, ...res.data]
               setIconSequence([...tempIconSeq])
@@ -511,13 +511,13 @@ const OrderForm = (props) => {
   //   assignStateToItemInfo(itemInfoFields)
   // }, [itemInfoFields])
 
-  useEffect(() => {
-    console.log("dynamicFieldData", props.dynamicFieldData)
-  }, [props.dynamicFieldData])
-
-  useEffect(() => {
-    console.log("itemInfoOptions", itemInfoOptions)
-  }, [itemInfoOptions])
+  // useEffect(() => {
+  //   console.log("dynamicFieldData", props.dynamicFieldData)
+  // }, [props.dynamicFieldData])
+  //
+  // useEffect(() => {
+  //   console.log("itemInfoOptions", itemInfoOptions)
+  // }, [itemInfoOptions])
 
   // useEffect(() => {
   //   console.log("washCareOptions", washCareOptions)
@@ -646,11 +646,11 @@ const OrderForm = (props) => {
                         className="React"
                         classNamePrefix="select"
                         value={contentGroupOptions["A"]?.filter(
-                          (opt) => opt.label === contentNumberData.label
+                          (opt) => opt.label === props.contentNumberData?.label
                         )}
                         options={contentGroupOptions["A"]}
                         onChange={(e) => {
-                          setContentNumberData(e)
+                          props.setContentNumberData(e)
                           fetchContentNumberDetail(e.value, e.label, "A")
                         }}
                       />
@@ -661,7 +661,12 @@ const OrderForm = (props) => {
                       <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Input />
+                      <Input
+                        value={props.contentCustomNumber}
+                        onChange={(e) =>
+                          props.setContentCustomNumber(e.target.value)
+                        }
+                      />
                     </Col>
                   </Row>
                   <Card>
@@ -685,7 +690,8 @@ const OrderForm = (props) => {
                                     const tempData = props.fibreInstructionData
                                     tempData[index] = {
                                       ...props.fibreInstructionData[index],
-                                      part_key: e.value
+                                      part_key: e.value,
+                                      part_translation: e.label
                                     }
                                     props.setFibreInstructionData([...tempData])
                                   }}
@@ -704,9 +710,11 @@ const OrderForm = (props) => {
                                     const tempData = props.fibreInstructionData
                                     tempData[index] = {
                                       ...props.fibreInstructionData[index],
-                                      cont_key: e.value
+                                      cont_key: e.value,
+                                      cont_translation: e.label
                                     }
                                     props.setFibreInstructionData([...tempData])
+                                    // fetched default content for fabric
                                     fetchDefaultContentData(e.value, index)
                                   }}
                                 />
@@ -805,8 +813,12 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
+                        value={contentGroupOptions["BC"]?.filter(
+                          (opt) => opt.value === props.careNumberData?.value
+                        )}
                         options={contentGroupOptions["BC"]}
                         onChange={(e) => {
+                          props.setCareNumberData(e)
                           fetchContentNumberDetail(e.value, e.label, "BC")
                         }}
                       />
@@ -817,7 +829,12 @@ const OrderForm = (props) => {
                       <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Input />
+                      <Input
+                        value={props.careCustomNumber}
+                        onChange={(e) =>
+                          props.setCareCustomNumber(e.target.value)
+                        }
+                      />
                     </Col>
                   </Row>
                   <Card>
