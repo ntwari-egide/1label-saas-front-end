@@ -97,7 +97,8 @@ const PreviewAndSummary = (props) => {
         if (res.status === 200) {
           // preprocessing
           if (res?.data[0]?.size_content) {
-            props.setSizeTable(res?.data[0]?.size_content)
+            props.setSizeTable(res?.data[0]?.size_content) // to send it to invoice and delivery for save order
+            props.setSizeMatrixType(res.data[0]?.size_matrix_type) // to send it to invoice and delivery for save order
             setSizeData(formatColToRow(res?.data[0]?.size_content))
             console.log(
               "processed data",
@@ -127,9 +128,9 @@ const PreviewAndSummary = (props) => {
     fetchSizeTableList()
   }, [])
 
-  useEffect(() => {
-    console.log("sizeData", sizeData)
-  }, [sizeData])
+  // useEffect(() => {
+  //   console.log("sizeData", sizeData)
+  // }, [sizeData])
 
   return (
     <Card>
