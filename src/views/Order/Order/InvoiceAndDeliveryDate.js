@@ -74,7 +74,7 @@ const InvoiceAndDelivery = (props) => {
         }
       ],
       dynamic_field: Object.values(props.dynamicFieldData),
-      size_matrix_type: "",
+      size_matrix_type: props.sizeMatrixType,
       size_content: props.sizeTable,
       default_size_content: props.defaultSizeTable,
       size_pointer: "",
@@ -83,7 +83,7 @@ const InvoiceAndDelivery = (props) => {
       item_ref: props.selectedItems.map((item) => ({
         item_key: item.guid_key,
         item_ref: item.item_ref,
-        quantity: item.quantity,
+        qty: 1, // static for now
         price: item.price,
         currency: item.currency
       })),
@@ -92,22 +92,24 @@ const InvoiceAndDelivery = (props) => {
       update_date: formatDateYMD(new Date()),
       contents: [
         {
-          brand_key: props.brand ? props.brand.value : "",
+          brand_key: props.brand?.value,
           order_user: "innoa",
-          content_custom_number: "Content-jia",
-          content_number: "",
-          content_number_key: "",
-          care_custom_number: "Care-jia",
-          care_number: "",
-          care_number_key: "",
-          content_group: "A/BC",
-          content: props.fibreInstructionData.map((data, index) => ({
+          content_custom_number: props.contentCustomNumber,
+          content_number: props.contentNumberData?.label,
+          content_number_key: props.contentNumberData?.value,
+          care_custom_number: props.careCustomNumber,
+          care_number: props.careNumberData?.label,
+          care_number_key: props.careNumberData?.value,
+          content_group: props.contentGroup,
+          content: props.fibreInstructionData?.map((data, index) => ({
             cont_key: data.cont_key,
+            cont_translation: data.cont_translation,
             part_key: data.part_key,
+            part_translation: data.part_translation,
             percentage: data.en_percent,
             seqno: (index + 1) * 10
           })),
-          default_content: props.defaultContentData.map((cont, index) => ({
+          default_content: props.defaultContentData?.map((cont, index) => ({
             cont_key: cont,
             seqno: (index + 1) * 10
           })),
@@ -115,7 +117,7 @@ const InvoiceAndDelivery = (props) => {
             care_key: data.cont_key,
             seqno: (index + 1) * 10
           })),
-          icon: Object.values(props.washCareData).map((obj, index) => ({
+          icon: Object.values(props.washCareData)?.map((obj, index) => ({
             icon_group: obj.icon_group,
             icon_type_id: obj.icon_type_id,
             icon_key: obj.sys_icon_key,
