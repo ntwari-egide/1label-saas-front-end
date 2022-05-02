@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react"
 import {
   Card,
-  CardHeader,
-  Spinner,
   CardBody,
   CardFooter,
+  Spinner,
   Row,
   Col,
-  Button
+  Label
 } from "reactstrap"
-import { ArrowRight, ArrowLeft } from "react-feather"
 import DataTable from "react-data-table-component"
+import Select from "react-select"
 import Footer from "../../CommonFooter"
 import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
@@ -21,6 +20,8 @@ const PreviewAndSummary = (props) => {
   // App States
   const [sizeData, setSizeData] = useState([])
   const [defaultSizeData, setDefaultSizeData] = useState(null)
+  const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const sizeCols = [
     {
@@ -81,21 +82,27 @@ const PreviewAndSummary = (props) => {
       .post("/SizeTable/GetSizeTableList", body)
       .then((res) => {
         if (res.status === 200) {
-          fetchSizeTableDetails(res?.data[0]?.guid_key)
+          setSizeMatrixOptions(
+            res.data.map((sz) => ({
+              value: sz.guid_key,
+              label: sz.size_matrix_type
+            }))
+          )
         }
       })
       .catch((err) => console.log(err))
   }
 
   const fetchSizeTableDetails = (guid_key) => {
+    setLoading(true)
     const body = {
-      guid_key
+      guid_key: 134023
     }
     axios
       .post("/SizeTable/GetSizeTableDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          // preprocessing
+          //  set size content if available
           if (res?.data[0]?.size_content) {
             props.setSizeTable(res?.data[0]?.size_content) // to send it to invoice and delivery for save order
             props.setSizeMatrixType(res.data[0]?.size_matrix_type) // to send it to invoice and delivery for save order
@@ -104,11 +111,10 @@ const PreviewAndSummary = (props) => {
               "processed data",
               formatColToRow(res?.data[0]?.size_content)
             )
-          } else {
-            setSizeData([])
           }
+          // set default size content if available
           if (res?.data[0]?.default_size_content) {
-            props.setDefaultSizeTable(res?.data[0]?.default_size_content)
+            props.setDefaultSizeTable(res?.data[0]?.default_size_content) // to send it to invoice and delivery for save order
             setDefaultSizeData(
               formatColToRow(res?.data[0]?.default_size_content)
             )
@@ -116,9 +122,8 @@ const PreviewAndSummary = (props) => {
               "processed data",
               formatColToRow(res?.data[0]?.default_size_content)
             )
-          } else {
-            setDefaultSizeData([])
           }
+          setLoading(false)
         }
       })
       .catch((err) => console.log(err))
@@ -127,6 +132,10 @@ const PreviewAndSummary = (props) => {
   useEffect(() => {
     fetchSizeTableList()
   }, [])
+
+  useEffect(() => {
+    console.log("sizeData", sizeData)
+  }, [sizeData])
 
   // useEffect(() => {
   //   console.log("sizeData", sizeData)
@@ -192,23 +201,52 @@ const PreviewAndSummary = (props) => {
             </Card>
           </Col>
         </Row>
+        <Row style={{ marginBottom: "10px" }}>
+          <Col
+            xs="12"
+            sm="12"
+            md="3"
+            lg="1.5"
+            xl="1.5"
+            style={{
+              marginRight: "0px",
+              paddingRight: "0px",
+              maxWidth: "150px"
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                width: "100%",
+                height: "100%",
+                alignItems: "center"
+              }}
+            >
+              <div>Size Matrix Type:</div>
+            </div>
+          </Col>
+          <Col xs="12" sm="12" md="5" lg="5" xl="5">
+            <Select
+              className="React"
+              classNamePrefix="select"
+              options={sizeMatrixOptions}
+              onChange={(e) => {
+                setLoading(true)
+                fetchSizeTableDetails(e.value)
+              }}
+            />
+          </Col>
+        </Row>
         <Row>
           <Col>
-            <DataTable
-              data={sizeData ? sizeData : []}
-              columns={sizeCols}
-              noHeader
-            />
-            {sizeData.length <= 0 ? (
-              <div
-                style={{
-                  display: "flex",
-                  minHeight: "200px",
-                  justifyContent: "center"
-                }}
-              >
-                <div>No Data To Display</div>
-              </div>
+            {sizeData.length > 0 ? (
+              <DataTable
+                progressPending={loading}
+                progressComponent={<Spinner />}
+                data={sizeData}
+                columns={sizeCols}
+              />
             ) : null}
           </Col>
         </Row>
