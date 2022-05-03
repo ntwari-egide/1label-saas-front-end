@@ -1,18 +1,13 @@
 import Stepper from "../../Stepper"
 import { useState, useEffect } from "react"
-import {
-  Card,
-  Button,
-  CardBody,
-  CardHeader,
-  Breadcrumb,
-  BreadcrumbItem
-} from "reactstrap"
+import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { Link } from "react-router-dom"
+import { connect } from "react-redux"
+import Listing from "./Listing/listing"
 import { useTranslation } from "react-i18next"
-import DataTable from "react-data-table-component"
 
 const stepperMenu = [
+  "Listing",
   "Select Item",
   "Order Form",
   "Preview Item & Summary Size Table",
@@ -22,8 +17,9 @@ const stepperMenu = [
 ]
 
 const PoOrder = () => {
+  // constants
   const { t } = useTranslation()
-  // App states
+  // app states
   const [currentStep, setCurrentStep] = useState(0)
   return (
     <div>
@@ -50,16 +46,13 @@ const PoOrder = () => {
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
       />
-      <Card>
-        <CardHeader>
-          <h4>PO Order</h4>
-          <Button color="primary">Order</Button>
-        </CardHeader>
-        <hr />
-        <CardBody></CardBody>
-      </Card>
+      {currentStep === 0 ? <Listing /> : null}
     </div>
   )
 }
 
-export default PoOrder
+const mapStateToProps = (state) => ({
+  brand: state.orderReducer.brand
+})
+
+export default connect(mapStateToProps, null)(PoOrder)
