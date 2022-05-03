@@ -17,7 +17,7 @@ i18n
   .init({
     lng: "en",
     fallbackLng: "en",
-    debug: true,
+    debug: false,
     keySeparator: false,
     react: {
       useSuspense: false
