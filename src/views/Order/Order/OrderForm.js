@@ -598,7 +598,7 @@ const OrderForm = (props) => {
               value={projectionLocationOptions.filter(
                 (opt) => opt.value === props.projectionLocation
               )}
-              onChange={(e) => props.setProjectionLocation(e.value)}
+              onChange={(e) => props.setProjectionLocation(e.label)}
             />
           </div>
         </Col>
