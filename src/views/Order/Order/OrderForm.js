@@ -17,6 +17,7 @@ import { X, Plus } from "react-feather"
 import Footer from "../../CommonFooter"
 import Flatpickr from "react-flatpickr"
 import { useTranslation } from "react-i18next"
+import { connect } from "react-redux"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 let timerId = null
@@ -983,4 +984,8 @@ const OrderForm = (props) => {
   )
 }
 
-export default OrderForm
+const mapStateToProps = (state) => ({
+  brand: state.orderReducer.brand
+})
+
+export default connect(mapStateToProps, null)(OrderForm)

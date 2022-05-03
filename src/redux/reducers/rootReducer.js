@@ -6,12 +6,14 @@ import auth from "./auth"
 import navbar from "./navbar"
 import layout from "./layout"
 import verticalMenuReducer from "../../redux/navigation/vertical/reducers"
+import orderReducer from "./modules/order"
 
 const rootReducer = combineReducers({
   auth,
   navbar,
   layout,
-  verticalMenuReducer
+  verticalMenuReducer,
+  orderReducer
 })
 
 export default rootReducer

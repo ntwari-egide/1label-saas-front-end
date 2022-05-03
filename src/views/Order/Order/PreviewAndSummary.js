@@ -14,6 +14,7 @@ import Footer from "../../CommonFooter"
 import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
+import { connect } from "react-redux"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -74,7 +75,7 @@ const PreviewAndSummary = (props) => {
   // API Sevices
   const fetchSizeTableList = () => {
     const body = {
-      brand_key: props.brand ? props.brand.value : "",
+      brand_key: props.brand?.value,
       item_key: props.selectedItems.map((item) => item.guid_key),
       query_str: ""
     }
@@ -262,4 +263,8 @@ const PreviewAndSummary = (props) => {
   )
 }
 
-export default PreviewAndSummary
+const mapStateToProps = (state) => ({
+  brand: state.orderReducer.brand
+})
+
+export default connect(mapStateToProps, null)(PreviewAndSummary)

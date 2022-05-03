@@ -6,7 +6,7 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SERVER_ERROR':          
+    case 'SERVER_ERROR':
     return { ...state, serverError: action.data }
     case 'LOGIN':
       return { ...state, userData: action.data }

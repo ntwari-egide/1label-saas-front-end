@@ -24,7 +24,6 @@ const Order = () => {
   // APP states
   const [currentStep, setCurrentStep] = useState(0)
   const [lastStep] = useState(stepperMenu.length - 1)
-  const [brand, setBrand] = useState("")
   const [itemType, setItemType] = useState("")
   const [selectedItems, setSelectedItems] = useState([])
   // data of OrderForm component
@@ -63,10 +62,6 @@ const Order = () => {
   //   xmlToObj()
   // }, [])
 
-  useEffect(() => {
-    console.log("brand", brand, "itemType", itemType)
-  }, [brand, itemType])
-
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -98,8 +93,6 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          brand={brand}
-          setBrand={setBrand}
           itemType={itemType}
           setItemType={setItemType}
           selectedItems={selectedItems}
@@ -110,7 +103,6 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          brand={brand}
           itemType={itemType}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
@@ -146,7 +138,6 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          brand={brand}
           selectedItems={selectedItems}
           setSizeTable={setSizeTable}
           setDefaultSizeTable={setDefaultSizeTable}
@@ -158,7 +149,6 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          brand={brand}
           fibreInstructionData={fibreInstructionData}
           careData={careData}
           washCareData={washCareData}
