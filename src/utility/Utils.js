@@ -53,9 +53,7 @@ export const formatDate = (
  */
 export const formatDateYMD = (date) => {
   let month = date.getMonth() + 1
-  console.log("month", month)
   let d = date.getDate()
-  console.log("month", month)
   if (month < 10) {
     month = `0${month}`
   }
