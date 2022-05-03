@@ -26,7 +26,6 @@ const InvoiceAndDelivery = (props) => {
   const [contactInfoDetails, setContactInfoDetails] = useState({})
 
   //API Services
-
   const saveOrder = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
@@ -37,9 +36,9 @@ const InvoiceAndDelivery = (props) => {
       is_copy_order: "N",
       po_number: props.orderReference,
       factory_code: "",
-      location_code: props.projectionLoation ? props.projectionLocation : "",
+      location_code: props.projectionLocation ? props.projectionLocation : "",
       draft_order_email: clientDetails.draft_email,
-      order_expected_delivery_date: formatDateYMD(
+      order_expdate_delivery_date: formatDateYMD(
         new Date(props.expectedDeliveryDate)
       ),
       invoice_address: [
