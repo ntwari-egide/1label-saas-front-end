@@ -17,7 +17,7 @@ import Spinner from "./@core/components/spinner/Fallback-spinner"
 import "./@core/components/ripple-button"
 
 // ** i18n
-import "./configs/i18n/index"
+import "./i18/index"
 
 // ** PrismJS
 import "prismjs"

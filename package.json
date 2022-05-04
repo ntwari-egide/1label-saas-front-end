@@ -1,5 +1,6 @@
 {
   "name": "vuexy-react-admin-dashboard",
+  "homepage": ".",
   "version": "6.3.0",
   "private": true,
   "dependencies": {

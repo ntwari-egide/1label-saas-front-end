@@ -17,7 +17,15 @@ i18n
   .init({
     lng: "en",
     fallbackLng: "en",
-    debug: false,
+    resources: {
+      en: {
+        translation: require("./locales/en.json")
+      },
+      cn: {
+        translation: require("./locales/cn.json")
+      }
+    },
+    debug: true,
     keySeparator: false,
     react: {
       useSuspense: false

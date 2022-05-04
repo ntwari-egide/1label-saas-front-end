@@ -105,9 +105,9 @@ const SelectItem = (props) => {
   //   console.log("selectedItems", props.selectedItems)
   // }, [props.selectedItems])
 
-  useEffect(() => {
-    console.log("redux", props.brand)
-  }, [props.brand])
+  // useEffect(() => {
+  //   console.log("redux", props.brand)
+  // }, [props.brand])
 
   return (
     <Card>
