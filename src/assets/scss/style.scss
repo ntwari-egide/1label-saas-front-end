@@ -312,19 +312,24 @@ body {
 }
 
 // react-datatable-component custom styles
-
-.sc-AxiKw.cTEQON.rdt_TableHeadRow {
-  background-color: #304961;
+// background color for table header
+.rdt_TableHeadRow {
+  background-color: #304961 !important;
 }
 
-.sc-AxhCb.sc-AxhUy.sc-fzplWN.HWHoi.rdt_TableCol {
+// text color for table header.
+.rdt_TableCol {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+// text color for table header.
+.rdt_TableCol:hover {
   color: white;
-  font-weight: 600;
-}
-.sc-fznyAO.lgkeMn.rdt_TableCol_Sortable {
-  color: white;
+  font-weight: 700 !important;
 }
 
-.cxtWCz:hover {
+// text color for sortable table header.
+.rdt_TableCol_Sortable {
   color: white !important;
 }
