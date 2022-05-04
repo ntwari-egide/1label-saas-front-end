@@ -22,15 +22,12 @@ import { formatDateYMD } from "@utils"
 const Listing = () => {
   // constants
   const { t } = useTranslation()
-  const orderStatusOption = [
-    { value: "New", label: "New" },
-    { value: "Confirm", label: "Confirm" }
-  ]
   // App states
   const [poOrderData, setPoOrderData] = useState([])
   const [searchParams, setSearchParams] = useState({})
   // select options
   const [brandOptions, setBrandOptions] = useState([])
+  const [orderStatusOptions, setOrderStatusOptions] = useState([])
 
   const cols = [
     {
@@ -117,6 +114,7 @@ const Listing = () => {
   const fetchPoOrderList = (searchParams) => {
     let body
     if (searchParams) {
+      console.log("status", searchParams.orderStatus)
       body = {
         order_user: "innoa",
         brand_key: searchParams.brand ? searchParams.brand : "",
@@ -139,6 +137,7 @@ const Listing = () => {
         order_no: ""
       }
     }
+
     axios
       .post("/order/GetPOOrderList", body)
       .then((res) => {
@@ -169,10 +168,48 @@ const Listing = () => {
       .catch((err) => console.log(err))
   }
 
+  const fetchOrderStatus = () => {
+    axios
+      .post("/Order/GetOrderStatus")
+      .then((res) => {
+        if (res.status === 200) {
+          setOrderStatusOptions(
+            res.data.map((opt) => ({
+              value: opt.status_id,
+              label: opt.order_status
+            }))
+          )
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const fetchOrderDetails = (searchParams) => {
+    if (searchParams.brand && searchParams.poNo) {
+      const body = {
+        brand_key: searchParams.brand,
+        order_no: "ASLL-PO2022050001"
+      }
+
+      axios
+        .post("/Order/GetOrderDetail", body)
+        .then((res) => {
+          if (res.status === 200) {
+          }
+        })
+        .catch((err) => console.log(err))
+    }
+  }
+
   useEffect(() => {
+    fetchOrderStatus()
     fetchPoOrderList()
     fetchBrandList()
   }, [])
+
+  useEffect(() => {
+    console.log("searchParams", searchParams)
+  }, [searchParams])
 
   return (
     <Card>
@@ -255,14 +292,14 @@ const Listing = () => {
                 <Select
                   className="React"
                   classNamePrefix="select"
-                  options={orderStatusOption}
-                  value={orderStatusOption.filter(
-                    (opt) => opt.value === searchParams.orderStatus
+                  options={orderStatusOptions}
+                  value={orderStatusOptions.filter(
+                    (opt) => opt.value.toString() === searchParams.orderStatus
                   )}
                   onChange={(e) =>
                     setSearchParams({
                       ...searchParams,
-                      orderStatus: e.value
+                      orderStatus: e.value.toString()
                     })
                   }
                 />
@@ -326,7 +363,10 @@ const Listing = () => {
             <Button
               style={{ margin: "3px" }}
               color="primary"
-              onClick={() => fetchPoOrderList(searchParams)}
+              onClick={() => {
+                fetchPoOrderList(searchParams)
+                fetchOrderDetails(searchParams)
+              }}
             >
               Search
             </Button>
@@ -341,6 +381,9 @@ const Listing = () => {
               Cancel
             </Button>
           </Col>
+        </Row>
+        <Row>
+          <hr></hr>
         </Row>
       </CardHeader>
       <CardBody>
