@@ -468,28 +468,30 @@ const OrderForm = (props) => {
           field_value: "",
           field_label: ""
         }
-        fetch(field?.effect?.fetch?.action, {
-          method: field?.effect?.fetch?.method,
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            ...field?.effect?.fetch?.json_key_name,
-            order_user: "innoa"
+        if (field?.effect?.fetch?.action) {
+          fetch(field?.effect?.fetch?.action, {
+            method: field?.effect?.fetch?.method,
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              ...field?.effect?.fetch?.json_key_name,
+              order_user: "innoa"
+            })
           })
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            tempItemInfoOptions[field.title] = data.map((opt) => ({
-              value: opt[field?.effect?.fetch?.json_value_key],
-              label: opt[field?.effect?.fetch?.json_label_key]
-            }))
-            setItemInfoOptions({ ...tempItemInfoOptions })
-          })
-          .catch((err) => console.log(err))
+            .then((res) => res.json())
+            .then((data) => {
+              tempItemInfoOptions[field.title] = data.map((opt) => ({
+                value: opt[field?.effect?.fetch?.json_value_key],
+                label: opt[field?.effect?.fetch?.json_label_key]
+              }))
+              setItemInfoOptions({ ...tempItemInfoOptions })
+            })
+            .catch((err) => console.log(err))
+        }
       })
       // initialises only if not previously set,
-      // important for when the component is revisited.
+      // important for when the component is revisited since only initialises initial state when first visited.
       if (Object.keys(props.dynamicFieldData).length <= 0) {
         props.setDynamicFieldData({ ...tempItemInfoState })
       }
