@@ -6,6 +6,7 @@ import {
   Label,
   Collapse,
   CardHeader,
+  Spinner,
   CardBody,
   CardFooter,
   Row,
@@ -203,15 +204,20 @@ const OrderForm = (props) => {
         if (group === "A") {
           res?.data?.content
             ? props.setFibreInstructionData(res?.data?.content)
-            : props.setFibreInstructionData([{}])
+            : props.setFibreInstructionData([{}]) // default value, null throws eslint err
+          const tempDefaultContentData = []
           res?.data?.content?.map((cont, index) => {
             // fetches default content data for fabric
-            fetchDefaultContentData(cont.cont_key, index)
+            fetchDefaultContentData(
+              cont.cont_key,
+              index,
+              tempDefaultContentData
+            )
           })
         } else if (group === "BC") {
           res?.data?.care
             ? props.setCareData(res?.data?.care)
-            : props.setCareData([{}])
+            : props.setCareData([{}]) // default value, null throws eslint err
           if (res?.data?.icon.length > 0) {
             const tempData = {}
             res?.data?.icon.map((icon) => {
@@ -228,7 +234,7 @@ const OrderForm = (props) => {
     })
   }
 
-  const fetchDefaultContentData = (contKey, index) => {
+  const fetchDefaultContentData = (contKey, index, tempData) => {
     // fetches default Content Data as per option selected in fabric select field.
     const body = {
       brand_key: props.brand ? props.brand.value : "",
@@ -240,10 +246,42 @@ const OrderForm = (props) => {
       .post("/Translation/GetDefaultContentByContentKey", body)
       .then((res) => {
         if (res.status === 200) {
-          console.log("default content", res)
-          const tempData = props.defaultContentData
-          tempData[index] = `test${index}`
+          tempData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
           props.setDefaultContentData([...tempData])
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const handleFibreChange = (e, index) => {
+    // updating the fibreInstructionData state.
+    const tempData = props.fibreInstructionData
+    tempData[index] = {
+      ...props.fibreInstructionData[index],
+      cont_key: e.value,
+      cont_translation: e.label
+    }
+    props.setFibreInstructionData([...tempData])
+    // fetching default content for fabric and updating default content state
+    let tempDefData = props.defaultContentData
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      cont_key: e.value,
+      page_type: "content"
+    }
+
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          tempDefData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
+          props.setDefaultContentData([...tempDefData])
         }
       })
       .catch((err) => console.log(err))
@@ -498,6 +536,10 @@ const OrderForm = (props) => {
     }
   }
 
+  useEffect(() => {
+    console.log("props.defaultContentData", props.defaultContentData)
+  }, [props.defaultContentData])
+
   // useEffect(() => {
   //   console.log("props.washCareData", props.washCareData)
   // }, [props.washCareData])
@@ -619,9 +661,24 @@ const OrderForm = (props) => {
               </CardHeader>
               <Collapse isOpen={itemInfoCollapse}>
                 <CardBody>
-                  {itemInfoFields.map((field) => {
-                    return renderSwitch(field)
-                  })}
+                  {itemInfoFields.length > 0 ? (
+                    itemInfoFields.map((field) => {
+                      return renderSwitch(field)
+                    })
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        height: "400px",
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      <div>
+                        <Spinner color="primary" />
+                      </div>
+                    </div>
+                  )}
                 </CardBody>
               </Collapse>
             </Card>
@@ -710,15 +767,7 @@ const OrderForm = (props) => {
                                     (opt) => opt.value === rec?.cont_key
                                   )}
                                   onChange={(e) => {
-                                    const tempData = props.fibreInstructionData
-                                    tempData[index] = {
-                                      ...props.fibreInstructionData[index],
-                                      cont_key: e.value,
-                                      cont_translation: e.label
-                                    }
-                                    props.setFibreInstructionData([...tempData])
-                                    // fetched default content for fabric
-                                    fetchDefaultContentData(e.value, index)
+                                    handleFibreChange(e, index)
                                   }}
                                 />
                               </Col>
@@ -801,10 +850,22 @@ const OrderForm = (props) => {
                       </Label>
                     </Col>
                   </Row>
-                  {props.defaultContentData.map((data) => (
+                  {props.defaultContentData.map((data, index) => (
                     <Row style={{ marginBottom: "10px" }}>
                       <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                        <Input value={data} />
+                        <Input
+                          value={
+                            data?.cont_translation ? data?.cont_translation : ""
+                          }
+                          onChange={(e) => {
+                            const tempState = props.defaultContentData
+                            tempState[index] = {
+                              ...tempState[index],
+                              cont_translation: e.target.value
+                            }
+                            props.setDefaultContentData([...tempState])
+                          }}
+                        />
                       </Col>
                     </Row>
                   ))}
