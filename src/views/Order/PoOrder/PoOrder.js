@@ -23,6 +23,8 @@ const PoOrder = () => {
   // app states
   const [currentStep, setCurrentStep] = useState(0)
   const [lastStep, setLastStep] = useState(stepperMenu.length - 1)
+  // listing data
+  const [selectedItems, setSelectedItems] = useState([])
   // Order Form data
   const [dynamicFieldData, setDynamicFieldData] = useState([])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
@@ -59,6 +61,8 @@ const PoOrder = () => {
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
+          setSelectedItems={setSelectedItems}
+          selectedItems={selectedItems}
         />
       ) : currentStep === 2 ? (
         <OrderForm
@@ -73,6 +77,7 @@ const PoOrder = () => {
           setDefaultContentData={setDefaultContentData}
           careData={careData}
           setCareData={setCareData}
+          selectedItems={selectedItems}
         />
       ) : null}
     </div>

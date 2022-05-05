@@ -114,6 +114,14 @@ const Listing = (props) => {
     </div>
   )
 
+  const handleOrder = () => {
+    if (props.selectedItems.length <= 0) {
+      alert("Please Item/s to proceed with your order")
+      return
+    }
+    props.setCurrentStep(2)
+  }
+
   // API Services
   const fetchPoOrderList = (searchParams) => {
     setPoOrderLoader(true)
@@ -212,10 +220,6 @@ const Listing = (props) => {
     fetchPoOrderList()
     fetchBrandList()
   }, [])
-
-  useEffect(() => {
-    console.log("searchParams", searchParams)
-  }, [searchParams])
 
   return (
     <Card>
@@ -407,7 +411,9 @@ const Listing = (props) => {
                 <h4>PO Order</h4>
               </div>
               <div>
-                <Button color="primary">Order</Button>
+                <Button color="primary" onClick={handleOrder}>
+                  Order
+                </Button>
               </div>
             </div>
           </Col>
@@ -430,7 +436,16 @@ const Listing = (props) => {
                 pagination={true}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"350px"}
-                onRowDoubleClicked={(e) => console.log("db click", e)}
+                onRowDoubleClicked={(e) => {
+                  props.setSelectedItems([e.guid_key])
+                  props.setCurrentStep(2)
+                }}
+                selectableRowSelected={(e) =>
+                  props.selectedItems.includes(e.guid_key)
+                }
+                onSelectedRowsChange={(e) =>
+                  props.setSelectedItems(e.selectedRows.map((r) => r.guid_key))
+                }
               />
             ) : (
               <div
