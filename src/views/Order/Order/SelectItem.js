@@ -128,10 +128,11 @@ const SelectItem = (props) => {
               fetchItemList(e, props.itemType)
             }}
             isClearable={true}
+            isDisabled={itemList.length <= 0}
           />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Input placeholder={t("ITEM")} />
+          <Input placeholder={t("ITEM")} disabled={itemList.length <= 0} />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
           <Select
@@ -145,6 +146,7 @@ const SelectItem = (props) => {
               fetchItemList(props.brand, e)
             }}
             isClearable={true}
+            isDisabled={itemList.length <= 0}
           />
         </Col>
       </CardHeader>
