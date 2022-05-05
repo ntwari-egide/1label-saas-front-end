@@ -400,7 +400,7 @@ const OrderForm = (props) => {
                 value={itemInfoOptions[field.title]?.filter(
                   (opt) =>
                     opt.value ===
-                    props.dynamicFieldData[field.title].field_value
+                    props.dynamicFieldData[field?.title]?.field_value
                 )}
                 onChange={(e) => {
                   // set coo to use later in invoice and delivery component
