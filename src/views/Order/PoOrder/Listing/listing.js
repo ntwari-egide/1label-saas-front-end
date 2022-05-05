@@ -4,8 +4,10 @@ import {
   Card,
   Badge,
   Button,
+  CardFooter,
   Input,
   CardBody,
+  Spinner,
   CardHeader,
   Row,
   Col
@@ -18,13 +20,15 @@ import Select from "react-select"
 import Flatpickr from "react-flatpickr"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { formatDateYMD } from "@utils"
+import Footer from "../../../CommonFooter"
 
-const Listing = () => {
+const Listing = (props) => {
   // constants
   const { t } = useTranslation()
   // App states
   const [poOrderData, setPoOrderData] = useState([])
   const [searchParams, setSearchParams] = useState({})
+  const [poOrderLoader, setPoOrderLoader] = useState(false)
   // select options
   const [brandOptions, setBrandOptions] = useState([])
   const [orderStatusOptions, setOrderStatusOptions] = useState([])
@@ -112,6 +116,7 @@ const Listing = () => {
 
   // API Services
   const fetchPoOrderList = (searchParams) => {
+    setPoOrderLoader(true)
     let body
     if (searchParams) {
       console.log("status", searchParams.orderStatus)
@@ -144,6 +149,7 @@ const Listing = () => {
         if (res.status === 200) {
           setPoOrderData(res.data)
         }
+        setPoOrderLoader(false)
       })
       .catch((err) => console.log(err))
   }
@@ -408,25 +414,49 @@ const Listing = () => {
         </Row>
         <Row>
           <Col>
-            <DataTable
-              data={poOrderData}
-              columns={cols}
-              noHeader={true}
-              selectableRows={true}
-              selectableRowsComponent={CheckBox}
-              selectableRowsComponentProps={{
-                color: "primary",
-                icon: <Check className="vx-icon" size={15} />,
-                label: "",
-                size: "md"
-              }}
-              pagination={true}
-              fixedHeader={true}
-              fixedHeaderScrollHeight={"350px"}
-            />
+            {!poOrderLoader ? (
+              <DataTable
+                data={poOrderData}
+                columns={cols}
+                noHeader={true}
+                selectableRows={true}
+                selectableRowsComponent={CheckBox}
+                selectableRowsComponentProps={{
+                  color: "primary",
+                  icon: <Check className="vx-icon" size={15} />,
+                  label: "",
+                  size: "md"
+                }}
+                pagination={true}
+                fixedHeader={true}
+                fixedHeaderScrollHeight={"350px"}
+                onRowDoubleClicked={(e) => console.log("db click", e)}
+              />
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  height: "300px",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <div>
+                  <Spinner color="primary" />
+                </div>
+              </div>
+            )}
           </Col>
         </Row>
       </CardBody>
+      <CardFooter>
+        <Footer
+          // validationField={props.selectedItems}
+          currentStep={props.currentStep}
+          setCurrentStep={props.setCurrentStep}
+          lastStep={props.lastStep}
+        />
+      </CardFooter>
     </Card>
   )
 }
