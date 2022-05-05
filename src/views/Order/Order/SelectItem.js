@@ -226,7 +226,7 @@ const SelectItem = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
-          selectedItems={props.selectedItems}
+          validationField={props.selectedItems}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}

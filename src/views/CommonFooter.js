@@ -29,8 +29,7 @@ const Footer = (props) => {
           <Button
             color="primary"
             onClick={() => {
-              console.log("selectedItems", props.selectedItems)
-              if (props.selectedItems && props.selectedItems.length <= 0) {
+              if (props.validationField && props.validationField.length <= 0) {
                 alert("Please Select Item/s to proceed")
                 return
               }

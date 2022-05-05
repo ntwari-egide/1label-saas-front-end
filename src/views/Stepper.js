@@ -13,8 +13,11 @@ const Stepper = (props) => {
             <div
               className="custom-stepper"
               onClick={() => {
-                if (props.selectedItems && props.selectedItems.length > 0) {
+                if (props.validationField && props.validationField.length > 0) {
                   props.setCurrentStep(index)
+                } else if (!props.validationField) {
+                  props.setCurrentStep(index)
+                  return null
                 } else {
                   alert("Please select items to proceed")
                 }
