@@ -482,12 +482,12 @@ const Listing = (props) => {
                 pagination={true}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"350px"}
-                onRowDoubleClicked={(e) => {
-                  props.setSelectedItems([e.guid_key])
-                  props.setCurrentStep(2)
-                  props.setIsPoOrderTemp("N")
-                  props.setCombinedPOOrderkey(e.order_no)
-                }}
+                // onRowDoubleClicked={(e) => {
+                //   props.setSelectedItems([e.guid_key])
+                //   props.setCurrentStep(2)
+                //   props.setIsPoOrderTemp("N")
+                //   props.setCombinedPOOrderkey(e.order_no)
+                // }}
                 selectableRowSelected={(e) =>
                   props.selectedItems.includes(e.guid_key)
                 }
