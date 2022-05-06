@@ -17,7 +17,7 @@ import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import Select from "react-select"
 import Flatpickr from "react-flatpickr"
-import Footer from "../../CommonFooter"
+import Footer from "../../../CommonFooter"
 
 const OrderForm = (props) => {
   // constants
@@ -145,11 +145,11 @@ const OrderForm = (props) => {
   // API services
   const fetchItemInfoFields = () => {
     const body = {
-      brand_key: "e8c439c4-2bc0-4304-8053-e818071b5293",
+      brand_key: props.brand ? props.brand.value : "",
       show_status: "Y",
       order_user: "innoa",
-      order_no: "5282be03-c6fa-4dfb-8d05-96d7d241a7f5",
-      is_po_order_temp: "Y"
+      order_no: props.combinedPOOrderkey || "",
+      is_po_order_temp: props.isPoOrderTemp || ""
     }
 
     axios
@@ -163,17 +163,28 @@ const OrderForm = (props) => {
       .catch((err) => console.log(err))
   }
 
-  useEffect(() => {
-    fetchItemInfoFields()
-  }, [])
+  const fetchPOOrderDetails = () => {
+    const body = {
+      order_user: "innoa",
+      order_no: props.combinedPOOrderkey ? props.combinedPOOrderkey : "",
+      brand_key: props.brand ? props.brand.value : "",
+      is_po_order_temp: props.isPoOrderTemp ? props.isPoOrderTemp : ""
+    }
+    axios
+      .post("/Order/GetOrderDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+        }
+      })
+      .catch((err) => console.log(err))
+  }
 
   useEffect(() => {
-    console.log("dynamicFieldData", props.dynamicFieldData)
-  }, [props.dynamicFieldData])
-
-  useEffect(() => {
-    console.log("itemInfoOptions", itemInfoOptions)
-  }, [itemInfoOptions])
+    if (props.isPoOrderTemp.length > 0) {
+      fetchPOOrderDetails()
+      fetchItemInfoFields()
+    }
+  }, [props.isPoOrderTemp])
 
   return (
     <Card>
