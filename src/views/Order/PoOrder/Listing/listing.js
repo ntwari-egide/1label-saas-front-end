@@ -21,13 +21,15 @@ import Flatpickr from "react-flatpickr"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { formatDateYMD } from "@utils"
 import Footer from "../../../CommonFooter"
+import Swal from "sweetalert2"
+import withReactContent from "sweetalert2-react-content"
+const MySwal = withReactContent(Swal)
 
 const Listing = (props) => {
   // constants
   const { t } = useTranslation()
   // App states
   const [poOrderData, setPoOrderData] = useState([])
-  const [searchParams, setSearchParams] = useState({})
   const [poOrderLoader, setPoOrderLoader] = useState(false)
   // select options
   const [brandOptions, setBrandOptions] = useState([])
@@ -119,36 +121,32 @@ const Listing = (props) => {
       alert("Please Item/s to proceed with your order")
       return
     }
-    props.setCurrentStep(2)
+    // props.setCurrentStep(2)
+    addPoOrder()
   }
 
   // API Services
-  const fetchPoOrderList = (searchParams) => {
+  const fetchPoOrderList = (latestBrandValue) => {
     setPoOrderLoader(true)
-    let body
-    if (searchParams) {
-      console.log("status", searchParams.orderStatus)
-      body = {
-        order_user: "innoa",
-        brand_key: searchParams.brand ? searchParams.brand : "",
-        order_date_from: searchParams.fromDate ? searchParams.fromDate : "",
-        order_date_to: searchParams.toDate ? searchParams.toDate : "",
-        order_status: searchParams.orderStatus ? searchParams.orderStatus : "",
-        factory_code: searchParams.factoryNo ? searchParams.factoryNo : "",
-        consolidated_id: searchParams.cid ? searchParams.cid : "",
-        order_no: searchParams.poNo ? searchParams.poNo : ""
-      }
-    } else {
-      body = {
-        order_user: "innoa",
-        brand_key: "e88d9b8e-44ed-4fc2-b9a0-aef31ca0ccf3",
-        order_date_from: "2022-4-5",
-        order_date_to: "2022-5-1",
-        order_status: "",
-        factory_code: "",
-        consolidated_id: "",
-        order_no: ""
-      }
+    let body = {
+      order_user: "innoa",
+      brand_key: latestBrandValue
+        ? latestBrandValue
+        : props.searchParams.brand
+        ? props.searchParams.brand
+        : "",
+      order_date_from: props.searchParams.fromDate
+        ? props.searchParams.fromDate
+        : "",
+      order_date_to: props.searchParams.toDate ? props.searchParams.toDate : "",
+      order_status: props.searchParams.orderStatus
+        ? props.searchParams.orderStatus
+        : "",
+      factory_code: props.searchParams.factoryNo
+        ? props.searchParams.factoryNo
+        : "",
+      consolidated_id: props.searchParams.cid ? props.searchParams.cid : "",
+      order_no: props.searchParams.poNo ? props.searchParams.poNo : ""
     }
 
     axios
@@ -198,10 +196,10 @@ const Listing = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchOrderDetails = (searchParams) => {
-    if (searchParams.brand && searchParams.poNo) {
+  const fetchOrderDetails = () => {
+    if (props.searchParams.brand && props.searchParams.poNo) {
       const body = {
-        brand_key: searchParams.brand,
+        brand_key: props.searchParams.brand,
         order_no: "ASLL-PO2022050001"
       }
 
@@ -215,10 +213,41 @@ const Listing = (props) => {
     }
   }
 
+  const addPoOrder = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      order_user: "innoa",
+      order_keys: props.selectedItems
+    }
+
+    axios
+      .post("Order/AddPOOrder", body)
+      .then((res) => {
+        if (res.status === 200) {
+          if (res.data.status === "Success") {
+            props.setCombinedPOOrderkey(res.data.status_description)
+            props.setCurrentStep(2)
+            props.setIsPoOrderTemp("Y")
+          } else {
+            return MySwal.fire({
+              title: "Order Failed",
+              text: res.data.status_description,
+              icon: "error",
+              customClass: {
+                confirmButton: "btn btn-danger"
+              },
+              buttonsStyling: false
+            })
+          }
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   useEffect(() => {
     fetchOrderStatus()
-    fetchPoOrderList()
     fetchBrandList()
+    fetchPoOrderList()
   }, [])
 
   return (
@@ -234,11 +263,13 @@ const Listing = (props) => {
               classNamePrefix="select"
               options={brandOptions}
               value={brandOptions.filter(
-                (opt) => opt.value === searchParams.brand
+                (opt) => opt.value === props.searchParams.brand
               )}
-              onChange={(e) =>
-                setSearchParams({ ...searchParams, brand: e.value })
-              }
+              onChange={(e) => {
+                props.setSearchParams({ ...props.searchParams, brand: e.value })
+                props.setBrand({ ...e })
+                fetchPoOrderList(e.value)
+              }}
             />
           </Col>
         </Row>
@@ -250,9 +281,12 @@ const Listing = (props) => {
               </Col>
               <Col xs="12" sm="12" md="10" lg="10" xl="10">
                 <Input
-                  value={searchParams.cid ? searchParams.cid : ""}
+                  value={props.searchParams.cid ? props.searchParams.cid : ""}
                   onChange={(e) =>
-                    setSearchParams({ ...searchParams, cid: e.target.value })
+                    props.setSearchParams({
+                      ...props.searchParams,
+                      cid: e.target.value
+                    })
                   }
                 />
               </Col>
@@ -265,10 +299,14 @@ const Listing = (props) => {
               </Col>
               <Col xs="12" sm="12" md="10" lg="10" xl="10">
                 <Input
-                  value={searchParams.factoryNo ? searchParams.factoryNo : ""}
+                  value={
+                    props.searchParams.factoryNo
+                      ? props.searchParams.factoryNo
+                      : ""
+                  }
                   onChange={(e) =>
-                    setSearchParams({
-                      ...searchParams,
+                    props.setSearchParams({
+                      ...props.searchParams,
                       factoryNo: e.target.value
                     })
                   }
@@ -285,9 +323,12 @@ const Listing = (props) => {
               </Col>
               <Col xs="12" sm="12" md="10" lg="10" xl="10">
                 <Input
-                  value={searchParams.poNo ? searchParams.poNo : ""}
+                  value={props.searchParams.poNo ? props.searchParams.poNo : ""}
                   onChange={(e) =>
-                    setSearchParams({ ...searchParams, poNo: e.target.value })
+                    props.setSearchParams({
+                      ...props.searchParams,
+                      poNo: e.target.value
+                    })
                   }
                 />
               </Col>
@@ -304,11 +345,12 @@ const Listing = (props) => {
                   classNamePrefix="select"
                   options={orderStatusOptions}
                   value={orderStatusOptions.filter(
-                    (opt) => opt.value.toString() === searchParams.orderStatus
+                    (opt) =>
+                      opt.value.toString() === props.searchParams.orderStatus
                   )}
                   onChange={(e) =>
-                    setSearchParams({
-                      ...searchParams,
+                    props.setSearchParams({
+                      ...props.searchParams,
                       orderStatus: e.value.toString()
                     })
                   }
@@ -332,11 +374,13 @@ const Listing = (props) => {
                 <Flatpickr
                   className="form-control"
                   value={
-                    searchParams.fromDate ? new Date(searchParams.fromDate) : ""
+                    props.searchParams.fromDate
+                      ? new Date(props.searchParams.fromDate)
+                      : ""
                   }
                   onChange={(e) => {
-                    setSearchParams({
-                      ...searchParams,
+                    props.setSearchParams({
+                      ...props.searchParams,
                       fromDate: formatDateYMD(new Date(e))
                     })
                   }}
@@ -354,11 +398,13 @@ const Listing = (props) => {
                 <Flatpickr
                   className="form-control"
                   value={
-                    searchParams.toDate ? new Date(searchParams.toDate) : ""
+                    props.searchParams.toDate
+                      ? new Date(props.searchParams.toDate)
+                      : ""
                   }
                   onChange={(e) => {
-                    setSearchParams({
-                      ...searchParams,
+                    props.setSearchParams({
+                      ...props.searchParams,
                       toDate: formatDateYMD(new Date(e))
                     })
                   }}
@@ -374,8 +420,8 @@ const Listing = (props) => {
               style={{ margin: "3px" }}
               color="primary"
               onClick={() => {
-                fetchPoOrderList(searchParams)
-                fetchOrderDetails(searchParams)
+                fetchPoOrderList(props.searchParams)
+                fetchOrderDetails(props.searchParams)
               }}
             >
               Search
@@ -384,7 +430,7 @@ const Listing = (props) => {
               style={{ margin: "3px" }}
               color="primary"
               onClick={() => {
-                setSearchParams({})
+                props.setSearchParams({})
                 fetchPoOrderList()
               }}
             >
@@ -439,6 +485,8 @@ const Listing = (props) => {
                 onRowDoubleClicked={(e) => {
                   props.setSelectedItems([e.guid_key])
                   props.setCurrentStep(2)
+                  props.setIsPoOrderTemp("N")
+                  props.setCombinedPOOrderkey(e.order_no)
                 }}
                 selectableRowSelected={(e) =>
                   props.selectedItems.includes(e.guid_key)
