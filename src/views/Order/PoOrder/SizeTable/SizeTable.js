@@ -4,6 +4,7 @@ import {
   Spinner,
   Col,
   Card,
+  Button,
   CardHeader,
   CardBody,
   CardFooter
@@ -20,6 +21,7 @@ const SizeTable = (props) => {
   const [sizeContentData, setSizeContentData] = useState([])
   const [wastageStatus, setWastageStatus] = useState(true)
   const [wastageOptions, setWastageOptions] = useState([])
+  const [wastage, setWastage] = useState({})
   const [loader, setLoader] = useState(false)
 
   const sizeCols = [
@@ -225,13 +227,12 @@ const SizeTable = (props) => {
           </div>
         )}
         <Row>
-          <Col xs="12" sm="12" md="3" lg="1" xl="1">
+          <Col xs="12" sm="12" md="2" lg="1" xl="1">
             <div
               style={{
                 display: "flex",
                 height: "100%",
                 width: "100%",
-                justifyContent: "center",
                 alignItems: "center"
               }}
             >
@@ -243,7 +244,26 @@ const SizeTable = (props) => {
               className="React"
               classNamePrefix="select"
               options={wastageOptions}
+              isDisabled={!wastageStatus}
             />
+          </Col>
+          <Col xs="12" sm="12" md="7" lg="4" xl="4">
+            <Button
+              color="primary"
+              style={{
+                marginRight: "5px",
+                paddingLeft: "10px",
+                paddingRight: "10px"
+              }}
+            >
+              Add Wastage
+            </Button>
+            <Button
+              color="primary"
+              style={{ paddingLeft: "10px", paddingRight: "10px" }}
+            >
+              Reset Wastage
+            </Button>
           </Col>
         </Row>
       </CardBody>
