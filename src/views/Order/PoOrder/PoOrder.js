@@ -5,12 +5,14 @@ import { Link } from "react-router-dom"
 import { connect } from "react-redux"
 import Listing from "./Listing/listing"
 import { useTranslation } from "react-i18next"
-import OrderForm from "./OrderForm"
+import OrderForm from "./OrderForm/OrderForm"
+import SizeTable from "./SizeTable/SizeTable"
 
 const stepperMenu = [
   "Listing",
   "Select Item",
   "Order Form",
+  "PO Order Size Table",
   "Preview Item & Summary Size Table",
   "Invoice & Delivery Date",
   "Payment",
@@ -25,6 +27,10 @@ const PoOrder = () => {
   const [lastStep, setLastStep] = useState(stepperMenu.length - 1)
   // listing data
   const [selectedItems, setSelectedItems] = useState([])
+  const [brand, setBrand] = useState({})
+  const [combinedPOOrderkey, setCombinedPOOrderkey] = useState("")
+  const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
+  const [searchParams, setSearchParams] = useState({})
   // Order Form data
   const [dynamicFieldData, setDynamicFieldData] = useState([])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
@@ -58,17 +64,24 @@ const PoOrder = () => {
       />
       {currentStep === 0 ? (
         <Listing
+          brand={brand}
+          setBrand={setBrand}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
           setSelectedItems={setSelectedItems}
           selectedItems={selectedItems}
+          setCombinedPOOrderkey={setCombinedPOOrderkey}
+          setIsPoOrderTemp={setIsPoOrderTemp}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
         />
       ) : currentStep === 2 ? (
         <OrderForm
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
+          brand={brand}
           dynamicFieldData={dynamicFieldData}
           setDynamicFieldData={setDynamicFieldData}
           fibreInstructionData={fibreInstructionData}
@@ -78,6 +91,14 @@ const PoOrder = () => {
           careData={careData}
           setCareData={setCareData}
           selectedItems={selectedItems}
+          combinedPOOrderkey={combinedPOOrderkey}
+          isPoOrderTemp={isPoOrderTemp}
+        />
+      ) : currentStep === 3 ? (
+        <SizeTable
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          lastStep={lastStep}
         />
       ) : null}
     </div>
