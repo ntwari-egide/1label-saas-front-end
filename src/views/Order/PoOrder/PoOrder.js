@@ -28,7 +28,7 @@ const PoOrder = () => {
   // listing data
   const [selectedItems, setSelectedItems] = useState([])
   const [brand, setBrand] = useState({})
-  const [combinedPOOrderkey, setCombinedPOOrderkey] = useState("")
+  const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   const [searchParams, setSearchParams] = useState({})
   // Order Form data
@@ -91,7 +91,7 @@ const PoOrder = () => {
           careData={careData}
           setCareData={setCareData}
           selectedItems={selectedItems}
-          combinedPOOrderkey={combinedPOOrderkey}
+          combinedPOOrderKey={combinedPOOrderKey}
           isPoOrderTemp={isPoOrderTemp}
         />
       ) : currentStep === 3 ? (
@@ -99,6 +99,8 @@ const PoOrder = () => {
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
+          brand={brand}
+          combinedPOOrderKey={combinedPOOrderKey}
         />
       ) : null}
     </div>
