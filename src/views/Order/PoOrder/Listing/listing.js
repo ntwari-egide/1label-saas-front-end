@@ -196,7 +196,9 @@ const Listing = (props) => {
     if (props.searchParams.brand && props.searchParams.poNo) {
       const body = {
         brand_key: props.searchParams.brand,
-        order_no: "ASLL-PO2022050001"
+        order_no: "ASLL-PO2022050001",
+        order_user: "innoa",
+        is_po_order_temp: ""
       }
 
       axios
@@ -420,7 +422,7 @@ const Listing = (props) => {
               color="primary"
               onClick={() => {
                 fetchPoOrderList(props.searchParams)
-                fetchOrderDetails(props.searchParams)
+                fetchOrderDetails()
               }}
             >
               Search
@@ -513,7 +515,7 @@ const Listing = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
-          // validationField={props.selectedItems}
+          selectedItems={props.selectedItems}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}

@@ -30,6 +30,7 @@ const PoOrder = () => {
   const [brand, setBrand] = useState({})
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [searchParams, setSearchParams] = useState({})
+  const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   // Order Form data
   const [dynamicFieldData, setDynamicFieldData] = useState([])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
@@ -57,6 +58,7 @@ const PoOrder = () => {
         </Breadcrumb>
       </div>
       <Stepper
+        validationFields={{ selectedItems }}
         stepperMenu={stepperMenu}
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
@@ -73,6 +75,8 @@ const PoOrder = () => {
           setCombinedPOOrderkey={setCombinedPOOrderkey}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
+          isPoOrderTemp={isPoOrderTemp}
+          setIsPoOrderTemp={setIsPoOrderTemp}
         />
       ) : currentStep === 2 ? (
         <OrderForm
