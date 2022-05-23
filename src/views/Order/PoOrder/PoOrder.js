@@ -36,6 +36,7 @@ const PoOrder = () => {
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
   const [defaultContentData, setDefaultContentData] = useState([{}])
   const [careData, setCareData] = useState([{}])
+  const [contentGroup, setContentGroup] = useState("")
 
   return (
     <div>
@@ -94,9 +95,11 @@ const PoOrder = () => {
           setCareData={setCareData}
           selectedItems={selectedItems}
           combinedPOOrderKey={combinedPOOrderKey}
+          setContentGroup={setContentGroup}
         />
       ) : currentStep === 3 ? (
         <SizeTable
+          isPoOrderTemp={isPoOrderTemp}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
