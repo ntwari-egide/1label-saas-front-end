@@ -33,7 +33,6 @@ const OrderForm = (props) => {
   const [itemInfoOptions, setItemInfoOptions] = useState({})
   const [minExpectedDeliveryDate, setMinExpectedDeliveryDate] = useState("")
   const [iconSequence, setIconSequence] = useState([])
-  const [contentNumberSettings, setContentNumberSettings] = useState({})
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
@@ -156,7 +155,6 @@ const OrderForm = (props) => {
       .then((res) => {
         if (res.status === 200) {
           props.setContentGroup(res.data[0]?.content_model) // to send to invoice and delivery for save order api
-          setContentNumberSettings(res.data[0])
           fetchContentNumberList(res.data[0]?.content_model.split("/")) // passes content_group as an array
         }
       })
