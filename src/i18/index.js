@@ -25,7 +25,7 @@ i18n
         translation: require("./locales/cn.json")
       }
     },
-    debug: true,
+    debug: false,
     keySeparator: false,
     react: {
       useSuspense: false
