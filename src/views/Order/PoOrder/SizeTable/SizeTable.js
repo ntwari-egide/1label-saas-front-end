@@ -143,7 +143,8 @@ const SizeTable = (props) => {
   const fetchSizeTable = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
-      order_key: props.combinedPOOrderKey || ""
+      order_key: props.combinedPOOrderKey || "",
+      is_po_order_temp: props.isPoOrderTemp || ""
     }
     const tempState = []
     axios
