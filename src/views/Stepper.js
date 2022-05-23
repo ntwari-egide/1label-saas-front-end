@@ -16,8 +16,8 @@ const Stepper = (props) => {
                 let validationPassed = true
                 // validation for selected items
                 if (
-                  props.validationFields.selectedItems &&
-                  props.validationFields.selectedItems.length <= 0
+                  props.validationFields?.selectedItems &&
+                  props.validationFields?.selectedItems?.length <= 0
                 ) {
                   alert("Please select an item to continue")
                   validationPassed = false
