@@ -29,7 +29,6 @@ const PoOrder = () => {
   const [selectedItems, setSelectedItems] = useState([])
   const [brand, setBrand] = useState({})
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
-  const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   const [searchParams, setSearchParams] = useState({})
   // Order Form data
   const [dynamicFieldData, setDynamicFieldData] = useState([])
@@ -72,7 +71,6 @@ const PoOrder = () => {
           setSelectedItems={setSelectedItems}
           selectedItems={selectedItems}
           setCombinedPOOrderkey={setCombinedPOOrderkey}
-          setIsPoOrderTemp={setIsPoOrderTemp}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
         />
@@ -92,7 +90,6 @@ const PoOrder = () => {
           setCareData={setCareData}
           selectedItems={selectedItems}
           combinedPOOrderKey={combinedPOOrderKey}
-          isPoOrderTemp={isPoOrderTemp}
         />
       ) : currentStep === 3 ? (
         <SizeTable

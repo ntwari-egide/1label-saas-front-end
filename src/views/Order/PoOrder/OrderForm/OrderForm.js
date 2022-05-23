@@ -180,11 +180,9 @@ const OrderForm = (props) => {
   }
 
   useEffect(() => {
-    if (props.isPoOrderTemp.length > 0) {
-      fetchPOOrderDetails()
-      fetchItemInfoFields()
-    }
-  }, [props.isPoOrderTemp])
+    fetchPOOrderDetails()
+    fetchItemInfoFields()
+  }, [])
 
   return (
     <Card>

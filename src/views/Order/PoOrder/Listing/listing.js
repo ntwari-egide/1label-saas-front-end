@@ -126,15 +126,11 @@ const Listing = (props) => {
   }
 
   // API Services
-  const fetchPoOrderList = (latestBrandValue) => {
+  const fetchPoOrderList = () => {
     setPoOrderLoader(true)
     let body = {
       order_user: "innoa",
-      brand_key: latestBrandValue
-        ? latestBrandValue
-        : props.searchParams.brand
-        ? props.searchParams.brand
-        : "",
+      brand_key: props.searchParams.brand ? props.searchParams.brand : "",
       order_date_from: props.searchParams.fromDate
         ? props.searchParams.fromDate
         : "",
@@ -250,6 +246,10 @@ const Listing = (props) => {
     fetchPoOrderList()
   }, [])
 
+  useEffect(() => {
+    console.log("search parama", props.searchParams)
+  }, [props.searchParams])
+
   return (
     <Card>
       <CardHeader style={{ display: "block" }}>
@@ -268,7 +268,6 @@ const Listing = (props) => {
               onChange={(e) => {
                 props.setSearchParams({ ...props.searchParams, brand: e.value })
                 props.setBrand({ ...e })
-                fetchPoOrderList(e.value)
               }}
             />
           </Col>
