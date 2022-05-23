@@ -248,10 +248,6 @@ const Listing = (props) => {
     fetchPoOrderList()
   }, [])
 
-  useEffect(() => {
-    console.log("search parama", props.searchParams)
-  }, [props.searchParams])
-
   return (
     <Card>
       <CardHeader style={{ display: "block" }}>
