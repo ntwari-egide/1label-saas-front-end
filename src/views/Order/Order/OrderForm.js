@@ -591,6 +591,7 @@ const OrderForm = (props) => {
   // useEffect(() => {
   //   console.log("iconSequence", iconSequence)
   // }, [iconSequence])
+  //
 
   useEffect(() => {
     fetchContentNumberSettings()
@@ -1041,6 +1042,13 @@ const OrderForm = (props) => {
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}
+          validationFields={{
+            orderForm: {
+              orderReference: props.orderReference,
+              minExpectedDeliveryDate: props.expectedDeliveryDate,
+              projectionLocation: props.projectionLocation
+            }
+          }}
         />
       </CardFooter>
     </Card>

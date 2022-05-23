@@ -26,6 +26,7 @@ const Order = () => {
   const [lastStep] = useState(stepperMenu.length - 1)
   const [itemType, setItemType] = useState("")
   const [selectedItems, setSelectedItems] = useState([])
+
   // data of OrderForm component
   const [careData, setCareData] = useState([{}])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
@@ -41,6 +42,13 @@ const Order = () => {
   const [careNumberData, setCareNumberData] = useState({})
   const [contentCustomNumber, setContentCustomNumber] = useState("")
   const [careCustomNumber, setCareCustomNumber] = useState("")
+  // validations for OrderForm Component
+  const [orderFormManFields, setOrderFormManFields] = useState({
+    projectionLocation: false,
+    expectedDeliveryDate: false,
+    orderReference: false
+  })
+
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
@@ -61,6 +69,10 @@ const Order = () => {
   // useEffect(() => {
   //   xmlToObj()
   // }, [])
+  //
+  useEffect(() => {
+    console.log(orderFormManFields)
+  }, [orderFormManFields])
 
   return (
     <div>
@@ -86,7 +98,17 @@ const Order = () => {
         stepperMenu={stepperMenu}
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
-        validationField={selectedItems}
+        validationFields={{
+          selectedItems,
+          orderFormManFields: {
+            expectedDeliveryDate,
+            projectionLocation,
+            orderReference
+          }
+        }}
+        setOrderFormManFields={setOrderFormManFields}
+        orderFormManFields={orderFormManFields}
+        setOrderFormManFields={setOrderFormManFields}
       />
       {currentStep === 0 ? (
         <SelectItem
@@ -132,6 +154,7 @@ const Order = () => {
           setContentCustomNumber={setContentCustomNumber}
           careCustomNumber={careCustomNumber}
           setCareCustomNumber={setCareCustomNumber}
+          orderFormManFields={orderFormManFields}
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary

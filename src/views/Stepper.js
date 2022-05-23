@@ -13,13 +13,37 @@ const Stepper = (props) => {
             <div
               className="custom-stepper"
               onClick={() => {
-                if (props.validationField && props.validationField.length > 0) {
+                let validationPassed = true
+                // validation for selected items
+                if (
+                  props.validationFields.selectedItems &&
+                  props.validationFields.selectedItems.length <= 0
+                ) {
+                  alert("Please select an item to continue")
+                  validationPassed = false
+                }
+                // validation for Order Form mandatory fields
+                if (props.validationFields?.orderFormManFields) {
+                  Object.keys(props.validationFields.orderFormManFields).map(
+                    (field) => {
+                      if (
+                        props.validationFields.orderFormManFields[field]
+                          .length <= 0 &&
+                        props.currentStep === 1
+                      ) {
+                        const tempState = props.orderFormManFields
+                        tempState[field] = true
+                        props.setOrderFormManFields({ ...tempState })
+                        validationPassed = false
+                      }
+                    }
+                  )
+                  if (!validationPassed && props.currentStep === 1) {
+                    alert("Please enter mandatory fields")
+                  }
+                }
+                if (validationPassed) {
                   props.setCurrentStep(index)
-                } else if (!props.validationField) {
-                  props.setCurrentStep(index)
-                  return null
-                } else {
-                  alert("Please select items to proceed")
                 }
               }}
             >

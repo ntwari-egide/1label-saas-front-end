@@ -29,10 +29,30 @@ const Footer = (props) => {
           <Button
             color="primary"
             onClick={() => {
-              if (props.validationField && props.validationField.length <= 0) {
+              let validationPassed = true
+              // selectedItems validation for Select Item page.
+              if (props.selectedItems && props.selectedItems.length <= 0) {
                 alert("Please Select Item/s to proceed")
                 return
               }
+              // validation for mandatory fields in Order Form
+              if (
+                props.currentStep === 1 &&
+                props.validationFields?.orderForm
+              ) {
+                Object.keys(props.validationFields.orderForm).map((field) => {
+                  if (props.validationFields?.orderForm[field]?.length <= 0) {
+                    validationPassed = false
+                  }
+                })
+              }
+
+              if (!validationPassed && props.currentStep === 1) {
+                alert("Please enter mandatory fields")
+                return
+              }
+
+              // checks for boundary conditions.
               if (props.currentStep < props.lastStep) {
                 props.setCurrentStep(props.currentStep + 1)
               }
