@@ -9,6 +9,7 @@ import OrderForm from "./OrderForm/OrderForm"
 import SizeTable from "./SizeTable/SizeTable"
 import ItemList from "./ItemList/ItemList"
 import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
+import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
 
 const stepperMenu = [
   "Listing",
@@ -34,6 +35,8 @@ const PoOrder = () => {
   const [searchParams, setSearchParams] = useState({})
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   // Order Form data
+  const [contentCustomNumber, setContentCustomNumber] = useState("")
+  const [careCustomNumber, setCareCustomNumber] = useState("")
   const [projectionLocation, setProjectionLocation] = useState("")
   const [orderReference, setOrderReference] = useState("")
   const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
@@ -45,6 +48,7 @@ const PoOrder = () => {
   const [careData, setCareData] = useState([{}])
   const [careNumberData, setCareNumberData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
+  const [coo, setCoo] = useState("")
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
@@ -123,6 +127,11 @@ const PoOrder = () => {
           setProjectionLocation={setProjectionLocation}
           orderReference={orderReference}
           setOrderReference={setOrderReference}
+          setCoo={setCoo}
+          contentCustomNumber={contentCustomNumber}
+          setContentCustomNumber={setContentCustomNumber}
+          careCustomNumber={careCustomNumber}
+          setCareCustomNumber={setCareCustomNumber}
         />
       ) : currentStep === 3 ? (
         <SizeTable
@@ -144,6 +153,30 @@ const PoOrder = () => {
           setDefaultSizeTable={setDefaultSizeTable}
           defaultSizeTable={defaultSizeTable}
           setSizeMatrixType={setSizeMatrixType}
+        />
+      ) : currentStep === 5 ? (
+        <InvoiceAndDelivery
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+          lastStep={lastStep}
+          fibreInstructionData={fibreInstructionData}
+          careData={careData}
+          washCareData={washCareData}
+          defaultContentData={defaultContentData}
+          expectedDeliveryDate={expectedDeliveryDate}
+          dynamicFieldData={dynamicFieldData}
+          sizeTable={sizeTable}
+          defaultSizeTable={defaultSizeTable}
+          coo={coo}
+          selectedItems={selectedItems}
+          projectionLocation={projectionLocation}
+          orderReference={orderReference}
+          sizeMatrixType={sizeMatrixType}
+          contentGroup={contentGroup}
+          contentNumberData={contentNumberData}
+          contentCustomNumber={contentCustomNumber}
+          careCustomNumber={careCustomNumber}
+          careNumberData={careNumberData}
         />
       ) : null}
     </div>
