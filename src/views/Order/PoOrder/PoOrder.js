@@ -35,9 +35,11 @@ const PoOrder = () => {
   // Order Form data
   const [dynamicFieldData, setDynamicFieldData] = useState([])
   const [washCareData, setWashCareData] = useState([])
+  const [contentNumberData, setContentNumberData] = useState({})
   const [defaultContentData, setDefaultContentData] = useState([""])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
   const [careData, setCareData] = useState([{}])
+  const [careNumberData, setCareNumberData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
 
   return (
@@ -95,7 +97,11 @@ const PoOrder = () => {
           setFibreInstructionData={setFibreInstructionData}
           defaultContentData={defaultContentData}
           setDefaultContentData={setDefaultContentData}
+          setContentNumberData={setContentNumberData}
+          contentNumberData={contentNumberData}
           careData={careData}
+          careNumberData={careNumberData}
+          setCareNumberData={setCareNumberData}
           setWashCareData={setWashCareData}
           washCareData={washCareData}
           isPoOrderTemp={isPoOrderTemp}

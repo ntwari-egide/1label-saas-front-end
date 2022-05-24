@@ -37,6 +37,7 @@ const OrderForm = (props) => {
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
   const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
+  const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
 
   const renderSwitch = (field) => {
     // renders dynamic fields under Item Info
@@ -239,7 +240,13 @@ const OrderForm = (props) => {
       .then((res) => {
         if (res.status === 200) {
           props.setContentGroup(res.data[0]?.content_model) // to send to invoice and delivery for save order api
-          fetchContentNumberList(res.data[0]?.content_model.split("/")) // passes content_group as an array
+          // sets state to determine options for care and content for different content settings namely A/BC and ABC
+          if (res.data[0]?.content_model === "ABC") {
+            setIsContentSettingCommon(true)
+          } else {
+            setIsContentSettingCommon(false)
+          }
+          fetchContentNumberList(res.data[0]?.content_model?.split("/")) // passes content_group as an array
         }
       })
       .catch((err) => console.log(err))
@@ -283,7 +290,7 @@ const OrderForm = (props) => {
     }
     axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
       if (res.status === 200) {
-        if (group === "A") {
+        if (res.data?.content) {
           res?.data?.content
             ? props.setFibreInstructionData(res?.data?.content)
             : props.setFibreInstructionData([{}]) // default value, null throws eslint err
@@ -296,21 +303,22 @@ const OrderForm = (props) => {
               tempDefaultContentData
             )
           })
-        } else if (group === "BC") {
+        }
+        if (res.data?.care) {
           res?.data?.care
             ? props.setCareData(res?.data?.care)
             : props.setCareData([{}]) // default value, null throws eslint err
-          if (res?.data?.icon.length > 0) {
-            const tempData = {}
-            res?.data?.icon.map((icon) => {
-              tempData[icon.icon_type_id] = {
-                icon_group: icon.icon_group,
-                icon_type_id: icon.icon_type_id,
-                sys_icon_key: icon.sys_icon_key
-              }
-            })
-            props.setWashCareData({ ...tempData })
-          }
+        }
+        if (res.data?.icon) {
+          const tempData = {}
+          res?.data?.icon.map((icon) => {
+            tempData[icon.icon_type_id] = {
+              icon_group: icon.icon_group,
+              icon_type_id: icon.icon_type_id,
+              sys_icon_key: icon.sys_icon_key
+            }
+          })
+          props.setWashCareData({ ...tempData })
         }
       }
     })
@@ -470,17 +478,21 @@ const OrderForm = (props) => {
     })
   }
 
-  useEffect(() => {
-    console.log("dynamicFieldData", props.dynamicFieldData)
-  }, [props.dynamicFieldData])
-
-  useEffect(() => {
-    console.log("washCareOptions", washCareOptions)
-  }, [washCareOptions])
-
-  useEffect(() => {
-    console.log("washCareData", props.washCareData)
-  }, [props.washCareData])
+  // useEffect(() => {
+  //   console.log("dynamicFieldData", props.dynamicFieldData)
+  // }, [props.dynamicFieldData])
+  //
+  // useEffect(() => {
+  //   console.log("washCareData", props.washCareData)
+  // }, [props.washCareData])
+  //
+  // useEffect(() => {
+  //   console.log("isContentSettingCommon", isContentSettingCommon)
+  // }, [isContentSettingCommon])
+  //
+  // useEffect(() => {
+  //   console.log("contentGroupOptions", contentGroupOptions)
+  // }, [contentGroupOptions])
 
   useEffect(() => {
     fetchItemInfoData()
@@ -583,13 +595,21 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
-                        // value={contentGroupOptions["A"]?.filter(
-                        //   (opt) => opt.label === props.contentNumberData?.label
-                        // )}
-                        options={contentGroupOptions["A"]}
+                        value={contentGroupOptions["A"]?.filter(
+                          (opt) => opt.label === props.contentNumberData?.label
+                        )}
+                        options={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]
+                            : contentGroupOptions["A"]
+                        }
                         onChange={(e) => {
                           props.setContentNumberData(e)
-                          fetchContentNumberDetail(e.value, e.label, "A")
+                          let group = "A"
+                          if (isContentSettingCommon) {
+                            group = "ABC"
+                          }
+                          fetchContentNumberDetail(e.value, e.label, group)
                         }}
                       />
                     </Col>
@@ -750,13 +770,21 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
-                        //   value={contentGroupOptions["BC"]?.filter(
-                        //     (opt) => opt.value === props.careNumberData?.value
-                        //   )}
-                        //   options={contentGroupOptions["BC"]}
+                        value={contentGroupOptions["BC"]?.filter(
+                          (opt) => opt.value === props.careNumberData?.value
+                        )}
+                        options={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]
+                            : contentGroupOptions["BC"]
+                        }
                         onChange={(e) => {
                           props.setCareNumberData(e)
-                          fetchContentNumberDetail(e.value, e.label, "BC")
+                          let group = "BC"
+                          if (isContentSettingCommon) {
+                            group = "ABC"
+                          }
+                          fetchContentNumberDetail(e.value, e.label, group)
                         }}
                       />
                     </Col>
