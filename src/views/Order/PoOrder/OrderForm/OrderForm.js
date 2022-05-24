@@ -36,6 +36,7 @@ const OrderForm = (props) => {
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
+  const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
 
   const renderSwitch = (field) => {
     // renders dynamic fields under Item Info
@@ -98,7 +99,17 @@ const OrderForm = (props) => {
               <Label>{field?.title}</Label>
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
-              <Input />
+              <Input
+                value={props.dynamicFieldData[field.title]?.field_value}
+                onChange={(e) => {
+                  const tempState = props.dynamicFieldData
+                  tempState[field.title] = {
+                    ...tempState[field.title],
+                    field_value: e.target.value
+                  }
+                  props.setDynamicFieldData({ ...tempState })
+                }}
+              />
             </Col>
           </Row>
         )
@@ -147,6 +158,37 @@ const OrderForm = (props) => {
         props.setDynamicFieldData({ ...tempItemInfoState })
       }
     }
+  }
+
+  const handleFibreChange = (e, index) => {
+    // updating the fibreInstructionData state.
+    const tempData = props.fibreInstructionData
+    tempData[index] = {
+      ...props.fibreInstructionData[index],
+      cont_key: e.value,
+      cont_translation: e.label
+    }
+    props.setFibreInstructionData([...tempData])
+    // fetching default content for fabric and updating default content state
+    let tempDefData = props.defaultContentData
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      cont_key: e.value,
+      page_type: "content"
+    }
+
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          tempDefData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
+          props.setDefaultContentData([...tempDefData])
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   // API services
@@ -399,6 +441,26 @@ const OrderForm = (props) => {
     })
   }
 
+  const fetchProductLocationList = () => {
+    // fetches options for projection location select field.
+    const body = {
+      brand_key: props.brand ? props.brand.value : "",
+      order_user: "innoa",
+      order_no: props.combinedPOOrderKey || ""
+    }
+
+    axios
+      .post("/Order/GetLocationList", body)
+      .then((res) => {
+        if (res.status === 200) {
+          setProjectionLocationOptions(
+            res.data.map((loc) => ({ value: loc.erp_id, label: loc.erp_name }))
+          )
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const fetchItemInfoData = () => {
     const body = {
       guid_key: props.brand ? props.brand.value : ""
@@ -409,12 +471,25 @@ const OrderForm = (props) => {
   }
 
   useEffect(() => {
+    console.log("dynamicFieldData", props.dynamicFieldData)
+  }, [props.dynamicFieldData])
+
+  useEffect(() => {
+    console.log("washCareOptions", washCareOptions)
+  }, [washCareOptions])
+
+  useEffect(() => {
+    console.log("washCareData", props.washCareData)
+  }, [props.washCareData])
+
+  useEffect(() => {
     fetchItemInfoData()
     fetchPOOrderDetails()
     fetchItemInfoFields()
     fetchContentNumberSettings()
     fetchIconSequenceList()
     fetchContentTranslationList()
+    fetchProductLocationList()
   }, [])
 
   return (
@@ -438,7 +513,15 @@ const OrderForm = (props) => {
           <Label>{t("Projection Location")}</Label>
           <span className="text-danger">*</span>
           <div style={{ margin: "5px" }}>
-            <Select className="React" classNamePrefix="select" />
+            <Select
+              className="React"
+              classNamePrefix="select"
+              options={projectionLocationOptions}
+              // value={projectionLocationOptions.filter(
+              //   (opt) => opt.label === props.projectionLocation
+              // )}
+              // onChange={(e) => props.setProjectionLocation(e.label)}
+            />
           </div>
         </Col>
       </CardHeader>
@@ -533,18 +616,18 @@ const OrderForm = (props) => {
                                   className="React"
                                   classNamePrefix="select"
                                   options={componentOptions}
-                                  // value={componentOptions.filter(
-                                  //   (opt) => opt.value === rec?.part_key
-                                  // )}
-                                  // onChange={(e) => {
-                                  //   const tempData = props.fibreInstructionData
-                                  //   tempData[index] = {
-                                  //     ...props.fibreInstructionData[index],
-                                  //     part_key: e.value,
-                                  //     part_translation: e.label
-                                  //   }
-                                  //   props.setFibreInstructionData([...tempData])
-                                  // }}
+                                  value={componentOptions.filter(
+                                    (opt) => opt.value === rec?.part_key
+                                  )}
+                                  onChange={(e) => {
+                                    const tempData = props.fibreInstructionData
+                                    tempData[index] = {
+                                      ...props.fibreInstructionData[index],
+                                      part_key: e.value,
+                                      part_translation: e.label
+                                    }
+                                    props.setFibreInstructionData([...tempData])
+                                  }}
                                 />
                               </Col>
                               <Col xs="12" sm="12" md="3" lg="3" xl="3">
@@ -553,12 +636,12 @@ const OrderForm = (props) => {
                                   className="React"
                                   classNamePrefix="select"
                                   options={fabricOptions}
-                                  // value={fabricOptions.filter(
-                                  //   (opt) => opt.value === rec?.cont_key
-                                  // )}
-                                  // onChange={(e) => {
-                                  //   handleFibreChange(e, index)
-                                  // }}
+                                  value={fabricOptions.filter(
+                                    (opt) => opt.value === rec?.cont_key
+                                  )}
+                                  onChange={(e) => {
+                                    handleFibreChange(e, index)
+                                  }}
                                 />
                               </Col>
                               <Col xs="12" sm="12" md="2" lg="2" xl="2">
@@ -708,17 +791,17 @@ const OrderForm = (props) => {
                               className="React"
                               classNamePrefix="select"
                               options={additionalCareOptions}
-                              // value={additionalCareOptions.filter(
-                              //   (opt) => opt.value === rec.cont_key
-                              // )}
-                              // onChange={(e) => {
-                              //   const tempData = props.careData
-                              //   props.careData[index] = {
-                              //     ...props.careData[index],
-                              //     cont_key: e.value
-                              //   }
-                              //   props.setCareData([...tempData])
-                              // }}
+                              value={additionalCareOptions.filter(
+                                (opt) => opt.value === rec.cont_key
+                              )}
+                              onChange={(e) => {
+                                const tempData = props.careData
+                                props.careData[index] = {
+                                  ...props.careData[index],
+                                  cont_key: e.value
+                                }
+                                props.setCareData([...tempData])
+                              }}
                             />
                           </Col>
                           <Col xs="12" sm="12" md="1" lg="1" xl="1">
@@ -784,17 +867,19 @@ const OrderForm = (props) => {
                         </Col>
                         <Col xs="12" s="12" md="8" lg="8" xl="8">
                           <Select
+                            className="React"
+                            classNamePrefix="select"
                             options={washCareOptions[iconObj?.icon_type_id]}
-                            // value={
-                            //   washCareOptions[iconObj?.icon_type_id]
-                            //     ? washCareOptions[iconObj?.icon_type_id].filter(
-                            //         (opt) =>
-                            //           opt.value ===
-                            //           props.washCareData[iconObj?.icon_type_id]
-                            //             ?.sys_icon_key
-                            //       )
-                            //     : ""
-                            // }
+                            value={
+                              washCareOptions[iconObj?.icon_type_id]
+                                ? washCareOptions[iconObj?.icon_type_id].filter(
+                                    (opt) =>
+                                      opt.value ===
+                                      props.washCareData[iconObj?.icon_type_id]
+                                        ?.sys_icon_key
+                                  )
+                                : ""
+                            }
                             onChange={(e) => {
                               const tempData = {}
                               tempData[iconObj.icon_type_id] = {
@@ -807,8 +892,6 @@ const OrderForm = (props) => {
                                 ...tempData
                               })
                             }}
-                            className="React"
-                            classNamePrefix="select"
                             getOptionLabel={(e) => (
                               <div>
                                 {e.icon}
