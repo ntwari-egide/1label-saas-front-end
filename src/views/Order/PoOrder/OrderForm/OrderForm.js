@@ -70,6 +70,10 @@ const OrderForm = (props) => {
                     props.dynamicFieldData[field?.title]?.field_value
                 )}
                 onChange={(e) => {
+                  // set coo to use later in invoice and delivery component
+                  if (field.field === "F3") {
+                    props.setCoo(e.label)
+                  }
                   let tempData = props.dynamicFieldData
                   tempData[field?.title] = {
                     ...tempData[field?.title],
@@ -619,7 +623,12 @@ const OrderForm = (props) => {
                       <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Input />
+                      <Input
+                        value={props.contentCustomNumber}
+                        onChange={(e) =>
+                          props.setContentCustomNumber(e.target.value)
+                        }
+                      />
                     </Col>
                   </Row>
                   <Card>
@@ -795,10 +804,10 @@ const OrderForm = (props) => {
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
                       <Input
-                      // value={props.careCustomNumber}
-                      // onChange={(e) =>
-                      //   props.setCareCustomNumber(e.target.value)
-                      // }
+                        value={props.careCustomNumber}
+                        onChange={(e) =>
+                          props.setCareCustomNumber(e.target.value)
+                        }
                       />
                     </Col>
                   </Row>
