@@ -215,7 +215,7 @@ const Listing = (props) => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       order_user: "innoa",
-      order_keys: props.selectedItems
+      order_keys: props.selectedItems.map((item) => item.guid_key)
     }
 
     axios
@@ -490,7 +490,7 @@ const Listing = (props) => {
                   props.selectedItems.includes(e.guid_key)
                 }
                 onSelectedRowsChange={(e) =>
-                  props.setSelectedItems(e.selectedRows.map((r) => r.guid_key))
+                  props.setSelectedItems(e.selectedRows)
                 }
               />
             ) : (
