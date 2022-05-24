@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next"
 import OrderForm from "./OrderForm/OrderForm"
 import SizeTable from "./SizeTable/SizeTable"
 import ItemList from "./ItemList/ItemList"
+import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
 
 const stepperMenu = [
   "Listing",
@@ -33,6 +34,9 @@ const PoOrder = () => {
   const [searchParams, setSearchParams] = useState({})
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   // Order Form data
+  const [projectionLocation, setProjectionLocation] = useState("")
+  const [orderReference, setOrderReference] = useState("")
+  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
   const [dynamicFieldData, setDynamicFieldData] = useState([])
   const [washCareData, setWashCareData] = useState([])
   const [contentNumberData, setContentNumberData] = useState({})
@@ -41,6 +45,10 @@ const PoOrder = () => {
   const [careData, setCareData] = useState([{}])
   const [careNumberData, setCareNumberData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
+  // data of Preview and Summary component
+  const [sizeTable, setSizeTable] = useState("")
+  const [defaultSizeTable, setDefaultSizeTable] = useState("")
+  const [sizeMatrixType, setSizeMatrixType] = useState("")
 
   return (
     <div>
@@ -109,6 +117,12 @@ const PoOrder = () => {
           selectedItems={selectedItems}
           combinedPOOrderKey={combinedPOOrderKey}
           setContentGroup={setContentGroup}
+          expectedDeliveryDate={expectedDeliveryDate}
+          setExpectedDeliveryDate={setExpectedDeliveryDate}
+          projectionLocation={projectionLocation}
+          setProjectionLocation={setProjectionLocation}
+          orderReference={orderReference}
+          setOrderReference={setOrderReference}
         />
       ) : currentStep === 3 ? (
         <SizeTable
@@ -118,6 +132,18 @@ const PoOrder = () => {
           lastStep={lastStep}
           brand={brand}
           combinedPOOrderKey={combinedPOOrderKey}
+        />
+      ) : currentStep === 4 ? (
+        <PreviewAndSummary
+          brand={brand}
+          setCurrentStep={setCurrentStep}
+          currentStep={currentStep}
+          lastStep={lastStep}
+          selectedItems={selectedItems}
+          setSizeTable={setSizeTable}
+          setDefaultSizeTable={setDefaultSizeTable}
+          defaultSizeTable={defaultSizeTable}
+          setSizeMatrixType={setSizeMatrixType}
         />
       ) : null}
     </div>
