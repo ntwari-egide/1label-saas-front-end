@@ -110,7 +110,7 @@ const InvoiceAndDelivery = (props) => {
             seqno: (index + 1) * 10
           })),
           default_content: props.defaultContentData?.map((cont, index) => ({
-            cont_key: cont,
+            cont_key: cont.cont_key || "",
             seqno: (index + 1) * 10
           })),
           care: props.careData.map((data, index) => ({
