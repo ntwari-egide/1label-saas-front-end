@@ -185,11 +185,7 @@ const OrderForm = (props) => {
     })
   }
 
-  const fetchContentNumberDetail = (
-    content_number_key,
-    style_number,
-    group
-  ) => {
+  const fetchContentNumberDetail = (content_number_key, style_number) => {
     // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
     const body = {
       order_user: "innoa",
@@ -199,7 +195,36 @@ const OrderForm = (props) => {
     }
     axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
       if (res.status === 200) {
-        if (group === "A") {
+        // if (group === "A") {
+        //   res?.data?.content
+        //     ? props.setFibreInstructionData(res?.data?.content)
+        //     : props.setFibreInstructionData([{}]) // default value, null throws eslint err
+        //   const tempDefaultContentData = []
+        //   res?.data?.content?.map((cont, index) => {
+        //     // fetches default content data for fabric
+        //     fetchDefaultContentData(
+        //       cont.cont_key,
+        //       index,
+        //       tempDefaultContentData
+        //     )
+        //   })
+        // } else if (group === "BC") {
+        //   res?.data?.care
+        //     ? props.setCareData(res?.data?.care)
+        //     : props.setCareData([{}]) // default value, null throws eslint err
+        //   if (res?.data?.icon.length > 0) {
+        //     const tempData = {}
+        //     res?.data?.icon.map((icon) => {
+        //       tempData[icon.icon_type_id] = {
+        //         icon_group: icon.icon_group,
+        //         icon_type_id: icon.icon_type_id,
+        //         sys_icon_key: icon.sys_icon_key
+        //       }
+        //     })
+        //     props.setWashCareData({ ...tempData })
+        //   }
+        // }
+        if (res.data?.content) {
           res?.data?.content
             ? props.setFibreInstructionData(res?.data?.content)
             : props.setFibreInstructionData([{}]) // default value, null throws eslint err
@@ -212,21 +237,22 @@ const OrderForm = (props) => {
               tempDefaultContentData
             )
           })
-        } else if (group === "BC") {
+        }
+        if (res.data?.care) {
           res?.data?.care
             ? props.setCareData(res?.data?.care)
             : props.setCareData([{}]) // default value, null throws eslint err
-          if (res?.data?.icon.length > 0) {
-            const tempData = {}
-            res?.data?.icon.map((icon) => {
-              tempData[icon.icon_type_id] = {
-                icon_group: icon.icon_group,
-                icon_type_id: icon.icon_type_id,
-                sys_icon_key: icon.sys_icon_key
-              }
-            })
-            props.setWashCareData({ ...tempData })
-          }
+        }
+        if (res.data?.icon) {
+          const tempData = {}
+          res?.data?.icon.map((icon) => {
+            tempData[icon.icon_type_id] = {
+              icon_group: icon.icon_group,
+              icon_type_id: icon.icon_type_id,
+              sys_icon_key: icon.sys_icon_key
+            }
+          })
+          props.setWashCareData({ ...tempData })
         }
       }
     })
@@ -710,7 +736,7 @@ const OrderForm = (props) => {
                         options={contentGroupOptions["A"]}
                         onChange={(e) => {
                           props.setContentNumberData(e)
-                          fetchContentNumberDetail(e.value, e.label, "A")
+                          fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
                     </Col>
@@ -882,7 +908,7 @@ const OrderForm = (props) => {
                         options={contentGroupOptions["BC"]}
                         onChange={(e) => {
                           props.setCareNumberData(e)
-                          fetchContentNumberDetail(e.value, e.label, "BC")
+                          fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
                     </Col>
