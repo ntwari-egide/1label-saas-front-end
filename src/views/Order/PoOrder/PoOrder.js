@@ -7,10 +7,11 @@ import Listing from "./Listing/listing"
 import { useTranslation } from "react-i18next"
 import OrderForm from "./OrderForm/OrderForm"
 import SizeTable from "./SizeTable/SizeTable"
+import ItemList from "./ItemList/ItemList"
 
 const stepperMenu = [
   "Listing",
-  "Select Item",
+  "Item List",
   "Order Form",
   "PO Order Size Table",
   "Preview Item & Summary Size Table",
@@ -33,8 +34,9 @@ const PoOrder = () => {
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   // Order Form data
   const [dynamicFieldData, setDynamicFieldData] = useState([])
+  const [washCareData, setWashCareData] = useState([])
+  const [defaultContentData, setDefaultContentData] = useState([""])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
-  const [defaultContentData, setDefaultContentData] = useState([{}])
   const [careData, setCareData] = useState([{}])
   const [contentGroup, setContentGroup] = useState("")
 
@@ -79,6 +81,8 @@ const PoOrder = () => {
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
         />
+      ) : currentStep === 1 ? (
+        <ItemList />
       ) : currentStep === 2 ? (
         <OrderForm
           currentStep={currentStep}
@@ -92,6 +96,8 @@ const PoOrder = () => {
           defaultContentData={defaultContentData}
           setDefaultContentData={setDefaultContentData}
           careData={careData}
+          setWashCareData={setWashCareData}
+          washCareData={washCareData}
           isPoOrderTemp={isPoOrderTemp}
           setCareData={setCareData}
           selectedItems={selectedItems}
