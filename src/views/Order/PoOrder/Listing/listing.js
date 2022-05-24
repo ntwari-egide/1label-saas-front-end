@@ -419,6 +419,7 @@ const Listing = (props) => {
               onClick={() => {
                 fetchPoOrderList(props.searchParams)
                 fetchOrderDetails()
+                props.setSelectedItems([])
               }}
             >
               Search
