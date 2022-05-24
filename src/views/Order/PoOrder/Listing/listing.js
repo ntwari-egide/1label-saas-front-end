@@ -224,8 +224,8 @@ const Listing = (props) => {
         if (res.status === 200) {
           if (res.data.status === "Success") {
             props.setCombinedPOOrderkey(res.data.status_description)
-            props.setCurrentStep(2)
             props.setIsPoOrderTemp("Y")
+            props.setCurrentStep(2)
           } else {
             return MySwal.fire({
               title: "Order Failed",

@@ -92,6 +92,7 @@ const PoOrder = () => {
           defaultContentData={defaultContentData}
           setDefaultContentData={setDefaultContentData}
           careData={careData}
+          isPoOrderTemp={isPoOrderTemp}
           setCareData={setCareData}
           selectedItems={selectedItems}
           combinedPOOrderKey={combinedPOOrderKey}

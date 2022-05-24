@@ -155,7 +155,7 @@ const OrderForm = (props) => {
       brand_key: props.brand ? props.brand.value : "",
       show_status: "Y",
       order_user: "innoa",
-      order_no: props.combinedPOOrderkey || "",
+      order_no: props.combinedPOOrderKey || "",
       is_po_order_temp: props.isPoOrderTemp || ""
     }
 
@@ -209,7 +209,7 @@ const OrderForm = (props) => {
     contentGroup.map((content_group) => {
       const body = {
         order_user: "innoa",
-        brand_key: props.brand?.value,
+        brand_key: props.brand ? props.brand.value : "",
         content_group
       }
       axios
@@ -407,10 +407,6 @@ const OrderForm = (props) => {
       // console.log(res)
     })
   }
-
-  useEffect(() => {
-    console.log("contentGroupOptions", contentGroupOptions)
-  }, [contentGroupOptions])
 
   useEffect(() => {
     fetchItemInfoData()
