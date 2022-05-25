@@ -51,6 +51,9 @@ const PoOrder = () => {
   const [coo, setCoo] = useState("")
   // data of order size Table
   const [sizeContentData, setSizeContentData] = useState({})
+  const [wastageApplied, setWastageApplied] = useState(false)
+  const [wastage, setWastage] = useState(0)
+  const [sizeTableTrigger, setSizeTableTrigger] = useState(true)
 
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
@@ -97,6 +100,7 @@ const PoOrder = () => {
           setSearchParams={setSearchParams}
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
+          setSizeTableTrigger={setSizeTableTrigger}
         />
       ) : currentStep === 1 ? (
         <ItemList />
@@ -146,6 +150,12 @@ const PoOrder = () => {
           lastStep={lastStep}
           brand={brand}
           combinedPOOrderKey={combinedPOOrderKey}
+          wastageApplied={wastageApplied}
+          setWastageApplied={setWastageApplied}
+          wastage={wastage}
+          setWastage={setWastage}
+          sizeTableTrigger={sizeTableTrigger}
+          setSizeTableTrigger={setSizeTableTrigger}
         />
       ) : currentStep === 4 ? (
         <PreviewAndSummary
@@ -158,6 +168,8 @@ const PoOrder = () => {
           setDefaultSizeTable={setDefaultSizeTable}
           defaultSizeTable={defaultSizeTable}
           setSizeMatrixType={setSizeMatrixType}
+          sizeContentData={sizeContentData}
+          wastageApplied={wastageApplied}
         />
       ) : currentStep === 5 ? (
         <InvoiceAndDelivery
