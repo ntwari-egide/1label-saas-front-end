@@ -31,6 +31,7 @@ const Listing = (props) => {
   // App states
   const [poOrderData, setPoOrderData] = useState([])
   const [poOrderLoader, setPoOrderLoader] = useState(false)
+  const [orderLoader, setOrderLoader] = useState(false)
   // select options
   const [brandOptions, setBrandOptions] = useState([])
   const [orderStatusOptions, setOrderStatusOptions] = useState([])
@@ -122,6 +123,7 @@ const Listing = (props) => {
       return
     }
     // props.setCurrentStep(2)
+    setOrderLoader(true)
     addPoOrder()
   }
 
@@ -237,10 +239,15 @@ const Listing = (props) => {
               buttonsStyling: false
             })
           }
+          setOrderLoader(false)
         }
       })
       .catch((err) => console.log(err))
   }
+
+  useEffect(() => {
+    console.log(props.selectedItems)
+  }, [props.selectedItems])
 
   useEffect(() => {
     fetchOrderStatus()
@@ -430,6 +437,7 @@ const Listing = (props) => {
               onClick={() => {
                 props.setSearchParams({})
                 fetchPoOrderList()
+                props.setSelectedItems([])
               }}
             >
               Cancel
@@ -457,6 +465,9 @@ const Listing = (props) => {
               <div>
                 <Button color="primary" onClick={handleOrder}>
                   Order
+                  {orderLoader ? (
+                    <Spinner size="sm" style={{ marginLeft: "3px" }} />
+                  ) : null}
                 </Button>
               </div>
             </div>
@@ -487,7 +498,9 @@ const Listing = (props) => {
                 //   props.setCombinedPOOrderkey(e.order_no)
                 // }}
                 selectableRowSelected={(e) =>
-                  props.selectedItems.includes(e.guid_key)
+                  props.selectedItems
+                    .map((item) => item.guid_key)
+                    .includes(e.guid_key)
                 }
                 onSelectedRowsChange={(e) =>
                   props.setSelectedItems(e.selectedRows)
