@@ -49,6 +49,9 @@ const PoOrder = () => {
   const [careNumberData, setCareNumberData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
   const [coo, setCoo] = useState("")
+  // data of order size Table
+  const [sizeContentData, setSizeContentData] = useState({})
+
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
@@ -135,6 +138,8 @@ const PoOrder = () => {
         />
       ) : currentStep === 3 ? (
         <SizeTable
+          sizeContentData={sizeContentData}
+          setSizeContentData={setSizeContentData}
           isPoOrderTemp={isPoOrderTemp}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
