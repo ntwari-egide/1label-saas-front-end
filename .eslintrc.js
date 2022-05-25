@@ -45,7 +45,7 @@ module.exports = {
     "keyword-spacing": "error",
     //'multiline-ternary': ['error', 'never'],
     // 'no-lonely-if': 'error',
-    "no-mixed-operators": "error",
+    // "no-mixed-operators": "error",
     "no-multiple-empty-lines": ["error", { max: 2, maxEOF: 1 }],
     "no-tabs": "error",
     "no-unneeded-ternary": "error",
