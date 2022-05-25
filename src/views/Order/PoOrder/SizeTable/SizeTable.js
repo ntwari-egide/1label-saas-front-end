@@ -147,29 +147,30 @@ const SizeTable = (props) => {
       return
     }
     // actual algo
-    const tempData = props.sizeContentData.map((table) => {
-      const newTable = table.map((row) => {
-        const tempRow = row
-        // because following loop escapes when value is 0
-        if (tempRow["QTY ITEM REF 1"] === 0) {
-          tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
-        }
-        if (tempRow["QTY ITEM REF 1"]) {
-          if (operation === "add") {
-            tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
-              tempRow["QTY ITEM REF 1"] + wastage * tempRow["QTY ITEM REF 1"]
-            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
-              tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-            )
-          } else {
-            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+    const tempData = props.sizeContentData
+    Object.keys(props.sizeContentData).map((key) => {
+      tempData[key] = props.sizeContentData[key].map((table) =>
+        table.map((row) => {
+          const tempRow = row
+          if (tempRow["QTY ITEM REF 1"] === 0) {
+            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
           }
-        }
-        return tempRow
-      })
-      return newTable
+          if (tempRow["QTY ITEM REF 1"]) {
+            if (operation === "add") {
+              tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
+                tempRow["QTY ITEM REF 1"] + wastage * tempRow["QTY ITEM REF 1"]
+              tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
+                tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+              )
+            } else {
+              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+            }
+          }
+          return tempRow
+        })
+      )
     })
-    props.setSizeContentData(tempData)
+    props.setSizeContentData({ ...tempData })
     if (operation === "add") {
       setWastageApplied(true)
     } else {
