@@ -15,6 +15,7 @@ const PreviewAndSummary = (props) => {
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
   const [initialSummaryProcessing, setInitialSummaryProcessing] = useState(true)
+  const [summaryTable, setSummaryTable] = useState({})
 
   const sizeCols = [
     {
@@ -135,6 +136,33 @@ const PreviewAndSummary = (props) => {
     return data
   }
 
+  const calculateSummaryTable = () => {
+    const tempState = {}
+    Object.keys(props.sizeContentData).map((key) => {
+      const tempData = []
+      props.sizeContentData[key].map((table, tabIndex) => {
+        table.map((row, index) => {
+          // initialize for first table else add to existing
+          if (tabIndex === 0) {
+            tempData.push(row)
+          } else {
+            let col = "QTY ITEM REF 1"
+            if (tempData[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
+              col = "QTY ITEM REF 1 WITH WASTAGE"
+            }
+            if (row[col]) {
+              const tempRow = { ...tempData[index] }
+              tempRow[col] += row[col]
+              tempData[index] = tempRow
+            }
+          }
+        })
+      })
+      tempState[key] = tempData
+    })
+    setSummaryTable({ ...tempState })
+  }
+
   // API Sevices
   const fetchSizeTableList = () => {
     const body = {
@@ -194,11 +222,8 @@ const PreviewAndSummary = (props) => {
   }
 
   useEffect(() => {
-
-  })
-
-  useEffect(() => {
     fetchSizeTableList()
+    calculateSummaryTable()
   }, [])
 
   // useEffect(() => {
@@ -267,38 +292,13 @@ const PreviewAndSummary = (props) => {
         </Row>
         <Row>
           <Col>
-            {Object.keys(props.sizeContentData).map((key) => {
-              const tempData = []
-              props.sizeContentData[key].map((table, tabIndex) =>
-                table.map((row, index) => {
-                  // need this state since otherwise will recalculate on every state update
-                  if (initialSummaryProcessing) {
-                    // initialize for first table else add to existing
-                    console.log("tabIndex", tabIndex)
-                    if (tabIndex === 0) {
-                      tempData.push(row)
-                    } else {
-                      let col = "QTY ITEM REF 1"
-                      console.log("tempData[index]", tempData[index])
-                      if (tempData[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
-                        col = "QTY ITEM REF 1 WITH WASTAGE"
-                      }
-                      if (row[col]) {
-                        const tempRow = tempData[index]
-                        console.log("tempRow", tempRow)
-                        // console.log("tempRow", tempRow)
-                        // tempRow[col] += row[col]
-                        // tempData[index] = tempRow
-                      }
-                    }
-                  }
-                })
-              )
-              // console.log("cols", sizeCols)
-              return (
-                <DataTable data={tempData} noHeader={true} columns={sizeCols} />
-              )
-            })}
+            {Object.keys(summaryTable).map((key) => (
+              <DataTable
+                data={summaryTable[key]}
+                columns={sizeCols}
+                noHeader={true}
+              />
+            ))}
           </Col>
         </Row>
         <Row style={{ marginBottom: "10px" }}>
