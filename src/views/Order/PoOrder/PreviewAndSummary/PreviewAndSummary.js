@@ -14,29 +14,101 @@ const PreviewAndSummary = (props) => {
   const [defaultSizeData, setDefaultSizeData] = useState(null)
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
+  const [initialSummaryProcessing, setInitialSummaryProcessing] = useState(true)
 
   const sizeCols = [
     {
-      name: t("Sr No."),
-      selector: "Sequence",
+      name: t("SIZE DESCRIPTION"),
+      selector: "Size Description",
       sortable: true
     },
     {
       name: t("SIZE"),
-      selector: "SIZE",
+      selector: "Size",
       sortable: true
     },
     {
-      name: t("QTY ITEM REF 0"),
-      selector: "QTY ITEM REF 0"
+      name: t("SUPPLIER REF"),
+      selector: "Supplier Ref",
+      sortable: false
     },
     {
-      name: t("QTY ITEM REF 1"),
-      selector: "QTY ITEM REF 1"
+      name: t("SUPPLIER COLOR"),
+      selector: "Supplier Colour",
+      sortable: false
+    },
+    {
+      name: t("OPTION ID"),
+      selector: "Option ID",
+      sortable: false
+    },
+    {
+      name: t("BUYING GROUP ID"),
+      selector: "Buying Group ID",
+      sortable: false
+    },
+    {
+      name: t("PRODUCT GROUP DESCRIPTION"),
+      selector: "Product Group Description",
+      width: "200px",
+      sortable: false
+    },
+    {
+      name: t("SKU Code"),
+      selector: "SKU Code",
+      sortable: false
+    },
+    {
+      name: t("STYLE NUMBER"),
+      selector: "Style Number",
+      sortable: false
+    },
+    {
+      name: t("BARCODE"),
+      selector: "Barcode",
+      sortable: false
+    },
+    {
+      name: t("ASBAR1"),
+      selector: props.wastageApplied
+        ? "QTY ITEM REF 1 WITH WASTAGE"
+        : "QTY ITEM REF 1"
     },
     {
       name: t("QTY ITEM REF 2"),
       selector: "QTY ITEM REF 2"
+    },
+    {
+      name: t("QTY ITEM REF 3"),
+      selector: "QTY ITEM REF 3"
+    },
+    {
+      name: t("QTY ITEM REF 4"),
+      selector: "QTY ITEM REF 4"
+    },
+    {
+      name: t("QTY ITEM REF 5"),
+      selector: "QTY ITEM REF 5"
+    },
+    {
+      name: t("QTY ITEM REF 6"),
+      selector: "QTY ITEM REF 6"
+    },
+    {
+      name: t("QTY ITEM REF 7"),
+      selector: "QTY ITEM REF 7"
+    },
+    {
+      name: t("QTY ITEM REF 8"),
+      selector: "QTY ITEM REF 8"
+    },
+    {
+      name: t("QTY ITEM REF 9"),
+      selector: "QTY ITEM REF 9"
+    },
+    {
+      name: t("QTY ITEM REF 10"),
+      selector: "QTY ITEM REF 10"
     },
     {
       name: t("UPC/EAN CODE"),
@@ -85,7 +157,7 @@ const PreviewAndSummary = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchSizeTableDetails = (guid_key) => {
+  const fetchSizeTableDetails = () => {
     setLoading(true)
     const body = {
       guid_key: 134023
@@ -122,12 +194,12 @@ const PreviewAndSummary = (props) => {
   }
 
   useEffect(() => {
-    fetchSizeTableList()
-  }, [])
+
+  })
 
   useEffect(() => {
-    console.log("sizeData", sizeData)
-  }, [sizeData])
+    fetchSizeTableList()
+  }, [])
 
   // useEffect(() => {
   //   console.log("sizeData", sizeData)
@@ -193,6 +265,42 @@ const PreviewAndSummary = (props) => {
             </Card>
           </Col>
         </Row>
+        <Row>
+          <Col>
+            {Object.keys(props.sizeContentData).map((key) => {
+              const tempData = []
+              props.sizeContentData[key].map((table, tabIndex) =>
+                table.map((row, index) => {
+                  // need this state since otherwise will recalculate on every state update
+                  if (initialSummaryProcessing) {
+                    // initialize for first table else add to existing
+                    console.log("tabIndex", tabIndex)
+                    if (tabIndex === 0) {
+                      tempData.push(row)
+                    } else {
+                      let col = "QTY ITEM REF 1"
+                      console.log("tempData[index]", tempData[index])
+                      if (tempData[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
+                        col = "QTY ITEM REF 1 WITH WASTAGE"
+                      }
+                      if (row[col]) {
+                        const tempRow = tempData[index]
+                        console.log("tempRow", tempRow)
+                        // console.log("tempRow", tempRow)
+                        // tempRow[col] += row[col]
+                        // tempData[index] = tempRow
+                      }
+                    }
+                  }
+                })
+              )
+              // console.log("cols", sizeCols)
+              return (
+                <DataTable data={tempData} noHeader={true} columns={sizeCols} />
+              )
+            })}
+          </Col>
+        </Row>
         <Row style={{ marginBottom: "10px" }}>
           <Col
             xs="12"
@@ -230,6 +338,7 @@ const PreviewAndSummary = (props) => {
             />
           </Col>
         </Row>
+        {/*}
         <Row>
           <Col>
             {sizeData.length > 0 ? (
@@ -242,6 +351,7 @@ const PreviewAndSummary = (props) => {
             ) : null}
           </Col>
         </Row>
+    */}
       </CardBody>
       <CardFooter>
         <Footer
