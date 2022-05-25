@@ -18,11 +18,11 @@ import { useTranslation } from "react-i18next"
 
 const SizeTable = (props) => {
   const { t } = useTranslation()
-  const [sizeContentData, setSizeContentData] = useState([])
   const [wastageStatus, setWastageStatus] = useState(true)
   const [wastageOptions, setWastageOptions] = useState([])
-  const [wastage, setWastage] = useState({})
+  const [wastage, setWastage] = useState(0)
   const [loader, setLoader] = useState(false)
+  const [wastageApplied, setWastageApplied] = useState(false)
 
   const sizeCols = [
     {
@@ -77,8 +77,10 @@ const SizeTable = (props) => {
       sortable: false
     },
     {
-      name: t("QTY ITEM REF 1"),
-      selector: "QTY ITEM REF 1"
+      name: t("ASBAR1"),
+      selector: wastageApplied
+        ? "QTY ITEM REF 1 WITH WASTAGE"
+        : "QTY ITEM REF 1"
     },
     {
       name: t("QTY ITEM REF 2"),
@@ -139,6 +141,43 @@ const SizeTable = (props) => {
     return data
   }
 
+  const handleAddResetWastage = (operation) => {
+    // just to avoid computation
+    if (wastage === 0) {
+      return
+    }
+    // actual algo
+    const tempData = props.sizeContentData.map((table) => {
+      const newTable = table.map((row) => {
+        const tempRow = row
+        // because following loop escapes when value is 0
+        if (tempRow["QTY ITEM REF 1"] === 0) {
+          tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
+        }
+        if (tempRow["QTY ITEM REF 1"]) {
+          if (operation === "add") {
+            tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
+              tempRow["QTY ITEM REF 1"] + wastage * tempRow["QTY ITEM REF 1"]
+            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
+              tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+            )
+          } else {
+            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          }
+        }
+        return tempRow
+      })
+      return newTable
+    })
+    props.setSizeContentData(tempData)
+    if (operation === "add") {
+      setWastageApplied(true)
+    } else {
+      setWastage(0)
+      setWastageApplied(false)
+    }
+  }
+
   // API Services
   const fetchSizeTable = () => {
     const body = {
@@ -146,7 +185,7 @@ const SizeTable = (props) => {
       order_key: props.combinedPOOrderKey || "",
       is_po_order_temp: props.isPoOrderTemp || ""
     }
-    const tempState = []
+    const tempState = {}
     axios
       .post("/order/GetPOSizeTableTempList", body)
       .then((res) => {
@@ -154,11 +193,16 @@ const SizeTable = (props) => {
         if (res.status === 200) {
           res.data.map((dt, index) => {
             if (dt.size_content) {
-              tempState[index] = formatColToRow(dt.size_content)
+              // if exists then push else initialize
+              if (tempState[dt.group_type]) {
+                tempState[dt.group_type].push(formatColToRow(dt.size_content))
+              } else {
+                tempState[dt.group_type] = [formatColToRow(dt.size_content)]
+              }
             }
           })
         }
-        setSizeContentData([...tempState])
+        props.setSizeContentData({ ...tempState })
         setLoader(false)
       })
       .catch((err) => console.log(err))
@@ -182,6 +226,10 @@ const SizeTable = (props) => {
       })
       .catch((err) => console.log(err))
   }
+
+  useEffect(() => {
+    console.log("size table", props.sizeContentData)
+  }, [props.sizeContentData])
 
   useEffect(() => {
     fetchSizeTable()
@@ -209,22 +257,13 @@ const SizeTable = (props) => {
           </div>
         ) : (
           <div>
-            <Row style={{ margin: 0, marginBottom: "10px" }}>
-              <DataTable
-                data={sizeContentData[0]}
-                columns={sizeCols}
-                noHeader={true}
-              />
-            </Row>
-            {sizeContentData[1] ? (
-              <Row style={{ margin: 0, marginBottom: "10px" }}>
-                <DataTable
-                  data={sizeContentData[1]}
-                  columns={sizeCols}
-                  noHeader={true}
-                />
-              </Row>
-            ) : null}
+            {Object.keys(props.sizeContentData).map((key) =>
+              props.sizeContentData[key].map((table) => (
+                <Row style={{ margin: 0, marginBottom: "10px" }}>
+                  <DataTable data={table} columns={sizeCols} noHeader={true} />
+                </Row>
+              ))
+            )}
           </div>
         )}
         <Row>
@@ -245,6 +284,8 @@ const SizeTable = (props) => {
               className="React"
               classNamePrefix="select"
               options={wastageOptions}
+              value={wastageOptions.filter((opt) => opt.value === wastage)}
+              onChange={(e) => setWastage(e.value)}
               isDisabled={!wastageStatus}
             />
           </Col>
@@ -256,12 +297,14 @@ const SizeTable = (props) => {
                 paddingLeft: "10px",
                 paddingRight: "10px"
               }}
+              onClick={() => handleAddResetWastage("add")}
             >
               Add Wastage
             </Button>
             <Button
               color="primary"
               style={{ paddingLeft: "10px", paddingRight: "10px" }}
+              onClick={() => handleAddResetWastage("reset")}
             >
               Reset Wastage
             </Button>
