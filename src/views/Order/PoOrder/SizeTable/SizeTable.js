@@ -20,9 +20,7 @@ const SizeTable = (props) => {
   const { t } = useTranslation()
   const [wastageStatus, setWastageStatus] = useState(true)
   const [wastageOptions, setWastageOptions] = useState([])
-  const [wastage, setWastage] = useState(0)
   const [loader, setLoader] = useState(false)
-  const [wastageApplied, setWastageApplied] = useState(false)
 
   const sizeCols = [
     {
@@ -78,7 +76,7 @@ const SizeTable = (props) => {
     },
     {
       name: t("ASBAR1"),
-      selector: wastageApplied
+      selector: props.wastageApplied
         ? "QTY ITEM REF 1 WITH WASTAGE"
         : "QTY ITEM REF 1"
     },
@@ -143,7 +141,7 @@ const SizeTable = (props) => {
 
   const handleAddResetWastage = (operation) => {
     // just to avoid computation
-    if (wastage === 0) {
+    if (props.wastage === 0) {
       return
     }
     // actual algo
@@ -158,7 +156,8 @@ const SizeTable = (props) => {
           if (tempRow["QTY ITEM REF 1"]) {
             if (operation === "add") {
               tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
-                tempRow["QTY ITEM REF 1"] + wastage * tempRow["QTY ITEM REF 1"]
+                tempRow["QTY ITEM REF 1"] +
+                props.wastage * tempRow["QTY ITEM REF 1"]
               tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
                 tempRow["QTY ITEM REF 1 WITH WASTAGE"]
               )
@@ -172,10 +171,10 @@ const SizeTable = (props) => {
     })
     props.setSizeContentData({ ...tempData })
     if (operation === "add") {
-      setWastageApplied(true)
+      props.setWastageApplied(true)
     } else {
-      setWastage(0)
-      setWastageApplied(false)
+      props.setWastage(0)
+      props.setWastageApplied(false)
     }
   }
 
@@ -204,6 +203,7 @@ const SizeTable = (props) => {
           })
         }
         props.setSizeContentData({ ...tempState })
+        props.setSizeTableTrigger(false)
         setLoader(false)
       })
       .catch((err) => console.log(err))
@@ -233,7 +233,14 @@ const SizeTable = (props) => {
   }, [props.sizeContentData])
 
   useEffect(() => {
-    fetchSizeTable()
+    console.log("wastageApplied", props.wastageApplied)
+    console.log("cols", sizeCols)
+  }, [props.wastageApplied])
+
+  useEffect(() => {
+    if (props.sizeTableTrigger) {
+      fetchSizeTable()
+    }
     fetchWastageList()
   }, [])
 
@@ -285,8 +292,10 @@ const SizeTable = (props) => {
               className="React"
               classNamePrefix="select"
               options={wastageOptions}
-              value={wastageOptions.filter((opt) => opt.value === wastage)}
-              onChange={(e) => setWastage(e.value)}
+              value={wastageOptions.filter(
+                (opt) => opt.value === props.wastage
+              )}
+              onChange={(e) => props.setWastage(e.value)}
               isDisabled={!wastageStatus}
             />
           </Col>
