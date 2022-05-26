@@ -38,6 +38,7 @@ const InvoiceAndDelivery = (props) => {
       factory_code: "",
       location_code: props.projectionLocation ? props.projectionLocation : "",
       draft_order_email: clientDetails.draft_email,
+      approved_email_address: "", // to be
       order_expdate_delivery_date: formatDateYMD(
         new Date(props.expectedDeliveryDate)
       ),
@@ -73,6 +74,33 @@ const InvoiceAndDelivery = (props) => {
         }
       ],
       dynamic_field: Object.values(props.dynamicFieldData),
+      summary_size_table: Object.keys({ ...props.summaryTable }).map((key) => {
+        const returnDict = {
+          group_type: key
+        }
+        if (!props.wastageApplied) {
+          return {
+            ...returnDict,
+            size_content: props.summaryTable[key],
+            default_size_content: props.summaryTable[key]
+          }
+        } else {
+          return {
+            ...returnDict,
+            size_content: props.summaryTable[key].map((row) => {
+              const tempRow = { ...row }
+              tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+              return tempRow
+            }),
+            default_size_content: props.summaryTable[key].map((row) => {
+              const tempRow = { ...row }
+              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+              return tempRow
+            })
+          }
+        }
+      }), // to be
       size_matrix_type: props.sizeMatrixType,
       size_content: props.sizeTable,
       default_size_content: props.defaultSizeTable,
@@ -125,13 +153,14 @@ const InvoiceAndDelivery = (props) => {
         }
       ]
     }
-    axios
-      .post("Order/SaveOrder", body)
-      .then((res) => {
-        if (res.status === 200) {
-        }
-      })
-      .catch((err) => console.log(err))
+    console.log("body", body)
+    // axios
+    //   .post("Order/SaveOrder", body)
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //     }
+    //   })
+    //   .catch((err) => console.log(err))
   }
 
   const fetchUserInfo = () => {
