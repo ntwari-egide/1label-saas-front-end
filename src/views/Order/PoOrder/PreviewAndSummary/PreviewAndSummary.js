@@ -150,8 +150,10 @@ const PreviewAndSummary = (props) => {
               tempRow["QTY ITEM REF 1 WITH WASTAGE"] +=
                 row["QTY ITEM REF 1 WITH WASTAGE"]
             }
-            tempRow["QTY ITEM REF 1"] += row["QTY ITEM REF 1"]
-            tempData[index] = tempRow
+            if (tempRow["QTY ITEM REF 1"]) {
+              tempRow["QTY ITEM REF 1"] += row["QTY ITEM REF 1"]
+              tempData[index] = tempRow
+            }
           }
         })
       })
