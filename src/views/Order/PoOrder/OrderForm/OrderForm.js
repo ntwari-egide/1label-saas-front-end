@@ -514,14 +514,25 @@ const OrderForm = (props) => {
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           <Label>{t("Customer Order Reference")}</Label>
           <span className="text-danger">*</span>
-          <Input style={{ margin: "5px" }} />
+          <Input
+            value={props.orderReference}
+            onChange={(e) => props.setOrderReference(e.target.value)}
+            style={{ margin: "5px" }}
+          />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           <Label>{t("Expected Delivery Date")}</Label>
           <span className="text-danger">*</span>
           <Flatpickr
             className="form-control"
+            value={props.expectedDeliveryDate ? props.expectedDeliveryDate : ""}
             style={{ margin: "5px" }}
+            options={{
+              minDate: minExpectedDeliveryDate
+            }}
+            onChange={(e) => {
+              props.setExpectedDeliveryDate(e)
+            }}
             disabled={false}
           />
         </Col>
@@ -533,10 +544,10 @@ const OrderForm = (props) => {
               className="React"
               classNamePrefix="select"
               options={projectionLocationOptions}
-              // value={projectionLocationOptions.filter(
-              //   (opt) => opt.label === props.projectionLocation
-              // )}
-              // onChange={(e) => props.setProjectionLocation(e.label)}
+              value={projectionLocationOptions.filter(
+                (opt) => opt.label === props.projectionLocation
+              )}
+              onChange={(e) => props.setProjectionLocation(e.label)}
             />
           </div>
         </Col>
