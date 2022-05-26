@@ -14,6 +14,7 @@ import {
 import Footer from "../../../CommonFooter"
 import { useTranslation } from "react-i18next"
 import { formatDateYMD } from "@utils"
+import { XMLBuilder } from "fast-xml-parser"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
@@ -24,6 +25,35 @@ const InvoiceAndDelivery = (props) => {
   const [deliveryAddressDetails, setDeliveryAddressDetails] = useState({})
   const [contactInfo, setContactInfo] = useState({})
   const [contactInfoDetails, setContactInfoDetails] = useState({})
+
+  const buildXML = (jsObj) => {
+    const builder = new XMLBuilder()
+    return builder.build(jsObj)
+  }
+
+  const formatRowToCOl = (table) => {
+    const newTable = []
+    table.map((row, rIndex) => {
+      Object.keys(row).map((key, index) => {
+        const tempData = {}
+        if (rIndex === 0) {
+          tempData["Column0"] = key.includes("QTY") ? "QTY" : "TITLE"
+          tempData["Column1"] = key
+          tempData["Column2"] = row[key]
+          newTable[index] = { ...tempData }
+        } else {
+          tempData[`Column${rIndex + 2}`] = row[key]
+          newTable[index] = { ...newTable[index], ...tempData }
+        }
+      })
+    })
+    return {
+      "?xml": "",
+      SizeMatrix: {
+        Table: newTable
+      }
+    }
+  }
 
   //API Services
   const saveOrder = () => {
@@ -81,23 +111,33 @@ const InvoiceAndDelivery = (props) => {
         if (!props.wastageApplied) {
           return {
             ...returnDict,
-            size_content: props.summaryTable[key],
-            default_size_content: props.summaryTable[key]
+            size_content: buildXML(formatRowToCOl(props.summaryTable[key])),
+            default_size_content: buildXML(
+              formatRowToCOl(props.summaryTable[key])
+            )
           }
         } else {
+          // just remove "QTY ITEM REF 1 WITH WASTAGE" col for default_size_content
+          const processedDefault = props.summaryTable[key].map((row) => {
+            const tempRow = { ...row }
+            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+            return tempRow
+          })
+          // to xml string
+          const processedDefaultXML = buildXML(formatRowToCOl(processedDefault))
+          // preprocess for size_content
+          const processedWastage = props.summaryTable[key].map((row) => {
+            const tempRow = { ...row }
+            tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+            return tempRow
+          })
+          // to xml string
+          const processedWastageXML = buildXML(formatRowToCOl(processedWastage))
           return {
             ...returnDict,
-            size_content: props.summaryTable[key].map((row) => {
-              const tempRow = { ...row }
-              tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-              return tempRow
-            }),
-            default_size_content: props.summaryTable[key].map((row) => {
-              const tempRow = { ...row }
-              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-              return tempRow
-            })
+            size_content: processedWastageXML,
+            default_size_content: processedDefaultXML
           }
         }
       }), // to be
