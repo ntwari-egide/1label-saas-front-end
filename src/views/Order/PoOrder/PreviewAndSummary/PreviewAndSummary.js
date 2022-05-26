@@ -15,7 +15,6 @@ const PreviewAndSummary = (props) => {
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
   const [initialSummaryProcessing, setInitialSummaryProcessing] = useState(true)
-  const [summaryTable, setSummaryTable] = useState({})
 
   const sizeCols = [
     {
@@ -146,21 +145,19 @@ const PreviewAndSummary = (props) => {
           if (tabIndex === 0) {
             tempData.push(row)
           } else {
-            let col = "QTY ITEM REF 1"
+            const tempRow = { ...tempData[index] }
             if (tempData[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
-              col = "QTY ITEM REF 1 WITH WASTAGE"
+              tempRow["QTY ITEM REF 1 WITH WASTAGE"] +=
+                row["QTY ITEM REF 1 WITH WASTAGE"]
             }
-            if (row[col]) {
-              const tempRow = { ...tempData[index] }
-              tempRow[col] += row[col]
-              tempData[index] = tempRow
-            }
+            tempRow["QTY ITEM REF 1"] += row["QTY ITEM REF 1"]
+            tempData[index] = tempRow
           }
         })
       })
       tempState[key] = tempData
     })
-    setSummaryTable({ ...tempState })
+    props.setSummaryTable({ ...tempState })
   }
 
   // API Sevices
@@ -230,6 +227,10 @@ const PreviewAndSummary = (props) => {
   //   console.log("sizeData", sizeData)
   // }, [sizeData])
 
+  // useEffect(() => {
+  //   console.log("summaryTable", props.summaryTable)
+  // }, [props.summaryTable])
+
   return (
     <Card>
       <CardBody>
@@ -292,9 +293,9 @@ const PreviewAndSummary = (props) => {
         </Row>
         <Row>
           <Col>
-            {Object.keys(summaryTable).map((key) => (
+            {Object.keys(props.summaryTable).map((key) => (
               <DataTable
-                data={summaryTable[key]}
+                data={props.summaryTable[key]}
                 columns={sizeCols}
                 noHeader={true}
               />
