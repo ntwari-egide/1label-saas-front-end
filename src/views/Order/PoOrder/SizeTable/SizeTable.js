@@ -228,14 +228,14 @@ const SizeTable = (props) => {
       .catch((err) => console.log(err))
   }
 
-  useEffect(() => {
-    console.log("size table", props.sizeContentData)
-  }, [props.sizeContentData])
-
-  useEffect(() => {
-    console.log("wastageApplied", props.wastageApplied)
-    console.log("cols", sizeCols)
-  }, [props.wastageApplied])
+  // useEffect(() => {
+  //   console.log("size table", props.sizeContentData)
+  // }, [props.sizeContentData])
+  //
+  // useEffect(() => {
+  //   console.log("wastageApplied", props.wastageApplied)
+  //   console.log("cols", sizeCols)
+  // }, [props.wastageApplied])
 
   useEffect(() => {
     if (props.sizeTableTrigger) {
