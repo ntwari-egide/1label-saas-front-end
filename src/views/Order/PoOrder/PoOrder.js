@@ -28,12 +28,14 @@ const PoOrder = () => {
   // app states
   const [currentStep, setCurrentStep] = useState(0)
   const [lastStep, setLastStep] = useState(stepperMenu.length - 1)
+
   // listing data
   const [selectedItems, setSelectedItems] = useState([])
   const [brand, setBrand] = useState({})
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [searchParams, setSearchParams] = useState({})
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
+
   // Order Form data
   const [contentCustomNumber, setContentCustomNumber] = useState("")
   const [careCustomNumber, setCareCustomNumber] = useState("")
@@ -49,11 +51,15 @@ const PoOrder = () => {
   const [careNumberData, setCareNumberData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
   const [coo, setCoo] = useState("")
+
   // data of order size Table
   const [sizeContentData, setSizeContentData] = useState({})
   const [wastageApplied, setWastageApplied] = useState(false)
   const [wastage, setWastage] = useState(0)
   const [sizeTableTrigger, setSizeTableTrigger] = useState(true)
+
+  // data of preview and summary page
+  const [summaryTable, setSummaryTable] = useState({})
 
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
@@ -170,6 +176,8 @@ const PoOrder = () => {
           setSizeMatrixType={setSizeMatrixType}
           sizeContentData={sizeContentData}
           wastageApplied={wastageApplied}
+          summaryTable={summaryTable}
+          setSummaryTable={setSummaryTable}
         />
       ) : currentStep === 5 ? (
         <InvoiceAndDelivery
@@ -194,6 +202,8 @@ const PoOrder = () => {
           contentCustomNumber={contentCustomNumber}
           careCustomNumber={careCustomNumber}
           careNumberData={careNumberData}
+          summaryTable={summaryTable}
+          wastageApplied={wastageApplied}
         />
       ) : null}
     </div>
