@@ -162,11 +162,11 @@ const InvoiceAndDelivery = (props) => {
       coo: props.coo,
       shrinkage_percentage: "",
       item_ref: props.selectedItems.map((item) => ({
-        item_key: item.guid_key,
-        item_ref: item.item_ref,
+        item_key: item.guid_key || "",
+        item_ref: item.item_ref || "",
         qty: 1, // static for now
-        price: item.price,
-        currency: item.currency
+        price: item.price || "",
+        currency: item.currency || ""
       })),
       is_wastage: "",
       update_user: "innoa",
@@ -210,11 +210,11 @@ const InvoiceAndDelivery = (props) => {
         ...data,
         size_content: buildXML(processPoSizeTable(data.size_content)),
         item_ref: props.selectedItems.map((item) => ({
-          item_key: item.guid_key,
-          item_ref: item.item_ref,
+          item_key: item.guid_key || "",
+          item_ref: item.item_ref || "",
           qty: 1, // static for now
-          price: item.price,
-          currency: item.currency
+          price: item.price || "",
+          currency: item.currency || ""
         }))
       }))
     }
