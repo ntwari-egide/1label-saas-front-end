@@ -181,6 +181,7 @@ const PoOrder = () => {
         />
       ) : currentStep === 5 ? (
         <InvoiceAndDelivery
+          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
