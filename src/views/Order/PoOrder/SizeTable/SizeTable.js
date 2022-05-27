@@ -145,31 +145,31 @@ const SizeTable = (props) => {
       return
     }
     // actual algo
-    const tempData = props.sizeContentData
-    Object.keys(props.sizeContentData).map((key) => {
-      tempData[key] = props.sizeContentData[key].map((table) =>
-        table.map((row) => {
-          const tempRow = row
-          if (tempRow["QTY ITEM REF 1"] === 0) {
-            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
+    // iterates throuch size content data and returns the same object with modifications to size_content field
+    const tempState = props.sizeContentData.map((data) => ({
+      ...data,
+      size_content: data.size_content.map((row) => {
+        const tempRow = { ...row }
+        // because value 0 will escape the following loop.
+        if (tempRow["QTY ITEM REF 1"] === 0) {
+          tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
+        }
+        if (tempRow["QTY ITEM REF 1"]) {
+          if (operation === "add") {
+            tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
+              tempRow["QTY ITEM REF 1"] +
+              props.wastage * tempRow["QTY ITEM REF 1"]
+            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
+              tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+            )
+          } else {
+            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
           }
-          if (tempRow["QTY ITEM REF 1"]) {
-            if (operation === "add") {
-              tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
-                tempRow["QTY ITEM REF 1"] +
-                props.wastage * tempRow["QTY ITEM REF 1"]
-              tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
-                tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-              )
-            } else {
-              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-            }
-          }
-          return tempRow
-        })
-      )
-    })
-    props.setSizeContentData({ ...tempData })
+        }
+        return tempRow
+      })
+    }))
+    props.setSizeContentData([...tempState])
     if (operation === "add") {
       props.setWastageApplied(true)
     } else {
@@ -202,7 +202,7 @@ const SizeTable = (props) => {
             }
           })
           // refactor test
-          props.setTestData(
+          props.setSizeContentData(
             res.data.map((data) => {
               return {
                 ...data,
@@ -265,7 +265,7 @@ const SizeTable = (props) => {
           </div>
         ) : (
           <div>
-            {props.testData.map((data) => (
+            {props.sizeContentData.map((data) => (
               <Row style={{ margin: 0, marginBottom: "10px" }}>
                 <DataTable
                   data={data.size_content}

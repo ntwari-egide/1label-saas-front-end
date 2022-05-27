@@ -136,14 +136,14 @@ const PreviewAndSummary = (props) => {
 
   const calculateSummaryTable = () => {
     // get all the content group
-    let groupTypes = props.testData.map((data) => data.group_type)
+    let groupTypes = props.sizeContentData.map((data) => data.group_type)
     // remove duplicate
     groupTypes = [...new Set(groupTypes)]
     // get all table with same group type to process summary table
     const tempState = {} // init temp state for summary data
     groupTypes.map((groupType) => {
       const tempTable = [] // init temp table for every group type
-      const contentGroupArr = props.testData.filter(
+      const contentGroupArr = props.sizeContentData.filter(
         (data) => data.group_type === groupType
       )
       // iterate through tables with common group id
