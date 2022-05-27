@@ -31,7 +31,7 @@ const InvoiceAndDelivery = (props) => {
     return builder.build(jsObj)
   }
 
-  const formatRowToCOl = (table) => {
+  const formatRowToCol = (table) => {
     const newTable = []
     table.map((row, rIndex) => {
       Object.keys(row).map((key, index) => {
@@ -55,11 +55,52 @@ const InvoiceAndDelivery = (props) => {
     }
   }
 
+  const processSummarySizeTable = () => {
+    return Object.keys({ ...props.summaryTable }).map((key) => {
+      const returnDict = {
+        group_type: key
+      }
+      if (!props.wastageApplied) {
+        return {
+          ...returnDict,
+          size_content: buildXML(formatRowToCol(props.summaryTable[key])),
+          default_size_content: buildXML(
+            formatRowToCol(props.summaryTable[key])
+          )
+        }
+      } else {
+        // just remove "QTY ITEM REF 1 WITH WASTAGE" col for default_size_content
+        const processedDefault = props.summaryTable[key].map((row) => {
+          const tempRow = { ...row }
+          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          return tempRow
+        })
+        // to xml string
+        const processedDefaultXML = buildXML(formatRowToCol(processedDefault))
+        // preprocess for size_content
+        const processedWastage = props.summaryTable[key].map((row) => {
+          const tempRow = { ...row }
+          tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          return tempRow
+        })
+        // to xml string
+        const processedWastageXML = buildXML(formatRowToCol(processedWastage))
+        return {
+          ...returnDict,
+          size_content: processedWastageXML,
+          default_size_content: processedDefaultXML
+        }
+      }
+    })
+  }
+
   //API Services
   const saveOrder = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       order_user: "innoa",
+      order_key: props.combinedPOOrderKey, // to be
       order_no: "",
       num: "",
       order_status: "Draft",
@@ -104,43 +145,7 @@ const InvoiceAndDelivery = (props) => {
         }
       ],
       dynamic_field: Object.values(props.dynamicFieldData),
-      summary_size_table: Object.keys({ ...props.summaryTable }).map((key) => {
-        const returnDict = {
-          group_type: key
-        }
-        if (!props.wastageApplied) {
-          return {
-            ...returnDict,
-            size_content: buildXML(formatRowToCOl(props.summaryTable[key])),
-            default_size_content: buildXML(
-              formatRowToCOl(props.summaryTable[key])
-            )
-          }
-        } else {
-          // just remove "QTY ITEM REF 1 WITH WASTAGE" col for default_size_content
-          const processedDefault = props.summaryTable[key].map((row) => {
-            const tempRow = { ...row }
-            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-            return tempRow
-          })
-          // to xml string
-          const processedDefaultXML = buildXML(formatRowToCOl(processedDefault))
-          // preprocess for size_content
-          const processedWastage = props.summaryTable[key].map((row) => {
-            const tempRow = { ...row }
-            tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-            return tempRow
-          })
-          // to xml string
-          const processedWastageXML = buildXML(formatRowToCOl(processedWastage))
-          return {
-            ...returnDict,
-            size_content: processedWastageXML,
-            default_size_content: processedDefaultXML
-          }
-        }
-      }), // to be
+      summary_size_table: processSummarySizeTable(),
       size_matrix_type: props.sizeMatrixType,
       size_content: props.sizeTable,
       default_size_content: props.defaultSizeTable,
@@ -191,7 +196,8 @@ const InvoiceAndDelivery = (props) => {
             seqno: (index + 1) * 10
           }))
         }
-      ]
+      ],
+      po_size_table: []
     }
     console.log("body", body)
     // axios
