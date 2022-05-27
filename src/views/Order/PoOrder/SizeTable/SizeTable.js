@@ -201,6 +201,15 @@ const SizeTable = (props) => {
               }
             }
           })
+          // refactor test
+          props.setTestData(
+            res.data.map((data) => {
+              return {
+                ...data,
+                size_content: formatColToRow(data.size_content)
+              }
+            })
+          )
         }
         props.setSizeContentData({ ...tempState })
         props.setSizeTableTrigger(false)
@@ -227,15 +236,6 @@ const SizeTable = (props) => {
       })
       .catch((err) => console.log(err))
   }
-
-  // useEffect(() => {
-  //   console.log("size table", props.sizeContentData)
-  // }, [props.sizeContentData])
-  //
-  // useEffect(() => {
-  //   console.log("wastageApplied", props.wastageApplied)
-  //   console.log("cols", sizeCols)
-  // }, [props.wastageApplied])
 
   useEffect(() => {
     if (props.sizeTableTrigger) {
@@ -265,13 +265,15 @@ const SizeTable = (props) => {
           </div>
         ) : (
           <div>
-            {Object.keys(props.sizeContentData).map((key) =>
-              props.sizeContentData[key].map((table) => (
-                <Row style={{ margin: 0, marginBottom: "10px" }}>
-                  <DataTable data={table} columns={sizeCols} noHeader={true} />
-                </Row>
-              ))
-            )}
+            {props.testData.map((data) => (
+              <Row style={{ margin: 0, marginBottom: "10px" }}>
+                <DataTable
+                  data={data.size_content}
+                  columns={sizeCols}
+                  noHeader={true}
+                />
+              </Row>
+            ))}
           </div>
         )}
         <Row>
