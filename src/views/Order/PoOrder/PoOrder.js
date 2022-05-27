@@ -205,6 +205,7 @@ const PoOrder = () => {
           summaryTable={summaryTable}
           wastageApplied={wastageApplied}
           combinedPOOrderKey={combinedPOOrderKey}
+          sizeContentData={sizeContentData}
         />
       ) : null}
     </div>

@@ -55,6 +55,15 @@ const InvoiceAndDelivery = (props) => {
     }
   }
 
+  const processPoSizeTable = (table) => {
+    return {
+      "?xml": "",
+      SizeMatrix: {
+        Table: table
+      }
+    }
+  }
+
   const processSummarySizeTable = () => {
     return Object.keys({ ...props.summaryTable }).map((key) => {
       const returnDict = {
@@ -197,16 +206,26 @@ const InvoiceAndDelivery = (props) => {
           }))
         }
       ],
-      po_size_table: []
+      po_size_table: props.sizeContentData.map((data) => ({
+        ...data,
+        size_content: buildXML(processPoSizeTable(data.size_content)),
+        item_ref: props.selectedItems.map((item) => ({
+          item_key: item.guid_key,
+          item_ref: item.item_ref,
+          qty: 1, // static for now
+          price: item.price,
+          currency: item.currency
+        }))
+      }))
     }
     console.log("body", body)
-    // axios
-    //   .post("Order/SaveOrder", body)
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //     }
-    //   })
-    //   .catch((err) => console.log(err))
+    axios
+      .post("Order/SaveOrder", body)
+      .then((res) => {
+        if (res.status === 200) {
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   const fetchUserInfo = () => {
