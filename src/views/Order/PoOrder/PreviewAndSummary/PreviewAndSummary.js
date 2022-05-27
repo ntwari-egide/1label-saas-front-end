@@ -313,7 +313,7 @@ const PreviewAndSummary = (props) => {
             ))}
           </Col>
         </Row>
-        <Row style={{ marginBottom: "10px" }}>
+        <Row style={{ marginBottom: "10px", marginTop: "10px" }}>
           <Col
             xs="12"
             sm="12"
