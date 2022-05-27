@@ -92,6 +92,9 @@ const Order = () => {
           <BreadcrumbItem>
             <Link to="/Order">{t("Order")}</Link>
           </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/Order">{t("Order")}</Link>
+          </BreadcrumbItem>
         </Breadcrumb>
       </div>
       <Stepper

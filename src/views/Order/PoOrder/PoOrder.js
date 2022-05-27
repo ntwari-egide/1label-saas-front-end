@@ -82,7 +82,10 @@ const PoOrder = () => {
             <Link to="/home">{t("Home")}</Link>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <Link to="/Order">{t("PO Order")}</Link>
+            <Link>{t("Order")}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/POOrder">{t("PO Order")}</Link>
           </BreadcrumbItem>
         </Breadcrumb>
       </div>

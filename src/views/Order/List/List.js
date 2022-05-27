@@ -21,7 +21,10 @@ const List = () => {
             <Link to="/home">{t("Home")}</Link>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <Link to="/Order">{t("Order")}</Link>
+            <Link>{t("Order")}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/List">{t("List")}</Link>
           </BreadcrumbItem>
         </Breadcrumb>
       </div>
