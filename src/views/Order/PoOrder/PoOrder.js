@@ -53,7 +53,7 @@ const PoOrder = () => {
   const [coo, setCoo] = useState("")
 
   // data of order size Table
-  const [sizeContentData, setSizeContentData] = useState({})
+  const [sizeContentData, setSizeContentData] = useState([])
   const [wastageApplied, setWastageApplied] = useState(false)
   const [wastage, setWastage] = useState(0)
   const [sizeTableTrigger, setSizeTableTrigger] = useState(true)

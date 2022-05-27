@@ -185,23 +185,11 @@ const SizeTable = (props) => {
       order_key: props.combinedPOOrderKey || "",
       is_po_order_temp: props.isPoOrderTemp || ""
     }
-    const tempState = {}
     axios
       .post("/order/GetPOSizeTableTempList", body)
       .then((res) => {
         setLoader(true)
         if (res.status === 200) {
-          res.data.map((dt, index) => {
-            if (dt.size_content) {
-              // if exists then push else initialize
-              if (tempState[dt.group_type]) {
-                tempState[dt.group_type].push(formatColToRow(dt.size_content))
-              } else {
-                tempState[dt.group_type] = [formatColToRow(dt.size_content)]
-              }
-            }
-          })
-          // refactor test
           props.setSizeContentData(
             res.data.map((data) => {
               return {
@@ -211,7 +199,6 @@ const SizeTable = (props) => {
             })
           )
         }
-        props.setSizeContentData({ ...tempState })
         props.setSizeTableTrigger(false)
         setLoader(false)
       })
