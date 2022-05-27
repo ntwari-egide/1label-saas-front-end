@@ -54,7 +54,6 @@ const PoOrder = () => {
 
   // data of order size Table
   const [sizeContentData, setSizeContentData] = useState({})
-  const [testData, setTestData] = useState([])
   const [wastageApplied, setWastageApplied] = useState(false)
   const [wastage, setWastage] = useState(0)
   const [sizeTableTrigger, setSizeTableTrigger] = useState(true)
@@ -66,10 +65,6 @@ const PoOrder = () => {
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
   const [sizeMatrixType, setSizeMatrixType] = useState("")
-
-  useEffect(() => {
-    console.log("testData", testData)
-  }, [testData])
 
   return (
     <div>
@@ -155,8 +150,6 @@ const PoOrder = () => {
         <SizeTable
           sizeContentData={sizeContentData}
           setSizeContentData={setSizeContentData}
-          testData={testData}
-          setTestData={setTestData}
           isPoOrderTemp={isPoOrderTemp}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
@@ -185,7 +178,6 @@ const PoOrder = () => {
           wastageApplied={wastageApplied}
           summaryTable={summaryTable}
           setSummaryTable={setSummaryTable}
-          testData={testData}
         />
       ) : currentStep === 5 ? (
         <InvoiceAndDelivery
