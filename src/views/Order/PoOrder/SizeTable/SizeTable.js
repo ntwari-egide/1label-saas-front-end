@@ -15,6 +15,7 @@ import Select from "react-select"
 import DataTable from "react-data-table-component"
 import { XMLParser } from "fast-xml-parser"
 import { useTranslation } from "react-i18next"
+import { toast } from "react-toastify"
 
 const SizeTable = (props) => {
   const { t } = useTranslation()
@@ -144,37 +145,45 @@ const SizeTable = (props) => {
     if (props.wastage === 0) {
       return
     }
-    // actual algo
-    // iterates throuch size content data and returns the same object with modifications to size_content field
-    const tempState = props.sizeContentData.map((data) => ({
-      ...data,
-      size_content: data.size_content.map((row) => {
-        const tempRow = { ...row }
-        // because value 0 will escape the following loop.
-        if (tempRow["QTY ITEM REF 1"] === 0) {
-          tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
-        }
-        if (tempRow["QTY ITEM REF 1"]) {
-          if (operation === "add") {
-            tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
-              tempRow["QTY ITEM REF 1"] +
-              props.wastage * tempRow["QTY ITEM REF 1"]
-            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
-              tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-            )
-          } else {
-            delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+    try {
+      // actual algo
+      // iterates throuch size content data and returns the same object with modifications to size_content field
+      const tempState = props.sizeContentData.map((data) => ({
+        ...data,
+        size_content: data.size_content.map((row) => {
+          const tempRow = { ...row }
+          // because value 0 will escape the following loop.
+          if (tempRow["QTY ITEM REF 1"] === 0) {
+            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
           }
-        }
-        return tempRow
-      })
-    }))
-    props.setSizeContentData([...tempState])
+          if (tempRow["QTY ITEM REF 1"]) {
+            if (operation === "add") {
+              tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
+                tempRow["QTY ITEM REF 1"] +
+                props.wastage * tempRow["QTY ITEM REF 1"]
+              tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
+                tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+              )
+            } else {
+              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+            }
+          }
+          return tempRow
+        })
+      }))
+      props.setSizeContentData([...tempState])
+    } catch (err) {
+      console.log("Something went wrong while processing wastage")
+      props.setWastage(0)
+      return
+    }
     if (operation === "add") {
       props.setWastageApplied(true)
+      toast(`${props.wastage * 100}% Wastage Applied.`)
     } else {
       props.setWastage(0)
       props.setWastageApplied(false)
+      toast("Wastage Reset.")
     }
   }
 
