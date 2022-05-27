@@ -14,7 +14,6 @@ const PreviewAndSummary = (props) => {
   const [defaultSizeData, setDefaultSizeData] = useState(null)
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
-  const [initialSummaryProcessing, setInitialSummaryProcessing] = useState(true)
 
   const sizeCols = [
     {
@@ -136,28 +135,38 @@ const PreviewAndSummary = (props) => {
   }
 
   const calculateSummaryTable = () => {
-    const tempState = {}
-    Object.keys(props.sizeContentData).map((key) => {
-      const tempData = []
-      props.sizeContentData[key].map((table, tabIndex) => {
-        table.map((row, index) => {
-          // initialize for first table else add to existing
+    // get all the content group
+    let groupTypes = props.testData.map((data) => data.group_type)
+    // remove duplicate
+    groupTypes = [...new Set(groupTypes)]
+    // get all table with same group type to process summary table
+    const tempState = {} // init temp state for summary data
+    groupTypes.map((groupType) => {
+      const tempTable = [] // init temp table for every group type
+      const contentGroupArr = props.testData.filter(
+        (data) => data.group_type === groupType
+      )
+      // iterate through tables with common group id
+      contentGroupArr.map((data, tabIndex) => {
+        // iterate through rows of table
+        data.size_content?.map((row, index) => {
+          // initi temp table
           if (tabIndex === 0) {
-            tempData.push(row)
+            tempTable.push(row)
           } else {
-            const tempRow = { ...tempData[index] }
-            if (tempData[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
+            const tempRow = { ...tempTable[index] }
+            if (tempTable[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
               tempRow["QTY ITEM REF 1 WITH WASTAGE"] +=
                 row["QTY ITEM REF 1 WITH WASTAGE"]
             }
             if (tempRow["QTY ITEM REF 1"]) {
               tempRow["QTY ITEM REF 1"] += row["QTY ITEM REF 1"]
-              tempData[index] = tempRow
+              tempTable[index] = tempRow
             }
           }
         })
       })
-      tempState[key] = tempData
+      tempState[groupType] = tempTable
     })
     props.setSummaryTable({ ...tempState })
   }
