@@ -528,7 +528,7 @@ const OrderForm = (props) => {
             value={props.expectedDeliveryDate ? props.expectedDeliveryDate : ""}
             style={{ margin: "5px" }}
             options={{
-              minDate: minExpectedDeliveryDate
+              minDate: props.minExpectedDeliveryDate
             }}
             onChange={(e) => {
               props.setExpectedDeliveryDate(e)
