@@ -30,11 +30,14 @@ const PoOrder = () => {
   const [lastStep, setLastStep] = useState(stepperMenu.length - 1)
 
   // listing data
-  const [selectedItems, setSelectedItems] = useState([])
+  const [poSelectedItems, setpoSelectedItems] = useState([])
   const [brand, setBrand] = useState({})
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [searchParams, setSearchParams] = useState({})
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
+
+  // data of Item List page.
+  const [selectedItems, setSelectedItems] = useState([])
 
   // Order Form data
   const [contentCustomNumber, setContentCustomNumber] = useState("")
@@ -66,6 +69,10 @@ const PoOrder = () => {
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
   const [sizeMatrixType, setSizeMatrixType] = useState("")
 
+  useEffect(() => {
+    console.log("selectedItems", selectedItems)
+  }, [selectedItems])
+
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -90,7 +97,8 @@ const PoOrder = () => {
         </Breadcrumb>
       </div>
       <Stepper
-        validationFields={{ selectedItems }}
+        component={"POOrder"}
+        validationFields={{ poSelectedItems }}
         stepperMenu={stepperMenu}
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
@@ -102,17 +110,25 @@ const PoOrder = () => {
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
+          setpoSelectedItems={setpoSelectedItems}
+          poSelectedItems={poSelectedItems}
           setSelectedItems={setSelectedItems}
-          selectedItems={selectedItems}
           setCombinedPOOrderkey={setCombinedPOOrderkey}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
           setSizeTableTrigger={setSizeTableTrigger}
+          setDynamicFieldData={setDynamicFieldData}
+          setCareData={setCareData}
+          setFibreInstructionData={setFibreInstructionData}
+          setWashCareData={setWashCareData}
         />
       ) : currentStep === 1 ? (
-        <ItemList />
+        <ItemList
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+        />
       ) : currentStep === 2 ? (
         <OrderForm
           currentStep={currentStep}
@@ -134,7 +150,6 @@ const PoOrder = () => {
           washCareData={washCareData}
           isPoOrderTemp={isPoOrderTemp}
           setCareData={setCareData}
-          selectedItems={selectedItems}
           combinedPOOrderKey={combinedPOOrderKey}
           setContentGroup={setContentGroup}
           expectedDeliveryDate={expectedDeliveryDate}
