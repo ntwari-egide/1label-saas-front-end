@@ -22,6 +22,15 @@ const Stepper = (props) => {
                   alert("Please select an item to continue")
                   validationPassed = false
                 }
+                // validation for poselectedtiems
+                if (
+                  props.validationFields?.poSelectedItems &&
+                  props.validationFields?.poSelectedItems?.length <= 0
+                ) {
+                  alert("Please select an item to continue")
+                  validationPassed = false
+                }
+
                 // validation for Order Form mandatory fields
                 if (props.validationFields?.orderFormManFields) {
                   Object.keys(props.validationFields.orderFormManFields).map(
