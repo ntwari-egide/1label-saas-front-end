@@ -118,16 +118,55 @@ const Listing = (props) => {
   )
 
   const handleOrder = () => {
-    if (props.selectedItems.length <= 0) {
+    if (props.poSelectedItems.length <= 0) {
       alert("Please Item/s to proceed with your order")
       return
     }
     // props.setCurrentStep(2)
-    setOrderLoader(true)
     addPoOrder()
   }
 
   // API Services
+  const fetchPOOrderDetails = (combKey, isTemp) => {
+    const body = {
+      order_user: "innoa",
+      order_no: combKey || "",
+      brand_key: props.brand ? props.brand.value : "",
+      is_po_order_temp: isTemp || ""
+    }
+    axios
+      .post("/Order/GetOrderDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          if (res.data[0]?.contents[0]?.care) {
+            props.setCareData(res.data[0].contents[0].care)
+          }
+          if (res.data[0]?.contents[0]?.icon) {
+            props.setWashCareData(res.data[0].contents[0].icon)
+          }
+          if (res.data[0]?.dynamic_field) {
+            props.setDynamicFieldData(res.data[0]?.dynamic_field)
+          }
+          if (res.data[0]?.contents[0]?.content) {
+            props.setFibreInstructionData(res.data[0]?.contents[0]?.content)
+          }
+          if (res.data[0]?.item_ref) {
+            props.setSelectedItems(
+              res.data[0]?.item_ref.map((item) => {
+                const tempItem = { ...item }
+                tempItem["guid_key"] = tempItem["item_key"]
+                delete tempItem["item_key"]
+                return { ...tempItem }
+              })
+            )
+          }
+          setOrderLoader(false)
+          props.setCurrentStep(1)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const fetchPoOrderList = () => {
     setPoOrderLoader(true)
     let body = {
@@ -214,10 +253,11 @@ const Listing = (props) => {
   }
 
   const addPoOrder = () => {
+    setOrderLoader(true)
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       order_user: "innoa",
-      order_keys: props.selectedItems.map((item) => item.guid_key)
+      order_keys: props.poSelectedItems.map((item) => item.guid_key)
     }
 
     axios
@@ -227,7 +267,7 @@ const Listing = (props) => {
           if (res.data.status === "Success") {
             props.setCombinedPOOrderkey(res.data.status_description)
             props.setIsPoOrderTemp("Y")
-            props.setCurrentStep(2)
+            fetchPOOrderDetails(res.data.status_description, "Y")
           } else {
             return MySwal.fire({
               title: "Order Failed",
@@ -239,7 +279,6 @@ const Listing = (props) => {
               buttonsStyling: false
             })
           }
-          setOrderLoader(false)
         }
       })
       .catch((err) => console.log(err))
@@ -248,7 +287,7 @@ const Listing = (props) => {
   // to enable fetching size table only when selected items are changed
   useEffect(() => {
     props.setSizeTableTrigger(true)
-  }, [props.selectedItems])
+  }, [props.poSelectedItems])
 
   useEffect(() => {
     fetchOrderStatus()
@@ -427,7 +466,7 @@ const Listing = (props) => {
               onClick={() => {
                 fetchPoOrderList(props.searchParams)
                 fetchOrderDetails()
-                props.setSelectedItems([])
+                props.setpoSelectedItems([])
               }}
             >
               Search
@@ -438,7 +477,7 @@ const Listing = (props) => {
               onClick={() => {
                 props.setSearchParams({})
                 fetchPoOrderList()
-                props.setSelectedItems([])
+                props.setpoSelectedItems([])
               }}
             >
               Cancel
@@ -492,19 +531,13 @@ const Listing = (props) => {
                 pagination={true}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"350px"}
-                // onRowDoubleClicked={(e) => {
-                //   props.setSelectedItems([e.guid_key])
-                //   props.setCurrentStep(2)
-                //   props.setIsPoOrderTemp("N")
-                //   props.setCombinedPOOrderkey(e.order_no)
-                // }}
                 selectableRowSelected={(e) =>
-                  props.selectedItems
+                  props.poSelectedItems
                     .map((item) => item.guid_key)
                     .includes(e.guid_key)
                 }
                 onSelectedRowsChange={(e) =>
-                  props.setSelectedItems(e.selectedRows)
+                  props.setpoSelectedItems(e.selectedRows)
                 }
               />
             ) : (
@@ -526,7 +559,7 @@ const Listing = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
-          selectedItems={props.selectedItems}
+          poSelectedItems={props.poSelectedItems}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}
