@@ -26,20 +26,20 @@ const ItemList = (props) => {
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [loader, setLoader] = useState(false)
 
-  // const handleCheckListChange = (item) => {
-  //   let tempList = props.selectedItems
-  //   if (
-  //     props.selectedItems.map((item) => item.guid_key).includes(item.guid_key)
-  //   ) {
-  //     tempList.splice(
-  //       props.selectedItems.map((item) => item.guid_key).indexOf(item.guid_key),
-  //       1
-  //     )
-  //     props.setSelectedItems([...tempList])
-  //   } else {
-  //     props.setSelectedItems([...tempList, item])
-  //   }
-  // }
+  const handleCheckListChange = (item) => {
+    let tempList = props.selectedItems
+    if (
+      props.selectedItems.map((item) => item.guid_key).includes(item.guid_key)
+    ) {
+      tempList.splice(
+        props.selectedItems.map((item) => item.guid_key).indexOf(item.guid_key),
+        1
+      )
+      props.setSelectedItems([...tempList])
+    } else {
+      props.setSelectedItems([...tempList, item])
+    }
+  }
 
   const fetchBrandList = () => {
     const body = {
@@ -164,10 +164,10 @@ const ItemList = (props) => {
                       <CheckBox
                         color="primary"
                         icon={<Check className="vx-icon" size={16} />}
-                        // checked={props.selectedItems
-                        //   .map((item) => item.guid_key)
-                        //   .includes(item.guid_key)}
-                        // onChange={() => handleCheckListChange(item)}
+                        checked={props.selectedItems
+                          ?.map((item) => item.guid_key)
+                          .includes(item.guid_key)}
+                        onChange={() => handleCheckListChange(item)}
                       />
                     </CardFooter>
                   </Card>
