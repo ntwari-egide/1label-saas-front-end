@@ -217,22 +217,6 @@ const OrderForm = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchPOOrderDetails = () => {
-    const body = {
-      order_user: "innoa",
-      order_no: props.combinedPOOrderkey ? props.combinedPOOrderkey : "",
-      brand_key: props.brand ? props.brand.value : "",
-      is_po_order_temp: props.isPoOrderTemp ? props.isPoOrderTemp : ""
-    }
-    axios
-      .post("/Order/GetOrderDetail", body)
-      .then((res) => {
-        if (res.status === 200) {
-        }
-      })
-      .catch((err) => console.log(err))
-  }
-
   const fetchContentNumberSettings = () => {
     // fetches content model either of: "ABC" or "A/BC"
     const body = {
@@ -500,7 +484,6 @@ const OrderForm = (props) => {
 
   useEffect(() => {
     fetchItemInfoData()
-    fetchPOOrderDetails()
     fetchItemInfoFields()
     fetchContentNumberSettings()
     fetchIconSequenceList()
@@ -959,7 +942,6 @@ const OrderForm = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
-          selectedItems={props.selectedItems}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}
