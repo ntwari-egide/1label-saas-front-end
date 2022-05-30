@@ -70,9 +70,9 @@ const Order = () => {
   //   xmlToObj()
   // }, [])
   //
-  useEffect(() => {
-    console.log(orderFormManFields)
-  }, [orderFormManFields])
+  // useEffect(() => {
+  //   console.log("selectedItems", selectedItems)
+  // }, [selectedItems])
 
   return (
     <div>
@@ -98,6 +98,7 @@ const Order = () => {
         </Breadcrumb>
       </div>
       <Stepper
+        component={"Order"}
         stepperMenu={stepperMenu}
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
