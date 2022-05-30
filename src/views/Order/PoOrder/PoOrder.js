@@ -14,8 +14,8 @@ import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
 const stepperMenu = [
   "Listing",
   "Item List",
-  "Order Form",
   "PO Order Size Table",
+  "Order Form",
   "Preview Item & Summary Size Table",
   "Invoice & Delivery Date",
   "Payment",
@@ -129,7 +129,7 @@ const PoOrder = () => {
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
         />
-      ) : currentStep === 2 ? (
+      ) : currentStep === 3 ? (
         <OrderForm
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
@@ -164,7 +164,7 @@ const PoOrder = () => {
           careCustomNumber={careCustomNumber}
           setCareCustomNumber={setCareCustomNumber}
         />
-      ) : currentStep === 3 ? (
+      ) : currentStep === 2 ? (
         <SizeTable
           sizeContentData={sizeContentData}
           setSizeContentData={setSizeContentData}
