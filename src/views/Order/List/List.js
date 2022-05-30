@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import Stepper from "../../Stepper"
 import Listing from "./Listing/Listing"
+import Details from "./Details/Details"
 
 const List = () => {
   const { t } = useTranslation()
@@ -38,7 +39,7 @@ const List = () => {
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
       />
-      {currentStep === 0 ? <Listing /> : null}
+      {currentStep === 0 ? <Listing /> : currentStep === 1 ? <Details /> : null}
     </div>
   )
 }
