@@ -21,7 +21,7 @@ const SizeTable = (props) => {
   const { t } = useTranslation()
   const [wastageStatus, setWastageStatus] = useState(true)
   const [wastageOptions, setWastageOptions] = useState([])
-  const [loader, setLoader] = useState(false)
+  const [loader, setLoader] = useState(true)
 
   const sizeCols = [
     {
@@ -126,18 +126,17 @@ const SizeTable = (props) => {
   const formatColToRow = (xmlStr) => {
     const parser = new XMLParser()
     const jsObj = parser.parse(xmlStr)
-    const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
-    let data = [] // initialized data to fill row by row
-    let currentRow = 0 + 2 // because actual data begins at Column2
+    const table = []
+    const nRows = Object.keys(jsObj?.SizeMatrix?.Table[0]).length - 2 // gets the no of rows
     for (let i = 0; i < nRows; i++) {
-      let row = {} // initialise empty row
-      jsObj?.SizeMatrix?.Table?.map((col) => {
-        row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
+      // for no of rows push row
+      const tempRow = {}
+      jsObj?.SizeMatrix?.Table.map((col) => {
+        tempRow[col.Column1] = col[`Column${i + 2}`]
       })
-      data.push(row) // push the row to data
-      currentRow += 1 // increment row count
+      table.push({ ...tempRow })
     }
-    return data
+    return table
   }
 
   const handleAddResetWastage = (operation) => {
@@ -197,7 +196,6 @@ const SizeTable = (props) => {
     axios
       .post("/order/GetPOSizeTableTempList", body)
       .then((res) => {
-        setLoader(true)
         if (res.status === 200) {
           props.setSizeContentData(
             res.data.map((data) => {
@@ -234,6 +232,10 @@ const SizeTable = (props) => {
   }
 
   useEffect(() => {
+    console.log("props.sizeContentData", props.sizeContentData)
+  }, [props.sizeContentData])
+
+  useEffect(() => {
     if (props.sizeTableTrigger) {
       fetchSizeTable()
     }
@@ -250,7 +252,7 @@ const SizeTable = (props) => {
           <div
             style={{
               display: "flex",
-              height: "500px",
+              minHeight: "500px",
               justifyContent: "center",
               alignItems: "center"
             }}
@@ -262,7 +264,7 @@ const SizeTable = (props) => {
         ) : (
           <div>
             {props.sizeContentData.map((data) => (
-              <Row style={{ margin: 0, marginBottom: "10px" }}>
+              <Row style={{ margin: 0, marginBottom: "20px" }}>
                 <DataTable
                   data={data.size_content}
                   columns={sizeCols}
