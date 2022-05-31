@@ -333,3 +333,8 @@ body {
 .rdt_TableCol_Sortable {
   color: white !important;
 }
+
+// cursor as pointer for datatable rows, since some are double-clickable
+.rdt_TableRow {
+  cursor: pointer;
+}
