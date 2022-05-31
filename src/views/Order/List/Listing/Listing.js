@@ -1,10 +1,20 @@
 import { useState, useEffect } from "react"
-import { Spinner, Card, CardHeader, CardBody, Row, Col } from "reactstrap"
+import {
+  Spinner,
+  Badge,
+  Card,
+  CardHeader,
+  CardBody,
+  Row,
+  Col
+} from "reactstrap"
 import { useTranslation } from "react-i18next"
 import axios from "@axios"
 import DataTable from "react-data-table-component"
+import CheckBox from "@components/CheckBox/CheckBox"
+import { Check } from "react-feather"
 
-const Listing = () => {
+const Listing = (props) => {
   const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(true)
   const { t } = useTranslation()
@@ -62,21 +72,49 @@ const Listing = () => {
       width: "250px"
     },
     {
-      name: t("ORDER STATUS"),
+      name: t("STATUS"),
       selector: "order_status",
-      sortable: false
+      sortable: true,
+      cell: (row) => (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <Badge
+            className="badge-glow"
+            pill
+            color={
+              row.order_status === "Confirm"
+                ? "success"
+                : row.order_status === "Draft"
+                ? "danger"
+                : "primary"
+            }
+          >
+            {row.order_status}
+          </Badge>
+        </div>
+      )
     },
     {
       name: t("CREATE BY"),
-      selector: "order_user"
+      selector: "order_user",
+      width: "150px"
     },
     {
       name: t("CLIENT NAME"),
-      selector: "order_user"
+      selector: "order_user",
+      width: "150px"
     },
     {
       name: t("LAST UPDATE PERSON"),
-      selector: "update_user"
+      selector: "update_user",
+      width: "150px"
     }
   ]
 
@@ -153,7 +191,19 @@ const Listing = () => {
                 data={orderList}
                 columns={cols}
                 noHeader={true}
+                selectableRows={true}
+                selectableRowsComponent={CheckBox}
+                selectableRowsComponentProps={{
+                  color: "primary",
+                  icon: <Check className="vx-icon" size={15} />,
+                  label: "",
+                  size: "md"
+                }}
                 style={{ minHeight: "500px" }}
+                onRowDoubleClicked={(e) => {
+                  props.setSelectedOrder(e)
+                  props.setCurrentStep(1)
+                }}
               />
             )}
           </Col>
