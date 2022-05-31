@@ -70,6 +70,7 @@ const Listing = (props) => {
     {
       name: t("STATUS"),
       selector: "order_status",
+      sortable: true,
       cell: (row) => (
         <div
           style={{
