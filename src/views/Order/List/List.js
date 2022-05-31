@@ -10,6 +10,12 @@ const List = () => {
   const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(0)
   const stepper = ["Listing", "Details"]
+  // data for listing page
+  const [selectedOrder, setSelectedOrder] = useState({})
+
+  useEffect(() => {
+    console.log("selectedOrder", selectedOrder)
+  }, [selectedOrder])
 
   return (
     <div>
@@ -39,7 +45,14 @@ const List = () => {
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
       />
-      {currentStep === 0 ? <Listing /> : currentStep === 1 ? <Details /> : null}
+      {currentStep === 0 ? (
+        <Listing
+          setCurrentStep={setCurrentStep}
+          setSelectedOrder={setSelectedOrder}
+        />
+      ) : currentStep === 1 ? (
+        <Details selectedOrder={selectedOrder} />
+      ) : null}
     </div>
   )
 }
