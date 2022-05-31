@@ -264,11 +264,7 @@ const OrderForm = (props) => {
     })
   }
 
-  const fetchContentNumberDetail = (
-    content_number_key,
-    style_number,
-    group
-  ) => {
+  const fetchContentNumberDetail = (content_number_key, style_number) => {
     // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
     const body = {
       order_user: "innoa",
@@ -281,7 +277,7 @@ const OrderForm = (props) => {
         if (res.data?.content) {
           res?.data?.content
             ? props.setFibreInstructionData(res?.data?.content)
-            : props.setFibreInstructionData([{}]) // default value, null throws eslint err
+            : props.setFibreInstructionData([{}]) // default value. "null" throws eslint err
           const tempDefaultContentData = []
           res?.data?.content?.map((cont, index) => {
             // fetches default content data for fabric
@@ -295,7 +291,7 @@ const OrderForm = (props) => {
         if (res.data?.care) {
           res?.data?.care
             ? props.setCareData(res?.data?.care)
-            : props.setCareData([{}]) // default value, null throws eslint err
+            : props.setCareData([{}]) // default value. "null" throws eslint err
         }
         if (res.data?.icon) {
           const tempData = {}
@@ -603,11 +599,7 @@ const OrderForm = (props) => {
                         }
                         onChange={(e) => {
                           props.setContentNumberData(e)
-                          let group = "A"
-                          if (isContentSettingCommon) {
-                            group = "ABC"
-                          }
-                          fetchContentNumberDetail(e.value, e.label, group)
+                          fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
                     </Col>
@@ -783,11 +775,7 @@ const OrderForm = (props) => {
                         }
                         onChange={(e) => {
                           props.setCareNumberData(e)
-                          let group = "BC"
-                          if (isContentSettingCommon) {
-                            group = "ABC"
-                          }
-                          fetchContentNumberDetail(e.value, e.label, group)
+                          fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
                     </Col>

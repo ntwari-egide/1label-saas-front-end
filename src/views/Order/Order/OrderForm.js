@@ -40,6 +40,7 @@ const OrderForm = (props) => {
   const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
   const [contentGroupOptions, setContentGroupOptions] = useState({})
   const [washCareOptions, setWashCareOptions] = useState({})
+  const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
 
   // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
   const debounceFun = () => {
@@ -155,6 +156,12 @@ const OrderForm = (props) => {
       .then((res) => {
         if (res.status === 200) {
           props.setContentGroup(res.data[0]?.content_model) // to send to invoice and delivery for save order api
+          // sets state to determine options for care and content for different content settings namely A/BC and ABC
+          if (res.data[0]?.content_model === "ABC") {
+            setIsContentSettingCommon(true)
+          } else {
+            setIsContentSettingCommon(false)
+          }
           fetchContentNumberList(res.data[0]?.content_model.split("/")) // passes content_group as an array
         }
       })
@@ -195,35 +202,6 @@ const OrderForm = (props) => {
     }
     axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
       if (res.status === 200) {
-        // if (group === "A") {
-        //   res?.data?.content
-        //     ? props.setFibreInstructionData(res?.data?.content)
-        //     : props.setFibreInstructionData([{}]) // default value, null throws eslint err
-        //   const tempDefaultContentData = []
-        //   res?.data?.content?.map((cont, index) => {
-        //     // fetches default content data for fabric
-        //     fetchDefaultContentData(
-        //       cont.cont_key,
-        //       index,
-        //       tempDefaultContentData
-        //     )
-        //   })
-        // } else if (group === "BC") {
-        //   res?.data?.care
-        //     ? props.setCareData(res?.data?.care)
-        //     : props.setCareData([{}]) // default value, null throws eslint err
-        //   if (res?.data?.icon.length > 0) {
-        //     const tempData = {}
-        //     res?.data?.icon.map((icon) => {
-        //       tempData[icon.icon_type_id] = {
-        //         icon_group: icon.icon_group,
-        //         icon_type_id: icon.icon_type_id,
-        //         sys_icon_key: icon.sys_icon_key
-        //       }
-        //     })
-        //     props.setWashCareData({ ...tempData })
-        //   }
-        // }
         if (res.data?.content) {
           res?.data?.content
             ? props.setFibreInstructionData(res?.data?.content)
@@ -733,7 +711,11 @@ const OrderForm = (props) => {
                         value={contentGroupOptions["A"]?.filter(
                           (opt) => opt.label === props.contentNumberData?.label
                         )}
-                        options={contentGroupOptions["A"]}
+                        options={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]
+                            : contentGroupOptions["A"]
+                        }
                         onChange={(e) => {
                           props.setContentNumberData(e)
                           fetchContentNumberDetail(e.value, e.label)
@@ -905,7 +887,11 @@ const OrderForm = (props) => {
                         value={contentGroupOptions["BC"]?.filter(
                           (opt) => opt.value === props.careNumberData?.value
                         )}
-                        options={contentGroupOptions["BC"]}
+                        options={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]
+                            : contentGroupOptions["BC"]
+                        }
                         onChange={(e) => {
                           props.setCareNumberData(e)
                           fetchContentNumberDetail(e.value, e.label)
