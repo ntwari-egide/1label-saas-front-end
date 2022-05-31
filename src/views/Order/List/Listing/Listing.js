@@ -201,6 +201,9 @@ const Listing = (props) => {
                 }}
                 style={{ minHeight: "500px" }}
                 onRowDoubleClicked={(e) => {
+                  if (e.order_status === "Confirm") {
+                    props.setPageDisabled(true)
+                  }
                   props.setSelectedOrder(e)
                   props.setCurrentStep(1)
                 }}
