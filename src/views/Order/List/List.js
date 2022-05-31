@@ -12,6 +12,7 @@ const List = () => {
   const stepper = ["Listing", "Details"]
   // data for listing page
   const [selectedOrder, setSelectedOrder] = useState({})
+  const [pageDisabled, setPageDisabled] = useState(false)
 
   useEffect(() => {
     console.log("selectedOrder", selectedOrder)
@@ -49,9 +50,10 @@ const List = () => {
         <Listing
           setCurrentStep={setCurrentStep}
           setSelectedOrder={setSelectedOrder}
+          setPageDisabled={setPageDisabled}
         />
       ) : currentStep === 1 ? (
-        <Details selectedOrder={selectedOrder} />
+        <Details selectedOrder={selectedOrder} pageDisabled={pageDisabled} />
       ) : null}
     </div>
   )
