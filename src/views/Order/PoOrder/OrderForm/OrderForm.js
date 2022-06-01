@@ -19,6 +19,7 @@ import Select from "react-select"
 import Flatpickr from "react-flatpickr"
 import Footer from "../../../CommonFooter"
 import { use } from "i18next"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 const OrderForm = (props) => {
   // constants
