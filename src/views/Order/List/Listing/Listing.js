@@ -5,6 +5,10 @@ import {
   Card,
   CardHeader,
   CardBody,
+  CardFooter,
+  Label,
+  Button,
+  Input,
   Row,
   Col
 } from "reactstrap"
@@ -12,12 +16,28 @@ import { useTranslation } from "react-i18next"
 import axios from "@axios"
 import DataTable from "react-data-table-component"
 import CheckBox from "@components/CheckBox/CheckBox"
-import { Check } from "react-feather"
+import { Check, ArrowLeft, ArrowRight, Search } from "react-feather"
+import Select from "react-select"
+import Flatpickr from "react-flatpickr"
+import { formatDateYMD } from "@utils"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
+
+let timerId
 
 const Listing = (props) => {
   const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
+  const [orderDateFrom, setOrderDateFrom] = useState("")
+  const [orderDateTo, setOrderDateTo] = useState("")
   const { t } = useTranslation()
+
+  const recordsPerPageOptions = [
+    { value: 5, label: 5 },
+    { value: 10, label: 10 },
+    { value: 20, label: 20 }
+  ]
 
   const cols = [
     {
@@ -45,12 +65,12 @@ const Listing = (props) => {
       name: t("CREATE DATE"),
       selector: "order_date",
       sortable: false,
-      width: "175px"
+      width: "180px"
     },
     {
       name: t("ORDER DATE"),
       selector: "order_confirm_date",
-      width: "175px",
+      width: "180px",
       sortable: false
     },
     {
@@ -104,27 +124,38 @@ const Listing = (props) => {
     {
       name: t("CREATE BY"),
       selector: "order_user",
-      width: "150px"
+      width: "160px"
     },
     {
       name: t("CLIENT NAME"),
       selector: "order_user",
-      width: "150px"
+      width: "160px"
     },
     {
       name: t("LAST UPDATE PERSON"),
       selector: "update_user",
-      width: "150px"
+      width: "160px"
     }
   ]
 
+  // Other Functions
+  const debounceFetch = (currPage, recPerPage) => {
+    if (timerId) {
+      return
+    }
+    timerId = setTimeout(() => {
+      fetchOrderList(currPage, recPerPage.value, orderDateFrom, orderDateTo)
+      timerId = null
+    }, 400)
+  }
+
+  // API Services
   const copyConfirmOrder = () => {
     const body = {
       order_user: "innoa",
       brand_key: "e8c439c4-2bc0-4304-8053-e818071b5293",
       order_no: "JJ2-PO2022040006"
     }
-
     axios
       .post(Order / CopyOrder, body)
       .then((res) => console.log(res))
@@ -138,22 +169,28 @@ const Listing = (props) => {
       order_no: "JJ2-PO2022040006",
       order_status: "Draft"
     }
-
     axios
       .post("Order/SendOrderEmail", body)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
   }
 
-  const fetchOrderList = () => {
+  const fetchOrderList = (
+    page_index,
+    page_size,
+    order_date_from,
+    order_date_to
+  ) => {
+    if (!loading) {
+      setLoading(true)
+    }
     const body = {
       order_user: "innoa",
-      page_index: "1",
-      page_size: "10",
-      order_date_from: "2022-01-1",
-      order_date_to: "2022-05-5"
+      page_index,
+      page_size,
+      order_date_from,
+      order_date_to
     }
-
     axios
       .post("/Order/GetOrderList", body)
       .then((res) => {
@@ -164,7 +201,12 @@ const Listing = (props) => {
   }
 
   useEffect(() => {
-    fetchOrderList()
+    fetchOrderList(
+      currentPage,
+      recordsPerPage.value,
+      orderDateFrom,
+      orderDateTo
+    )
   }, [])
 
   return (
@@ -173,12 +215,70 @@ const Listing = (props) => {
         <h3>Order List</h3>
       </CardHeader>
       <CardBody>
+        <Row style={{ marginBottom: "10px" }}>
+          <Col xs="12" sm="12" md="5" lg="4" xl="3">
+            <Row>
+              <Col>Order Date From:</Col>
+            </Row>
+            <Row>
+              <Col>
+                <Flatpickr
+                  className="form-control"
+                  value={orderDateFrom}
+                  onChange={(e) =>
+                    setOrderDateFrom(formatDateYMD(new Date(e[0])))
+                  }
+                />
+              </Col>
+            </Row>
+          </Col>
+          <Col xs="12" sm="12" md="5" lg="4" xl="3">
+            <Row>
+              <Col>Order Date To:</Col>
+            </Row>
+            <Row>
+              <Col>
+                <Flatpickr
+                  className="form-control"
+                  value={orderDateTo}
+                  onChange={(e) =>
+                    setOrderDateTo(formatDateYMD(new Date(e[0])))
+                  }
+                />
+              </Col>
+            </Row>
+          </Col>
+          <Col
+            xs="12"
+            sm="12"
+            md="2"
+            lg="4"
+            xl="3"
+            style={{ display: "flex", alignItems: "end" }}
+          >
+            <Button
+              color="primary"
+              onClick={() =>
+                fetchOrderList(
+                  currentPage,
+                  recordsPerPage.value,
+                  orderDateFrom,
+                  orderDateTo
+                )
+              }
+              style={{ paddingLeft: "12px", paddingRight: "12px" }}
+            >
+              <Search size={16} style={{ maringRight: "5px" }} />
+              Search
+            </Button>
+          </Col>
+        </Row>
         <Row>
           <Col>
             {loading ? (
               <div
                 style={{
-                  minHeight: "560px",
+                  minHeight: "50vh",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center"
@@ -191,6 +291,8 @@ const Listing = (props) => {
                 data={orderList}
                 columns={cols}
                 noHeader={true}
+                fixedHeader
+                fixedHeaderScrollHeight="42vh"
                 selectableRows={true}
                 selectableRowsComponent={CheckBox}
                 selectableRowsComponentProps={{
@@ -199,7 +301,6 @@ const Listing = (props) => {
                   label: "",
                   size: "md"
                 }}
-                style={{ minHeight: "500px" }}
                 onRowDoubleClicked={(e) => {
                   if (e.order_status === "Confirm") {
                     props.setPageDisabled(true)
@@ -212,6 +313,88 @@ const Listing = (props) => {
           </Col>
         </Row>
       </CardBody>
+      <CardFooter>
+        <Row style={{ display: "flex", justifyContent: "space-between" }}>
+          <Col xs="6" sm="6" md="4" lg="2">
+            <Row>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    minWidth: "120px",
+                    paddingRight: "2%",
+                    paddingTop: "10px"
+                  }}
+                >
+                  <Label>{t("Records Per Page")}</Label>
+                </div>
+                <div style={{ minWidth: "70px" }}>
+                  <Select
+                    classNamePrefix="select"
+                    defaultValue={recordsPerPageOptions[1]}
+                    name="clear"
+                    menuPlacement={"auto"}
+                    options={recordsPerPageOptions}
+                    onChange={(e) => {
+                      console.log("changed")
+                      setRecordsPerPage(e)
+                      debounceFetch(currentPage, e)
+                    }}
+                  />
+                </div>
+              </div>
+            </Row>
+          </Col>
+          <Col xs="6" sm="6" md="4" lg="2">
+            <div style={{ display: "flex", float: "right" }}>
+              <div>
+                <Button
+                  color="primary"
+                  style={{ padding: "10px" }}
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1)
+                      debounceFetch(currentPage - 1, recordsPerPage)
+                    }
+                  }}
+                >
+                  <ArrowLeft size={15} />
+                </Button>
+              </div>
+              <div style={{ minWidth: "50px", maxWidth: "50px" }}>
+                <Input
+                  value={currentPage}
+                  style={{ textAlign: "center" }}
+                  onChange={(e) => {
+                    if (
+                      parseInt(e.target.value) ||
+                      e.target.value.length <= 0
+                    ) {
+                      setCurrentPage(
+                        parseInt(e.target.value) ? parseInt(e.target.value) : ""
+                      )
+                      if (parseInt(e.target.value)) {
+                        debounceFetch(parseInt(e.target.value), recordsPerPage)
+                      }
+                    }
+                  }}
+                />
+              </div>
+              <div>
+                <Button
+                  onClick={() => {
+                    setCurrentPage(currentPage + 1)
+                    debounceFetch(currentPage + 1, recordsPerPage)
+                  }}
+                  color="primary"
+                  style={{ padding: "10px" }}
+                >
+                  <ArrowRight size={15} />
+                </Button>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </CardFooter>
     </Card>
   )
 }
