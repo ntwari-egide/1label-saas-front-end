@@ -177,7 +177,19 @@ const Listing = (props) => {
   }
 
   const sendDraftOrder = (row) => {
-    console.log(row)
+    const body = {
+      order_user: "innoa",
+      brand_key: row.brand_guid_key,
+      order_no: [row.order_no.split("-")[0], row.order_no.split("-")[1]].join(
+        "-"
+      ),
+      order_status: "Draft"
+    }
+
+    axios
+      .post("/Order/SendOrderEmail", body)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
   }
 
   const copy = (row) => {
