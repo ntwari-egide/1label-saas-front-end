@@ -338,3 +338,8 @@ body {
 .rdt_TableRow {
   cursor: pointer;
 }
+
+// to get around double horizontal scrollbar issue for react-datatable-component
+.rdt_TableBody {
+  overflow-x: hidden !important;
+}
