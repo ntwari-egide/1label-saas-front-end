@@ -65,12 +65,12 @@ const Listing = (props) => {
       name: t("CREATE DATE"),
       selector: "order_date",
       sortable: false,
-      width: "180px"
+      width: "200px"
     },
     {
       name: t("ORDER DATE"),
       selector: "order_confirm_date",
-      width: "180px",
+      width: "200px",
       sortable: false
     },
     {
@@ -95,6 +95,7 @@ const Listing = (props) => {
       name: t("STATUS"),
       selector: "order_status",
       sortable: true,
+      width: "100px",
       cell: (row) => (
         <div
           style={{
@@ -135,10 +136,58 @@ const Listing = (props) => {
       name: t("LAST UPDATE PERSON"),
       selector: "update_user",
       width: "160px"
+    },
+    {
+      name: t("ACTIONS"),
+      cell: (row) => (
+        <div
+          style={{ display: "flex", minWidth: "220px", marginRight: "375px" }}
+        >
+          {row.action.map((act) => (
+            <div>
+              <Button
+                color="primary"
+                style={{ margin: "1px", padding: "5px" }}
+                onClick={() => handleActionButtonClick(act.label, row)}
+              >
+                {act.label}
+              </Button>
+            </div>
+          ))}
+        </div>
+      )
     }
   ]
 
   // Other Functions
+  const handleActionButtonClick = (action, row) => {
+    switch (action) {
+      case "Send Draft Order":
+        sendDraftOrder(row)
+        return
+      case "Copy":
+        copy(row)
+        return
+      case "Preview":
+        preview(row)
+        return
+      default:
+        return null
+    }
+  }
+
+  const sendDraftOrder = (row) => {
+    console.log(row)
+  }
+
+  const copy = (row) => {
+    console.log(row)
+  }
+
+  const preview = (row) => {
+    console.log(row)
+  }
+
   const debounceFetch = (currPage, recPerPage) => {
     if (timerId) {
       return
