@@ -25,12 +25,7 @@ import "@styles/react/libs/flatpickr/flatpickr.scss"
 let timerId
 
 const Listing = (props) => {
-  const [orderList, setOrderList] = useState([])
   const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
-  const [orderDateFrom, setOrderDateFrom] = useState("")
-  const [orderDateTo, setOrderDateTo] = useState("")
   const { t } = useTranslation()
 
   const recordsPerPageOptions = [
@@ -205,7 +200,12 @@ const Listing = (props) => {
       return
     }
     timerId = setTimeout(() => {
-      fetchOrderList(currPage, recPerPage.value, orderDateFrom, orderDateTo)
+      fetchOrderList(
+        currPage,
+        recPerPage.value,
+        props.orderDateFrom,
+        props.orderDateTo
+      )
       timerId = null
     }, 400)
   }
@@ -255,7 +255,7 @@ const Listing = (props) => {
     axios
       .post("/Order/GetOrderList", body)
       .then((res) => {
-        setOrderList(res.data)
+        props.setOrderList(res.data)
         setLoading(false)
       })
       .catch((err) => console.log(err))
@@ -263,10 +263,10 @@ const Listing = (props) => {
 
   useEffect(() => {
     fetchOrderList(
-      currentPage,
-      recordsPerPage.value,
-      orderDateFrom,
-      orderDateTo
+      props.currentPage,
+      props.recordsPerPage.value,
+      props.orderDateFrom,
+      props.orderDateTo
     )
   }, [])
 
@@ -285,9 +285,9 @@ const Listing = (props) => {
               <Col>
                 <Flatpickr
                   className="form-control"
-                  value={orderDateFrom}
+                  value={props.orderDateFrom}
                   onChange={(e) =>
-                    setOrderDateFrom(formatDateYMD(new Date(e[0])))
+                    props.setOrderDateFrom(formatDateYMD(new Date(e[0])))
                   }
                 />
               </Col>
@@ -301,9 +301,9 @@ const Listing = (props) => {
               <Col>
                 <Flatpickr
                   className="form-control"
-                  value={orderDateTo}
+                  value={props.orderDateTo}
                   onChange={(e) =>
-                    setOrderDateTo(formatDateYMD(new Date(e[0])))
+                    props.setOrderDateTo(formatDateYMD(new Date(e[0])))
                   }
                 />
               </Col>
@@ -321,10 +321,10 @@ const Listing = (props) => {
               color="primary"
               onClick={() =>
                 fetchOrderList(
-                  currentPage,
-                  recordsPerPage.value,
-                  orderDateFrom,
-                  orderDateTo
+                  props.currentPage,
+                  props.recordsPerPage.value,
+                  props.orderDateFrom,
+                  props.orderDateTo
                 )
               }
               style={{ paddingLeft: "12px", paddingRight: "12px" }}
@@ -349,7 +349,7 @@ const Listing = (props) => {
               </div>
             ) : (
               <DataTable
-                data={orderList}
+                data={props.orderList}
                 columns={cols}
                 noHeader={true}
                 fixedHeader
@@ -391,14 +391,16 @@ const Listing = (props) => {
                 <div style={{ minWidth: "70px" }}>
                   <Select
                     classNamePrefix="select"
-                    defaultValue={recordsPerPageOptions[1]}
                     name="clear"
+                    value={recordsPerPageOptions.filter(
+                      (opt) => opt.value === props.recordsPerPage.value
+                    )}
                     menuPlacement={"auto"}
                     options={recordsPerPageOptions}
                     onChange={(e) => {
                       console.log("changed")
-                      setRecordsPerPage(e)
-                      debounceFetch(currentPage, e)
+                      props.setRecordsPerPage(e)
+                      debounceFetch(props.currentPage, e)
                     }}
                   />
                 </div>
@@ -412,9 +414,9 @@ const Listing = (props) => {
                   color="primary"
                   style={{ padding: "10px" }}
                   onClick={() => {
-                    if (currentPage > 1) {
-                      setCurrentPage(currentPage - 1)
-                      debounceFetch(currentPage - 1, recordsPerPage)
+                    if (props.currentPage > 1) {
+                      props.setCurrentPage(props.currentPage - 1)
+                      debounceFetch(props.currentPage - 1, props.recordsPerPage)
                     }
                   }}
                 >
@@ -423,18 +425,21 @@ const Listing = (props) => {
               </div>
               <div style={{ minWidth: "50px", maxWidth: "50px" }}>
                 <Input
-                  value={currentPage}
+                  value={props.currentPage}
                   style={{ textAlign: "center" }}
                   onChange={(e) => {
                     if (
                       parseInt(e.target.value) ||
                       e.target.value.length <= 0
                     ) {
-                      setCurrentPage(
+                      props.setCurrentPage(
                         parseInt(e.target.value) ? parseInt(e.target.value) : ""
                       )
                       if (parseInt(e.target.value)) {
-                        debounceFetch(parseInt(e.target.value), recordsPerPage)
+                        debounceFetch(
+                          parseInt(e.target.value),
+                          props.recordsPerPage
+                        )
                       }
                     }
                   }}
@@ -443,8 +448,8 @@ const Listing = (props) => {
               <div>
                 <Button
                   onClick={() => {
-                    setCurrentPage(currentPage + 1)
-                    debounceFetch(currentPage + 1, recordsPerPage)
+                    props.setCurrentPage(props.currentPage + 1)
+                    debounceFetch(props.currentPage + 1, props.recordsPerPage)
                   }}
                   color="primary"
                   style={{ padding: "10px" }}

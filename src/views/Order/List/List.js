@@ -11,12 +11,17 @@ const List = () => {
   const [currentStep, setCurrentStep] = useState(0)
   const stepper = ["Listing", "Details"]
   // data for listing page
+  const [orderList, setOrderList] = useState([])
   const [selectedOrder, setSelectedOrder] = useState({})
   const [pageDisabled, setPageDisabled] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
+  const [orderDateFrom, setOrderDateFrom] = useState("")
+  const [orderDateTo, setOrderDateTo] = useState("")
 
-  useEffect(() => {
-    console.log("selectedOrder", selectedOrder)
-  }, [selectedOrder])
+  // useEffect(() => {
+  //   console.log("selectedOrder", selectedOrder)
+  // }, [selectedOrder])
 
   return (
     <div>
@@ -51,6 +56,16 @@ const List = () => {
           setCurrentStep={setCurrentStep}
           setSelectedOrder={setSelectedOrder}
           setPageDisabled={setPageDisabled}
+          orderList={orderList}
+          setOrderList={setOrderList}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          recordsPerPage={recordsPerPage}
+          setRecordsPerPage={setRecordsPerPage}
+          orderDateFrom={orderDateFrom}
+          setOrderDateFrom={setOrderDateFrom}
+          orderDateTo={orderDateTo}
+          setOrderDateTo={setOrderDateTo}
         />
       ) : currentStep === 1 ? (
         <Details selectedOrder={selectedOrder} pageDisabled={pageDisabled} />
