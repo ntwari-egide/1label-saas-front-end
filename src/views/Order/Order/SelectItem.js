@@ -16,8 +16,6 @@ import {
 } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
 import { useTranslation } from "react-i18next"
-import { setBrandRedux } from "@redux/actions/modules/order"
-import { useDispatch, connect } from "react-redux"
 
 const SelectItem = (props) => {
   const { t } = useTranslation()
@@ -26,7 +24,6 @@ const SelectItem = (props) => {
   const [itemList, setItemList] = useState([])
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [loader, setLoader] = useState(false)
-  const dispatch = useDispatch()
 
   const handleCheckListChange = (item) => {
     let tempList = props.selectedItems
@@ -124,7 +121,7 @@ const SelectItem = (props) => {
             }
             options={brandOptions}
             onChange={(e) => {
-              dispatch(setBrandRedux(e))
+              props.setBrand(e)
               fetchItemList(e, props.itemType)
             }}
             isClearable={true}
@@ -236,8 +233,4 @@ const SelectItem = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  brand: state.orderReducer.brand
-})
-
-export default connect(mapStateToProps, null)(SelectItem)
+export default SelectItem

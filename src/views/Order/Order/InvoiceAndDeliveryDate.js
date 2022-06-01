@@ -14,7 +14,6 @@ import {
 import Footer from "../../CommonFooter"
 import { useTranslation } from "react-i18next"
 import { formatDateYMD } from "@utils"
-import { connect } from "react-redux"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
@@ -426,8 +425,4 @@ const InvoiceAndDelivery = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  brand: state.orderReducer.brand
-})
-
-export default connect(mapStateToProps, null)(InvoiceAndDelivery)
+export default InvoiceAndDelivery

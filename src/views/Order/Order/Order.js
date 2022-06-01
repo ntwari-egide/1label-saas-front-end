@@ -27,6 +27,9 @@ const Order = () => {
   const [itemType, setItemType] = useState("")
   const [selectedItems, setSelectedItems] = useState([])
 
+  // data for Select Item component
+  const [brand, setBrand] = useState({})
+
   // data of OrderForm component
   const [careData, setCareData] = useState([{}])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
@@ -116,6 +119,8 @@ const Order = () => {
       />
       {currentStep === 0 ? (
         <SelectItem
+          brand={brand}
+          setBrand={setBrand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
@@ -126,6 +131,7 @@ const Order = () => {
         />
       ) : currentStep === 1 ? (
         <OrderForm
+          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
@@ -162,6 +168,7 @@ const Order = () => {
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
+          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
@@ -173,6 +180,7 @@ const Order = () => {
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
+          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}

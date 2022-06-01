@@ -231,9 +231,9 @@ const SizeTable = (props) => {
       .catch((err) => console.log(err))
   }
 
-  useEffect(() => {
-    console.log("props.sizeContentData", props.sizeContentData)
-  }, [props.sizeContentData])
+  // useEffect(() => {
+  //   console.log("props.sizeContentData", props.sizeContentData)
+  // }, [props.sizeContentData])
 
   useEffect(() => {
     if (props.sizeTableTrigger) {
