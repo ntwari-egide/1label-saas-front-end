@@ -35,7 +35,9 @@ import {
   setWashCareData,
   setCareNumberData,
   setContentCustomNumber,
-  setCareCustomNumber
+  setCareCustomNumber,
+  setDynamicFieldData,
+  setContentGroup
 } from "@redux/actions/views/Order/Order"
 
 let timerId = null
@@ -159,7 +161,7 @@ const OrderForm = (props) => {
       .post("/Brand/GetContentNumberSetting", body)
       .then((res) => {
         if (res.status === 200) {
-          props.setContentGroup(res.data[0]?.content_model) // to send to invoice and delivery for save order api
+          dispatch(setContentGroup(res.data[0]?.content_model)) // to send to invoice and delivery for save order api
           // sets state to determine options for care and content for different content settings namely A/BC and ABC
           if (res.data[0]?.content_model === "ABC") {
             setIsContentSettingCommon(true)
@@ -360,7 +362,7 @@ const OrderForm = (props) => {
                     field_value: e.value,
                     field_label: e.label
                   }
-                  props.setDynamicFieldData({ ...tempState })
+                  dispatch(setDynamicFieldData({ ...tempState }))
                 }}
               />
             </Col>
@@ -392,7 +394,7 @@ const OrderForm = (props) => {
                     ...tempState[field.title],
                     field_value: e.target.value
                   }
-                  props.setDynamicFieldData({ ...tempState })
+                  dispatch(setDynamicFieldData({ ...tempState }))
                 }}
               />
             </Col>
@@ -410,11 +412,13 @@ const OrderForm = (props) => {
     if (fields.length > 0) {
       fields.map((field) => {
         // assigns initial state to dynamic fields data.
+        // to establish a data structure
         tempItemInfoState[field.title] = {
           field_id: field.field,
           field_value: "",
           field_label: ""
         }
+        // fetches options for select inputs for dynamic fields.
         if (field?.effect?.fetch?.action) {
           fetch(field?.effect?.fetch?.action, {
             method: field?.effect?.fetch?.method,
@@ -440,7 +444,7 @@ const OrderForm = (props) => {
       // initialises only if not previously set,
       // important for when the component is revisited since only initialises initial state when first visited.
       if (Object.keys(props.dynamicFieldData).length <= 0) {
-        props.setDynamicFieldData({ ...tempItemInfoState })
+        dispatch(setDynamicFieldData({ ...tempItemInfoState }))
       }
     }
   }
@@ -1026,7 +1030,9 @@ const mapStateToProps = (state) => ({
   defaultContentData: state.orderReducer.defaultContentData,
   careNumberData: state.orderReducer.careNumberData,
   contentCustomNumber: state.orderReducer.contentCustomNumber,
-  careCustomNumber: state.orderReducer.careCustomNumber
+  careCustomNumber: state.orderReducer.careCustomNumber,
+  dynamicFieldData: state.orderReducer.dynamicFieldData,
+  contentGroup: state.orderReducer.contentGroup
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

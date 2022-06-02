@@ -14,7 +14,9 @@ const initialState = {
   coo: "",
   careNumberData: {},
   careCustomNumber: "",
-  contentCustomNumber: ""
+  contentCustomNumber: "",
+  dynamicFieldData: {},
+  contentGroup: ""
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -51,6 +53,10 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, careCustomNumber: action.payload }
     case "SET_CONTENT_CUSTOM_NUMBER":
       return { ...state, contentCustomNumber: action.payload }
+    case "SET_DYNAMIC_FIELD_DATA":
+      return { ...state, dynamicFieldData: action.payload }
+    case "SET_CONTENT_GROUP":
+      return { ...state, contentGroup: action.payload }
     default:
       return state
   }

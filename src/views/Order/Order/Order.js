@@ -27,9 +27,6 @@ const Order = (props) => {
   const [lastStep] = useState(stepperMenu.length - 1)
   const [itemType, setItemType] = useState("")
 
-  // data of OrderForm component
-  const [dynamicFieldData, setDynamicFieldData] = useState({})
-  const [contentGroup, setContentGroup] = useState("")
   // validations for OrderForm Component
   const [orderFormManFields, setOrderFormManFields] = useState({
     projectionLocation: false,
@@ -116,9 +113,6 @@ const Order = (props) => {
           currentStep={currentStep}
           lastStep={lastStep}
           itemType={itemType}
-          dynamicFieldData={dynamicFieldData}
-          setDynamicFieldData={setDynamicFieldData}
-          setContentGroup={setContentGroup}
           orderFormManFields={orderFormManFields}
         />
       ) : currentStep === 2 ? (
@@ -136,11 +130,9 @@ const Order = (props) => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          dynamicFieldData={dynamicFieldData}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
           sizeMatrixType={sizeMatrixType}
-          contentGroup={contentGroup}
         />
       ) : currentStep === 4 ? (
         <Payment

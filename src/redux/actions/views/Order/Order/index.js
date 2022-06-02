@@ -66,6 +66,14 @@ export const setCareCustomNumber = (value) => (dispatch) => {
   dispatch({ type: "SET_CARE_CUSTOM_NUMBER", payload: value })
 }
 
+export const setDynamicFieldData = (data) => (dispatch) => {
+  dispatch({ type: "SET_DYNAMIC_FIELD_DATA", payload: data })
+}
+
+export const setContentGroup = (value) => (dispatch) => {
+  dispatch({ type: "SET_CONTENT_GROUP", payload: value })
+}
+
 export const handleFibreChange =
   (e, index, fibreInstructionState, defaultContentState, brand) =>
   (dispatch) => {
