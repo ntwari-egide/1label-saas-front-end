@@ -14,10 +14,12 @@ import Footer from "../../CommonFooter"
 import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
-import { connect } from "react-redux"
+import { useDispatch, connect } from "react-redux"
+import { setSizeMatrixType } from "@redux/actions/views/Order/Order"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   // App States
   const [sizeData, setSizeData] = useState([])
   const [defaultSizeData, setDefaultSizeData] = useState(null)
@@ -57,7 +59,6 @@ const PreviewAndSummary = (props) => {
   const formatColToRow = (xmlStr) => {
     const parser = new XMLParser()
     const jsObj = parser.parse(xmlStr)
-    console.log("jsObj", jsObj)
     const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
     let data = [] // initialized data to fill row by row
     let currentRow = 0 + 2 // because actual data begins at Column2
@@ -106,7 +107,7 @@ const PreviewAndSummary = (props) => {
           //  set size content if available
           if (res?.data[0]?.size_content) {
             props.setSizeTable(res?.data[0]?.size_content) // to send it to invoice and delivery for save order
-            props.setSizeMatrixType(res.data[0]?.size_matrix_type) // to send it to invoice and delivery for save order
+            dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
             setSizeData(formatColToRow(res?.data[0]?.size_content))
             console.log(
               "processed data",
@@ -265,7 +266,8 @@ const PreviewAndSummary = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.orderReducer.brand,
-  selectedItems: state.orderReducer.selectedItems
+  selectedItems: state.orderReducer.selectedItems,
+  sizeMatrixType: state.orderReducer.sizeMatrixType
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)

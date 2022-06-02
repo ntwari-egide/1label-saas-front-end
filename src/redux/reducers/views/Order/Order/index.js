@@ -16,7 +16,8 @@ const initialState = {
   careCustomNumber: "",
   contentCustomNumber: "",
   dynamicFieldData: {},
-  contentGroup: ""
+  contentGroup: "",
+  sizeMatrixType: ""
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -57,6 +58,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, dynamicFieldData: action.payload }
     case "SET_CONTENT_GROUP":
       return { ...state, contentGroup: action.payload }
+    case "SET_SIZE_MATRIX_TYPE":
+      return { ...state, sizeMatrixType: action.payload }
     default:
       return state
   }

@@ -74,6 +74,10 @@ export const setContentGroup = (value) => (dispatch) => {
   dispatch({ type: "SET_CONTENT_GROUP", payload: value })
 }
 
+export const setSizeMatrixType = (value) => (dispatch) => {
+  dispatch({ type: "SET_SIZE_MATRIX_TYPE", payload: value })
+}
+
 export const handleFibreChange =
   (e, index, fibreInstructionState, defaultContentState, brand) =>
   (dispatch) => {

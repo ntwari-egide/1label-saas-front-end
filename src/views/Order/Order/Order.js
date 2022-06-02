@@ -37,7 +37,6 @@ const Order = (props) => {
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
-  const [sizeMatrixType, setSizeMatrixType] = useState("")
 
   // const xmlToObj = () => {
   //   const xml = "<SizeMatrix>".concat(
@@ -123,7 +122,6 @@ const Order = (props) => {
           setSizeTable={setSizeTable}
           setDefaultSizeTable={setDefaultSizeTable}
           defaultSizeTable={defaultSizeTable}
-          setSizeMatrixType={setSizeMatrixType}
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
@@ -132,7 +130,6 @@ const Order = (props) => {
           lastStep={lastStep}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
-          sizeMatrixType={sizeMatrixType}
         />
       ) : currentStep === 4 ? (
         <Payment
