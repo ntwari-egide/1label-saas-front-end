@@ -188,7 +188,19 @@ const Listing = (props) => {
   }
 
   const copy = (row) => {
-    console.log(row)
+    const body = {
+      order_user: "innoa",
+      brand_key: row.brand_guid_key,
+      order_no: row.order_no
+    }
+    axios
+      .post("/Order/CopyOrder", body)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res)
+        }
+      })
+      .catch((err) => console.log(err))
   }
 
   const preview = (row) => {
