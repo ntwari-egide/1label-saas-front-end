@@ -59,13 +59,6 @@ const Stepper = (props) => {
             <div
               className="custom-stepper"
               onClick={() => {
-                // let validationPassed = true
-                // validation for selected items
-                // validationPassed = normalSelectedItemValidation()
-                // validation for poselectedtiems
-                // validationPassed = poSelectedItemsValidation()
-                // validation for Order Form mandatory fields
-                // validationPassed = normalOrderFormManFieldsValidation()
                 if (
                   normalSelectedItemValidation() &&
                   poSelectedItemsValidation() &&
