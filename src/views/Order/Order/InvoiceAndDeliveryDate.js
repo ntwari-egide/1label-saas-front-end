@@ -437,7 +437,10 @@ const mapStateToProps = (state) => ({
   defaultContentData: state.orderReducer.defaultContentData,
   fibreInstructionData: state.orderReducer.fibreInstructionData,
   careData: state.orderReducer.careData,
-  washCareData: state.orderReducer.washCareData
+  washCareData: state.orderReducer.washCareData,
+  careNumberData: state.orderReducer.careNumberData,
+  careCustomNumber: state.orderReducer.careCustomNumber,
+  contentCustomNumber: state.orderReducer.contentCustomNumber
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

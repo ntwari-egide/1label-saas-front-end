@@ -11,7 +11,10 @@ const initialState = {
   expectedDeliveryDate: "",
   minExpectedDeliveryDate: "",
   orderReference: "",
-  coo: ""
+  coo: "",
+  careNumberData: {},
+  careCustomNumber: "",
+  contentCustomNumber: ""
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -42,6 +45,12 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, coo: action.payload }
     case "SET_CONTENT_NUMBER_DATA":
       return { ...state, contentNumberData: action.payload }
+    case "SET_CARE_NUMBER_DATA":
+      return { ...state, careNumberData: action.payload }
+    case "SET_CARE_CUSTOM_NUMBER":
+      return { ...state, careCustomNumber: action.payload }
+    case "SET_CONTENT_CUSTOM_NUMBER":
+      return { ...state, contentCustomNumber: action.payload }
     default:
       return state
   }

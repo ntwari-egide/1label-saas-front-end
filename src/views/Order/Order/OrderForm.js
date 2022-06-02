@@ -32,7 +32,10 @@ import {
   setDefaultContentData,
   setFibreInstructionData,
   setCareData,
-  setWashCareData
+  setWashCareData,
+  setCareNumberData,
+  setContentCustomNumber,
+  setCareCustomNumber
 } from "@redux/actions/views/Order/Order"
 
 let timerId = null
@@ -648,7 +651,7 @@ const OrderForm = (props) => {
                       <Input
                         value={props.contentCustomNumber}
                         onChange={(e) =>
-                          props.setContentCustomNumber(e.target.value)
+                          dispatch(setContentCustomNumber(e.target.value))
                         }
                       />
                     </Col>
@@ -828,7 +831,7 @@ const OrderForm = (props) => {
                             : contentGroupOptions["BC"]
                         }
                         onChange={(e) => {
-                          props.setCareNumberData(e)
+                          dispatch(setCareNumberData(e))
                           // fetchContentNumberDetail(e.value, e.label)
                           dispatch(
                             fetchContentNumberDetail(
@@ -849,7 +852,7 @@ const OrderForm = (props) => {
                       <Input
                         value={props.careCustomNumber}
                         onChange={(e) =>
-                          props.setCareCustomNumber(e.target.value)
+                          dispatch(setCareCustomNumber(e.target.value))
                         }
                       />
                     </Col>
@@ -1020,7 +1023,10 @@ const mapStateToProps = (state) => ({
   fibreInstructionData: state.orderReducer.fibreInstructionData,
   washCareData: state.orderReducer.washCareData,
   contentNumberData: state.orderReducer.contentNumberData,
-  defaultContentData: state.orderReducer.defaultContentData
+  defaultContentData: state.orderReducer.defaultContentData,
+  careNumberData: state.orderReducer.careNumberData,
+  contentCustomNumber: state.orderReducer.contentCustomNumber,
+  careCustomNumber: state.orderReducer.careCustomNumber
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

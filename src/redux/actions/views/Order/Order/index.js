@@ -54,6 +54,18 @@ export const setDefaultContentData = (data) => (dispatch) => {
   dispatch({ type: "SET_DEFAULT_CONTENT_DATA", payload: data })
 }
 
+export const setCareNumberData = (e) => (dispatch) => {
+  dispatch({ type: "SET_CARE_NUMBER_DATA", payload: e })
+}
+
+export const setContentCustomNumber = (value) => (dispatch) => {
+  dispatch({ type: "SET_CONTENT_CUSTOM_NUMBER", payload: value })
+}
+
+export const setCareCustomNumber = (value) => (dispatch) => {
+  dispatch({ type: "SET_CARE_CUSTOM_NUMBER", payload: value })
+}
+
 export const handleFibreChange =
   (e, index, fibreInstructionState, defaultContentState, brand) =>
   (dispatch) => {

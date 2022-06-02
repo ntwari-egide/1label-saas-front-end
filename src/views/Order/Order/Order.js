@@ -30,9 +30,6 @@ const Order = (props) => {
   // data of OrderForm component
   const [dynamicFieldData, setDynamicFieldData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
-  const [careNumberData, setCareNumberData] = useState({})
-  const [contentCustomNumber, setContentCustomNumber] = useState("")
-  const [careCustomNumber, setCareCustomNumber] = useState("")
   // validations for OrderForm Component
   const [orderFormManFields, setOrderFormManFields] = useState({
     projectionLocation: false,
@@ -122,12 +119,6 @@ const Order = (props) => {
           dynamicFieldData={dynamicFieldData}
           setDynamicFieldData={setDynamicFieldData}
           setContentGroup={setContentGroup}
-          careNumberData={careNumberData}
-          setCareNumberData={setCareNumberData}
-          contentCustomNumber={contentCustomNumber}
-          setContentCustomNumber={setContentCustomNumber}
-          careCustomNumber={careCustomNumber}
-          setCareCustomNumber={setCareCustomNumber}
           orderFormManFields={orderFormManFields}
         />
       ) : currentStep === 2 ? (
@@ -150,9 +141,6 @@ const Order = (props) => {
           defaultSizeTable={defaultSizeTable}
           sizeMatrixType={sizeMatrixType}
           contentGroup={contentGroup}
-          contentCustomNumber={contentCustomNumber}
-          careCustomNumber={careCustomNumber}
-          careNumberData={careNumberData}
         />
       ) : currentStep === 4 ? (
         <Payment
