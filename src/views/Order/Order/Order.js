@@ -119,8 +119,6 @@ const Order = () => {
       />
       {currentStep === 0 ? (
         <SelectItem
-          brand={brand}
-          setBrand={setBrand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
@@ -131,7 +129,6 @@ const Order = () => {
         />
       ) : currentStep === 1 ? (
         <OrderForm
-          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
@@ -168,7 +165,6 @@ const Order = () => {
         />
       ) : currentStep === 2 ? (
         <PreviewAndSummary
-          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
@@ -180,7 +176,6 @@ const Order = () => {
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
-          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}

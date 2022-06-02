@@ -16,9 +16,12 @@ import {
 } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
 import { useTranslation } from "react-i18next"
+import { useDispatch, connect } from "react-redux"
+import { setBrand } from "@redux/actions/views/Order/Order"
 
 const SelectItem = (props) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const [brandOptions, setBrandOptions] = useState([])
   const [itemTypeOptions, setItemTypeOptions] = useState([])
   const [itemList, setItemList] = useState([])
@@ -103,7 +106,7 @@ const SelectItem = (props) => {
   // }, [props.selectedItems])
 
   // useEffect(() => {
-  //   console.log("redux", props.brand)
+  //   console.log("brand redux", props.brand)
   // }, [props.brand])
 
   return (
@@ -121,7 +124,7 @@ const SelectItem = (props) => {
             }
             options={brandOptions}
             onChange={(e) => {
-              props.setBrand(e)
+              dispatch(setBrand(e))
               fetchItemList(e, props.itemType)
             }}
             isClearable={true}
@@ -233,4 +236,8 @@ const SelectItem = (props) => {
   )
 }
 
-export default SelectItem
+const mapStateToProps = (state) => ({
+  brand: state.orderReducer.brand
+})
+
+export default connect(mapStateToProps, null)(SelectItem)
