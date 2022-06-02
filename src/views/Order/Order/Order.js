@@ -26,21 +26,15 @@ const Order = (props) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [lastStep] = useState(stepperMenu.length - 1)
   const [itemType, setItemType] = useState("")
-  const [selectedItems, setSelectedItems] = useState([])
 
   // data for Select Item component
-  const [brand, setBrand] = useState({})
 
   // data of OrderForm component
   const [careData, setCareData] = useState([{}])
   const [fibreInstructionData, setFibreInstructionData] = useState([{}])
   const [washCareData, setWashCareData] = useState([])
   const [defaultContentData, setDefaultContentData] = useState([""])
-  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
   const [dynamicFieldData, setDynamicFieldData] = useState({})
-  const [coo, setCoo] = useState("")
-  const [projectionLocation, setProjectionLocation] = useState("")
-  const [orderReference, setOrderReference] = useState("")
   const [contentGroup, setContentGroup] = useState("")
   const [contentNumberData, setContentNumberData] = useState({})
   const [careNumberData, setCareNumberData] = useState({})
@@ -109,9 +103,9 @@ const Order = (props) => {
         validationFields={{
           selectedItems: props.selectedItems,
           orderFormManFields: {
-            expectedDeliveryDate,
-            projectionLocation,
-            orderReference
+            expectedDeliveryDate: props.expectedDeliveryDate,
+            projectionLocation: props.projectionLocation,
+            orderReference: props.orderReference
           }
         }}
         setOrderFormManFields={setOrderFormManFields}
@@ -140,15 +134,8 @@ const Order = (props) => {
           setWashCareData={setWashCareData}
           defaultContentData={defaultContentData}
           setDefaultContentData={setDefaultContentData}
-          expectedDeliveryDate={expectedDeliveryDate}
-          setExpectedDeliveryDate={setExpectedDeliveryDate}
           dynamicFieldData={dynamicFieldData}
           setDynamicFieldData={setDynamicFieldData}
-          setCoo={setCoo}
-          projectionLocation={projectionLocation}
-          setProjectionLocation={setProjectionLocation}
-          orderReference={orderReference}
-          setOrderReference={setOrderReference}
           setContentGroup={setContentGroup}
           setContentNumberData={setContentNumberData}
           contentNumberData={contentNumberData}
@@ -179,13 +166,9 @@ const Order = (props) => {
           careData={careData}
           washCareData={washCareData}
           defaultContentData={defaultContentData}
-          expectedDeliveryDate={expectedDeliveryDate}
           dynamicFieldData={dynamicFieldData}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
-          coo={coo}
-          projectionLocation={projectionLocation}
-          orderReference={orderReference}
           sizeMatrixType={sizeMatrixType}
           contentGroup={contentGroup}
           contentNumberData={contentNumberData}
@@ -211,7 +194,10 @@ const Order = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  selectedItems: state.orderReducer.selectedItems
+  selectedItems: state.orderReducer.selectedItems,
+  projectionLocation: state.orderReducer.projectionLocation,
+  orderReference: state.orderReducer.orderReference,
+  expectedDeliveryDate: state.orderReducer.expectedDeliveryDate
 })
 
 export default connect(mapStateToProps, null)(Order)

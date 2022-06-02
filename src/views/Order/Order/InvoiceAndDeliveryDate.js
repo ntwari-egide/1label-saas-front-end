@@ -428,7 +428,11 @@ const InvoiceAndDelivery = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.orderReducer.brand,
-  selectedItems: state.orderReducer.selectedItems
+  selectedItems: state.orderReducer.selectedItems,
+  projectionLocation: state.orderReducer.projectionLocation,
+  orderReference: state.orderReducer.orderReference,
+  expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
+  coo: state.orderReducer.coo
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

@@ -5,7 +5,12 @@ const initialState = {
   washCareData: [{}],
   defaultContentData: [""],
   dynamicFieldData: {},
-  selectedItems: []
+  selectedItems: [],
+  projectionLocation: "",
+  expectedDeliveryDate: "",
+  minExpectedDeliveryDate: "",
+  orderReference: "",
+  coo: ""
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -24,6 +29,16 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, dynamicFieldData: action.payload }
     case "SET_SELECTED_ITEMS":
       return { ...state, selectedItems: action.payload }
+    case "SET_ORDER_REFERENCE":
+      return { ...state, orderReference: action.payload }
+    case "SET_EXPECTED_DELIVERY_DATE":
+      return { ...state, expectedDeliveryDate: action.payload }
+    case "SET_MIN_EXPECTED_DELIVERY_DATE":
+      return { ...state, minExpectedDeliveryDate: action.payload }
+    case "SET_PROJECTION_LOCATION":
+      return { ...state, projectionLocation: action.payload }
+    case "SET_COO":
+      return { ...state, coo: action.payload }
     default:
       return state
   }

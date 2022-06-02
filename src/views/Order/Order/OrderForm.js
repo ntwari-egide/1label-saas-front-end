@@ -19,11 +19,19 @@ import Footer from "../../CommonFooter"
 import Flatpickr from "react-flatpickr"
 import { useTranslation } from "react-i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
+import {
+  setExpectedDeliveryDate,
+  setProjectionLocation,
+  setOrderReference,
+  fetchMinExpectedDeliveryDate,
+  setCoo
+} from "@redux/actions/views/Order/Order"
 
 let timerId = null
 const OrderForm = (props) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   // states for Collapse component
   const [itemInfoCollapse, setItemInfoCollapse] = useState(true)
   const [careContentCollapse, setCareContentCollapse] = useState(true)
@@ -115,19 +123,6 @@ const OrderForm = (props) => {
         }
       })
       .catch((err) => console.log(err))
-  }
-
-  const fetchMinDeliveryDate = () => {
-    // min delivery date for Expected Delivery Date field
-    const body = {
-      brand_key: props.brand ? props.brand.value : "",
-      erp_id: 8,
-      item_key: props.selectedItems.map((item) => item.guid_key)
-    }
-
-    axios
-      .post("/Order/GetMinExpectedDeliveryDate", body)
-      .then((res) => setMinExpectedDeliveryDate(res.data.min_delivery_date))
   }
 
   const fetchSizeTableList = () => {
@@ -445,7 +440,7 @@ const OrderForm = (props) => {
                 onChange={(e) => {
                   // set coo to use later in invoice and delivery component
                   if (field.field === "F3") {
-                    props.setCoo(e.label)
+                    dispatch(setCoo(e.label))
                   }
                   const tempState = props.dynamicFieldData
                   tempState[field.title] = {
@@ -603,7 +598,8 @@ const OrderForm = (props) => {
     fetchIconSequenceList()
     fetchContentTranslationList()
     fetchProductLocationList()
-    fetchMinDeliveryDate()
+    // fetchMinDeliveryDate()
+    dispatch(fetchMinExpectedDeliveryDate(props.brand, props.selectedItems))
   }, [])
 
   return (
@@ -614,7 +610,9 @@ const OrderForm = (props) => {
           <span className="text-danger">*</span>
           <Input
             value={props.orderReference}
-            onChange={(e) => props.setOrderReference(e.target.value)}
+            onChange={(e) => {
+              dispatch(setOrderReference(e.target.value))
+            }}
             style={{ margin: "5px" }}
           />
         </Col>
@@ -626,10 +624,10 @@ const OrderForm = (props) => {
             value={props.expectedDeliveryDate ? props.expectedDeliveryDate : ""}
             style={{ margin: "5px" }}
             options={{
-              minDate: minExpectedDeliveryDate
+              minDate: props.minExpectedDeliveryDate
             }}
             onChange={(e) => {
-              props.setExpectedDeliveryDate(e)
+              dispatch(setExpectedDeliveryDate(e))
             }}
             disabled={false}
           />
@@ -645,7 +643,9 @@ const OrderForm = (props) => {
               value={projectionLocationOptions.filter(
                 (opt) => opt.label === props.projectionLocation
               )}
-              onChange={(e) => props.setProjectionLocation(e.label)}
+              onChange={(e) => {
+                dispatch(setProjectionLocation(e.label))
+              }}
             />
           </div>
         </Col>
@@ -1067,7 +1067,11 @@ const OrderForm = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.orderReducer.brand,
-  selectedItems: state.orderReducer.selectedItems
+  selectedItems: state.orderReducer.selectedItems,
+  expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
+  minExpectedDeliveryDate: state.orderReducer.minExpectedDeliveryDate,
+  projectionLocation: state.orderReducer.projectionLocation,
+  orderReference: state.orderReducer.orderReference
 })
 
 export default connect(mapStateToProps, null)(OrderForm)
