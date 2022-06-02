@@ -9,6 +9,7 @@ import DirectPrint from "./DirectPrint"
 import { Link } from "react-router-dom"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { useTranslation } from "react-i18next"
+import { connect } from "react-redux"
 
 const stepperMenu = [
   "Select Item",
@@ -19,7 +20,7 @@ const stepperMenu = [
   "Direct Print"
 ]
 
-const Order = () => {
+const Order = (props) => {
   const { t } = useTranslation()
   // APP states
   const [currentStep, setCurrentStep] = useState(0)
@@ -106,7 +107,7 @@ const Order = () => {
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         validationFields={{
-          selectedItems,
+          selectedItems: props.selectedItems,
           orderFormManFields: {
             expectedDeliveryDate,
             projectionLocation,
@@ -124,8 +125,6 @@ const Order = () => {
           lastStep={lastStep}
           itemType={itemType}
           setItemType={setItemType}
-          selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
         />
       ) : currentStep === 1 ? (
         <OrderForm
@@ -133,8 +132,6 @@ const Order = () => {
           currentStep={currentStep}
           lastStep={lastStep}
           itemType={itemType}
-          selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
           careData={careData}
           setCareData={setCareData}
           fibreInstructionData={fibreInstructionData}
@@ -168,7 +165,6 @@ const Order = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          selectedItems={selectedItems}
           setSizeTable={setSizeTable}
           setDefaultSizeTable={setDefaultSizeTable}
           defaultSizeTable={defaultSizeTable}
@@ -188,7 +184,6 @@ const Order = () => {
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
           coo={coo}
-          selectedItems={selectedItems}
           projectionLocation={projectionLocation}
           orderReference={orderReference}
           sizeMatrixType={sizeMatrixType}
@@ -215,4 +210,8 @@ const Order = () => {
   )
 }
 
-export default Order
+const mapStateToProps = (state) => ({
+  selectedItems: state.orderReducer.selectedItems
+})
+
+export default connect(mapStateToProps, null)(Order)

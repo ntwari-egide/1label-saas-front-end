@@ -4,7 +4,8 @@ const initialState = {
   fibreInstructionData: [{}],
   washCareData: [{}],
   defaultContentData: [""],
-  dynamicFieldData: {}
+  dynamicFieldData: {},
+  selectedItems: []
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -21,6 +22,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, defaultContentData: action.payload }
     case "SET_DYNAMIC_FIELD_DATA":
       return { ...state, dynamicFieldData: action.payload }
+    case "SET_SELECTED_ITEMS":
+      return { ...state, selectedItems: action.payload }
     default:
       return state
   }

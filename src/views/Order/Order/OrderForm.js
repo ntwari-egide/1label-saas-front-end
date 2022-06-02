@@ -1066,7 +1066,8 @@ const OrderForm = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.orderReducer.brand
+  brand: state.orderReducer.brand,
+  selectedItems: state.orderReducer.selectedItems
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

@@ -17,7 +17,10 @@ import {
 import { ArrowRight, ArrowLeft } from "react-feather"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
-import { setBrand } from "@redux/actions/views/Order/Order"
+import {
+  setBrand,
+  handleSelectedItemsChange
+} from "@redux/actions/views/Order/Order"
 
 const SelectItem = (props) => {
   const { t } = useTranslation()
@@ -27,21 +30,6 @@ const SelectItem = (props) => {
   const [itemList, setItemList] = useState([])
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [loader, setLoader] = useState(false)
-
-  const handleCheckListChange = (item) => {
-    let tempList = props.selectedItems
-    if (
-      props.selectedItems.map((item) => item.guid_key).includes(item.guid_key)
-    ) {
-      tempList.splice(
-        props.selectedItems.map((item) => item.guid_key).indexOf(item.guid_key),
-        1
-      )
-      props.setSelectedItems([...tempList])
-    } else {
-      props.setSelectedItems([...tempList, item])
-    }
-  }
 
   const fetchBrandList = () => {
     const body = {
@@ -177,7 +165,11 @@ const SelectItem = (props) => {
                         checked={props.selectedItems
                           .map((item) => item.guid_key)
                           .includes(item.guid_key)}
-                        onChange={() => handleCheckListChange(item)}
+                        onChange={() => {
+                          dispatch(
+                            handleSelectedItemsChange(item, props.selectedItems)
+                          )
+                        }}
                       />
                     </CardFooter>
                   </Card>
@@ -237,7 +229,8 @@ const SelectItem = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.orderReducer.brand
+  brand: state.orderReducer.brand,
+  selectedItems: state.orderReducer.selectedItems
 })
 
 export default connect(mapStateToProps, null)(SelectItem)
