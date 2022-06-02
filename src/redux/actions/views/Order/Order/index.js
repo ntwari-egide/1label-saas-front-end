@@ -34,6 +34,130 @@ export const setCoo = (label) => (dispatch) => {
   dispatch({ type: "SET_COO", payload: label })
 }
 
+export const setCareData = (data) => (dispatch) => {
+  dispatch({ type: "SET_CARE_DATA", payload: data })
+}
+
+export const setFibreInstructionData = (data) => (dispatch) => {
+  dispatch({ type: "SET_FIBRE_INSTRUCTION_DATA", payload: data })
+}
+
+export const setWashCareData = (data) => (dispatch) => {
+  dispatch({ type: "SET_WASH_CARE_DATA", payload: data })
+}
+
+export const setContentNumberData = (e) => (dispatch) => {
+  dispatch({ type: "SET_CONTENT_NUMBER_DATA", payload: e })
+}
+
+export const setDefaultContentData = (data) => (dispatch) => {
+  dispatch({ type: "SET_DEFAULT_CONTENT_DATA", payload: data })
+}
+
+export const handleFibreChange =
+  (e, index, fibreInstructionState, defaultContentState, brand) =>
+  (dispatch) => {
+    // updating the fibreInstructionData state.
+    const tempData = [...fibreInstructionState]
+    tempData[index] = {
+      ...fibreInstructionState[index],
+      cont_key: e.value,
+      cont_translation: e.label
+    }
+    // props.setFibreInstructionData([...tempData])
+    dispatch(setFibreInstructionData([...tempData]))
+    // fetching default content for fabric and updating default content state
+    let tempDefData = [...defaultContentState]
+    const body = {
+      brand_key: brand.value || "",
+      cont_key: e.value,
+      page_type: "content"
+    }
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          tempDefData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
+          // props.setDefaultContentData([...tempDefData])
+          dispatch(setDefaultContentData([...tempDefData]))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+export const fetchDefaultContentData =
+  (contKey, index, tempData, brand) => (dispatch) => {
+    // fetches default Content Data as per option selected in fabric select field.
+    const body = {
+      brand_key: brand.value || "",
+      cont_key: contKey,
+      page_type: "content"
+    }
+
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          tempData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
+          // props.setDefaultContentData([...tempData])
+          dispatch(setDefaultContentData([...tempData]))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+export const fetchContentNumberDetail =
+  (content_number_key, style_number, brand) => (dispatch) => {
+    // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
+    const body = {
+      order_user: "innoa",
+      content_number_key,
+      brand_key: brand.value || "",
+      style_number
+    }
+    axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
+      if (res.status === 200) {
+        if (res.data.content) {
+          dispatch(setFibreInstructionData(res.data.content))
+          const tempDefaultContentData = []
+          res?.data?.content?.map((cont, index) => {
+            // fetches default content data for fabric
+            // fetchDefaultContentData(cont.cont_key, index, tempDefaultContentData)  // TODO
+            dispatch(
+              fetchDefaultContentData(
+                cont.cont_key,
+                index,
+                tempDefaultContentData,
+                brand
+              )
+            )
+          })
+        }
+        if (res.data.care) {
+          dispatch(setCareData(res.data.care))
+        }
+        if (res.data.icon) {
+          const tempData = {}
+          res?.data?.icon.map((icon) => {
+            tempData[icon.icon_type_id] = {
+              icon_group: icon.icon_group,
+              icon_type_id: icon.icon_type_id,
+              sys_icon_key: icon.sys_icon_key
+            }
+          })
+          // props.setWashCareData({ ...tempData })
+          dispatch(setWashCareData({ ...tempData }))
+        }
+      }
+    })
+  }
+
 export const fetchMinExpectedDeliveryDate =
   (brand, selectedItems) => (dispatch) => {
     // min delivery date for Expected Delivery Date field

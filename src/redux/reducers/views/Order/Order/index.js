@@ -1,5 +1,6 @@
 const initialState = {
   brand: {},
+  contentNumberData: {},
   careData: [{}],
   fibreInstructionData: [{}],
   washCareData: [{}],
@@ -39,6 +40,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, projectionLocation: action.payload }
     case "SET_COO":
       return { ...state, coo: action.payload }
+    case "SET_CONTENT_NUMBER_DATA":
+      return { ...state, contentNumberData: action.payload }
     default:
       return state
   }

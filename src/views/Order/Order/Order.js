@@ -27,16 +27,9 @@ const Order = (props) => {
   const [lastStep] = useState(stepperMenu.length - 1)
   const [itemType, setItemType] = useState("")
 
-  // data for Select Item component
-
   // data of OrderForm component
-  const [careData, setCareData] = useState([{}])
-  const [fibreInstructionData, setFibreInstructionData] = useState([{}])
-  const [washCareData, setWashCareData] = useState([])
-  const [defaultContentData, setDefaultContentData] = useState([""])
   const [dynamicFieldData, setDynamicFieldData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
-  const [contentNumberData, setContentNumberData] = useState({})
   const [careNumberData, setCareNumberData] = useState({})
   const [contentCustomNumber, setContentCustomNumber] = useState("")
   const [careCustomNumber, setCareCustomNumber] = useState("")
@@ -126,19 +119,9 @@ const Order = (props) => {
           currentStep={currentStep}
           lastStep={lastStep}
           itemType={itemType}
-          careData={careData}
-          setCareData={setCareData}
-          fibreInstructionData={fibreInstructionData}
-          setFibreInstructionData={setFibreInstructionData}
-          washCareData={washCareData}
-          setWashCareData={setWashCareData}
-          defaultContentData={defaultContentData}
-          setDefaultContentData={setDefaultContentData}
           dynamicFieldData={dynamicFieldData}
           setDynamicFieldData={setDynamicFieldData}
           setContentGroup={setContentGroup}
-          setContentNumberData={setContentNumberData}
-          contentNumberData={contentNumberData}
           careNumberData={careNumberData}
           setCareNumberData={setCareNumberData}
           contentCustomNumber={contentCustomNumber}
@@ -162,16 +145,11 @@ const Order = (props) => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          fibreInstructionData={fibreInstructionData}
-          careData={careData}
-          washCareData={washCareData}
-          defaultContentData={defaultContentData}
           dynamicFieldData={dynamicFieldData}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
           sizeMatrixType={sizeMatrixType}
           contentGroup={contentGroup}
-          contentNumberData={contentNumberData}
           contentCustomNumber={contentCustomNumber}
           careCustomNumber={careCustomNumber}
           careNumberData={careNumberData}

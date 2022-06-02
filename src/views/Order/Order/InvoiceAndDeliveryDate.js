@@ -432,7 +432,12 @@ const mapStateToProps = (state) => ({
   projectionLocation: state.orderReducer.projectionLocation,
   orderReference: state.orderReducer.orderReference,
   expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
-  coo: state.orderReducer.coo
+  coo: state.orderReducer.coo,
+  contentNumberData: state.orderReducer.contentNumberData,
+  defaultContentData: state.orderReducer.defaultContentData,
+  fibreInstructionData: state.orderReducer.fibreInstructionData,
+  careData: state.orderReducer.careData,
+  washCareData: state.orderReducer.washCareData
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)
