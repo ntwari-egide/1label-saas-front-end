@@ -521,12 +521,14 @@ const InvoiceAndDelivery = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.poOrderReduced.brand,
-  selectedItems: state.poOrderReduced.selectedItems,
-  careData: state.poOrderReduced.careData,
-  washCareData: state.poOrderReduced.washCareData,
-  dynamicFieldData: state.poOrderReduced.dynamicFieldData,
-  fibreInstructionData: state.poOrderReduced.fibreInstructionData
+  brand: state.poOrderReducer.brand,
+  selectedItems: state.poOrderReducer.selectedItems,
+  careData: state.poOrderReducer.careData,
+  washCareData: state.poOrderReducer.washCareData,
+  dynamicFieldData: state.poOrderReducer.dynamicFieldData,
+  fibreInstructionData: state.poOrderReducer.fibreInstructionData,
+  contentCustomNumber: state.poOrderReducer.contentCustomNumber,
+  careCustomNumber: state.poOrderReducer.careCustomNumber
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

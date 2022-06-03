@@ -36,8 +36,6 @@ const PoOrder = () => {
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
 
   // Order Form data
-  const [contentCustomNumber, setContentCustomNumber] = useState("")
-  const [careCustomNumber, setCareCustomNumber] = useState("")
   const [projectionLocation, setProjectionLocation] = useState("")
   const [orderReference, setOrderReference] = useState("")
   const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
@@ -128,10 +126,6 @@ const PoOrder = () => {
           orderReference={orderReference}
           setOrderReference={setOrderReference}
           setCoo={setCoo}
-          contentCustomNumber={contentCustomNumber}
-          setContentCustomNumber={setContentCustomNumber}
-          careCustomNumber={careCustomNumber}
-          setCareCustomNumber={setCareCustomNumber}
         />
       ) : currentStep === 2 ? (
         <SizeTable
@@ -178,8 +172,6 @@ const PoOrder = () => {
           sizeMatrixType={sizeMatrixType}
           contentGroup={contentGroup}
           contentNumberData={contentNumberData}
-          contentCustomNumber={contentCustomNumber}
-          careCustomNumber={careCustomNumber}
           careNumberData={careNumberData}
           summaryTable={summaryTable}
           wastageApplied={wastageApplied}
@@ -192,7 +184,7 @@ const PoOrder = () => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.orderReducer.brand
+  brand: state.poOrderReducer.brand
 })
 
 export default connect(mapStateToProps, null)(PoOrder)

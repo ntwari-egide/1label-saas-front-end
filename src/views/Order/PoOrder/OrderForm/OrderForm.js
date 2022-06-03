@@ -24,7 +24,9 @@ import {
   setCareData,
   setWashCareData,
   setDynamicFieldData,
-  setFibreInstructionData
+  setFibreInstructionData,
+  setContentCustomNumber,
+  setCareCustomNumber
 } from "@redux/actions/views/Order/POOrder"
 
 const OrderForm = (props) => {
@@ -616,7 +618,7 @@ const OrderForm = (props) => {
                       <Input
                         value={props.contentCustomNumber}
                         onChange={(e) =>
-                          props.setContentCustomNumber(e.target.value)
+                          dispatch(setContentCustomNumber(e.target.value))
                         }
                       />
                     </Col>
@@ -796,7 +798,7 @@ const OrderForm = (props) => {
                       <Input
                         value={props.careCustomNumber}
                         onChange={(e) =>
-                          props.setCareCustomNumber(e.target.value)
+                          dispatch(setCareCustomNumber(e.target.value))
                         }
                       />
                     </Col>
@@ -954,7 +956,9 @@ const mapStateToProps = (state) => ({
   careData: state.poOrderReducer.careData,
   washCareData: state.poOrderReducer.washCareData,
   dynamicFieldData: state.poOrderReducer.dynamicFieldData,
-  fibreInstructionData: state.poOrderReducer.fibreInstructionData
+  fibreInstructionData: state.poOrderReducer.fibreInstructionData,
+  contentCustomNumber: state.poOrderReducer.contentCustomNumber,
+  careCustomNumber: state.poOrderReducer.careCustomNumber
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

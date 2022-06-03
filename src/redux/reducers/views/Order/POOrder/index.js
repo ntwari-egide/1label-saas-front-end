@@ -4,7 +4,9 @@ const initialState = {
   washCareData: [],
   dynamicFieldData: {},
   fibreInstructionData: [{}],
-  selectedItems: []
+  selectedItems: [],
+  careCustomNumber: "",
+  contentCustomNumber: ""
 }
 
 const poOrderReduced = (state = initialState, action) => {
@@ -21,6 +23,10 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, fibreInstructionData: action.payload }
     case "SET_SELECTED_ITEMS":
       return { ...state, selectedItems: action.payload }
+    case "SET_CARE_CUSTOM_NUMBER":
+      return { ...state, careCustomNumber: action.payload }
+    case "SET_CONTENT_CUSTOM_NUMBER":
+      return { ...state, contentCustomNumber: action.payload }
     default:
       return state
   }

@@ -21,3 +21,11 @@ export const setFibreInstructionData = (data) => (dispatch) => {
 export const setSelectedItems = (data) => (dispatch) => {
   dispatch({ type: "SET_SELECTED_ITEMS", payload: data })
 }
+
+export const setContentCustomNumber = (value) => (dispatch) => {
+  dispatch({ type: "SET_CONTENT_CUSTOM_NUMBER", payload: value })
+}
+
+export const setCareCustomNumber = (value) => (dispatch) => {
+  dispatch({ type: "SET_CARE_CUSTOM_NUMBER", payload: value })
+}
