@@ -26,7 +26,10 @@ import {
   setDynamicFieldData,
   setFibreInstructionData,
   setContentCustomNumber,
-  setCareCustomNumber
+  setCareCustomNumber,
+  setProjectionLocation,
+  setOrderReference,
+  setExpectedDeliveryDate
 } from "@redux/actions/views/Order/POOrder"
 
 const OrderForm = (props) => {
@@ -501,7 +504,7 @@ const OrderForm = (props) => {
           <span className="text-danger">*</span>
           <Input
             value={props.orderReference}
-            onChange={(e) => props.setOrderReference(e.target.value)}
+            onChange={(e) => dispatch(setOrderReference(e.target.value))}
             style={{ margin: "5px" }}
           />
         </Col>
@@ -516,7 +519,7 @@ const OrderForm = (props) => {
               minDate: props.minExpectedDeliveryDate
             }}
             onChange={(e) => {
-              props.setExpectedDeliveryDate(e)
+              dispatch(setExpectedDeliveryDate(e))
             }}
             disabled={false}
           />
@@ -532,7 +535,7 @@ const OrderForm = (props) => {
               value={projectionLocationOptions.filter(
                 (opt) => opt.label === props.projectionLocation
               )}
-              onChange={(e) => props.setProjectionLocation(e.label)}
+              onChange={(e) => dispatch(setProjectionLocation(e.label))}
             />
           </div>
         </Col>
@@ -958,7 +961,10 @@ const mapStateToProps = (state) => ({
   dynamicFieldData: state.poOrderReducer.dynamicFieldData,
   fibreInstructionData: state.poOrderReducer.fibreInstructionData,
   contentCustomNumber: state.poOrderReducer.contentCustomNumber,
-  careCustomNumber: state.poOrderReducer.careCustomNumber
+  careCustomNumber: state.poOrderReducer.careCustomNumber,
+  projectionLocation: state.poOrderReducer.projectionLocation,
+  orderReference: state.poOrderReducer.orderReference,
+  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

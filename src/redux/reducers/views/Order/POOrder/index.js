@@ -6,7 +6,10 @@ const initialState = {
   fibreInstructionData: [{}],
   selectedItems: [],
   careCustomNumber: "",
-  contentCustomNumber: ""
+  contentCustomNumber: "",
+  projectionLocation: "",
+  orderReference: "",
+  expectedDeliveryDate: ""
 }
 
 const poOrderReduced = (state = initialState, action) => {
@@ -27,6 +30,12 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, careCustomNumber: action.payload }
     case "SET_CONTENT_CUSTOM_NUMBER":
       return { ...state, contentCustomNumber: action.payload }
+    case "SET_PROJECTION_LOCATION":
+      return { ...state, projectionLocation: action.payload }
+    case "SET_ORDER_REFERENCE":
+      return { ...state, orderReference: action.payload }
+    case "SET_EXPECTED_DELIVERY_DATE":
+      return { ...state, expectedDeliveryDate: action.payload }
     default:
       return state
   }

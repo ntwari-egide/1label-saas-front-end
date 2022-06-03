@@ -29,3 +29,15 @@ export const setContentCustomNumber = (value) => (dispatch) => {
 export const setCareCustomNumber = (value) => (dispatch) => {
   dispatch({ type: "SET_CARE_CUSTOM_NUMBER", payload: value })
 }
+
+export const setProjectionLocation = (value) => (dispatch) => {
+  dispatch({ type: "SET_PROJECTION_LOCATION", payload: value })
+}
+
+export const setOrderReference = (value) => (dispatch) => {
+  dispatch({ type: "SET_ORDER_REFERENCE", payload: value })
+}
+
+export const setExpectedDeliveryDate = (value) => (dispatch) => {
+  dispatch({ type: "SET_EXPECTED_DELIVERY_DATE", payload: value })
+}

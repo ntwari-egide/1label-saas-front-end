@@ -36,9 +36,6 @@ const PoOrder = () => {
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
 
   // Order Form data
-  const [projectionLocation, setProjectionLocation] = useState("")
-  const [orderReference, setOrderReference] = useState("")
-  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
   const [contentNumberData, setContentNumberData] = useState({})
   const [defaultContentData, setDefaultContentData] = useState([""])
   const [careNumberData, setCareNumberData] = useState({})
@@ -119,12 +116,6 @@ const PoOrder = () => {
           isPoOrderTemp={isPoOrderTemp}
           combinedPOOrderKey={combinedPOOrderKey}
           setContentGroup={setContentGroup}
-          expectedDeliveryDate={expectedDeliveryDate}
-          setExpectedDeliveryDate={setExpectedDeliveryDate}
-          projectionLocation={projectionLocation}
-          setProjectionLocation={setProjectionLocation}
-          orderReference={orderReference}
-          setOrderReference={setOrderReference}
           setCoo={setCoo}
         />
       ) : currentStep === 2 ? (
@@ -163,12 +154,9 @@ const PoOrder = () => {
           currentStep={currentStep}
           lastStep={lastStep}
           defaultContentData={defaultContentData}
-          expectedDeliveryDate={expectedDeliveryDate}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
           coo={coo}
-          projectionLocation={projectionLocation}
-          orderReference={orderReference}
           sizeMatrixType={sizeMatrixType}
           contentGroup={contentGroup}
           contentNumberData={contentNumberData}
