@@ -15,6 +15,7 @@ import Footer from "../../../CommonFooter"
 import { useTranslation } from "react-i18next"
 import { formatDateYMD } from "@utils"
 import { XMLBuilder } from "fast-xml-parser"
+import { connect } from "react-redux"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
@@ -519,4 +520,13 @@ const InvoiceAndDelivery = (props) => {
   )
 }
 
-export default InvoiceAndDelivery
+const mapStateToProps = (state) => ({
+  brand: state.poOrderReduced.brand,
+  selectedItems: state.poOrderReduced.selectedItems,
+  careData: state.poOrderReduced.careData,
+  washCareData: state.poOrderReduced.washCareData,
+  dynamicFieldData: state.poOrderReduced.dynamicFieldData,
+  fibreInstructionData: state.poOrderReduced.fibreInstructionData
+})
+
+export default connect(mapStateToProps, null)(InvoiceAndDelivery)

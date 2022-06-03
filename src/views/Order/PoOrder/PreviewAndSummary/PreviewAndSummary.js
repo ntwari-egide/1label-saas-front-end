@@ -6,6 +6,7 @@ import Footer from "../../../CommonFooter"
 import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
+import { connect } from "react-redux"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -376,4 +377,9 @@ const PreviewAndSummary = (props) => {
   )
 }
 
-export default PreviewAndSummary
+const mapStateToProps = (state) => ({
+  brand: state.poOrderReducer.brand,
+  selectedItems: state.poOrderReducer.selectedItems
+})
+
+export default connect(mapStateToProps, null)(PreviewAndSummary)

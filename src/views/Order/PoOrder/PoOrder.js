@@ -31,13 +31,9 @@ const PoOrder = () => {
 
   // listing data
   const [poSelectedItems, setpoSelectedItems] = useState([])
-  const [brand, setBrand] = useState({})
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [searchParams, setSearchParams] = useState({})
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
-
-  // data of Item List page.
-  const [selectedItems, setSelectedItems] = useState([])
 
   // Order Form data
   const [contentCustomNumber, setContentCustomNumber] = useState("")
@@ -45,12 +41,8 @@ const PoOrder = () => {
   const [projectionLocation, setProjectionLocation] = useState("")
   const [orderReference, setOrderReference] = useState("")
   const [expectedDeliveryDate, setExpectedDeliveryDate] = useState("")
-  const [dynamicFieldData, setDynamicFieldData] = useState([])
-  const [washCareData, setWashCareData] = useState([])
   const [contentNumberData, setContentNumberData] = useState({})
   const [defaultContentData, setDefaultContentData] = useState([""])
-  const [fibreInstructionData, setFibreInstructionData] = useState([{}])
-  const [careData, setCareData] = useState([{}])
   const [careNumberData, setCareNumberData] = useState({})
   const [contentGroup, setContentGroup] = useState("")
   const [coo, setCoo] = useState("")
@@ -68,10 +60,6 @@ const PoOrder = () => {
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
   const [sizeMatrixType, setSizeMatrixType] = useState("")
-
-  useEffect(() => {
-    console.log("selectedItems", selectedItems)
-  }, [selectedItems])
 
   return (
     <div>
@@ -105,8 +93,6 @@ const PoOrder = () => {
       />
       {currentStep === 0 ? (
         <Listing
-          brand={brand}
-          setBrand={setBrand}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
@@ -120,31 +106,19 @@ const PoOrder = () => {
           setSizeTableTrigger={setSizeTableTrigger}
         />
       ) : currentStep === 1 ? (
-        <ItemList
-          selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
-        />
+        <ItemList />
       ) : currentStep === 3 ? (
         <OrderForm
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
-          brand={brand}
-          dynamicFieldData={dynamicFieldData}
-          setDynamicFieldData={setDynamicFieldData}
-          fibreInstructionData={fibreInstructionData}
-          setFibreInstructionData={setFibreInstructionData}
           defaultContentData={defaultContentData}
           setDefaultContentData={setDefaultContentData}
           setContentNumberData={setContentNumberData}
           contentNumberData={contentNumberData}
-          careData={careData}
           careNumberData={careNumberData}
           setCareNumberData={setCareNumberData}
-          setWashCareData={setWashCareData}
-          washCareData={washCareData}
           isPoOrderTemp={isPoOrderTemp}
-          setCareData={setCareData}
           combinedPOOrderKey={combinedPOOrderKey}
           setContentGroup={setContentGroup}
           expectedDeliveryDate={expectedDeliveryDate}
@@ -167,7 +141,6 @@ const PoOrder = () => {
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
-          brand={brand}
           combinedPOOrderKey={combinedPOOrderKey}
           wastageApplied={wastageApplied}
           setWastageApplied={setWastageApplied}
@@ -178,11 +151,9 @@ const PoOrder = () => {
         />
       ) : currentStep === 4 ? (
         <PreviewAndSummary
-          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          selectedItems={selectedItems}
           setSizeTable={setSizeTable}
           setDefaultSizeTable={setDefaultSizeTable}
           defaultSizeTable={defaultSizeTable}
@@ -194,20 +165,14 @@ const PoOrder = () => {
         />
       ) : currentStep === 5 ? (
         <InvoiceAndDelivery
-          brand={brand}
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          fibreInstructionData={fibreInstructionData}
-          careData={careData}
-          washCareData={washCareData}
           defaultContentData={defaultContentData}
           expectedDeliveryDate={expectedDeliveryDate}
-          dynamicFieldData={dynamicFieldData}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
           coo={coo}
-          selectedItems={selectedItems}
           projectionLocation={projectionLocation}
           orderReference={orderReference}
           sizeMatrixType={sizeMatrixType}

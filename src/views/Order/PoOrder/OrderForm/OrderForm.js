@@ -18,12 +18,19 @@ import { useTranslation } from "react-i18next"
 import Select from "react-select"
 import Flatpickr from "react-flatpickr"
 import Footer from "../../../CommonFooter"
-import { use } from "i18next"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
+import { connect, useDispatch } from "react-redux"
+import {
+  setCareData,
+  setWashCareData,
+  setDynamicFieldData,
+  setFibreInstructionData
+} from "@redux/actions/views/Order/POOrder"
 
 const OrderForm = (props) => {
   // constants
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   // states for Collapse component
   const [itemInfoCollapse, setItemInfoCollapse] = useState(true)
   const [careContentCollapse, setCareContentCollapse] = useState(true)
@@ -81,7 +88,7 @@ const OrderForm = (props) => {
                     field_value: e.value,
                     field_label: e.label
                   }
-                  props.setDynamicFieldData({ ...tempData })
+                  dispatch(setDynamicFieldData({ ...tempData }))
                 }}
               />
             </Col>
@@ -113,7 +120,7 @@ const OrderForm = (props) => {
                     ...tempState[field.title],
                     field_value: e.target.value
                   }
-                  props.setDynamicFieldData({ ...tempState })
+                  dispatch(setDynamicFieldData({ ...tempState }))
                 }}
               />
             </Col>
@@ -161,7 +168,7 @@ const OrderForm = (props) => {
       // initialises only if not previously set,
       // important for when the component is revisited since only initialises initial state when first visited.
       if (Object.keys(props.dynamicFieldData).length <= 0) {
-        props.setDynamicFieldData({ ...tempItemInfoState })
+        dispatch(setDynamicFieldData({ ...tempItemInfoState }))
       }
     }
   }
@@ -174,7 +181,7 @@ const OrderForm = (props) => {
       cont_key: e.value,
       cont_translation: e.label
     }
-    props.setFibreInstructionData([...tempData])
+    dispatch(setFibreInstructionData([...tempData]))
     // fetching default content for fabric and updating default content state
     let tempDefData = props.defaultContentData
     const body = {
@@ -276,9 +283,7 @@ const OrderForm = (props) => {
     axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
       if (res.status === 200) {
         if (res.data?.content) {
-          res?.data?.content
-            ? props.setFibreInstructionData(res?.data?.content)
-            : props.setFibreInstructionData([{}]) // default value. "null" throws eslint err
+          dispatch(setFibreInstructionData(res?.data?.content))
           const tempDefaultContentData = []
           res?.data?.content?.map((cont, index) => {
             // fetches default content data for fabric
@@ -290,9 +295,7 @@ const OrderForm = (props) => {
           })
         }
         if (res.data?.care) {
-          res?.data?.care
-            ? props.setCareData(res?.data?.care)
-            : props.setCareData([{}]) // default value. "null" throws eslint err
+          dispatch(setCareData(res?.data?.care))
         }
         if (res.data?.icon) {
           const tempData = {}
@@ -303,7 +306,7 @@ const OrderForm = (props) => {
               sys_icon_key: icon.sys_icon_key
             }
           })
-          props.setWashCareData({ ...tempData })
+          dispatch(setWashCareData({ ...tempData }))
         }
       }
     })
@@ -642,7 +645,9 @@ const OrderForm = (props) => {
                                       part_key: e.value,
                                       part_translation: e.label
                                     }
-                                    props.setFibreInstructionData([...tempData])
+                                    dispatch(
+                                      setFibreInstructionData([...tempData])
+                                    )
                                   }}
                                 />
                               </Col>
@@ -693,7 +698,9 @@ const OrderForm = (props) => {
                                   onClick={() => {
                                     let tempData = props.fibreInstructionData
                                     tempData.splice(index, 1)
-                                    props.setFibreInstructionData([...tempData])
+                                    dispatch(
+                                      setFibreInstructionData([...tempData])
+                                    )
                                     tempData = props.defaultContentData
                                     tempData.splice(index, 1)
                                     props.setDefaultContentData([...tempData])
@@ -717,9 +724,9 @@ const OrderForm = (props) => {
                           const tempFibreInstructions =
                             props.fibreInstructionData
                           tempFibreInstructions.push({})
-                          props.setFibreInstructionData([
-                            ...tempFibreInstructions
-                          ])
+                          dispatch(
+                            setFibreInstructionData([...tempFibreInstructions])
+                          )
                           const tempDefaultContent = props.defaultContentData
                           tempDefaultContent.push("")
                           props.setDefaultContentData([...tempDefaultContent])
@@ -820,7 +827,7 @@ const OrderForm = (props) => {
                                   ...props.careData[index],
                                   cont_key: e.value
                                 }
-                                props.setCareData([...tempData])
+                                dispatch(setCareData([...tempData]))
                               }}
                             />
                           </Col>
@@ -832,7 +839,7 @@ const OrderForm = (props) => {
                               onClick={() => {
                                 const tempCare = props.careData
                                 tempCare.splice(index, 1)
-                                props.setCareData([...tempCare])
+                                dispatch(setCareData([...tempCare]))
                               }}
                             >
                               <div style={{ display: "flex" }}>
@@ -849,7 +856,7 @@ const OrderForm = (props) => {
                         onClick={() => {
                           const tempCare = props.careData
                           tempCare.push({})
-                          props.setCareData([...tempCare])
+                          dispatch(setCareData([...tempCare]))
                         }}
                         color="primary"
                         style={{ padding: "10px" }}
@@ -907,10 +914,12 @@ const OrderForm = (props) => {
                                 icon_type_id: e.iconTypeId,
                                 icon_group: e.iconGroup
                               }
-                              props.setWashCareData({
-                                ...props.washCareData,
-                                ...tempData
-                              })
+                              dispatch(
+                                setWashCareData({
+                                  ...props.washCareData,
+                                  ...tempData
+                                })
+                              )
                             }}
                             getOptionLabel={(e) => (
                               <div>
@@ -940,4 +949,12 @@ const OrderForm = (props) => {
   )
 }
 
-export default OrderForm
+const mapStateToProps = (state) => ({
+  brand: state.poOrderReducer.brand,
+  careData: state.poOrderReducer.careData,
+  washCareData: state.poOrderReducer.washCareData,
+  dynamicFieldData: state.poOrderReducer.dynamicFieldData,
+  fibreInstructionData: state.poOrderReducer.fibreInstructionData
+})
+
+export default connect(mapStateToProps, null)(OrderForm)

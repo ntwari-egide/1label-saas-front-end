@@ -16,6 +16,7 @@ import DataTable from "react-data-table-component"
 import { XMLParser } from "fast-xml-parser"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
+import { connect } from "react-redux"
 
 const SizeTable = (props) => {
   const { t } = useTranslation()
@@ -332,4 +333,8 @@ const SizeTable = (props) => {
   )
 }
 
-export default SizeTable
+const mapStateToProps = (state) => ({
+  brand: state.poOrderReducer.brand
+})
+
+export default connect(mapStateToProps, null)(SizeTable)

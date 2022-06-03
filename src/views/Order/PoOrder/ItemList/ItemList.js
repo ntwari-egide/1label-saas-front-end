@@ -17,9 +17,12 @@ import {
 } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import { ArrowRight, ArrowLeft } from "react-feather"
+import { connect, useDispatch } from "react-redux"
+import { setSelectedItems } from "@redux/actions/views/Order/POOrder"
 
 const ItemList = (props) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const [brandOptions, setBrandOptions] = useState([])
   const [itemTypeOptions, setItemTypeOptions] = useState([])
   const [itemList, setItemList] = useState([])
@@ -35,9 +38,9 @@ const ItemList = (props) => {
         props.selectedItems.map((item) => item.guid_key).indexOf(item.guid_key),
         1
       )
-      props.setSelectedItems([...tempList])
+      dispatch(setSelectedItems([...tempList]))
     } else {
-      props.setSelectedItems([...tempList, item])
+      dispatch(setSelectedItems([...tempList, item]))
     }
   }
 
@@ -75,6 +78,9 @@ const ItemList = (props) => {
   }
 
   const fetchItemList = (brand = "", item_type = "") => {
+    if (!brand || brand.length <= 0) {
+      return
+    }
     setLoader(true)
     setVisibleCardIndex(0)
     const body = {
@@ -226,4 +232,9 @@ const ItemList = (props) => {
   )
 }
 
-export default ItemList
+const mapStateToProps = (state) => ({
+  brand: state.poOrderReducer.brand,
+  selectedItems: state.poOrderReducer.selectedItems
+})
+
+export default connect(mapStateToProps, null)(ItemList)
