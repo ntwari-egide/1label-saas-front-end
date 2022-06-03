@@ -112,17 +112,12 @@ const PoOrder = () => {
           lastStep={lastStep}
           setpoSelectedItems={setpoSelectedItems}
           poSelectedItems={poSelectedItems}
-          setSelectedItems={setSelectedItems}
           setCombinedPOOrderkey={setCombinedPOOrderkey}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
           setSizeTableTrigger={setSizeTableTrigger}
-          setDynamicFieldData={setDynamicFieldData}
-          setCareData={setCareData}
-          setFibreInstructionData={setFibreInstructionData}
-          setWashCareData={setWashCareData}
         />
       ) : currentStep === 1 ? (
         <ItemList

@@ -24,10 +24,20 @@ import Footer from "../../../CommonFooter"
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 const MySwal = withReactContent(Swal)
+import { connect, useDispatch } from "react-redux"
+import {
+  setBrand,
+  setCareData,
+  setWashCareData,
+  setDynamicFieldData,
+  setFibreInstructionData,
+  setSelectedItems
+} from "@redux/actions/views/Order/POOrder"
 
 const Listing = (props) => {
   // constants
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   // App states
   const [poOrderData, setPoOrderData] = useState([])
   const [poOrderLoader, setPoOrderLoader] = useState(false)
@@ -132,33 +142,38 @@ const Listing = (props) => {
     const body = {
       order_user: "innoa",
       order_no: combKey || "",
-      brand_key: props.brand ? props.brand.value : "",
+      brand_key: props.searchParams.brand ? props.searchParams.brand : "",
       is_po_order_temp: isTemp || ""
     }
     axios
       .post("/Order/GetOrderDetail", body)
       .then((res) => {
         if (res.status === 200) {
+          if (res.data[0]?.brand_key) {
+            dispatch(setBrand({ value: res.data[0]?.brand_key }))
+          }
           if (res.data[0]?.contents[0]?.care) {
-            props.setCareData(res.data[0].contents[0].care)
+            dispatch(setCareData(res.data[0].contents[0].care))
           }
           if (res.data[0]?.contents[0]?.icon) {
-            props.setWashCareData(res.data[0].contents[0].icon)
+            dispatch(setWashCareData(res.data[0].contents[0].icon))
           }
           if (res.data[0]?.dynamic_field) {
-            props.setDynamicFieldData(res.data[0]?.dynamic_field)
+            dispatch(setDynamicFieldData(res.data[0]?.dynamic_field))
           }
           if (res.data[0]?.contents[0]?.content) {
-            props.setFibreInstructionData(res.data[0]?.contents[0]?.content)
+            dispatch(setFibreInstructionData(res.data[0]?.contents[0]?.content))
           }
           if (res.data[0]?.item_ref) {
-            props.setSelectedItems(
-              res.data[0]?.item_ref.map((item) => {
-                const tempItem = { ...item }
-                tempItem["guid_key"] = tempItem["item_key"]
-                delete tempItem["item_key"]
-                return { ...tempItem }
-              })
+            dispatch(
+              setSelectedItems(
+                res.data[0]?.item_ref.map((item) => {
+                  const tempItem = { ...item }
+                  tempItem["guid_key"] = tempItem["item_key"]
+                  delete tempItem["item_key"]
+                  return { ...tempItem }
+                })
+              )
             )
           }
           setOrderLoader(false)
@@ -256,7 +271,7 @@ const Listing = (props) => {
   const addPoOrder = () => {
     setOrderLoader(true)
     const body = {
-      brand_key: props.brand ? props.brand.value : "",
+      brand_key: props.searchParams.brand ? props.searchParams.brand : "",
       order_user: "innoa",
       order_keys: props.poSelectedItems.map((item) => item.guid_key)
     }
@@ -291,6 +306,10 @@ const Listing = (props) => {
   }, [props.poSelectedItems])
 
   useEffect(() => {
+    console.log("se", props.searchParams)
+  }, [props.searchParams])
+
+  useEffect(() => {
     fetchOrderStatus()
     fetchBrandList()
     fetchPoOrderList()
@@ -313,7 +332,6 @@ const Listing = (props) => {
               )}
               onChange={(e) => {
                 props.setSearchParams({ ...props.searchParams, brand: e.value })
-                props.setBrand({ ...e })
               }}
             />
           </Col>
@@ -570,4 +588,6 @@ const Listing = (props) => {
   )
 }
 
-export default Listing
+const mapStateToProps = (state) => ({})
+
+export default connect(mapStateToProps, null)(Listing)
