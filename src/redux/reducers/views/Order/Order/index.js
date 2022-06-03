@@ -19,7 +19,8 @@ const initialState = {
   contentGroup: "",
   sizeMatrixType: "",
   sizeTable: "",
-  defaultSizeTable: ""
+  defaultSizeTable: "",
+  currentStep: 0
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -66,6 +67,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, sizeTable: action.payload }
     case "SET_DEFAULT_SIZE_TABLE":
       return { ...state, defaultSizeTable: action.payload }
+    case "SET_CURRENT_STEP":
+      return { ...state, currentStep: action.payload }
     default:
       return state
   }

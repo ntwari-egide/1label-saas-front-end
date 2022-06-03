@@ -86,6 +86,10 @@ export const setDefaultSizeTable = (value) => (dispatch) => {
   dispatch({ type: "SET_DEFAULT_SIZE_TABLE", payload: value })
 }
 
+export const setCurrentStep = (value) => (dispatch) => {
+  dispatch({ type: "SET_CURRENT_STEP", payload: value })
+}
+
 export const handleFibreChange =
   (e, index, fibreInstructionState, defaultContentState, brand) =>
   (dispatch) => {
