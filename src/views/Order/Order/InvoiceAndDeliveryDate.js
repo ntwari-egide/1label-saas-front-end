@@ -443,7 +443,9 @@ const mapStateToProps = (state) => ({
   contentCustomNumber: state.orderReducer.contentCustomNumber,
   dynamicFieldData: state.orderReducer.dynamicFieldData,
   contentGroup: state.orderReducer.contentGroup,
-  sizeMatrixType: state.orderReducer.sizeMatrixType
+  sizeMatrixType: state.orderReducer.sizeMatrixType,
+  sizeTable: state.orderReducer.sizeTable,
+  defaultSizeTable: state.orderReducer.defaultSizeTable
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

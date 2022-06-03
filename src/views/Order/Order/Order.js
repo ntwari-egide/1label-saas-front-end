@@ -34,30 +34,6 @@ const Order = (props) => {
     orderReference: false
   })
 
-  // data of Preview and Summary component
-  const [sizeTable, setSizeTable] = useState("")
-  const [defaultSizeTable, setDefaultSizeTable] = useState("")
-
-  // const xmlToObj = () => {
-  //   const xml = "<SizeMatrix>".concat(
-  //     "<Table> <Column0>TITLE</Column0> <Column1>size</Column1> <Column2>s</Column2> <Column3>m</Column3> <Column4>l</Column4> </Table>".repeat(
-  //       500
-  //     ),
-  //     "</SizeMatrix>"
-  //   )
-  //   console.log("xml", xml)
-  //   const parser = new XMLParser()
-  //   console.log(parser.parse(xml))
-  // }
-  //
-  // useEffect(() => {
-  //   xmlToObj()
-  // }, [])
-  //
-  // useEffect(() => {
-  //   console.log("selectedItems", selectedItems)
-  // }, [selectedItems])
-
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -119,17 +95,12 @@ const Order = (props) => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          setSizeTable={setSizeTable}
-          setDefaultSizeTable={setDefaultSizeTable}
-          defaultSizeTable={defaultSizeTable}
         />
       ) : currentStep === 3 ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          sizeTable={sizeTable}
-          defaultSizeTable={defaultSizeTable}
         />
       ) : currentStep === 4 ? (
         <Payment

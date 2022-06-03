@@ -17,7 +17,9 @@ const initialState = {
   contentCustomNumber: "",
   dynamicFieldData: {},
   contentGroup: "",
-  sizeMatrixType: ""
+  sizeMatrixType: "",
+  sizeTable: "",
+  defaultSizeTable: ""
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -60,6 +62,10 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, contentGroup: action.payload }
     case "SET_SIZE_MATRIX_TYPE":
       return { ...state, sizeMatrixType: action.payload }
+    case "SET_SIZE_TABLE":
+      return { ...state, sizeTable: action.payload }
+    case "SET_DEFAULT_SIZE_TABLE":
+      return { ...state, defaultSizeTable: action.payload }
     default:
       return state
   }

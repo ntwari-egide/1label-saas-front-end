@@ -15,7 +15,11 @@ import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
-import { setSizeMatrixType } from "@redux/actions/views/Order/Order"
+import {
+  setSizeMatrixType,
+  setSizeTable,
+  setDefaultSizeTable
+} from "@redux/actions/views/Order/Order"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -98,7 +102,7 @@ const PreviewAndSummary = (props) => {
   const fetchSizeTableDetails = (guid_key) => {
     setLoading(true)
     const body = {
-      guid_key: 134023
+      guid_key: 134023 // static for now
     }
     axios
       .post("/SizeTable/GetSizeTableDetail", body)
@@ -106,22 +110,14 @@ const PreviewAndSummary = (props) => {
         if (res.status === 200) {
           //  set size content if available
           if (res?.data[0]?.size_content) {
-            props.setSizeTable(res?.data[0]?.size_content) // to send it to invoice and delivery for save order
+            dispatch(setSizeTable(res?.data[0]?.size_content)) // to send it to invoice and delivery for save order
             dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
             setSizeData(formatColToRow(res?.data[0]?.size_content))
-            console.log(
-              "processed data",
-              formatColToRow(res?.data[0]?.size_content)
-            )
           }
           // set default size content if available
           if (res?.data[0]?.default_size_content) {
-            props.setDefaultSizeTable(res?.data[0]?.default_size_content) // to send it to invoice and delivery for save order
+            dispatch(setDefaultSizeTable(res?.data[0]?.default_size_content)) // to send it to invoice and delivery for save order
             setDefaultSizeData(
-              formatColToRow(res?.data[0]?.default_size_content)
-            )
-            console.log(
-              "processed data",
               formatColToRow(res?.data[0]?.default_size_content)
             )
           }
@@ -267,7 +263,9 @@ const PreviewAndSummary = (props) => {
 const mapStateToProps = (state) => ({
   brand: state.orderReducer.brand,
   selectedItems: state.orderReducer.selectedItems,
-  sizeMatrixType: state.orderReducer.sizeMatrixType
+  sizeMatrixType: state.orderReducer.sizeMatrixType,
+  sizeTable: state.orderReducer.sizeTable,
+  defaultSizeTable: state.orderReducer.defaultSizeTable
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)
