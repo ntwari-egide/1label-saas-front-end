@@ -222,7 +222,7 @@ const ItemList = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
-          // selectedItems={props.selectedItems}
+          selectedItems={props.selectedItems}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}

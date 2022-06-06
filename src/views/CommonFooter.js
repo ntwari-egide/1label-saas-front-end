@@ -4,6 +4,51 @@ import { useTranslation } from "react-i18next"
 
 const Footer = (props) => {
   const { t } = useTranslation()
+
+  const selectedItemsValidation = () => {
+    // selectedItems validation for Select Item page.
+    if (props.selectedItems && props.selectedItems.length <= 0) {
+      alert("Please Select Item/s to proceed")
+      return false
+    }
+    return true
+  }
+
+  const poSelectedOrderValidation = () => {
+    // validation for order selection in PO Order Listing page
+    if (props.poSelectedItems && props.poSelectedItems.length <= 0) {
+      alert("Please select an order to proceed")
+      return false
+    }
+    return true
+  }
+
+  const orderFormManFieldValidation = () => {
+    // validation for mandatory fields in Order Form
+    let localFlag = true
+    if (props.validationFields?.orderFormManFields) {
+      Object.keys(props.validationFields?.orderFormManFields).map((key) => {
+        if (
+          props.validationFields?.orderFormManFields[key].length <= 0 &&
+          localFlag
+        ) {
+          alert("Please fill the mandatory fields to proceed")
+          localFlag = false
+          return localFlag
+        }
+      })
+    }
+    return localFlag
+  }
+
+  const checkBoundary = () => {
+    // checks for boundary conditions.
+    if (props.currentStep < props.lastStep) {
+      return true
+    }
+    return false
+  }
+
   return (
     <Row>
       <Col>
@@ -29,31 +74,12 @@ const Footer = (props) => {
           <Button
             color="primary"
             onClick={() => {
-              let validationPassed = true
-              // selectedItems validation for Select Item page.
-              if (props.selectedItems && props.selectedItems.length <= 0) {
-                alert("Please Select Item/s to proceed")
-                return
-              }
-              // validation for mandatory fields in Order Form
               if (
-                props.currentStep === 1 &&
-                props.validationFields?.orderForm
+                selectedItemsValidation() &&
+                poSelectedOrderValidation() &&
+                orderFormManFieldValidation() &&
+                checkBoundary()
               ) {
-                Object.keys(props.validationFields.orderForm).map((field) => {
-                  if (props.validationFields?.orderForm[field]?.length <= 0) {
-                    validationPassed = false
-                  }
-                })
-              }
-
-              if (!validationPassed && props.currentStep === 1) {
-                alert("Please enter mandatory fields")
-                return
-              }
-
-              // checks for boundary conditions.
-              if (props.currentStep < props.lastStep) {
                 props.setCurrentStep(props.currentStep + 1)
               }
             }}

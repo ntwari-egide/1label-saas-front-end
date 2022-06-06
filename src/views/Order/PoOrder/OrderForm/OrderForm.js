@@ -954,6 +954,13 @@ const OrderForm = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
+          validationFields={{
+            orderFormManFields: {
+              orderReference: props.orderReference,
+              expectedDeliveryDate: props.expectedDeliveryDate,
+              projectionLocation: props.projectionLocation
+            }
+          }}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}
