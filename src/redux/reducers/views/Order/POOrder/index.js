@@ -29,51 +29,51 @@ const initialState = {
 
 const poOrderReduced = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_CURRENT_STEP":
+    case "SET_PO_CURRENT_STEP":
       return { ...state, currentStep: action.payload }
-    case "SET_BRAND":
+    case "SET_PO_BRAND":
       return { ...state, brand: action.payload }
-    case "SET_CARE_DATA":
+    case "SET_PO_CARE_DATA":
       return { ...state, careData: action.payload }
-    case "SET_WASH_CARE_DATA":
+    case "SET_PO_WASH_CARE_DATA":
       return { ...state, washCareData: action.payload }
-    case "SET_DYNAMIC_FIELD_DATA":
+    case "SET_PO_DYNAMIC_FIELD_DATA":
       return { ...state, dynamicFieldData: action.payload }
-    case "SET_FIBRE_INSTRUCTION_DATA":
+    case "SET_PO_FIBRE_INSTRUCTION_DATA":
       return { ...state, fibreInstructionData: action.payload }
-    case "SET_SELECTED_ITEMS":
+    case "SET_PO_SELECTED_ITEMS":
       return { ...state, selectedItems: action.payload }
-    case "SET_CARE_CUSTOM_NUMBER":
+    case "SET_PO_CARE_CUSTOM_NUMBER":
       return { ...state, careCustomNumber: action.payload }
-    case "SET_CONTENT_CUSTOM_NUMBER":
+    case "SET_PO_CONTENT_CUSTOM_NUMBER":
       return { ...state, contentCustomNumber: action.payload }
-    case "SET_PROJECTION_LOCATION":
+    case "SET_PO_PROJECTION_LOCATION":
       return { ...state, projectionLocation: action.payload }
-    case "SET_ORDER_REFERENCE":
+    case "SET_PO_ORDER_REFERENCE":
       return { ...state, orderReference: action.payload }
-    case "SET_EXPECTED_DELIVERY_DATE":
+    case "SET_PO_EXPECTED_DELIVERY_DATE":
       return { ...state, expectedDeliveryDate: action.payload }
-    case "SET_CONTENT_NUMBER_DATA":
+    case "SET_PO_CONTENT_NUMBER_DATA":
       return { ...state, contentNumberData: action.payload }
-    case "SET_DEFAULT_CONTENT_DATA":
+    case "SET_PO_DEFAULT_CONTENT_DATA":
       return { ...state, defaultContentData: action.payload }
-    case "SET_CARE_NUMBER_DATA":
+    case "SET_PO_CARE_NUMBER_DATA":
       return { ...state, careNumberData: action.payload }
-    case "SET_CONTENT_GROUP":
+    case "SET_PO_CONTENT_GROUP":
       return { ...state, contentGroup: action.payload }
-    case "SET_COO":
+    case "SET_PO_COO":
       return { ...state, coo: action.payload }
-    case "SET_SIZE_CONTENT_DATA":
+    case "SET_PO_SIZE_CONTENT_DATA":
       return { ...state, sizeContentData: action.payload }
-    case "SET_WASTAGE":
+    case "SET_PO_WASTAGE":
       return { ...state, wastage: action.payload }
-    case "SET_SUMMARY_TABLE":
+    case "SET_PO_SUMMARY_TABLE":
       return { ...state, summaryTable: action.payload }
-    case "SET_SIZE_TABLE":
+    case "SET_PO_SIZE_TABLE":
       return { ...state, sizeTable: action.payload }
-    case "SET_DEFAULT_SIZE_TABLE":
+    case "SET_PO_DEFAULT_SIZE_TABLE":
       return { ...state, defaultSizeTable: action.payload }
-    case "SET_SIZE_MATRIX_TYPE":
+    case "SET_PO_SIZE_MATRIX_TYPE":
       return { ...state, sizeMatrixType: action.payload }
     default:
       return state
