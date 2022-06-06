@@ -73,3 +73,8 @@ export const setWastage = (value) => (dispatch) => {
 export const setSummaryTable = (data) => (dispatch) => {
   dispatch({ type: "SET_SUMMARY_TABLE", payload: data })
 }
+
+export const setCurrentStep = (value) => (dispatch) => {
+  console.log("from action", value)
+  dispatch({ type: "SET_CURRENT_STEP", payload: value })
+}

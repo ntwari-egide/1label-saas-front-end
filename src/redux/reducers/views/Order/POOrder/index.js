@@ -1,4 +1,5 @@
 const initialState = {
+  currentStep: 0,
   // po order states
   brand: {},
   careData: [{}],
@@ -24,6 +25,8 @@ const initialState = {
 
 const poOrderReduced = (state = initialState, action) => {
   switch (action.type) {
+    case "SET_CURRENT_STEP":
+      return { ...state, currentStep: action.payload }
     case "SET_BRAND":
       return { ...state, brand: action.payload }
     case "SET_CARE_DATA":

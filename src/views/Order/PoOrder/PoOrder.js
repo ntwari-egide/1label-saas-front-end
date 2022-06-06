@@ -2,7 +2,7 @@ import Stepper from "../../Stepper"
 import { useState, useEffect } from "react"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { Link } from "react-router-dom"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 import Listing from "./Listing/listing"
 import { useTranslation } from "react-i18next"
 import OrderForm from "./OrderForm/OrderForm"
@@ -10,6 +10,7 @@ import SizeTable from "./SizeTable/SizeTable"
 import ItemList from "./ItemList/ItemList"
 import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
+import { setCurrentStep } from "@redux/actions/views/Order/POOrder"
 
 const stepperMenu = [
   "Listing",
@@ -22,11 +23,11 @@ const stepperMenu = [
   "Direct Print"
 ]
 
-const PoOrder = () => {
+const PoOrder = (props) => {
   // constants
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   // app states
-  const [currentStep, setCurrentStep] = useState(0)
   const [lastStep, setLastStep] = useState(stepperMenu.length - 1)
 
   // listing data
@@ -43,6 +44,10 @@ const PoOrder = () => {
   const [sizeTable, setSizeTable] = useState("")
   const [defaultSizeTable, setDefaultSizeTable] = useState("")
   const [sizeMatrixType, setSizeMatrixType] = useState("")
+
+  const setCurrentStepHelper = (value) => {
+    dispatch(setCurrentStep(value))
+  }
 
   return (
     <div>
@@ -71,13 +76,13 @@ const PoOrder = () => {
         component={"POOrder"}
         validationFields={{ poSelectedItems }}
         stepperMenu={stepperMenu}
-        currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
+        currentStep={props.currentStep}
+        setCurrentStep={setCurrentStepHelper}
       />
-      {currentStep === 0 ? (
+      {props.currentStep === 0 ? (
         <Listing
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
+          currentStep={props.currentStep}
+          setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
           setpoSelectedItems={setpoSelectedItems}
           poSelectedItems={poSelectedItems}
@@ -88,21 +93,25 @@ const PoOrder = () => {
           setIsPoOrderTemp={setIsPoOrderTemp}
           setSizeTableTrigger={setSizeTableTrigger}
         />
-      ) : currentStep === 1 ? (
-        <ItemList />
-      ) : currentStep === 3 ? (
+      ) : props.currentStep === 1 ? (
+        <ItemList
+          currentStep={props.currentStep}
+          setCurrentStep={setCurrentStepHelper}
+          lastStep={lastStep}
+        />
+      ) : props.currentStep === 3 ? (
         <OrderForm
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
+          currentStep={props.currentStep}
+          setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
           isPoOrderTemp={isPoOrderTemp}
           combinedPOOrderKey={combinedPOOrderKey}
         />
-      ) : currentStep === 2 ? (
+      ) : props.currentStep === 2 ? (
         <SizeTable
           isPoOrderTemp={isPoOrderTemp}
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
+          currentStep={props.currentStep}
+          setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
           combinedPOOrderKey={combinedPOOrderKey}
           wastageApplied={wastageApplied}
@@ -110,10 +119,10 @@ const PoOrder = () => {
           sizeTableTrigger={sizeTableTrigger}
           setSizeTableTrigger={setSizeTableTrigger}
         />
-      ) : currentStep === 4 ? (
+      ) : props.currentStep === 4 ? (
         <PreviewAndSummary
-          setCurrentStep={setCurrentStep}
-          currentStep={currentStep}
+          setCurrentStep={setCurrentStepHelper}
+          currentStep={props.currentStep}
           lastStep={lastStep}
           setSizeTable={setSizeTable}
           setDefaultSizeTable={setDefaultSizeTable}
@@ -121,10 +130,10 @@ const PoOrder = () => {
           setSizeMatrixType={setSizeMatrixType}
           wastageApplied={wastageApplied}
         />
-      ) : currentStep === 5 ? (
+      ) : props.currentStep === 5 ? (
         <InvoiceAndDelivery
-          setCurrentStep={setCurrentStep}
-          currentStep={currentStep}
+          setCurrentStep={setCurrentStepHelper}
+          currentStep={props.currentStep}
           lastStep={lastStep}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
@@ -138,7 +147,8 @@ const PoOrder = () => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.poOrderReducer.brand
+  brand: state.poOrderReducer.brand,
+  currentStep: state.poOrderReducer.currentStep
 })
 
 export default connect(mapStateToProps, null)(PoOrder)
