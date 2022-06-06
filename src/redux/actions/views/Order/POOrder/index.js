@@ -61,3 +61,15 @@ export const setContentGroup = (value) => (dispatch) => {
 export const setCoo = (value) => (dispatch) => {
   dispatch({ type: "SET_COO", payload: value })
 }
+
+export const setSizeContentData = (data) => (dispatch) => {
+  dispatch({ type: "SET_SIZE_CONTENT_DATA", payload: data })
+}
+
+export const setWastage = (value) => (dispatch) => {
+  dispatch({ type: "SET_WASTAGE", payload: value })
+}
+
+export const setSummaryTable = (data) => (dispatch) => {
+  dispatch({ type: "SET_SUMMARY_TABLE", payload: data })
+}

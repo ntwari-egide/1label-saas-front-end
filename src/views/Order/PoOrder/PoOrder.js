@@ -36,13 +36,8 @@ const PoOrder = () => {
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
 
   // data of order size Table
-  const [sizeContentData, setSizeContentData] = useState([])
   const [wastageApplied, setWastageApplied] = useState(false)
-  const [wastage, setWastage] = useState(0)
   const [sizeTableTrigger, setSizeTableTrigger] = useState(true)
-
-  // data of preview and summary page
-  const [summaryTable, setSummaryTable] = useState({})
 
   // data of Preview and Summary component
   const [sizeTable, setSizeTable] = useState("")
@@ -105,8 +100,6 @@ const PoOrder = () => {
         />
       ) : currentStep === 2 ? (
         <SizeTable
-          sizeContentData={sizeContentData}
-          setSizeContentData={setSizeContentData}
           isPoOrderTemp={isPoOrderTemp}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
@@ -114,8 +107,6 @@ const PoOrder = () => {
           combinedPOOrderKey={combinedPOOrderKey}
           wastageApplied={wastageApplied}
           setWastageApplied={setWastageApplied}
-          wastage={wastage}
-          setWastage={setWastage}
           sizeTableTrigger={sizeTableTrigger}
           setSizeTableTrigger={setSizeTableTrigger}
         />
@@ -128,10 +119,7 @@ const PoOrder = () => {
           setDefaultSizeTable={setDefaultSizeTable}
           defaultSizeTable={defaultSizeTable}
           setSizeMatrixType={setSizeMatrixType}
-          sizeContentData={sizeContentData}
           wastageApplied={wastageApplied}
-          summaryTable={summaryTable}
-          setSummaryTable={setSummaryTable}
         />
       ) : currentStep === 5 ? (
         <InvoiceAndDelivery
@@ -141,10 +129,8 @@ const PoOrder = () => {
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
           sizeMatrixType={sizeMatrixType}
-          summaryTable={summaryTable}
           wastageApplied={wastageApplied}
           combinedPOOrderKey={combinedPOOrderKey}
-          sizeContentData={sizeContentData}
         />
       ) : null}
     </div>

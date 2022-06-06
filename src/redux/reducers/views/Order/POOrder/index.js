@@ -1,4 +1,5 @@
 const initialState = {
+  // po order states
   brand: {},
   careData: [{}],
   washCareData: [],
@@ -14,7 +15,11 @@ const initialState = {
   defaultContentData: [""],
   careNumberData: {},
   contentGroup: "",
-  coo: ""
+  coo: "",
+  // size table states
+  sizeContentData: [],
+  wastage: 0,
+  summaryTable: {}
 }
 
 const poOrderReduced = (state = initialState, action) => {
@@ -51,6 +56,12 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, contentGroup: action.payload }
     case "SET_COO":
       return { ...state, coo: action.payload }
+    case "SET_SIZE_CONTENT_DATA":
+      return { ...state, sizeContentData: action.payload }
+    case "SET_WASTAGE":
+      return { ...state, wastage: action.payload }
+    case "SET_SUMMARY_TABLE":
+      return { ...state, summaryTable: action.payload }
     default:
       return state
   }

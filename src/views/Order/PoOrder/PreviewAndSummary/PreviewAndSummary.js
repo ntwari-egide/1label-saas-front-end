@@ -6,10 +6,12 @@ import Footer from "../../../CommonFooter"
 import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
+import { setSummaryTable } from "@redux/actions/views/Order/POOrder"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   // App States
   const [sizeData, setSizeData] = useState([])
   const [defaultSizeData, setDefaultSizeData] = useState(null)
@@ -169,7 +171,7 @@ const PreviewAndSummary = (props) => {
       })
       tempState[groupType] = tempTable
     })
-    props.setSummaryTable({ ...tempState })
+    dispatch(setSummaryTable({ ...tempState }))
   }
 
   // API Sevices
@@ -379,7 +381,9 @@ const PreviewAndSummary = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
-  selectedItems: state.poOrderReducer.selectedItems
+  selectedItems: state.poOrderReducer.selectedItems,
+  sizeContentData: state.poOrderReducer.sizeContentData,
+  summaryTable: state.poOrderReducer.summaryTable
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)

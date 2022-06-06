@@ -16,10 +16,15 @@ import DataTable from "react-data-table-component"
 import { XMLParser } from "fast-xml-parser"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
+import {
+  setSizeContentData,
+  setWastage
+} from "@redux/actions/views/Order/POOrder"
 
 const SizeTable = (props) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const [wastageStatus, setWastageStatus] = useState(true)
   const [wastageOptions, setWastageOptions] = useState([])
   const [loader, setLoader] = useState(true)
@@ -171,17 +176,17 @@ const SizeTable = (props) => {
           return tempRow
         })
       }))
-      props.setSizeContentData([...tempState])
+      dispatch(setSizeContentData([...tempState]))
     } catch (err) {
       console.log("Something went wrong while processing wastage")
-      props.setWastage(0)
+      dispatch(setWastage(0))
       return
     }
     if (operation === "add") {
       props.setWastageApplied(true)
       toast(`${props.wastage * 100}% Wastage Applied.`)
     } else {
-      props.setWastage(0)
+      dispatch(setWastage(0))
       props.setWastageApplied(false)
       toast("Wastage Reset.")
     }
@@ -198,13 +203,15 @@ const SizeTable = (props) => {
       .post("/order/GetPOSizeTableTempList", body)
       .then((res) => {
         if (res.status === 200) {
-          props.setSizeContentData(
-            res.data.map((data) => {
-              return {
-                ...data,
-                size_content: formatColToRow(data.size_content)
-              }
-            })
+          dispatch(
+            setSizeContentData(
+              res.data.map((data) => {
+                return {
+                  ...data,
+                  size_content: formatColToRow(data.size_content)
+                }
+              })
+            )
           )
         }
         props.setSizeTableTrigger(false)
@@ -296,7 +303,7 @@ const SizeTable = (props) => {
               value={wastageOptions.filter(
                 (opt) => opt.value === props.wastage
               )}
-              onChange={(e) => props.setWastage(e.value)}
+              onChange={(e) => dispatch(setWastage(e.value))}
               isDisabled={!wastageStatus}
             />
           </Col>
@@ -334,7 +341,9 @@ const SizeTable = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.poOrderReducer.brand
+  brand: state.poOrderReducer.brand,
+  sizeContentData: state.poOrderReducer.sizeContentData,
+  wastage: state.poOrderReducer.wastage
 })
 
 export default connect(mapStateToProps, null)(SizeTable)
