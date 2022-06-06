@@ -1,12 +1,13 @@
 const initialState = {
   currentStep: 0,
+  // po item list states
+  selectedItems: [],
   // po order states
   brand: {},
   careData: [{}],
   washCareData: [],
   dynamicFieldData: {},
   fibreInstructionData: [{}],
-  selectedItems: [],
   careCustomNumber: "",
   contentCustomNumber: "",
   projectionLocation: "",

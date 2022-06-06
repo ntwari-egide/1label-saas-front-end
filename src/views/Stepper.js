@@ -23,6 +23,18 @@ const Stepper = (props) => {
       props.validationFields?.poSelectedItems &&
       props.validationFields?.poSelectedItems?.length <= 0
     ) {
+      alert("Please select an order to continue")
+      return false
+    }
+    return true
+  }
+
+  const poItemListValidation = () => {
+    if (
+      props.component === "POOrder" &&
+      props.validationFields?.selectedItems &&
+      props.validationFields?.selectedItems?.length <= 0
+    ) {
       alert("Please select an item to continue")
       return false
     }
@@ -35,6 +47,7 @@ const Stepper = (props) => {
     if (props.validationFields?.orderFormManFields) {
       Object.keys(props.validationFields.orderFormManFields).map((field) => {
         if (
+          props.component === "Order" &&
           props.validationFields.orderFormManFields[field].length <= 0 &&
           props.currentStep === 1 &&
           localFlag &&
@@ -44,6 +57,26 @@ const Stepper = (props) => {
           tempState[field] = true
           props.setOrderFormManFields({ ...tempState })
           alert("Please enter mandatory fields")
+          localFlag = false
+        }
+      })
+    }
+    return localFlag
+  }
+
+  const poOrderFormManFieldsValidation = (menuItem) => {
+    // to end the loop when one of the man fields is empty
+    let localFlag = true
+    if (props.validationFields?.orderFormManFields) {
+      Object.keys(props.validationFields.orderFormManFields).map((field) => {
+        if (
+          props.component === "POOrder" &&
+          props.validationFields.orderFormManFields[field].length <= 0 &&
+          props.currentStep === 3 &&
+          localFlag &&
+          !["Listing", "Item List", "PO Order Size Table"].includes(menuItem)
+        ) {
+          alert("Please enter mandatory fields to proceed")
           localFlag = false
         }
       })
@@ -62,7 +95,9 @@ const Stepper = (props) => {
                 if (
                   normalSelectedItemValidation() &&
                   poSelectedItemsValidation() &&
-                  normalOrderFormManFieldsValidation(menuItem)
+                  normalOrderFormManFieldsValidation(menuItem) &&
+                  poItemListValidation() &&
+                  poOrderFormManFieldsValidation(menuItem)
                 ) {
                   props.setCurrentStep(index)
                 }

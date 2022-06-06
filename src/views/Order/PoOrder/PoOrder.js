@@ -33,7 +33,6 @@ const PoOrder = (props) => {
   // listing data
   const [poSelectedItems, setpoSelectedItems] = useState([])
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
-  const [searchParams, setSearchParams] = useState({})
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
 
   // data of order size Table
@@ -69,7 +68,15 @@ const PoOrder = (props) => {
       </div>
       <Stepper
         component={"POOrder"}
-        validationFields={{ poSelectedItems }}
+        validationFields={{
+          poSelectedItems,
+          selectedItems: props.selectedItems,
+          orderFormManFields: {
+            orderReference: props.orderReference,
+            projectionLocation: props.projectionLocation,
+            expectedDeliveryDate: props.expectedDeliveryDate
+          }
+        }}
         stepperMenu={stepperMenu}
         currentStep={props.currentStep}
         setCurrentStep={setCurrentStepHelper}
@@ -82,8 +89,6 @@ const PoOrder = (props) => {
           setpoSelectedItems={setpoSelectedItems}
           poSelectedItems={poSelectedItems}
           setCombinedPOOrderkey={setCombinedPOOrderkey}
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
           setSizeTableTrigger={setSizeTableTrigger}
@@ -136,7 +141,11 @@ const PoOrder = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
-  currentStep: state.poOrderReducer.currentStep
+  currentStep: state.poOrderReducer.currentStep,
+  selectedItems: state.poOrderReducer.selectedItems,
+  orderReference: state.poOrderReducer.orderReference,
+  projectionLocation: state.poOrderReducer.projectionLocation,
+  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate
 })
 
 export default connect(mapStateToProps, null)(PoOrder)
