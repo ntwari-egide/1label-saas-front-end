@@ -21,12 +21,15 @@ import Select from "react-select"
 import Flatpickr from "react-flatpickr"
 import { formatDateYMD } from "@utils"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
+import { useDispatch } from "react-redux"
+import history from "@src/history"
 
 let timerId
 
 const Listing = (props) => {
-  const [loading, setLoading] = useState(true)
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true)
 
   const recordsPerPageOptions = [
     { value: 5, label: 5 },
@@ -171,6 +174,32 @@ const Listing = (props) => {
     }
   }
 
+  const fetchOrderDetails = (brand_key, order_no, is_po_order_temp) => {
+    const body = {
+      order_user: "innoa",
+      brand_key,
+      order_no,
+      is_po_order_temp
+    }
+
+    axios
+      .post("/Order/GetOrderDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          let module = "Order"
+          if (is_po_order_temp === "Y") {
+            module = "POOrder"
+          }
+          const {
+            setCurrentStep
+          } = require(`@redux/actions/views/Order/${module}`)
+          history.push(`/${module}`)
+          dispatch(setCurrentStep(1))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const sendDraftOrder = (row) => {
     const body = {
       order_user: "innoa",
@@ -197,7 +226,12 @@ const Listing = (props) => {
       .post("/Order/CopyOrder", body)
       .then((res) => {
         if (res.status === 200) {
-          console.log(res)
+          // fetches order details to then populate data in redux
+          fetchOrderDetails(
+            row.brand_guid_key,
+            row.order_no,
+            res.data.data?.is_po_order_temp
+          )
         }
       })
       .catch((err) => console.log(err))
