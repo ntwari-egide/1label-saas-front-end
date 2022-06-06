@@ -2,12 +2,7 @@ import { Suspense, lazy } from "react"
 import { isUserLoggedIn } from "@utils"
 import { DefaultRoute, Routes } from "./routes"
 // import { HashRouter, Route, Switch, Redirect, AppRouter } from 'react-router-dom'
-import {
-  BrowserRouter as AppRouter,
-  Route,
-  Switch,
-  Redirect
-} from "react-router-dom"
+import { Router as AppRouter, Route, Switch, Redirect } from "react-router-dom"
 import LayoutWrapper from "@layouts/components/layout-wrapper"
 import BlankLayout from "@layouts/BlankLayout"
 import VerticalLayout from "@src/layouts/VerticalLayout"
