@@ -35,13 +35,6 @@ const PoOrder = () => {
   const [searchParams, setSearchParams] = useState({})
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
 
-  // Order Form data
-  const [contentNumberData, setContentNumberData] = useState({})
-  const [defaultContentData, setDefaultContentData] = useState([""])
-  const [careNumberData, setCareNumberData] = useState({})
-  const [contentGroup, setContentGroup] = useState("")
-  const [coo, setCoo] = useState("")
-
   // data of order size Table
   const [sizeContentData, setSizeContentData] = useState([])
   const [wastageApplied, setWastageApplied] = useState(false)
@@ -107,16 +100,8 @@ const PoOrder = () => {
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           lastStep={lastStep}
-          defaultContentData={defaultContentData}
-          setDefaultContentData={setDefaultContentData}
-          setContentNumberData={setContentNumberData}
-          contentNumberData={contentNumberData}
-          careNumberData={careNumberData}
-          setCareNumberData={setCareNumberData}
           isPoOrderTemp={isPoOrderTemp}
           combinedPOOrderKey={combinedPOOrderKey}
-          setContentGroup={setContentGroup}
-          setCoo={setCoo}
         />
       ) : currentStep === 2 ? (
         <SizeTable
@@ -153,14 +138,9 @@ const PoOrder = () => {
           setCurrentStep={setCurrentStep}
           currentStep={currentStep}
           lastStep={lastStep}
-          defaultContentData={defaultContentData}
           sizeTable={sizeTable}
           defaultSizeTable={defaultSizeTable}
-          coo={coo}
           sizeMatrixType={sizeMatrixType}
-          contentGroup={contentGroup}
-          contentNumberData={contentNumberData}
-          careNumberData={careNumberData}
           summaryTable={summaryTable}
           wastageApplied={wastageApplied}
           combinedPOOrderKey={combinedPOOrderKey}

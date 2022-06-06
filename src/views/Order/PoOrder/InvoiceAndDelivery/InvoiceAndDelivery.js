@@ -531,7 +531,12 @@ const mapStateToProps = (state) => ({
   careCustomNumber: state.poOrderReducer.careCustomNumber,
   projectionLocation: state.poOrderReducer.projectionLocation,
   orderReference: state.poOrderReducer.orderReference,
-  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate
+  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
+  contentNumberData: state.poOrderReducer.contentNumberData,
+  defaultContentData: state.poOrderReducer.defaultContentData,
+  careNumberData: state.poOrderReducer.careNumberData,
+  contentGroup: state.poOrderReducer.contentGroup,
+  coo: state.poOrderReducer.coo
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

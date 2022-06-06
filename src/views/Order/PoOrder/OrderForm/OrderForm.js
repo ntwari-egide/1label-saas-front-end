@@ -29,7 +29,12 @@ import {
   setCareCustomNumber,
   setProjectionLocation,
   setOrderReference,
-  setExpectedDeliveryDate
+  setExpectedDeliveryDate,
+  setContentNumberData,
+  setDefaultContentData,
+  setCareNumberData,
+  setContentGroup,
+  setCoo
 } from "@redux/actions/views/Order/POOrder"
 
 const OrderForm = (props) => {
@@ -85,7 +90,7 @@ const OrderForm = (props) => {
                 onChange={(e) => {
                   // set coo to use later in invoice and delivery component
                   if (field.field === "F3") {
-                    props.setCoo(e.label)
+                    dispatch(setCoo(e.label))
                   }
                   let tempData = props.dynamicFieldData
                   tempData[field?.title] = {
@@ -203,7 +208,7 @@ const OrderForm = (props) => {
             cont_key: res.data[0]?.guid_key,
             cont_translation: res.data[0]?.gb_translation
           }
-          props.setDefaultContentData([...tempDefData])
+          dispatch(setDefaultContentData([...tempDefData]))
         }
       })
       .catch((err) => console.log(err))
@@ -240,7 +245,7 @@ const OrderForm = (props) => {
       .post("/Brand/GetContentNumberSetting", body)
       .then((res) => {
         if (res.status === 200) {
-          props.setContentGroup(res.data[0]?.content_model) // to send to invoice and delivery for save order api
+          dispatch(setContentGroup(res.data[0]?.content_model)) // to send to invoice and delivery for save order api
           // sets state to determine options for care and content for different content settings namely A/BC and ABC
           if (res.data[0]?.content_model === "ABC") {
             setIsContentSettingCommon(true)
@@ -333,7 +338,7 @@ const OrderForm = (props) => {
             cont_key: res.data[0]?.guid_key,
             cont_translation: res.data[0]?.gb_translation
           }
-          props.setDefaultContentData([...tempData])
+          dispatch(setDefaultContentData([...tempData]))
         }
       })
       .catch((err) => console.log(err))
@@ -607,7 +612,7 @@ const OrderForm = (props) => {
                             : contentGroupOptions["A"]
                         }
                         onChange={(e) => {
-                          props.setContentNumberData(e)
+                          dispatch(setContentNumberData(e))
                           fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
@@ -708,7 +713,9 @@ const OrderForm = (props) => {
                                     )
                                     tempData = props.defaultContentData
                                     tempData.splice(index, 1)
-                                    props.setDefaultContentData([...tempData])
+                                    dispatch(
+                                      setDefaultContentData([...tempData])
+                                    )
                                   }}
                                 >
                                   <div style={{ display: "flex" }}>
@@ -734,7 +741,9 @@ const OrderForm = (props) => {
                           )
                           const tempDefaultContent = props.defaultContentData
                           tempDefaultContent.push("")
-                          props.setDefaultContentData([...tempDefaultContent])
+                          dispatch(
+                            setDefaultContentData([...tempDefaultContent])
+                          )
                         }}
                         color="primary"
                         style={{ padding: "10px" }}
@@ -787,7 +796,7 @@ const OrderForm = (props) => {
                             : contentGroupOptions["BC"]
                         }
                         onChange={(e) => {
-                          props.setCareNumberData(e)
+                          dispatch(setCareNumberData(e))
                           fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
@@ -964,7 +973,10 @@ const mapStateToProps = (state) => ({
   careCustomNumber: state.poOrderReducer.careCustomNumber,
   projectionLocation: state.poOrderReducer.projectionLocation,
   orderReference: state.poOrderReducer.orderReference,
-  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate
+  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
+  contentNumberData: state.poOrderReducer.contentNumberData,
+  defaultContentData: state.poOrderReducer.defaultContentData,
+  careNumberData: state.poOrderReducer.careNumberData
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

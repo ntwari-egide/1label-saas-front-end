@@ -41,3 +41,23 @@ export const setOrderReference = (value) => (dispatch) => {
 export const setExpectedDeliveryDate = (value) => (dispatch) => {
   dispatch({ type: "SET_EXPECTED_DELIVERY_DATE", payload: value })
 }
+
+export const setContentNumberData = (e) => (dispatch) => {
+  dispatch({ type: "SET_CONTENT_NUMBER_DATA", payload: e })
+}
+
+export const setDefaultContentData = (data) => (dispatch) => {
+  dispatch({ type: "SET_DEFAULT_CONTENT_DATA", payload: data })
+}
+
+export const setCareNumberData = (e) => (dispatch) => {
+  dispatch({ type: "SET_CARE_NUMBER_DATA", payload: e })
+}
+
+export const setContentGroup = (value) => (dispatch) => {
+  dispatch({ type: "SET_CONTENT_GROUP", payload: value })
+}
+
+export const setCoo = (value) => (dispatch) => {
+  dispatch({ type: "SET_COO", payload: value })
+}

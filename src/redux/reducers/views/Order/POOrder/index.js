@@ -9,7 +9,12 @@ const initialState = {
   contentCustomNumber: "",
   projectionLocation: "",
   orderReference: "",
-  expectedDeliveryDate: ""
+  expectedDeliveryDate: "",
+  contentNumberData: {},
+  defaultContentData: [""],
+  careNumberData: {},
+  contentGroup: "",
+  coo: ""
 }
 
 const poOrderReduced = (state = initialState, action) => {
@@ -36,6 +41,16 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, orderReference: action.payload }
     case "SET_EXPECTED_DELIVERY_DATE":
       return { ...state, expectedDeliveryDate: action.payload }
+    case "SET_CONTENT_NUMBER_DATA":
+      return { ...state, contentNumberData: action.payload }
+    case "SET_DEFAULT_CONTENT_DATA":
+      return { ...state, defaultContentData: action.payload }
+    case "SET_CARE_NUMBER_DATA":
+      return { ...state, careNumberData: action.payload }
+    case "SET_CONTENT_GROUP":
+      return { ...state, contentGroup: action.payload }
+    case "SET_COO":
+      return { ...state, coo: action.payload }
     default:
       return state
   }
