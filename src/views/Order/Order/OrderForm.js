@@ -1004,7 +1004,7 @@ const OrderForm = (props) => {
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}
           validationFields={{
-            orderForm: {
+            orderFormManFields: {
               orderReference: props.orderReference,
               minExpectedDeliveryDate: props.expectedDeliveryDate,
               projectionLocation: props.projectionLocation
