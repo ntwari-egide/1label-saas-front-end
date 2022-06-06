@@ -20,7 +20,11 @@ const initialState = {
   // size table states
   sizeContentData: [],
   wastage: 0,
-  summaryTable: {}
+  summaryTable: {},
+  // preview and summary states
+  sizeTable: "",
+  defaultSizeTable: "",
+  sizeMatrixType: ""
 }
 
 const poOrderReduced = (state = initialState, action) => {
@@ -65,6 +69,12 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, wastage: action.payload }
     case "SET_SUMMARY_TABLE":
       return { ...state, summaryTable: action.payload }
+    case "SET_SIZE_TABLE":
+      return { ...state, sizeTable: action.payload }
+    case "SET_DEFAULT_SIZE_TABLE":
+      return { ...state, defaultSizeTable: action.payload }
+    case "SET_SIZE_MATRIX_TYPE":
+      return { ...state, sizeMatrixType: action.payload }
     default:
       return state
   }

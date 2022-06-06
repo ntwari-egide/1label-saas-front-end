@@ -78,3 +78,15 @@ export const setCurrentStep = (value) => (dispatch) => {
   console.log("from action", value)
   dispatch({ type: "SET_CURRENT_STEP", payload: value })
 }
+
+export const setSizeTable = (data) => (dispatch) => {
+  dispatch({ type: "SET_SIZE_TABLE", payload: data })
+}
+
+export const setDefaultSizeTable = (data) => (dispatch) => {
+  dispatch({ type: "SET_DEFAULT_SIZE_TABLE", payload: data })
+}
+
+export const setSizeMatrixType = (data) => (dispatch) => {
+  dispatch({ type: "SET_SIZE_MATRIX_TYPE", payload: data })
+}

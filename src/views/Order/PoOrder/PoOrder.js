@@ -40,11 +40,6 @@ const PoOrder = (props) => {
   const [wastageApplied, setWastageApplied] = useState(false)
   const [sizeTableTrigger, setSizeTableTrigger] = useState(true)
 
-  // data of Preview and Summary component
-  const [sizeTable, setSizeTable] = useState("")
-  const [defaultSizeTable, setDefaultSizeTable] = useState("")
-  const [sizeMatrixType, setSizeMatrixType] = useState("")
-
   const setCurrentStepHelper = (value) => {
     dispatch(setCurrentStep(value))
   }
@@ -124,10 +119,6 @@ const PoOrder = (props) => {
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
-          setSizeTable={setSizeTable}
-          setDefaultSizeTable={setDefaultSizeTable}
-          defaultSizeTable={defaultSizeTable}
-          setSizeMatrixType={setSizeMatrixType}
           wastageApplied={wastageApplied}
         />
       ) : props.currentStep === 5 ? (
@@ -135,9 +126,6 @@ const PoOrder = (props) => {
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
-          sizeTable={sizeTable}
-          defaultSizeTable={defaultSizeTable}
-          sizeMatrixType={sizeMatrixType}
           wastageApplied={wastageApplied}
           combinedPOOrderKey={combinedPOOrderKey}
         />

@@ -538,7 +538,10 @@ const mapStateToProps = (state) => ({
   contentGroup: state.poOrderReducer.contentGroup,
   coo: state.poOrderReducer.coo,
   sizeContentData: state.poOrderReducer.sizeContentData,
-  summaryTable: state.poOrderReducer.summaryTable
+  summaryTable: state.poOrderReducer.summaryTable,
+  sizeTable: state.poOrderReducer.sizeTable,
+  defaultSizeTable: state.poOrderReducer.defaultSizeTable,
+  sizeMatrixType: state.poOrderReducer.sizeMatrixType
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

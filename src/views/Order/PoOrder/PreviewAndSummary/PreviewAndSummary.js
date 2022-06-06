@@ -7,7 +7,12 @@ import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
-import { setSummaryTable } from "@redux/actions/views/Order/POOrder"
+import {
+  setSummaryTable,
+  setSizeTable,
+  setDefaultSizeTable,
+  setSizeMatrixType
+} from "@redux/actions/views/Order/POOrder"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -207,22 +212,14 @@ const PreviewAndSummary = (props) => {
         if (res.status === 200) {
           //  set size content if available
           if (res?.data[0]?.size_content) {
-            props.setSizeTable(res?.data[0]?.size_content) // to send it to invoice and delivery for save order
-            props.setSizeMatrixType(res.data[0]?.size_matrix_type) // to send it to invoice and delivery for save order
+            dispatch(setSizeTable(res?.data[0]?.size_content)) // to send it to invoice and delivery for save order
+            dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
             setSizeData(formatColToRow(res?.data[0]?.size_content))
-            console.log(
-              "processed data",
-              formatColToRow(res?.data[0]?.size_content)
-            )
           }
           // set default size content if available
           if (res?.data[0]?.default_size_content) {
-            props.setDefaultSizeTable(res?.data[0]?.default_size_content) // to send it to invoice and delivery for save order
+            dispatch(setDefaultSizeTable(res?.data[0]?.default_size_content)) // to send it to invoice and delivery for save order
             setDefaultSizeData(
-              formatColToRow(res?.data[0]?.default_size_content)
-            )
-            console.log(
-              "processed data",
               formatColToRow(res?.data[0]?.default_size_content)
             )
           }
@@ -383,7 +380,8 @@ const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   selectedItems: state.poOrderReducer.selectedItems,
   sizeContentData: state.poOrderReducer.sizeContentData,
-  summaryTable: state.poOrderReducer.summaryTable
+  summaryTable: state.poOrderReducer.summaryTable,
+  defaultSizeTable: state.poOrderReducer.defaultSizeTable
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)

@@ -547,7 +547,7 @@ const Listing = (props) => {
                   label: "",
                   size: "md"
                 }}
-                pagination={true}
+                // pagination={true}
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"350px"}
                 selectableRowSelected={(e) =>
@@ -558,6 +558,7 @@ const Listing = (props) => {
                 onSelectedRowsChange={(e) =>
                   props.setpoSelectedItems(e.selectedRows)
                 }
+                // style={{ minHeight: "300px" }}
               />
             ) : (
               <div
