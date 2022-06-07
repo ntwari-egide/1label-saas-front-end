@@ -191,9 +191,11 @@ const Listing = (props) => {
             module = "POOrder"
           }
           const {
-            setCurrentStep
+            setCurrentStep,
+            setBrand
           } = require(`@redux/actions/views/Order/${module}`)
           history.push(`/${module}`)
+          dispatch(setBrand({ value: brand_key, label: "" }))
           dispatch(setCurrentStep(1))
         }
       })
@@ -229,7 +231,7 @@ const Listing = (props) => {
           // fetches order details to then populate data in redux
           fetchOrderDetails(
             row.brand_guid_key,
-            row.order_no,
+            res.data.data?.order_no,
             res.data.data?.is_po_order_temp
           )
         }
