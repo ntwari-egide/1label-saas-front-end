@@ -11,6 +11,7 @@ import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
 import { setCurrentStep } from "@redux/actions/views/Order/Order"
+import { toggleSaveBtnStatus } from "@redux/actions/layout"
 
 const stepperMenu = [
   "Select Item",
@@ -28,6 +29,9 @@ const Order = (props) => {
   const [lastStep] = useState(stepperMenu.length - 1)
   const [itemType, setItemType] = useState("")
 
+  // summary states
+  const [sizeMatrixSelect, setSizeMatrixSelect] = useState({})
+
   // validations for OrderForm Component
   const [orderFormManFields, setOrderFormManFields] = useState({
     projectionLocation: false,
@@ -38,6 +42,14 @@ const Order = (props) => {
   const setCurrentStepHelper = (value) => {
     dispatch(setCurrentStep(value))
   }
+
+  useEffect(() => {
+    dispatch(toggleSaveBtnStatus(true))
+
+    return () => {
+      dispatch(toggleSaveBtnStatus(false))
+    }
+  }, [])
 
   return (
     <div>
@@ -100,6 +112,8 @@ const Order = (props) => {
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
+          sizeMatrixSelect={sizeMatrixSelect}
+          setSizeMatrixSelect={setSizeMatrixSelect}
         />
       ) : props.currentStep === 3 ? (
         <InvoiceAndDelivery
