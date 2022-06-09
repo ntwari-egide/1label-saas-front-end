@@ -1,4 +1,22 @@
 import axios from "@axios"
+import { XMLParser } from "fast-xml-parser"
+
+const formatColToRow = (xmlStr) => {
+  const parser = new XMLParser()
+  const jsObj = parser.parse(xmlStr)
+  const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
+  let data = [] // initialized data to fill row by row
+  let currentRow = 0 + 2 // because actual data begins at Column2
+  for (let i = 0; i < nRows; i++) {
+    let row = {} // initialise empty row
+    jsObj?.SizeMatrix?.Table.map((col) => {
+      row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
+    })
+    data.push(row) // push the row to data
+    currentRow += 1 // increment row count
+  }
+  return data
+}
 
 export const setBrand = (e) => (dispatch) => {
   dispatch({ type: "SET_BRAND_DATA", payload: e })
@@ -94,8 +112,12 @@ export const setShrinkagePercentage = (value) => (dispatch) => {
   dispatch({ typa: "SET_SHRINKAGE_PERCENTAGE", payload: value })
 }
 
-export const setSizeTableTrigger = (value) => (dispatch) => {
-  dispatch({ type: "SET_SIZE_TABLE_TRIGGER", payload: value })
+export const setSizeData = (data) => (dispatch) => {
+  dispatch({ type: "SET_SIZE_DATA", payload: formatColToRow(data) })
+}
+
+export const setDefaultSizeData = (data) => (dispatch) => {
+  dispatch({ type: "SET_DEFAULT_SIZE_TABLE", payload: formatColToRow(data) })
 }
 
 export const handleFibreChange =

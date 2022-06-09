@@ -11,22 +11,21 @@ import {
 import DataTable from "react-data-table-component"
 import Select from "react-select"
 import Footer from "../../CommonFooter"
-import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
 import {
   setSizeMatrixType,
   setSizeTable,
-  setDefaultSizeTable
+  setDefaultSizeTable,
+  setSizeData,
+  setDefaultSizeData
 } from "@redux/actions/views/Order/Order"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   // App States
-  const [sizeData, setSizeData] = useState([])
-  const [defaultSizeData, setDefaultSizeData] = useState(null)
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -59,24 +58,6 @@ const PreviewAndSummary = (props) => {
     }
   ]
 
-  // Other Functions
-  const formatColToRow = (xmlStr) => {
-    const parser = new XMLParser()
-    const jsObj = parser.parse(xmlStr)
-    const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
-    let data = [] // initialized data to fill row by row
-    let currentRow = 0 + 2 // because actual data begins at Column2
-    for (let i = 0; i < nRows; i++) {
-      let row = {} // initialise empty row
-      jsObj?.SizeMatrix?.Table.map((col) => {
-        row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
-      })
-      data.push(row) // push the row to data
-      currentRow += 1 // increment row count
-    }
-    return data
-  }
-
   // API Sevices
   const fetchSizeTableList = () => {
     const body = {
@@ -108,18 +89,16 @@ const PreviewAndSummary = (props) => {
       .post("/SizeTable/GetSizeTableDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          //  set size content if available
+          //  set size content if available only if not previously set
           if (res?.data[0]?.size_content) {
             dispatch(setSizeTable(res?.data[0]?.size_content)) // to send it to invoice and delivery for save order
             dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
-            setSizeData(formatColToRow(res?.data[0]?.size_content))
+            dispatch(setSizeData(res?.data[0]?.size_content))
           }
           // set default size content if available
           if (res?.data[0]?.default_size_content) {
             dispatch(setDefaultSizeTable(res?.data[0]?.default_size_content)) // to send it to invoice and delivery for save order
-            setDefaultSizeData(
-              formatColToRow(res?.data[0]?.default_size_content)
-            )
+            dispatch(setDefaultSizeData(res?.data[0]?.default_size_content))
           }
           setLoading(false)
         }
@@ -131,9 +110,9 @@ const PreviewAndSummary = (props) => {
     fetchSizeTableList()
   }, [])
 
-  useEffect(() => {
-    console.log("sizeData", sizeData)
-  }, [sizeData])
+  // useEffect(() => {
+  //   console.log("sizeData", sizeData)
+  // }, [sizeData])
 
   // useEffect(() => {
   //   console.log("sizeData", sizeData)
@@ -228,21 +207,25 @@ const PreviewAndSummary = (props) => {
             <Select
               className="React"
               classNamePrefix="select"
+              value={sizeMatrixOptions.filter(
+                (opt) => opt.value === props.sizeMatrixSelect.value
+              )}
               options={sizeMatrixOptions}
               onChange={(e) => {
                 setLoading(true)
                 fetchSizeTableDetails(e.value)
+                props.setSizeMatrixSelect(e)
               }}
             />
           </Col>
         </Row>
         <Row>
           <Col>
-            {sizeData.length > 0 ? (
+            {props.sizeData.length > 0 ? (
               <DataTable
                 progressPending={loading}
                 progressComponent={<Spinner />}
-                data={sizeData}
+                data={props.sizeData}
                 columns={sizeCols}
               />
             ) : null}
@@ -265,7 +248,9 @@ const mapStateToProps = (state) => ({
   selectedItems: state.orderReducer.selectedItems,
   sizeMatrixType: state.orderReducer.sizeMatrixType,
   sizeTable: state.orderReducer.sizeTable,
-  defaultSizeTable: state.orderReducer.defaultSizeTable
+  defaultSizeTable: state.orderReducer.defaultSizeTable,
+  sizeData: state.orderReducer.sizeData,
+  defaultSizeData: state.orderReducer.defaultSizeData
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)

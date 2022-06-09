@@ -1,5 +1,6 @@
 const initialState = {
   brand: {},
+  // order form data
   contentNumberData: {},
   careData: [{}],
   fibreInstructionData: [{}],
@@ -17,12 +18,15 @@ const initialState = {
   contentCustomNumber: "",
   dynamicFieldData: {},
   contentGroup: "",
+  // size table data
   sizeMatrixType: "",
   sizeTable: "",
   defaultSizeTable: "",
+  sizeData: [],
+  defaultSizeData: [],
+  // misc
   currentStep: 0,
-  shrinkagePercentage: "",
-  sizeTableTrigger: true
+  shrinkagePercentage: ""
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -73,8 +77,10 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, currentStep: action.payload }
     case "SET_SHRINKAGE_PERCENTAGE":
       return { ...state, shrinkagePercentage: action.payload }
-    case "SET_SIZE_TABLE_TRIGGER":
-      return { ...state, sizeTableTrigger: action.payload }
+    case "SET_SIZE_DATA":
+      return { ...state, sizeData: action.payload }
+    case "SET_DEFAULT_SIZE_DATA":
+      return { ...state, defaultSizeData: action.payload }
     default:
       return state
   }
