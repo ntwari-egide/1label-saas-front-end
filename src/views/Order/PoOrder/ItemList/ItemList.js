@@ -18,7 +18,10 @@ import {
 import { useTranslation } from "react-i18next"
 import { ArrowRight, ArrowLeft } from "react-feather"
 import { connect, useDispatch } from "react-redux"
-import { setSelectedItems } from "@redux/actions/views/Order/POOrder"
+import {
+  setSelectedItems,
+  setSizeTableTrigger
+} from "@redux/actions/views/Order/POOrder"
 
 const ItemList = (props) => {
   const { t } = useTranslation()
@@ -108,7 +111,7 @@ const ItemList = (props) => {
   // to enable fetching size table only when selected items are changed
   useEffect(() => {
     if (!props.setSizeTableTrigger) {
-      props.setSizeTableTrigger(true)
+      dispatch(setSizeTableTrigger(true))
     }
   }, [props.selectedItems])
 

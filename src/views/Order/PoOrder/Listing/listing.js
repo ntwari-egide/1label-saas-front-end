@@ -31,7 +31,8 @@ import {
   setWashCareData,
   setDynamicFieldData,
   setFibreInstructionData,
-  setSelectedItems
+  setSelectedItems,
+  setSizeTableTrigger
 } from "@redux/actions/views/Order/POOrder"
 
 const Listing = (props) => {
@@ -298,7 +299,7 @@ const Listing = (props) => {
   // to enable fetching size table only when selected items are changed
   useEffect(() => {
     if (!props.setSizeTableTrigger) {
-      props.setSizeTableTrigger(true)
+      dispatch(setSizeTableTrigger(true))
     }
   }, [props.poSelectedItems])
 

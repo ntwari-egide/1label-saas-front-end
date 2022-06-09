@@ -247,6 +247,8 @@ const SizeTable = (props) => {
   useEffect(() => {
     if (props.sizeTableTrigger) {
       fetchSizeTable()
+    } else {
+      setLoader(false)
     }
     fetchWastageList()
   }, [])
@@ -345,7 +347,7 @@ const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   sizeContentData: state.poOrderReducer.sizeContentData,
   wastage: state.poOrderReducer.wastage,
-  sizeTableTrigger: poOrderReducer.sizeTableTrigger
+  sizeTableTrigger: state.poOrderReducer.sizeTableTrigger
 })
 
 export default connect(mapStateToProps, null)(SizeTable)
