@@ -30,7 +30,7 @@ import { NavItem, NavLink, UncontrolledTooltip } from "reactstrap"
 const NavbarUser = (props) => {
   // ** Props
   const { skin, setSkin, setMenuVisibility } = props
-  const store = useSelector((state) => state.navbar)
+  const store = useSelector((state) => state)
   const { linkbtnStatus, navbarBtnStatus } = store
   const history = useHistory()
   const dispatch = useDispatch()
@@ -79,7 +79,6 @@ const NavbarUser = (props) => {
     }
   }
 
-  useEffect(() => {}, [])
   return (
     <Fragment>
       <ul className="navbar-nav d-xl-none d-flex align-items-center">
@@ -96,7 +95,7 @@ const NavbarUser = (props) => {
         <NavItem className="d-none d-lg-block">
           <NavLink
             className="nav-link-style"
-            disabled={!navbarBtnStatus.addBtn}
+            // disabled={!navbarBtnStatus.addBtn}
           >
             <PlusCircle
               className="ficon"
@@ -111,7 +110,7 @@ const NavbarUser = (props) => {
         <NavItem className="d-none d-lg-block">
           <NavLink
             className="nav-link-style"
-            disabled={!navbarBtnStatus.deleteBtn}
+            // disabled={!navbarBtnStatus.deleteBtn}
           >
             <Trash2
               className="ficon"
@@ -123,13 +122,36 @@ const NavbarUser = (props) => {
             </UncontrolledTooltip>
           </NavLink>
         </NavItem>
+        {store.layout?.renderSaveDraftOrderButton ? (
+          <NavItem className="d-none d-lg-block">
+            <NavLink
+              className="nav-link-style"
+              // disabled={!navbarBtnStatus.saveBtn}
+            >
+              <Save
+                className="ficon"
+                id="Save-Draft"
+                onClick={() => handleSave()}
+              />
+              <UncontrolledTooltip target="Save-Draft">
+                Save Draft
+              </UncontrolledTooltip>
+            </NavLink>
+          </NavItem>
+        ) : null}
         <NavItem className="d-none d-lg-block">
           <NavLink
             className="nav-link-style"
-            disabled={!navbarBtnStatus.saveBtn}
+            // disabled={!navbarBtnStatus.saveBtn}
           >
-            <Save className="ficon" id="Save" onClick={() => handleSave()} />
-            <UncontrolledTooltip target="Save">Save</UncontrolledTooltip>
+            <Save
+              className="ficon"
+              id="Save-Confirm"
+              onClick={() => handleSave()}
+            />
+            <UncontrolledTooltip target="Save-Confirm">
+              Save Confirm
+            </UncontrolledTooltip>
           </NavLink>
         </NavItem>
         <NavItem className="d-none d-lg-block">
