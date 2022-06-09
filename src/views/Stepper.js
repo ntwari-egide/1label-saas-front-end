@@ -6,8 +6,9 @@ import { useTranslation } from "react-i18next"
 const Stepper = (props) => {
   const { t } = useTranslation()
 
-  const normalSelectedItemValidation = () => {
+  const normalSelectedItemValidation = (menuItem) => {
     if (
+      menuItem != "Select Item" &&
       props.validationFields?.selectedItems &&
       props.validationFields?.selectedItems?.length <= 0
     ) {
@@ -17,8 +18,9 @@ const Stepper = (props) => {
     return true
   }
 
-  const poSelectedItemsValidation = () => {
+  const poSelectedItemsValidation = (menuItem) => {
     if (
+      menuItem === "Listing" &&
       props.component === "POOrder" &&
       props.validationFields?.poSelectedItems &&
       props.validationFields?.poSelectedItems?.length <= 0
@@ -93,8 +95,8 @@ const Stepper = (props) => {
               className="custom-stepper"
               onClick={() => {
                 if (
-                  normalSelectedItemValidation() &&
-                  poSelectedItemsValidation() &&
+                  normalSelectedItemValidation(menuItem) &&
+                  poSelectedItemsValidation(menuItem) &&
                   normalOrderFormManFieldsValidation(menuItem) &&
                   poItemListValidation() &&
                   poOrderFormManFieldsValidation(menuItem)
