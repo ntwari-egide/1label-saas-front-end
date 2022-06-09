@@ -90,3 +90,11 @@ export const setDefaultSizeTable = (data) => (dispatch) => {
 export const setSizeMatrixType = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_SIZE_MATRIX_TYPE", payload: data })
 }
+
+export const setShrinkagePercentage = (value) => (dispatch) => {
+  dispatch({ typa: "SET_SHRINKAGE_PERCENTAGE", payload: value })
+}
+
+export const setSizeTableTrigger = (value) => (dispatch) => {
+  dispatch({ type: "SET_SIZE_TABLE_TRIGGER", payload: value })
+}

@@ -20,7 +20,9 @@ const initialState = {
   sizeMatrixType: "",
   sizeTable: "",
   defaultSizeTable: "",
-  currentStep: 0
+  currentStep: 0,
+  shrinkagePercentage: "",
+  sizeTableTrigger: true
 }
 
 const orderReducer = (state = initialState, action) => {
@@ -69,6 +71,10 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, defaultSizeTable: action.payload }
     case "SET_CURRENT_STEP":
       return { ...state, currentStep: action.payload }
+    case "SET_SHRINKAGE_PERCENTAGE":
+      return { ...state, shrinkagePercentage: action.payload }
+    case "SET_SIZE_TABLE_TRIGGER":
+      return { ...state, sizeTableTrigger: action.payload }
     default:
       return state
   }

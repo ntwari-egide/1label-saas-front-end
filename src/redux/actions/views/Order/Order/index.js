@@ -90,6 +90,14 @@ export const setCurrentStep = (value) => (dispatch) => {
   dispatch({ type: "SET_CURRENT_STEP", payload: value })
 }
 
+export const setShrinkagePercentage = (value) => (dispatch) => {
+  dispatch({ typa: "SET_SHRINKAGE_PERCENTAGE", payload: value })
+}
+
+export const setSizeTableTrigger = (value) => (dispatch) => {
+  dispatch({ type: "SET_SIZE_TABLE_TRIGGER", payload: value })
+}
+
 export const handleFibreChange =
   (e, index, fibreInstructionState, defaultContentState, brand) =>
   (dispatch) => {

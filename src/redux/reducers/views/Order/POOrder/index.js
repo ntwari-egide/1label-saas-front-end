@@ -25,7 +25,10 @@ const initialState = {
   // preview and summary states
   sizeTable: "",
   defaultSizeTable: "",
-  sizeMatrixType: ""
+  sizeMatrixType: "",
+  //anno
+  shrinkagePercentage: "",
+  sizeTableTrigger: true
 }
 
 const poOrderReduced = (state = initialState, action) => {
@@ -76,6 +79,10 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, defaultSizeTable: action.payload }
     case "SET_PO_SIZE_MATRIX_TYPE":
       return { ...state, sizeMatrixType: action.payload }
+    case "SET_SHRINKAGE_PERCENTAGE":
+      return { ...state, shrinkagePercentage: action.payload }
+    case "SET_SIZE_TABLE_TRIGGER":
+      return { ...state, sizeTableTrigger: action.payload }
     default:
       return state
   }
