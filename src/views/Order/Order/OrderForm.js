@@ -954,6 +954,8 @@ const OrderForm = (props) => {
                         </Col>
                         <Col xs="12" s="12" md="8" lg="8" xl="8">
                           <Select
+                            className="React"
+                            classNamePrefix="select"
                             options={washCareOptions[iconObj?.icon_type_id]}
                             value={
                               washCareOptions[iconObj?.icon_type_id]
@@ -979,8 +981,6 @@ const OrderForm = (props) => {
                                 })
                               )
                             }}
-                            className="React"
-                            classNamePrefix="select"
                             getOptionLabel={(e) => (
                               <div>
                                 {e.icon}
