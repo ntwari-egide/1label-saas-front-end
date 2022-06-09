@@ -296,10 +296,12 @@ const Listing = (props) => {
   }
 
   // to enable fetching size table only when selected items are changed
-  // useEffect(() => {
-  //   props.setSizeTableTrigger(true)
-  // }, [props.poSelectedItems])
-  //
+  useEffect(() => {
+    if (!props.setSizeTableTrigger) {
+      props.setSizeTableTrigger(true)
+    }
+  }, [props.poSelectedItems])
+
   // useEffect(() => {
   //   console.log("se", searchParams)
   // }, [searchParams])

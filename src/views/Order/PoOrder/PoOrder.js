@@ -37,7 +37,6 @@ const PoOrder = (props) => {
 
   // data of order size Table
   const [wastageApplied, setWastageApplied] = useState(false)
-  const [sizeTableTrigger, setSizeTableTrigger] = useState(true)
 
   const setCurrentStepHelper = (value) => {
     dispatch(setCurrentStep(value))
@@ -91,7 +90,6 @@ const PoOrder = (props) => {
           setCombinedPOOrderkey={setCombinedPOOrderkey}
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
-          setSizeTableTrigger={setSizeTableTrigger}
         />
       ) : props.currentStep === 1 ? (
         <ItemList
@@ -116,8 +114,6 @@ const PoOrder = (props) => {
           combinedPOOrderKey={combinedPOOrderKey}
           wastageApplied={wastageApplied}
           setWastageApplied={setWastageApplied}
-          sizeTableTrigger={sizeTableTrigger}
-          setSizeTableTrigger={setSizeTableTrigger}
         />
       ) : props.currentStep === 4 ? (
         <PreviewAndSummary

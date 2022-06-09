@@ -19,7 +19,8 @@ import { toast } from "react-toastify"
 import { connect, useDispatch } from "react-redux"
 import {
   setSizeContentData,
-  setWastage
+  setWastage,
+  setSizeTableTrigger
 } from "@redux/actions/views/Order/POOrder"
 
 const SizeTable = (props) => {
@@ -214,7 +215,7 @@ const SizeTable = (props) => {
             )
           )
         }
-        props.setSizeTableTrigger(false)
+        dispatch(setSizeTableTrigger(false))
         setLoader(false)
       })
       .catch((err) => console.log(err))
@@ -343,7 +344,8 @@ const SizeTable = (props) => {
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   sizeContentData: state.poOrderReducer.sizeContentData,
-  wastage: state.poOrderReducer.wastage
+  wastage: state.poOrderReducer.wastage,
+  sizeTableTrigger: poOrderReducer.sizeTableTrigger
 })
 
 export default connect(mapStateToProps, null)(SizeTable)

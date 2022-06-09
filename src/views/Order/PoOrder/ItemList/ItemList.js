@@ -105,6 +105,13 @@ const ItemList = (props) => {
     fetchItemList(props.brand, props.item_type)
   }, [])
 
+  // to enable fetching size table only when selected items are changed
+  useEffect(() => {
+    if (!props.setSizeTableTrigger) {
+      props.setSizeTableTrigger(true)
+    }
+  }, [props.selectedItems])
+
   return (
     <Card>
       <CardHeader style={{ flexGrow: 1 }}>
