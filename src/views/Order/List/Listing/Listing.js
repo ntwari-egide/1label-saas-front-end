@@ -196,8 +196,8 @@ const Listing = (props) => {
           } = require(`@redux/actions/views/Order/${module}`)
           history.push(`/${module}`)
           // dispatch brand key here to start fetching dynamic form fields
-          dispatch(setCurrentStep(1))
           dispatch(setBrand({ value: brand_key, label: "" }))
+          dispatch(setCurrentStep(1))
           populateOrderData(module, res.data[0])
         }
       })
@@ -220,7 +220,9 @@ const Listing = (props) => {
       setCareNumberData,
       setDefaultContentData,
       setCoo,
-      setShrinkagePercentage
+      setShrinkagePercentage,
+      setSizeData,
+      setDefaultSizeData
     } = require(`@redux/actions/views/Order/${module}`)
     if (data.dynamic_field) {
       dispatch(setDynamicFieldData(data.dynamic_field))
@@ -275,12 +277,21 @@ const Listing = (props) => {
           })
         )
       }
-    }
-    if (contData.content_group) {
-      dispatch(setContentGroup(contData.content_group))
+      if (contData.content_group) {
+        dispatch(setContentGroup(contData.content_group))
+      }
     }
     if (data.item_ref) {
-      dispatch(setSelectedItems(data.item_ref))
+      dispatch(
+        setSelectedItems(
+          data.item_ref.map((item) => {
+            const tempData = item
+            tempData["guid_key"] = tempData.item_key
+            delete tempData["item_key"]
+            return tempData
+          })
+        )
+      )
     }
     if (data.order_expdate_delivery_date) {
       dispatch(
@@ -298,6 +309,12 @@ const Listing = (props) => {
     }
     if (data.shrinkage_percentage) {
       dispatch(setShrinkagePercentage(data.shrinkage_percentage))
+    }
+    if (data.size_content) {
+      dispatch(setSizeData(data.size_content))
+    }
+    if (data.default_size_content) {
+      dispatch(setDefaultSizeData(data.default_size_content))
     }
   }
 
