@@ -22,6 +22,10 @@ export const setBrand = (e) => (dispatch) => {
   dispatch({ type: "SET_BRAND_DATA", payload: e })
 }
 
+export const setSelectedItems = (data) => (dispatch) => {
+  dispatch({ type: "SET_SELECTED_ITEMS", payload: data })
+}
+
 export const handleSelectedItemsChange = (item, initialState) => (dispatch) => {
   let tempList = [...initialState]
   // if already in list then removes else appends
@@ -109,7 +113,7 @@ export const setCurrentStep = (value) => (dispatch) => {
 }
 
 export const setShrinkagePercentage = (value) => (dispatch) => {
-  dispatch({ typa: "SET_SHRINKAGE_PERCENTAGE", payload: value })
+  dispatch({ type: "SET_SHRINKAGE_PERCENTAGE", payload: value })
 }
 
 export const setSizeData = (data) => (dispatch) => {
