@@ -81,9 +81,6 @@ const ItemList = (props) => {
   }
 
   const fetchItemList = (brand = "", item_type = "") => {
-    if (!brand || brand.length <= 0) {
-      return
-    }
     setLoader(true)
     setVisibleCardIndex(0)
     const body = {
@@ -130,8 +127,9 @@ const ItemList = (props) => {
             }
             options={brandOptions}
             onChange={(e) => {
-              // dispatch(setBrandRedux(e))
-              fetchItemList(e, props.itemType)
+              if (e) {
+                fetchItemList(e, props.itemType)
+              }
             }}
             isClearable={true}
             isDisabled={loader}
