@@ -406,7 +406,7 @@ const Listing = (props) => {
             {loading ? (
               <div
                 style={{
-                  minHeight: "50vh",
+                  minHeight: "455px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center"
