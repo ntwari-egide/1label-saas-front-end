@@ -30,7 +30,6 @@ export const handleLogin = (data) => {
           document.cookie = "Token=dummy"
           localStorage.setItem("userData", JSON.stringify(res?.data[0]))
           history.push("/home")
-          window.location.reload(true)
         }
       }
     })
