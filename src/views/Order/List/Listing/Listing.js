@@ -24,6 +24,10 @@ import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { useDispatch } from "react-redux"
 import history from "@src/history"
 import { populateData } from "@redux/actions/views/common"
+import {
+  setIsOrderConfirmed,
+  setSelectedOrder
+} from "@redux/actions/views/Order/List"
 
 let timerId
 
@@ -417,9 +421,11 @@ const Listing = (props) => {
                 }}
                 onRowDoubleClicked={(e) => {
                   if (e.order_status === "Confirm") {
-                    props.setPageDisabled(true)
+                    dispatch(setIsOrderConfirmed(true))
+                  } else {
+                    dispatch(setIsOrderConfirmed(false))
                   }
-                  props.setSelectedOrder(e)
+                  dispatch(setSelectedOrder(e))
                   props.setCurrentStep(1)
                 }}
               />

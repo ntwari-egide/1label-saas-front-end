@@ -12,6 +12,7 @@ import axios from "@axios"
 import { Link } from "react-router-dom"
 import Radio from "@components/Radio/Radio"
 import { X } from "react-feather"
+import { connect } from "react-redux"
 
 const Details = (props) => {
   const [itemList, setItemList] = useState([])
@@ -87,7 +88,6 @@ const Details = (props) => {
       .post("brand/GetBrandDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          console.log(res)
         }
       })
       .catch((err) => console.log(err))
@@ -161,14 +161,14 @@ const Details = (props) => {
                               <Radio
                                 label="Delivery"
                                 name={`item${index}`}
-                                disabled={props.pageDisabled}
+                                disabled={props.isOrderConfirmed}
                               />
                             </Col>
                             <Col xs="3" sm="3" md="3" lg="3" xl="3">
                               <Radio
                                 label="Direct Print"
                                 name={`item${index}`}
-                                disabled={props.pageDisabled}
+                                disabled={props.isOrderConfirmed}
                               />
                             </Col>
                           </Row>
@@ -190,7 +190,7 @@ const Details = (props) => {
                               <Button
                                 color="primary"
                                 style={{ width: "100%" }}
-                                disabled={props.pageDisabled}
+                                disabled={props.isOrderConfirmed}
                                 onClick={() => handleRemoveItem(index)}
                               >
                                 <X size={17} />
@@ -265,7 +265,7 @@ const Details = (props) => {
                     <Button
                       color="primary"
                       style={{ width: "100%", marginTop: "5px" }}
-                      disabled={props.pageDisabled}
+                      disabled={props.isOrderConfirmed}
                       onClick={confirmOrder}
                     >
                       Place Order
@@ -281,4 +281,9 @@ const Details = (props) => {
   )
 }
 
-export default Details
+const mapStateToProps = (state) => ({
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  selectedOrder: state.listReducer.selectedOrder
+})
+
+export default connect(mapStateToProps, null)(Details)

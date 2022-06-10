@@ -12,8 +12,6 @@ const List = () => {
   const stepper = ["Listing", "Details"]
   // data for listing page
   const [orderList, setOrderList] = useState([])
-  const [selectedOrder, setSelectedOrder] = useState({})
-  const [pageDisabled, setPageDisabled] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
   const [orderDateFrom, setOrderDateFrom] = useState("")
@@ -54,8 +52,6 @@ const List = () => {
       {currentStep === 0 ? (
         <Listing
           setCurrentStep={setCurrentStep}
-          setSelectedOrder={setSelectedOrder}
-          setPageDisabled={setPageDisabled}
           orderList={orderList}
           setOrderList={setOrderList}
           currentPage={currentPage}
@@ -68,7 +64,7 @@ const List = () => {
           setOrderDateTo={setOrderDateTo}
         />
       ) : currentStep === 1 ? (
-        <Details selectedOrder={selectedOrder} pageDisabled={pageDisabled} />
+        <Details />
       ) : null}
     </div>
   )
