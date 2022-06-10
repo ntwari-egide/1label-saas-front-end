@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 import { connect, useDispatch } from "react-redux"
 import {
-  setSizeContentData,
+  setSizeData,
   setWastage,
   setSizeTableTrigger
 } from "@redux/actions/views/Order/POOrder"
@@ -177,7 +177,7 @@ const SizeTable = (props) => {
           return tempRow
         })
       }))
-      dispatch(setSizeContentData([...tempState]))
+      dispatch(setSizeData([...tempState]))
     } catch (err) {
       console.log("Something went wrong while processing wastage")
       dispatch(setWastage(0))
@@ -205,7 +205,7 @@ const SizeTable = (props) => {
       .then((res) => {
         if (res.status === 200) {
           dispatch(
-            setSizeContentData(
+            setSizeData(
               res.data.map((data) => {
                 return {
                   ...data,

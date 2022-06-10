@@ -62,7 +62,7 @@ export const setCoo = (value) => (dispatch) => {
   dispatch({ type: "SET_PO_COO", payload: value })
 }
 
-export const setSizeContentData = (data) => (dispatch) => {
+export const setSizeData = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_SIZE_CONTENT_DATA", payload: data })
 }
 
@@ -75,7 +75,6 @@ export const setSummaryTable = (data) => (dispatch) => {
 }
 
 export const setCurrentStep = (value) => (dispatch) => {
-  console.log("from action", value)
   dispatch({ type: "SET_PO_CURRENT_STEP", payload: value })
 }
 
@@ -92,7 +91,7 @@ export const setSizeMatrixType = (data) => (dispatch) => {
 }
 
 export const setShrinkagePercentage = (value) => (dispatch) => {
-  dispatch({ typa: "SET_SHRINKAGE_PERCENTAGE", payload: value })
+  dispatch({ type: "SET_SHRINKAGE_PERCENTAGE", payload: value })
 }
 
 export const setSizeTableTrigger = (value) => (dispatch) => {

@@ -25,15 +25,8 @@ import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 const MySwal = withReactContent(Swal)
 import { connect, useDispatch } from "react-redux"
-import {
-  setBrand,
-  setCareData,
-  setWashCareData,
-  setDynamicFieldData,
-  setFibreInstructionData,
-  setSelectedItems,
-  setSizeTableTrigger
-} from "@redux/actions/views/Order/POOrder"
+import { setSizeTableTrigger } from "@redux/actions/views/Order/POOrder"
+import { populateData } from "@redux/actions/views/common"
 
 const Listing = (props) => {
   // constants
@@ -150,33 +143,7 @@ const Listing = (props) => {
       .post("/Order/GetOrderDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          if (res.data[0]?.brand_key) {
-            dispatch(setBrand({ value: res.data[0]?.brand_key }))
-          }
-          if (res.data[0]?.contents[0]?.care) {
-            dispatch(setCareData(res.data[0].contents[0].care))
-          }
-          if (res.data[0]?.contents[0]?.icon) {
-            dispatch(setWashCareData(res.data[0].contents[0].icon))
-          }
-          if (res.data[0]?.dynamic_field) {
-            dispatch(setDynamicFieldData(res.data[0]?.dynamic_field))
-          }
-          if (res.data[0]?.contents[0]?.content) {
-            dispatch(setFibreInstructionData(res.data[0]?.contents[0]?.content))
-          }
-          if (res.data[0]?.item_ref) {
-            dispatch(
-              setSelectedItems(
-                res.data[0]?.item_ref.map((item) => {
-                  const tempItem = { ...item }
-                  tempItem["guid_key"] = tempItem["item_key"]
-                  delete tempItem["item_key"]
-                  return tempItem
-                })
-              )
-            )
-          }
+          dispatch(populateData("POOrder", res.data[0]))
           setOrderLoader(false)
           props.setCurrentStep(1)
         }
