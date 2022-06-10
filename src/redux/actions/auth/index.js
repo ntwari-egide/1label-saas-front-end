@@ -38,10 +38,11 @@ export const handleLogin = (data) => {
 
 // ** Handle User Logout
 export const handleLogout = () => {
+  console.log("inside action")
   return (dispatch) => {
     dispatch({ type: "LOGOUT" })
     // ** Remove user from localStorage
     deleteCookie("Token")
-    localStorage.removeItem("loginInfo")
+    localStorage.removeItem("userData")
   }
 }

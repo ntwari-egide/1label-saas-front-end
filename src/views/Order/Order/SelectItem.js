@@ -21,6 +21,7 @@ import {
   setBrand,
   handleSelectedItemsChange
 } from "@redux/actions/views/Order/Order"
+import { getUserData } from "@utils"
 
 const SelectItem = (props) => {
   const { t } = useTranslation()
@@ -33,7 +34,7 @@ const SelectItem = (props) => {
 
   const fetchBrandList = () => {
     const body = {
-      order_user: "innoa"
+      order_user: getUserData().admin
     }
     axios
       .post("/Brand/GetBrandListByClient", body)
@@ -68,7 +69,7 @@ const SelectItem = (props) => {
     setLoader(true)
     setVisibleCardIndex(0)
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key: brand ? brand?.value : "",
       item_ref_type: item_type ? item_type?.value : ""
     }

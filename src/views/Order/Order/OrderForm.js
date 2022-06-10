@@ -39,6 +39,7 @@ import {
   setDynamicFieldData,
   setContentGroup
 } from "@redux/actions/views/Order/Order"
+import { getUserData } from "@utils"
 
 let timerId = null
 const OrderForm = (props) => {
@@ -77,7 +78,7 @@ const OrderForm = (props) => {
     // fetches content and care option value as per change in props.fibreInstructionData and props.careData
     const body = {
       brand_key: props.brand ? props.brand.value : "",
-      order_user: "innoa",
+      order_user: getUserData().admin,
       custom_number: "Test Number-jia",
       content_group: "A",
       content: props.fibreInstructionData.map((data, index) => ({
@@ -179,7 +180,7 @@ const OrderForm = (props) => {
     const tempData = {}
     contentGroup.map((content_group) => {
       const body = {
-        order_user: "innoa",
+        order_user: getUserData().admin,
         brand_key: props.brand?.value,
         content_group
       }
@@ -305,7 +306,7 @@ const OrderForm = (props) => {
     // fetches options for projection location select field.
     const body = {
       brand_key: props.brand ? props.brand.value : "",
-      order_user: "innoa",
+      order_user: getUserData().admin,
       order_no: ""
     }
 
@@ -427,7 +428,7 @@ const OrderForm = (props) => {
             },
             body: JSON.stringify({
               ...field?.effect?.fetch?.json_key_name,
-              order_user: "innoa"
+              order_user: getUserData().admin
             })
           })
             .then((res) => res.json())
