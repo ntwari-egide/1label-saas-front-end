@@ -267,6 +267,16 @@ const Listing = (props) => {
     }, 400)
   }
 
+  const handleRowDoubleClick = (e) => {
+    if (e.order_status === "Confirm") {
+      dispatch(setIsOrderConfirmed(true))
+    } else {
+      dispatch(setIsOrderConfirmed(false))
+    }
+    dispatch(setSelectedOrder(e))
+    props.setCurrentStep(1)
+  }
+
   // API Services
   const copyConfirmOrder = () => {
     const body = {
@@ -420,13 +430,7 @@ const Listing = (props) => {
                   size: "md"
                 }}
                 onRowDoubleClicked={(e) => {
-                  if (e.order_status === "Confirm") {
-                    dispatch(setIsOrderConfirmed(true))
-                  } else {
-                    dispatch(setIsOrderConfirmed(false))
-                  }
-                  dispatch(setSelectedOrder(e))
-                  props.setCurrentStep(1)
+                  handleRowDoubleClick(e)
                 }}
               />
             )}
