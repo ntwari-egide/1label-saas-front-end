@@ -78,7 +78,7 @@ const Home = () => {
   // Other Functions
   const debounceFetch = (currPage, recPerPage) => {
     if (timerId) {
-      return
+      clearTimeout(timerId)
     }
     timerId = setTimeout(() => {
       fetchOrdersList(currPage, recPerPage)

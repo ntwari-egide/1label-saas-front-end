@@ -250,7 +250,7 @@ const Listing = (props) => {
 
   const debounceFetch = (currPage, recPerPage) => {
     if (timerId) {
-      return
+      clearTimeout(timerId)
     }
     timerId = setTimeout(() => {
       fetchOrderList(
