@@ -36,6 +36,7 @@ import {
   setContentGroup,
   setCoo
 } from "@redux/actions/views/Order/POOrder"
+import { getUserData } from "@utils"
 
 const OrderForm = (props) => {
   // constants
@@ -161,7 +162,7 @@ const OrderForm = (props) => {
             },
             body: JSON.stringify({
               ...field?.effect?.fetch?.json_key_name,
-              order_user: "innoa"
+              order_user: getUserData().admin
             })
           })
             .then((res) => res.json())
@@ -219,7 +220,7 @@ const OrderForm = (props) => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       show_status: "Y",
-      order_user: "innoa",
+      order_user: getUserData().admin,
       order_no: props.combinedPOOrderKey || "",
       is_po_order_temp: props.isPoOrderTemp || ""
     }
@@ -263,7 +264,7 @@ const OrderForm = (props) => {
     const tempData = {}
     contentGroup.map((content_group) => {
       const body = {
-        order_user: "innoa",
+        order_user: getUserData().admin,
         brand_key: props.brand ? props.brand.value : "",
         content_group
       }
@@ -285,7 +286,7 @@ const OrderForm = (props) => {
   const fetchContentNumberDetail = (content_number_key, style_number) => {
     // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       content_number_key,
       brand_key: props.brand ? props.brand.value : "",
       style_number
@@ -451,7 +452,7 @@ const OrderForm = (props) => {
     // fetches options for projection location select field.
     const body = {
       brand_key: props.brand ? props.brand.value : "",
-      order_user: "innoa",
+      order_user: getUserData().admin,
       order_no: props.combinedPOOrderKey || ""
     }
 

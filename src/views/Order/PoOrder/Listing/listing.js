@@ -27,6 +27,7 @@ const MySwal = withReactContent(Swal)
 import { connect, useDispatch } from "react-redux"
 import { setSizeTableTrigger } from "@redux/actions/views/Order/POOrder"
 import { populateData } from "@redux/actions/views/common"
+import { getUserData } from "@utils"
 
 const Listing = (props) => {
   // constants
@@ -134,7 +135,7 @@ const Listing = (props) => {
   // API Services
   const fetchPOOrderDetails = (combKey, isTemp) => {
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       order_no: combKey || "",
       brand_key: props.searchParams.brand || "",
       is_po_order_temp: isTemp || ""
@@ -154,7 +155,7 @@ const Listing = (props) => {
   const fetchPoOrderList = () => {
     setPoOrderLoader(true)
     let body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key: props.searchParams.brand || "",
       order_date_from: props.searchParams.fromDate || "",
       order_date_to: props.searchParams.toDate || "",
@@ -177,7 +178,7 @@ const Listing = (props) => {
 
   const fetchBrandList = () => {
     const body = {
-      order_user: "innoa"
+      order_user: getUserData().admin
     }
 
     axios
@@ -216,7 +217,7 @@ const Listing = (props) => {
       const body = {
         brand_key: props.searchParams.brand,
         order_no: "ASLL-PO2022050001",
-        order_user: "innoa",
+        order_user: getUserData().admin,
         is_po_order_temp: ""
       }
 
@@ -234,7 +235,7 @@ const Listing = (props) => {
     setOrderLoader(true)
     const body = {
       brand_key: props.searchParams.brand ? props.searchParams.brand : "",
-      order_user: "innoa",
+      order_user: getUserData().admin,
       order_keys: props.poSelectedItems.map((item) => item.guid_key)
     }
 

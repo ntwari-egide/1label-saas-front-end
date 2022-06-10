@@ -22,6 +22,7 @@ import {
   setSelectedItems,
   setSizeTableTrigger
 } from "@redux/actions/views/Order/POOrder"
+import { getUserData } from "@utils"
 
 const ItemList = (props) => {
   const { t } = useTranslation()
@@ -49,7 +50,7 @@ const ItemList = (props) => {
 
   const fetchBrandList = () => {
     const body = {
-      order_user: "innoa"
+      order_user: getUserData().admin
     }
     axios
       .post("/Brand/GetBrandListByClient", body)
@@ -84,7 +85,7 @@ const ItemList = (props) => {
     setLoader(true)
     setVisibleCardIndex(0)
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key: brand ? brand?.value : "",
       item_ref_type: item_type ? item_type?.value : ""
     }

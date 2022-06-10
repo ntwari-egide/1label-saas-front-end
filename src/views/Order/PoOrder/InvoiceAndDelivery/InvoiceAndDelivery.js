@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next"
 import { formatDateYMD } from "@utils"
 import { XMLBuilder } from "fast-xml-parser"
 import { connect } from "react-redux"
+import { getUserData } from "@utils"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
@@ -109,7 +110,7 @@ const InvoiceAndDelivery = (props) => {
   const saveOrder = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
-      order_user: "innoa",
+      order_user: getUserData().admin,
       order_key: props.combinedPOOrderKey, // to be
       order_no: "",
       num: "",
@@ -175,7 +176,7 @@ const InvoiceAndDelivery = (props) => {
       contents: [
         {
           brand_key: props.brand?.value,
-          order_user: "innoa",
+          order_user: getUserData().admin,
           content_custom_number: props.contentCustomNumber,
           content_number: props.contentNumberData?.label,
           content_number_key: props.contentNumberData?.value,
@@ -231,7 +232,7 @@ const InvoiceAndDelivery = (props) => {
 
   const fetchUserInfo = () => {
     const body = {
-      order_user: "innoa"
+      order_user: getUserData().admin
     }
     axios
       .post("/Client/GetClientDetail", body)
@@ -252,7 +253,7 @@ const InvoiceAndDelivery = (props) => {
 
     Object.keys(addressTypes).map((addType) => {
       const body = {
-        order_user: "innoa",
+        order_user: getUserData().admin,
         address_type: addType
       }
       axios
@@ -274,7 +275,7 @@ const InvoiceAndDelivery = (props) => {
       contact: setContactInfoDetails
     }
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       address_type: addType,
       address_id: add.address_id
     }
