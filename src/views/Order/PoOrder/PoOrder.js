@@ -34,6 +34,7 @@ const PoOrder = (props) => {
   const [poSelectedItems, setpoSelectedItems] = useState([])
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
+  const [searchParams, setSearchParams] = useState({})
 
   // data of order size Table
   const [wastageApplied, setWastageApplied] = useState(false)
@@ -82,6 +83,8 @@ const PoOrder = (props) => {
       />
       {props.currentStep === 0 ? (
         <Listing
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
