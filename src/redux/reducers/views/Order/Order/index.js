@@ -24,6 +24,10 @@ const initialState = {
   defaultSizeTable: "",
   sizeData: [],
   defaultSizeData: [],
+  // invoice and delivery data
+  invoiceAddressDetails: {},
+  deliveryAddressDetails: {},
+  contactDetails: {},
   // misc
   currentStep: 0,
   shrinkagePercentage: ""
@@ -81,6 +85,12 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, sizeData: action.payload }
     case "SET_DEFAULT_SIZE_DATA":
       return { ...state, defaultSizeData: action.payload }
+    case "SET_INVOICE_ADDRESS_DETAILS":
+      return { ...state, invoiceAddressDetails: action.payload }
+    case "SET_DELIVERY_ADDRESS_DETAILS":
+      return { ...state, deliveryAddressDetails: action.payload }
+    case "SET_CONTACT_DETAILS":
+      return { ...state, contactDetails: action.payload }
     default:
       return state
   }
