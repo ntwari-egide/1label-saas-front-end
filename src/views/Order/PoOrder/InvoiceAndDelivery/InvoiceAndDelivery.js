@@ -15,18 +15,21 @@ import Footer from "../../../CommonFooter"
 import { useTranslation } from "react-i18next"
 import { formatDateYMD } from "@utils"
 import { XMLBuilder } from "fast-xml-parser"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 import { getUserData } from "@utils"
+import { savePOOrder } from "@redux/actions/views/common"
+import {
+  setInvoiceAddressDetails,
+  setDeliveryAddressDetails,
+  setContactDetails
+} from "@redux/actions/views/Order/POOrder"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const [clientDetails, setClientDetails] = useState({})
-  const [invoiceAddressList, setInvoiceAddressList] = useState({})
-  const [deliveryAddressList, setDeiveryAddresList] = useState({})
-  const [invoiceAddressDetails, setInvoiceAddressDetails] = useState({})
-  const [deliveryAddressDetails, setDeliveryAddressDetails] = useState({})
-  const [contactInfo, setContactInfo] = useState({})
-  const [contactInfoDetails, setContactInfoDetails] = useState({})
+  const [, setInvoiceAddressList] = useState({})
+  const [, setDeiveryAddresList] = useState({})
 
   const buildXML = (jsObj) => {
     const builder = new XMLBuilder()
@@ -66,10 +69,11 @@ const InvoiceAndDelivery = (props) => {
     }
   }
 
-  const processSummarySizeTable = () => {
-    return Object.keys({ ...props.summaryTable }).map((key) => {
+  const processSummarySizeTable = (size_matrix_type) => {
+    return Object.keys(props.summaryTable).map((key) => {
       const returnDict = {
-        group_type: key
+        group_type: key,
+        size_matrix_type
       }
       if (!props.wastageApplied) {
         return {
@@ -106,8 +110,31 @@ const InvoiceAndDelivery = (props) => {
     })
   }
 
+  const handleContactDetailsChange = (value, field) => {
+    const tempState = { ...props.contactDetails }
+    tempState[field] = value
+    dispatch(setContactDetails(tempState))
+  }
+
+  const handleAddressChange = (value, index, dispatchFun, initState) => {
+    const tempAdd = initState ? initState.split("|") : []
+    tempAdd[index] = value
+    dispatch(
+      dispatchFun({
+        ...props.deliveryAddressDetails,
+        address: tempAdd.join("|")
+      })
+    )
+  }
+
+  const handleDetailsChange = (value, field, dispatchFun, initState) => {
+    const tempState = { ...initState }
+    tempState[field] = value
+    dispatch(dispatchFun(tempState))
+  }
+
   //API Services
-  const saveOrder = () => {
+  const lsaveOrder = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
       order_user: getUserData().admin,
@@ -120,47 +147,43 @@ const InvoiceAndDelivery = (props) => {
       factory_code: "",
       location_code: props.projectionLocation ? props.projectionLocation : "",
       draft_order_email: clientDetails.draft_email,
-      approved_email_address: "", // to be
+      approver_email_address: "",
       order_expdate_delivery_date: formatDateYMD(
         new Date(props.expectedDeliveryDate)
       ),
       invoice_address: [
         {
-          invoice_address_id: invoiceAddressDetails.dyn_address_id,
-          invoice_contact_id: contactInfoDetails.dyn_customer_id,
-          invoice_cpyname: invoiceAddressDetails.name,
-          invoice_contact: contactInfoDetails.name,
-          invoice_phone: contactInfoDetails.phone,
-          invoice_fax: contactInfoDetails.fax,
-          invoice_email: contactInfoDetails.email,
-          invoice_addr: invoiceAddressDetails.address,
-          invoice_addr2: invoiceAddressDetails.address2,
-          invoice_addr3: invoiceAddressDetails.address3
+          invoice_address_id: props.invoiceAddressDetails?.dyn_address_id,
+          invoice_contact_id: props.contactDetails?.dyn_customer_id,
+          invoice_cpyname: props.invoiceAddressDetails.name,
+          invoice_contact: props.contactDetails?.name,
+          invoice_phone: props.contactDetails?.phone,
+          invoice_fax: props.contactDetails?.fax,
+          invoice_email: props.contactDetails?.email,
+          invoice_addr: props.invoiceAddressDetails?.address,
+          invoice_addr2: props.invoiceAddressDetails?.address2,
+          invoice_addr3: props.invoiceAddressDetails?.address3
         }
       ],
       delivery_address: [
         {
-          delivery_address_id: deliveryAddressDetails.dyn_address_id,
-          delivery_contact_id: deliveryAddressDetails.dyn_customer_id,
-          delivery_cpyname: deliveryAddressDetails.name,
-          delivery_contact: contactInfoDetails.name,
-          delivery_phone: contactInfoDetails.phone,
-          delivery_fax: contactInfoDetails.fax,
-          delivery_email: contactInfoDetails.email,
-          delivery_city: deliveryAddressDetails.city,
-          delivery_country: deliveryAddressDetails.country,
-          delivery_post_code: deliveryAddressDetails.post_code,
-          delivery_addr: deliveryAddressDetails.address,
-          delivery_addr2: deliveryAddressDetails.address2,
-          delivery_addr3: deliveryAddressDetails.address3
+          delivery_address_id: props.deliveryAddressDetails?.dyn_address_id,
+          delivery_contact_id: props.deliveryAddressDetails?.dyn_customer_id,
+          delivery_cpyname: props.deliveryAddressDetails?.name,
+          delivery_contact: props.contactDetails?.name,
+          delivery_phone: props.contactDetails?.phone,
+          delivery_fax: props.contactDetails?.fax,
+          delivery_email: props.contactDetails?.email,
+          delivery_city: props.deliveryAddressDetails?.city,
+          delivery_country: props.deliveryAddressDetails?.country,
+          delivery_post_code: props.deliveryAddressDetails?.post_code,
+          delivery_addr: props.deliveryAddressDetails?.address,
+          delivery_addr2: props.deliveryAddressDetails?.address2,
+          delivery_addr3: props.deliveryAddressDetails?.address3
         }
       ],
       dynamic_field: Object.values(props.dynamicFieldData),
-      summary_size_table: processSummarySizeTable(),
-      size_matrix_type: props.sizeMatrixType,
-      size_content: props.sizeTable,
-      default_size_content: props.defaultSizeTable,
-      size_pointer: "",
+      summary_size_table: processSummarySizeTable(props.sizeMatrixType),
       coo: props.coo,
       shrinkage_percentage: "",
       item_ref: props.selectedItems.map((item) => ({
@@ -170,9 +193,10 @@ const InvoiceAndDelivery = (props) => {
         price: item.price || "",
         currency: item.currency || ""
       })),
-      is_wastage: "",
+      is_wastage: "N",
       update_user: "innoa",
       update_date: formatDateYMD(new Date()),
+      customer_id: "",
       contents: [
         {
           brand_key: props.brand?.value,
@@ -208,16 +232,32 @@ const InvoiceAndDelivery = (props) => {
           }))
         }
       ],
+      edi_order_no: "",
+      consolidated_id: "",
+      supplier_code: "",
+      send_date: "",
+      production_description: "",
+      po_last_update_time: "",
+      option_id: "",
       po_size_table: props.sizeContentData.map((data) => ({
         ...data,
-        size_content: buildXML(processPoSizeTable(data.size_content)),
+        guid_key: "",
+        order_key: "",
+        brand_key: "",
+        edi_order_no: "",
+        consolidated_id: "",
+        group_type: "",
         item_ref: props.selectedItems.map((item) => ({
           item_key: item.guid_key || "",
           item_ref: item.item_ref || "",
           qty: 1, // static for now
           price: item.price || "",
           currency: item.currency || ""
-        }))
+        })),
+        size_matrix_type: props.sizeMatrixType,
+        size_content: buildXML(processPoSizeTable(data.size_content)),
+        send_date: "",
+        create_date: ""
       }))
     }
     console.log("body", body)
@@ -248,7 +288,7 @@ const InvoiceAndDelivery = (props) => {
     const addressTypes = {
       invoice: setInvoiceAddressList,
       delivery: setDeiveryAddresList,
-      contact: setContactInfo
+      contact: setContactDetails
     }
 
     Object.keys(addressTypes).map((addType) => {
@@ -272,7 +312,7 @@ const InvoiceAndDelivery = (props) => {
     const addressTypes = {
       invoice: setInvoiceAddressDetails,
       delivery: setDeliveryAddressDetails,
-      contact: setContactInfoDetails
+      contact: setContactDetails
     }
     const body = {
       order_user: getUserData().admin,
@@ -283,7 +323,7 @@ const InvoiceAndDelivery = (props) => {
       .post("/Client/GetClientAddressDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          addressTypes[addType](res?.data[0])
+          dispatch(addressTypes[addType](res?.data[0]))
         }
       })
       .catch((err) => console.log(err))
@@ -315,15 +355,26 @@ const InvoiceAndDelivery = (props) => {
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Full Name")}</Label>
                     <Input
-                      value={invoiceAddressDetails.name}
+                      value={props.invoiceAddressDetails?.name}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "name",
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
+                      }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Mobile Number")}</Label>
                     <Input
-                      value={contactInfoDetails.phone}
+                      value={props.contactDetails?.phone}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) => {
+                        handleContactDetailsChange(e.target.value, "phone")
+                      }}
                     />
                   </Col>
                 </Row>
@@ -331,15 +382,35 @@ const InvoiceAndDelivery = (props) => {
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Flat, House No")}</Label>
                     <Input
-                      value={invoiceAddressDetails?.address?.split("|")[0]}
+                      value={
+                        props.invoiceAddressDetails?.address?.split("|")[0]
+                      }
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleAddressChange(
+                          e.target.value,
+                          0,
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails?.address
+                        )
+                      }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Landmark e.g. near apollo hospital")}</Label>
                     <Input
-                      value={invoiceAddressDetails?.address?.split("|")[1]}
+                      value={
+                        props.invoiceAddressDetails?.address?.split("|")[1]
+                      }
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleAddressChange(
+                          e.target.value,
+                          1,
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails?.address
+                        )
+                      }
                     />
                   </Col>
                 </Row>
@@ -347,15 +418,31 @@ const InvoiceAndDelivery = (props) => {
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Town/City")}</Label>
                     <Input
-                      value={invoiceAddressDetails.city}
+                      value={props.invoiceAddressDetails?.city}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "city",
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
+                      }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Pincode")}</Label>
                     <Input
-                      value={invoiceAddressDetails.post_code}
+                      value={props.invoiceAddressDetails?.post_code}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "post_code",
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
+                      }
                     />
                   </Col>
                 </Row>
@@ -392,7 +479,9 @@ const InvoiceAndDelivery = (props) => {
                   <p>(86) 0755-8215 5991</p>
                   <div>
                     <Button
-                      onClick={() => saveOrder()}
+                      onClick={() => {
+                        dispatch(savePOOrder(clientDetails))
+                      }}
                       style={{ width: "100%" }}
                       color="primary"
                     >
@@ -423,15 +512,26 @@ const InvoiceAndDelivery = (props) => {
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Full Name")}</Label>
                     <Input
-                      value={deliveryAddressDetails.name}
+                      value={props.deliveryAddressDetails?.name}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "name",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Mobile Number")}</Label>
                     <Input
-                      value={contactInfoDetails.phone}
+                      value={props.contactDetails?.phone}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) => {
+                        handleContactDetailsChange(e.target.value, "phone")
+                      }}
                     />
                   </Col>
                 </Row>
@@ -439,15 +539,35 @@ const InvoiceAndDelivery = (props) => {
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Flat, House No")}</Label>
                     <Input
-                      value={deliveryAddressDetails?.address?.split("|")[0]}
+                      value={
+                        props.deliveryAddressDetails?.address?.split("|")[0]
+                      }
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleAddressChange(
+                          e.target.value,
+                          0,
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails?.address
+                        )
+                      }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Landmark e.g. near apollo hospital")}</Label>
                     <Input
-                      value={deliveryAddressDetails?.address?.split("|")[1]}
+                      value={
+                        props.deliveryAddressDetails?.address?.split("|")[1]
+                      }
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleAddressChange(
+                          e.target.value,
+                          1,
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails?.address
+                        )
+                      }
                     />
                   </Col>
                 </Row>
@@ -455,15 +575,31 @@ const InvoiceAndDelivery = (props) => {
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Town/City")}</Label>
                     <Input
-                      value={deliveryAddressDetails.city}
+                      value={props.deliveryAddressDetails?.city}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "city",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Pincode")}</Label>
                     <Input
-                      value={deliveryAddressDetails.post_code}
+                      value={props.deliveryAddressDetails?.post_code}
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "post_code",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
                     />
                   </Col>
                 </Row>
@@ -542,7 +678,10 @@ const mapStateToProps = (state) => ({
   summaryTable: state.poOrderReducer.summaryTable,
   sizeTable: state.poOrderReducer.sizeTable,
   defaultSizeTable: state.poOrderReducer.defaultSizeTable,
-  sizeMatrixType: state.poOrderReducer.sizeMatrixType
+  sizeMatrixType: state.poOrderReducer.sizeMatrixType,
+  deliveryAddressDetails: state.poOrderReducer.deliveryAddressDetails,
+  invoiceAddressDetails: state.poOrderReducer.invoiceAddressDetails,
+  contactDetails: state.poOrderReducer.contactDetails
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

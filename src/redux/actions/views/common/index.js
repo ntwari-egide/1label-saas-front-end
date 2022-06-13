@@ -1,6 +1,7 @@
 import { store } from "@redux/storeConfig/store"
 import { getUserData, formatDateYMD } from "@utils"
 import axios from "@axios"
+import { XMLBuilder } from "fast-xml-parser"
 
 export const populateData = (module, data) => (dispatch) => {
   const {
@@ -123,11 +124,8 @@ export const populateData = (module, data) => (dispatch) => {
   }
 }
 
-export const saveOrder = (module, clientDetails) => (dispatch) => {
-  const data =
-    module === "Order"
-      ? store.getState().orderReducer
-      : store.getState().poOrderReducer
+export const saveOrder = (clientDetails) => (dispatch) => {
+  const data = store.getState().orderReducer
 
   const body = {
     brand_key: data.brand ? data.brand.value : "",
@@ -140,6 +138,7 @@ export const saveOrder = (module, clientDetails) => (dispatch) => {
     factory_code: "",
     location_code: data.projectionLocation ? data.projectionLocation : "",
     draft_order_email: clientDetails.draft_email,
+    approver_email_address: "", // to be
     order_expdate_delivery_date: formatDateYMD(
       new Date(data.expectedDeliveryDate)
     ),
@@ -182,11 +181,11 @@ export const saveOrder = (module, clientDetails) => (dispatch) => {
     coo: data.coo,
     shrinkage_percentage: "",
     item_ref: data.selectedItems.map((item) => ({
-      item_key: item.guid_key,
-      item_ref: item.item_ref,
+      item_key: item.guid_key || "",
+      item_ref: item.item_ref || "",
       qty: 1, // static for now
-      price: item.price,
-      currency: item.currency
+      price: item.price || "",
+      currency: item.currency || ""
     })),
     is_wastage: "",
     update_user: "innoa",
@@ -226,6 +225,222 @@ export const saveOrder = (module, clientDetails) => (dispatch) => {
         }))
       }
     ]
+  }
+  axios
+    .post("Order/SaveOrder", body)
+    .then((res) => {
+      if (res.status === 200) {
+      }
+    })
+    .catch((err) => console.log(err))
+}
+
+const buildXML = (jsObj) => {
+  const builder = new XMLBuilder()
+  return builder.build(jsObj)
+}
+
+const formatRowToCol = (table) => {
+  const newTable = []
+  table.map((row, rIndex) => {
+    Object.keys(row).map((key, index) => {
+      const tempData = {}
+      if (rIndex === 0) {
+        tempData["Column0"] = key.includes("QTY") ? "QTY" : "TITLE"
+        tempData["Column1"] = key
+        tempData["Column2"] = row[key]
+        newTable[index] = { ...tempData }
+      } else {
+        tempData[`Column${rIndex + 2}`] = row[key]
+        newTable[index] = { ...newTable[index], ...tempData }
+      }
+    })
+  })
+  return {
+    "?xml": "",
+    SizeMatrix: {
+      Table: newTable
+    }
+  }
+}
+
+const processPoSizeTable = (table) => {
+  return {
+    "?xml": "",
+    SizeMatrix: {
+      Table: table
+    }
+  }
+}
+
+const processSummarySizeTable = (data) => {
+  if (data.summaryTable) {
+    return Object.keys(data.summaryTable).map((key) => {
+      const returnDict = {
+        group_type: key,
+        size_matrix_type: data.size_matrix_type
+      }
+      if (!data.wastageApplied) {
+        return {
+          ...returnDict,
+          size_content: buildXML(formatRowToCol(data.summaryTable[key])),
+          default_size_content: buildXML(formatRowToCol(data.summaryTable[key]))
+        }
+      } else {
+        // just remove "QTY ITEM REF 1 WITH WASTAGE" col for default_size_content
+        const processedDefault = data.summaryTable[key].map((row) => {
+          const tempRow = { ...row }
+          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          return tempRow
+        })
+        // to xml string
+        const processedDefaultXML = buildXML(formatRowToCol(processedDefault))
+        // preprocess for size_content
+        const processedWastage = data.summaryTable[key].map((row) => {
+          const tempRow = { ...row }
+          tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          return tempRow
+        })
+        // to xml string
+        const processedWastageXML = buildXML(formatRowToCol(processedWastage))
+        return {
+          ...returnDict,
+          size_content: processedWastageXML,
+          default_size_content: processedDefaultXML
+        }
+      }
+    })
+  }
+}
+
+export const savePOOrder = (clientDetails) => (dispatch) => {
+  const data = store.getState().poOrderReducer
+  console.log("data", data)
+
+  const body = {
+    brand_key: data.brand ? data.brand.value : "",
+    order_user: getUserData().admin,
+    order_key: data.combinedPOOrderKey, // to be
+    order_no: "",
+    num: "",
+    order_status: "Draft",
+    is_copy_order: "N",
+    po_number: data.orderReference,
+    factory_code: "",
+    location_code: data.projectionLocation ? data.projectionLocation : "",
+    draft_order_email: clientDetails.draft_email,
+    approver_email_address: "",
+    order_expdate_delivery_date: formatDateYMD(
+      new Date(data.expectedDeliveryDate)
+    ),
+    invoice_address: [
+      {
+        invoice_address_id: data.invoiceAddressDetails?.dyn_address_id,
+        invoice_contact_id: data.contactDetails?.dyn_customer_id,
+        invoice_cpyname: data.invoiceAddressDetails.name,
+        invoice_contact: data.contactDetails?.name,
+        invoice_phone: data.contactDetails?.phone,
+        invoice_fax: data.contactDetails?.fax,
+        invoice_email: data.contactDetails?.email,
+        invoice_addr: data.invoiceAddressDetails?.address,
+        invoice_addr2: data.invoiceAddressDetails?.address2,
+        invoice_addr3: data.invoiceAddressDetails?.address3
+      }
+    ],
+    delivery_address: [
+      {
+        delivery_address_id: data.deliveryAddressDetails?.dyn_address_id,
+        delivery_contact_id: data.deliveryAddressDetails?.dyn_customer_id,
+        delivery_cpyname: data.deliveryAddressDetails?.name,
+        delivery_contact: data.contactDetails?.name,
+        delivery_phone: data.contactDetails?.phone,
+        delivery_fax: data.contactDetails?.fax,
+        delivery_email: data.contactDetails?.email,
+        delivery_city: data.deliveryAddressDetails?.city,
+        delivery_country: data.deliveryAddressDetails?.country,
+        delivery_post_code: data.deliveryAddressDetails?.post_code,
+        delivery_addr: data.deliveryAddressDetails?.address,
+        delivery_addr2: data.deliveryAddressDetails?.address2,
+        delivery_addr3: data.deliveryAddressDetails?.address3
+      }
+    ],
+    dynamic_field: Object.values(data.dynamicFieldData),
+    summary_size_table: processSummarySizeTable(data) || "",
+    coo: data.coo,
+    shrinkage_percentage: "",
+    item_ref: data.selectedItems.map((item) => ({
+      item_key: item.guid_key || "",
+      item_ref: item.item_ref || "",
+      qty: 1, // static for now
+      price: item.price || "",
+      currency: item.currency || ""
+    })),
+    is_wastage: "N",
+    update_user: "innoa",
+    update_date: formatDateYMD(new Date()),
+    customer_id: "",
+    contents: [
+      {
+        brand_key: data.brand?.value,
+        order_user: getUserData().admin,
+        content_custom_number: data.contentCustomNumber,
+        content_number: data.contentNumberData?.label,
+        content_number_key: data.contentNumberData?.value,
+        care_custom_number: data.careCustomNumber,
+        care_number: data.careNumberData?.label,
+        care_number_key: data.careNumberData?.value,
+        content_group: data.contentGroup,
+        content: data.fibreInstructionData?.map((data, index) => ({
+          cont_key: data.cont_key,
+          cont_translation: data.cont_translation,
+          part_key: data.part_key,
+          part_translation: data.part_translation,
+          percentage: data.en_percent,
+          seqno: (index + 1) * 10
+        })),
+        default_content: data.defaultContentData?.map((cont, index) => ({
+          cont_key: cont.cont_key || "",
+          seqno: (index + 1) * 10
+        })),
+        care: data.careData.map((data, index) => ({
+          care_key: data.cont_key,
+          seqno: (index + 1) * 10
+        })),
+        icon: Object.values(data.washCareData)?.map((obj, index) => ({
+          icon_group: obj.icon_group,
+          icon_type_id: obj.icon_type_id,
+          icon_key: obj.sys_icon_key,
+          seqno: (index + 1) * 10
+        }))
+      }
+    ],
+    edi_order_no: "",
+    consolidated_id: "",
+    supplier_code: "",
+    send_date: "",
+    production_description: "",
+    po_last_update_time: "",
+    option_id: "",
+    po_size_tables: data.sizeContentData.map((sizeData) => ({
+      guid_key: "",
+      order_key: "",
+      brand_key: "",
+      edi_order_no: "",
+      consolidated_id: "",
+      group_type: "",
+      item_ref: data.selectedItems.map((item) => ({
+        item_key: item.guid_key || "",
+        item_ref: item.item_ref || "",
+        qty: 1, // static for now
+        price: item.price || "",
+        currency: item.currency || ""
+      })),
+      size_matrix_type: data.sizeMatrixType,
+      size_content: buildXML(processPoSizeTable(sizeData.size_content)),
+      send_date: "",
+      create_date: ""
+    }))
   }
   axios
     .post("Order/SaveOrder", body)
