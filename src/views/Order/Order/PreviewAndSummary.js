@@ -216,6 +216,7 @@ const PreviewAndSummary = (props) => {
                 fetchSizeTableDetails(e.value)
                 props.setSizeMatrixSelect(e)
               }}
+              menuPlacement={"auto"}
             />
           </Col>
         </Row>
