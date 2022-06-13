@@ -21,6 +21,7 @@ import {
   setInvoiceAddressDetails,
   setContactDetails
 } from "@redux/actions/views/Order/Order"
+import { saveOrder } from "@redux/actions/views/common"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
@@ -58,113 +59,6 @@ const InvoiceAndDelivery = (props) => {
   }
 
   //API Services
-  const saveOrder = () => {
-    const body = {
-      brand_key: props.brand ? props.brand.value : "",
-      order_user: getUserData().admin,
-      order_no: "",
-      num: "",
-      order_status: "Draft",
-      is_copy_order: "N",
-      po_number: props.orderReference,
-      factory_code: "",
-      location_code: props.projectionLocation ? props.projectionLocation : "",
-      draft_order_email: clientDetails.draft_email,
-      order_expdate_delivery_date: formatDateYMD(
-        new Date(props.expectedDeliveryDate)
-      ),
-      invoice_address: [
-        {
-          invoice_address_id: props.invoiceAddressDetails?.dyn_address_id,
-          invoice_contact_id: props.contactDetails?.dyn_customer_id,
-          invoice_cpyname: props.invoiceAddressDetails?.name,
-          invoice_contact: props.contactDetails?.name,
-          invoice_phone: props.contactDetails?.phone,
-          invoice_fax: props.contactDetails?.fax,
-          invoice_email: props.contactDetails?.email,
-          invoice_addr: props.invoiceAddressDetails?.address,
-          invoice_addr2: props.invoiceAddressDetails?.address2,
-          invoice_addr3: props.invoiceAddressDetails?.address3
-        }
-      ],
-      delivery_address: [
-        {
-          delivery_address_id: props.deliveryAddressDetails?.dyn_address_id,
-          delivery_contact_id: props.deliveryAddressDetails?.dyn_customer_id,
-          delivery_cpyname: props.deliveryAddressDetails?.name,
-          delivery_contact: props.contactDetails?.name,
-          delivery_phone: props.contactDetails?.phone,
-          delivery_fax: props.contactDetails?.fax,
-          delivery_email: props.contactDetails?.email,
-          delivery_city: props.deliveryAddressDetails?.city,
-          delivery_country: props.deliveryAddressDetails?.country,
-          delivery_post_code: props.deliveryAddressDetails?.post_code,
-          delivery_addr: props.deliveryAddressDetails?.address,
-          delivery_addr2: props.deliveryAddressDetails?.address2,
-          delivery_addr3: props.deliveryAddressDetails?.address3
-        }
-      ],
-      dynamic_field: Object.values(props.dynamicFieldData),
-      size_matrix_type: props.sizeMatrixType,
-      size_content: props.sizeTable,
-      default_size_content: props.defaultSizeTable,
-      size_pointer: "",
-      coo: props.coo,
-      shrinkage_percentage: "",
-      item_ref: props.selectedItems.map((item) => ({
-        item_key: item.guid_key,
-        item_ref: item.item_ref,
-        qty: 1, // static for now
-        price: item.price,
-        currency: item.currency
-      })),
-      is_wastage: "",
-      update_user: "innoa",
-      update_date: formatDateYMD(new Date()),
-      contents: [
-        {
-          brand_key: props.brand?.value,
-          order_user: getUserData().admin,
-          content_custom_number: props.contentCustomNumber,
-          content_number: props.contentNumberData?.label,
-          content_number_key: props.contentNumberData?.value,
-          care_custom_number: props.careCustomNumber,
-          care_number: props.careNumberData?.label,
-          care_number_key: props.careNumberData?.value,
-          content_group: props.contentGroup,
-          content: props.fibreInstructionData?.map((data, index) => ({
-            cont_key: data.cont_key,
-            cont_translation: data.cont_translation,
-            part_key: data.part_key,
-            part_translation: data.part_translation,
-            percentage: data.en_percent,
-            seqno: (index + 1) * 10
-          })),
-          default_content: props.defaultContentData?.map((cont, index) => ({
-            cont_key: cont.cont_key || "",
-            seqno: (index + 1) * 10
-          })),
-          care: props.careData.map((data, index) => ({
-            care_key: data.cont_key,
-            seqno: (index + 1) * 10
-          })),
-          icon: Object.values(props.washCareData)?.map((obj, index) => ({
-            icon_group: obj.icon_group,
-            icon_type_id: obj.icon_type_id,
-            icon_key: obj.sys_icon_key,
-            seqno: (index + 1) * 10
-          }))
-        }
-      ]
-    }
-    axios
-      .post("Order/SaveOrder", body)
-      .then((res) => {
-        if (res.status === 200) {
-        }
-      })
-      .catch((err) => console.log(err))
-  }
 
   const fetchUserInfo = () => {
     const body = {
@@ -358,7 +252,10 @@ const InvoiceAndDelivery = (props) => {
                   <p>(86) 0755-8215 5991</p>
                   <div>
                     <Button
-                      onClick={() => saveOrder()}
+                      onClick={() => {
+                        // saveOrder()
+                        dispatch(saveOrder("Order", clientDetails))
+                      }}
                       style={{ width: "100%" }}
                       color="primary"
                     >
@@ -525,25 +422,6 @@ const InvoiceAndDelivery = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.orderReducer.brand,
-  selectedItems: state.orderReducer.selectedItems,
-  projectionLocation: state.orderReducer.projectionLocation,
-  orderReference: state.orderReducer.orderReference,
-  expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
-  coo: state.orderReducer.coo,
-  contentNumberData: state.orderReducer.contentNumberData,
-  defaultContentData: state.orderReducer.defaultContentData,
-  fibreInstructionData: state.orderReducer.fibreInstructionData,
-  careData: state.orderReducer.careData,
-  washCareData: state.orderReducer.washCareData,
-  careNumberData: state.orderReducer.careNumberData,
-  careCustomNumber: state.orderReducer.careCustomNumber,
-  contentCustomNumber: state.orderReducer.contentCustomNumber,
-  dynamicFieldData: state.orderReducer.dynamicFieldData,
-  contentGroup: state.orderReducer.contentGroup,
-  sizeMatrixType: state.orderReducer.sizeMatrixType,
-  sizeTable: state.orderReducer.sizeTable,
-  defaultSizeTable: state.orderReducer.defaultSizeTable,
   invoiceAddressDetails: state.orderReducer.invoiceAddressDetails,
   deliveryAddressDetails: state.orderReducer.deliveryAddressDetails,
   contactDetails: state.orderReducer.contactDetails
