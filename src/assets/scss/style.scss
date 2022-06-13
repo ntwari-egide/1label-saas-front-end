@@ -343,3 +343,9 @@ body {
 .rdt_TableBody {
   overflow-x: hidden !important;
 }
+
+// override block ui css to cover entire page
+// preiously didn't cover the vertical menu
+.block-ui-container {
+  z-index: 10100 !important;
+}
