@@ -30,7 +30,6 @@ const InvoiceAndDelivery = (props) => {
   const [invoiceAddressList, setInvoiceAddressList] = useState({})
   const [deliveryAddressList, setDeiveryAddresList] = useState({})
   const [contactInfo, setContactInfo] = useState({})
-  const [tempDeliveryAdd, setTempDeliveryAdd] = useState([])
 
   const handleContactDetailsChange = (value, field) => {
     const tempState = { ...props.contactDetails }
@@ -38,14 +37,11 @@ const InvoiceAndDelivery = (props) => {
     dispatch(setContactDetails(tempState))
   }
 
-  const handleDeliveryAddChange = (value, index) => {
-    const tempAdd = props.deliveryAddressDetails?.address
-      ? props.deliveryAddressDetails?.address?.split("|")
-      : []
-    console.log("tempstate", tempAdd)
+  const handleAddressChange = (value, index, dispatchFun, initState) => {
+    const tempAdd = initState ? initState.split("|") : []
     tempAdd[index] = value
     dispatch(
-      setDeliveryAddressDetails({
+      dispatchFun({
         ...props.deliveryAddressDetails,
         address: tempAdd.join("|")
       })
@@ -59,7 +55,6 @@ const InvoiceAndDelivery = (props) => {
   }
 
   //API Services
-
   const fetchUserInfo = () => {
     const body = {
       order_user: getUserData().admin
@@ -175,6 +170,14 @@ const InvoiceAndDelivery = (props) => {
                         props.invoiceAddressDetails?.address?.split("|")[0]
                       }
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleAddressChange(
+                          e.target.value,
+                          0,
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
+                      }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -184,6 +187,14 @@ const InvoiceAndDelivery = (props) => {
                         props.invoiceAddressDetails?.address?.split("|")[1]
                       }
                       style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleAddressChange(
+                          e.target.value,
+                          1,
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
+                      }
                     />
                   </Col>
                 </Row>
@@ -254,7 +265,7 @@ const InvoiceAndDelivery = (props) => {
                     <Button
                       onClick={() => {
                         // saveOrder()
-                        dispatch(saveOrder("Order", clientDetails))
+                        dispatch(saveOrder(clientDetails))
                       }}
                       style={{ width: "100%" }}
                       color="primary"
@@ -318,7 +329,12 @@ const InvoiceAndDelivery = (props) => {
                       }
                       style={{ marginBottom: "15px" }}
                       onChange={(e) =>
-                        handleDeliveryAddChange(e.target.value, 0)
+                        handleAddressChange(
+                          e.target.value,
+                          0,
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
                       }
                     />
                   </Col>
@@ -330,7 +346,12 @@ const InvoiceAndDelivery = (props) => {
                       }
                       style={{ marginBottom: "15px" }}
                       onChange={(e) =>
-                        handleDeliveryAddChange(e.target.value, 1)
+                        handleAddressChange(
+                          e.target.value,
+                          1,
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
                       }
                     />
                   </Col>
