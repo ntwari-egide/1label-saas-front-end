@@ -29,6 +29,7 @@ import {
   setSelectedOrder
 } from "@redux/actions/views/Order/List"
 import { getUserData } from "@utils"
+import { setLoader } from "@redux/actions/layout"
 
 let timerId
 
@@ -205,6 +206,7 @@ const Listing = (props) => {
           dispatch(setBrand({ value: brand_key, label: "" }))
           dispatch(populateData(module, res.data[0]))
           dispatch(setCurrentStep(1))
+          dispatch(setLoader(false))
         }
       })
       .catch((err) => console.log(err))
@@ -227,6 +229,7 @@ const Listing = (props) => {
   }
 
   const copy = (row) => {
+    dispatch(setLoader(true))
     const body = {
       order_user: getUserData().admin,
       brand_key: row.brand_guid_key,
@@ -244,6 +247,9 @@ const Listing = (props) => {
             res.data.data?.order_no,
             res.data.data?.is_po_order_temp
           )
+        } else {
+          dispatch(setLoader(false))
+          alert("Something Went Wrong Please Try Again Later")
         }
       })
       .catch((err) => console.log(err))
