@@ -121,7 +121,19 @@ export const setSizeData = (data) => (dispatch) => {
 }
 
 export const setDefaultSizeData = (data) => (dispatch) => {
-  dispatch({ type: "SET_DEFAULT_SIZE_TABLE", payload: formatColToRow(data) })
+  dispatch({ type: "SET_DEFAULT_SIZE_DATA", payload: formatColToRow(data) })
+}
+
+export const setDeliveryAddressDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_DELIVERY_ADDRESS_DETAILS", payload: data })
+}
+
+export const setInvoiceAddressDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_INVOICE_ADDRESS_DETAILS", payload: data })
+}
+
+export const setContactDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_CONTACT_DETAILS", payload: data })
 }
 
 export const handleFibreChange =
