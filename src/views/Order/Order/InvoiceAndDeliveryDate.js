@@ -175,7 +175,7 @@ const InvoiceAndDelivery = (props) => {
                           e.target.value,
                           0,
                           setInvoiceAddressDetails,
-                          props.invoiceAddressDetails
+                          props.invoiceAddressDetails?.address
                         )
                       }
                     />
@@ -192,7 +192,7 @@ const InvoiceAndDelivery = (props) => {
                           e.target.value,
                           1,
                           setInvoiceAddressDetails,
-                          props.invoiceAddressDetails
+                          props.invoiceAddressDetails?.address
                         )
                       }
                     />
@@ -333,7 +333,7 @@ const InvoiceAndDelivery = (props) => {
                           e.target.value,
                           0,
                           setDeliveryAddressDetails,
-                          props.deliveryAddressDetails
+                          props.deliveryAddressDetails?.address
                         )
                       }
                     />
@@ -350,7 +350,7 @@ const InvoiceAndDelivery = (props) => {
                           e.target.value,
                           1,
                           setDeliveryAddressDetails,
-                          props.deliveryAddressDetails
+                          props.deliveryAddressDetails?.address
                         )
                       }
                     />
