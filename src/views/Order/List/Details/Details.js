@@ -13,6 +13,7 @@ import { Link } from "react-router-dom"
 import Radio from "@components/Radio/Radio"
 import { X } from "react-feather"
 import { connect } from "react-redux"
+import { getUserData } from "@utils"
 
 const Details = (props) => {
   const [itemList, setItemList] = useState([])
@@ -31,7 +32,7 @@ const Details = (props) => {
   // API service
   const fetchOrderDetails = () => {
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       order_no:
         [
           props.selectedOrder?.order_no?.split("-")[0],
@@ -95,7 +96,7 @@ const Details = (props) => {
 
   const deleteOrder = () => {
     const body = {
-      order_user: "",
+      order_user: getUserData().admin,
       brand_key: "",
       order_no: ""
     }

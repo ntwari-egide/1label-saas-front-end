@@ -28,6 +28,7 @@ import {
   setIsOrderConfirmed,
   setSelectedOrder
 } from "@redux/actions/views/Order/List"
+import { getUserData } from "@utils"
 
 let timerId
 
@@ -211,7 +212,7 @@ const Listing = (props) => {
 
   const sendDraftOrder = (row) => {
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key: row.brand_guid_key,
       order_no: [row.order_no.split("-")[0], row.order_no.split("-")[1]].join(
         "-"
@@ -227,7 +228,7 @@ const Listing = (props) => {
 
   const copy = (row) => {
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key: row.brand_guid_key,
       order_no: [row.order_no.split("-")[0], row.order_no.split("-")[1]].join(
         "-"
@@ -280,7 +281,7 @@ const Listing = (props) => {
   // API Services
   const copyConfirmOrder = () => {
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key: "e8c439c4-2bc0-4304-8053-e818071b5293",
       order_no: "JJ2-PO2022040006"
     }
@@ -292,7 +293,7 @@ const Listing = (props) => {
 
   const sendOrderEmail = (orderStatus) => {
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key: "e8c439c4-2bc0-4304-8053-e818071b5293",
       order_no: "JJ2-PO2022040006",
       order_status: "Draft"
@@ -313,7 +314,7 @@ const Listing = (props) => {
       setLoading(true)
     }
     const body = {
-      order_user: "innoa",
+      order_user: getUserData().admin,
       page_index,
       page_size,
       order_date_from,
