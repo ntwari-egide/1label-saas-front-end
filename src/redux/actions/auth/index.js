@@ -9,6 +9,7 @@ const MySwal = withReactContent(Swal)
 export const handleLogin = (data) => {
   return (dispatch) => {
     dispatch({ type: "SERVER_ERROR", data: "" })
+    dispatch({ type: "SET_LEFTLOADER", payload: true })
     const params = {
       user_name: data.username,
       password: data.password
@@ -17,6 +18,7 @@ export const handleLogin = (data) => {
       if (res.status === 200) {
         console.log("login", res)
         if (res?.data?.status === "fail") {
+          dispatch({ type: "SET_LEFTLOADER", payload: false })
           MySwal.fire({
             title: "Incorrect Username or Password",
             icon: "error",
@@ -27,7 +29,7 @@ export const handleLogin = (data) => {
           })
         } else {
           // dummy cookie for now is checked in router.js through isUserLoggedIn()
-          document.cookie = "Token=dummy"
+          dispatch({ type: "SET_LEFTLOADER", payload: false })
           localStorage.setItem("userData", JSON.stringify(res?.data[0]))
           history.push("/home")
         }
@@ -42,7 +44,6 @@ export const handleLogout = () => {
   return (dispatch) => {
     dispatch({ type: "LOGOUT" })
     // ** Remove user from localStorage
-    deleteCookie("Token")
     localStorage.removeItem("userData")
   }
 }

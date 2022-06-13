@@ -20,3 +20,7 @@ export const setCustom = (value) => (dispatch) =>
 export const toggleSaveBtnStatus = (value) => (dispatch) => {
   dispatch({ type: "TOGGLE_SAVE_BTN_STATUS", payload: value })
 }
+
+export const setLoader = (value) => (dispatch) => {
+  dispatch({ type: "SET_LEFTLOADER", payload: value })
+}

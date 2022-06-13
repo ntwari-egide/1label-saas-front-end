@@ -33,7 +33,7 @@ const layoutReducer = (state = initialState, action) => {
     case "IsOpen":
       return { ...state, status: action.value }
     case "SET_LEFTLOADER":
-      return { ...state, sidebarLeftLoading: action.data }
+      return { ...state, sidebarLeftLoading: action.payload }
     case "TOGGLE_SAVE_BTN_STATUS":
       return { ...state, renderSaveDraftOrderButton: action.payload }
     default:
