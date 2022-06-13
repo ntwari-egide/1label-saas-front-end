@@ -91,9 +91,21 @@ export const setSizeMatrixType = (data) => (dispatch) => {
 }
 
 export const setShrinkagePercentage = (value) => (dispatch) => {
-  dispatch({ type: "SET_SHRINKAGE_PERCENTAGE", payload: value })
+  dispatch({ type: "SET_PO_SHRINKAGE_PERCENTAGE", payload: value })
 }
 
 export const setSizeTableTrigger = (value) => (dispatch) => {
-  dispatch({ type: "SET_SIZE_TABLE_TRIGGER", payload: value })
+  dispatch({ type: "SET_PO_SIZE_TABLE_TRIGGER", payload: value })
+}
+
+export const setInvoiceAddressDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_INVOICE_ADDRESS_DETAILS", payload: data })
+}
+
+export const setDeliveryAddressDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_DELIVERY_ADDRESS_DETAILS", payload: data })
+}
+
+export const setContactDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_CONTACT_DETAILS", payload: data })
 }

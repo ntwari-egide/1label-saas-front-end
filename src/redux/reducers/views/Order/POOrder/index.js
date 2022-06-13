@@ -26,6 +26,10 @@ const initialState = {
   sizeTable: "",
   defaultSizeTable: "",
   sizeMatrixType: "",
+  // invoice and delivery data
+  invoiceAddressDetails: {},
+  deliveryAddressDetails: {},
+  contactDetails: {},
   //anno
   shrinkagePercentage: "",
   sizeTableTrigger: true
@@ -79,12 +83,18 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, defaultSizeTable: action.payload }
     case "SET_PO_SIZE_MATRIX_TYPE":
       return { ...state, sizeMatrixType: action.payload }
-    case "SET_SHRINKAGE_PERCENTAGE":
+    case "SET_PO_SHRINKAGE_PERCENTAGE":
       return { ...state, shrinkagePercentage: action.payload }
-    case "SET_SIZE_TABLE_TRIGGER":
+    case "SET_PO_SIZE_TABLE_TRIGGER":
       return { ...state, sizeTableTrigger: action.payload }
+    case "SET_PO_INVOICE_ADDRESS_DETAILS":
+      return { ...state, invoiceAddressDetails: action.payload }
+    case "SET_PO_DELIVERY_ADDRESS_DETAILS":
+      return { ...state, deliveryAddressDetails: action.payload }
+    case "SET_PO_CONTACT_DETAILS":
+      return { ...state, contactDetails: action.payload }
     default:
-      return state
+      return { ...state }
   }
 }
 
