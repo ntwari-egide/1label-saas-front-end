@@ -16,7 +16,7 @@ const App = (props) => (
   <BlockUi
     tag="body"
     blocking={props.loading}
-    loader={<Spinner type="grow" size="lg" color="primary" />}
+    loader={<Spinner size="lg" color="primary" />}
   >
     <Router />
   </BlockUi>
