@@ -9,11 +9,11 @@ import {
   CardFooter,
   Row,
   Col,
-  Button
+  Button,
+  Collapse
 } from "reactstrap"
 import Footer from "../../CommonFooter"
 import { useTranslation } from "react-i18next"
-import { formatDateYMD } from "@utils"
 import { connect, useDispatch } from "react-redux"
 import { getUserData } from "@utils"
 import {
@@ -27,9 +27,14 @@ const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const [clientDetails, setClientDetails] = useState({})
-  const [invoiceAddressList, setInvoiceAddressList] = useState({})
-  const [deliveryAddressList, setDeiveryAddresList] = useState({})
-  const [contactInfo, setContactInfo] = useState({})
+  const [, setInvoiceAddressList] = useState({})
+  const [, setDeiveryAddresList] = useState({})
+  const [, setContactInfo] = useState({})
+  const [invoiceDetailsList, setInvoiceDetailsList] = useState([])
+  const [deliveryDetailsList, setDeliveryDetailsList] = useState([])
+  const [contactDetailsList, setContactDetailsList] = useState([])
+  const [invoiceId, setInvoiceId] = useState(0)
+  const [deliveryId, setDeliveryId] = useState(0)
 
   const handleContactDetailsChange = (value, field) => {
     const tempState = { ...props.contactDetails }
@@ -70,34 +75,62 @@ const InvoiceAndDelivery = (props) => {
   }
 
   const fetchClientAddressList = () => {
-    const addressTypes = {
+    // meta data
+    const addressListTypes = {
       invoice: setInvoiceAddressList,
       delivery: setDeiveryAddresList,
       contact: setContactInfo
     }
+    const addressTypes = {
+      invoice: setInvoiceAddressDetails,
+      delivery: setDeliveryAddressDetails,
+      contact: setContactDetails
+    }
+    const addressDetailsTypes = {
+      invoice: setInvoiceDetailsList,
+      delivery: setDeliveryDetailsList,
+      contact: setContactDetailsList
+    }
+    const tempListTypes = {
+      invoice: [],
+      delivery: [],
+      contact: []
+    }
     const body = {
       order_user: getUserData().admin
     }
-    Object.keys(addressTypes).map((addType) => {
+    Object.keys(addressListTypes).map((addType) => {
       body.address_type = addType
       axios
         .post("/Client/GetClientAddressList", body)
         .then((res) => {
           if (res.status === 200) {
-            addressTypes[addType](res?.data)
-            fetchAddressDetail(addType, res?.data[0])
+            // addressListTypes[addType](res?.data)
+            console.log(addType)
+            res.data.map((add, index) =>
+              fetchAddressDetails(
+                addType,
+                add,
+                index,
+                addressTypes[addType],
+                addressDetailsTypes[addType],
+                tempListTypes[addType]
+              )
+            )
           }
         })
         .catch((err) => console.log(err))
     })
   }
 
-  const fetchAddressDetail = (addType, add) => {
-    const addressTypes = {
-      invoice: setInvoiceAddressDetails,
-      delivery: setDeliveryAddressDetails,
-      contact: setContactDetails
-    }
+  const fetchAddressDetails = (
+    addType,
+    add,
+    index,
+    dispatchFun,
+    setDetailsListFun,
+    tempDetailsList
+  ) => {
     const body = {
       order_user: getUserData().admin,
       address_type: addType,
@@ -107,7 +140,11 @@ const InvoiceAndDelivery = (props) => {
       .post("/Client/GetClientAddressDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          dispatch(addressTypes[addType](res?.data[0]))
+          if (index === 0) {
+            dispatch(dispatchFun(res?.data[0]))
+          }
+          tempDetailsList[index] = res.data[0]
+          setDetailsListFun([...tempDetailsList])
         }
       })
       .catch((err) => console.log(err))
@@ -251,32 +288,47 @@ const InvoiceAndDelivery = (props) => {
             </Card>
           </Col>
           <Col xs="12" sm="12" md="4" lg="4" xl="4">
-            <Card>
-              <CardHeader>Innoways (Mike.Jiang)</CardHeader>
-              <CardBody>
-                <div>
-                  <p>
-                    28th Floor, Block B, Honglong Century Plaza, Shennan East
-                    Road, Luohu District, Shenzhen,
-                  </p>
-                  <p>Guangdong Province</p>
-                  <p>(86) 0755-8215 5991</p>
-                  <div>
-                    <Button
-                      onClick={() => {
-                        // saveOrder()
-                        dispatch(saveOrder(clientDetails))
-                      }}
-                      style={{ width: "100%" }}
-                      color="primary"
-                    >
-                      {t("Invoice This Address")}
-                    </Button>
-                  </div>
-                </div>
-              </CardBody>
-              <CardFooter style={{ textAlign: "center" }}>Innoways</CardFooter>
-            </Card>
+            {invoiceDetailsList.map((data) => (
+              <div className="address-card">
+                <Card
+                  key={data?.guid_key}
+                  onClick={() => {
+                    if (invoiceId === data?.guid_key) {
+                      setInvoiceId("")
+                    } else {
+                      setInvoiceId(data?.guid_key)
+                      dispatch(setInvoiceAddressDetails(data))
+                    }
+                  }}
+                >
+                  <CardHeader>{data?.name}</CardHeader>
+                  <Collapse isOpen={invoiceId === data?.guid_key}>
+                    <CardBody>
+                      <div>
+                        <p>{data?.address}</p>
+                        <p>
+                          {data?.city}, {data?.country}
+                        </p>
+                        {/*
+                        <p>(86) 0755-8215 5991</p>
+              */}
+                        <div>
+                          <Button
+                            onClick={() => {
+                              dispatch(saveOrder(clientDetails))
+                            }}
+                            style={{ width: "100%" }}
+                            color="primary"
+                          >
+                            {t("Invoice This Address")}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Collapse>
+                </Card>
+              </div>
+            ))}
           </Col>
         </Row>
         <Row>
@@ -409,25 +461,40 @@ const InvoiceAndDelivery = (props) => {
             </Card>
           </Col>
           <Col xs="12" sm="12" md="4" lg="4" xl="4">
-            <Card>
-              <CardHeader>Innoways (Mike.Jiang)</CardHeader>
-              <CardBody>
-                <div>
-                  <p>
-                    28th Floor, Block B, Honglong Century Plaza, Shennan East
-                    Road, Luohu District, Shenzhen,
-                  </p>
-                  <p>Guangdong Province</p>
-                  <p>(86) 0755-8215 5991</p>
-                  <div>
-                    <Button style={{ width: "100%" }} color="primary">
-                      {t("Delivery To This Address")}
-                    </Button>
-                  </div>
-                </div>
-              </CardBody>
-              <CardFooter style={{ textAlign: "center" }}>Innoways</CardFooter>
-            </Card>
+            {deliveryDetailsList.map((data) => (
+              <div className="address-card">
+                <Card
+                  onClick={() => {
+                    if (deliveryId === data?.guid_key) {
+                      setDeliveryId("")
+                    } else {
+                      setDeliveryId(data?.guid_key)
+                      dispatch(setDeliveryAddressDetails(data))
+                    }
+                  }}
+                >
+                  <CardHeader>{data?.name}</CardHeader>
+                  <Collapse isOpen={deliveryId === data?.guid_key}>
+                    <CardBody>
+                      <div>
+                        <p>{data?.address}</p>
+                        <p>
+                          {data?.city}, {data?.country}
+                        </p>
+                        {/*
+                    <p>(86) 0755-8215 5991</p>
+              */}
+                        <div>
+                          <Button style={{ width: "100%" }} color="primary">
+                            {t("Delivery To This Address")}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Collapse>
+                </Card>
+              </div>
+            ))}
           </Col>
         </Row>
       </CardBody>
