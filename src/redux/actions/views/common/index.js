@@ -187,7 +187,7 @@ export const saveOrder = (clientDetails) => (dispatch) => {
       price: item.price || "",
       currency: item.currency || ""
     })),
-    is_wastage: "",
+    is_wastage: data.wastageApplied || "",
     update_user: "innoa",
     update_date: formatDateYMD(new Date()),
     contents: [
@@ -268,7 +268,12 @@ const processPoSizeTable = (table) => {
   return {
     "?xml": "",
     SizeMatrix: {
-      Table: table
+      Table: table.map((row) => {
+        const tempRow = { ...row }
+        tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+        delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+        return tempRow
+      })
     }
   }
 }
@@ -316,13 +321,12 @@ const processSummarySizeTable = (data) => {
 
 export const savePOOrder = (clientDetails) => (dispatch) => {
   const data = store.getState().poOrderReducer
-  console.log("data", data)
 
   const body = {
     brand_key: data.brand ? data.brand.value : "",
     order_user: getUserData().admin,
-    order_key: data.combinedPOOrderKey, // to be
     order_no: "",
+    guid_key: data.combinedPOOrderKey,
     num: "",
     order_status: "Draft",
     is_copy_order: "N",
@@ -376,7 +380,7 @@ export const savePOOrder = (clientDetails) => (dispatch) => {
       price: item.price || "",
       currency: item.currency || ""
     })),
-    is_wastage: "N",
+    is_wastage: data.wastageApplied || "",
     update_user: "innoa",
     update_date: formatDateYMD(new Date()),
     customer_id: "",
