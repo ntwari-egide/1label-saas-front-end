@@ -13,8 +13,6 @@ import {
 } from "reactstrap"
 import Footer from "../../../CommonFooter"
 import { useTranslation } from "react-i18next"
-import { formatDateYMD } from "@utils"
-import { XMLBuilder } from "fast-xml-parser"
 import { connect, useDispatch } from "react-redux"
 import { getUserData } from "@utils"
 import { savePOOrder } from "@redux/actions/views/common"
@@ -30,85 +28,6 @@ const InvoiceAndDelivery = (props) => {
   const [clientDetails, setClientDetails] = useState({})
   const [, setInvoiceAddressList] = useState({})
   const [, setDeiveryAddresList] = useState({})
-
-  const buildXML = (jsObj) => {
-    const builder = new XMLBuilder()
-    return builder.build(jsObj)
-  }
-
-  const formatRowToCol = (table) => {
-    const newTable = []
-    table.map((row, rIndex) => {
-      Object.keys(row).map((key, index) => {
-        const tempData = {}
-        if (rIndex === 0) {
-          tempData["Column0"] = key.includes("QTY") ? "QTY" : "TITLE"
-          tempData["Column1"] = key
-          tempData["Column2"] = row[key]
-          newTable[index] = { ...tempData }
-        } else {
-          tempData[`Column${rIndex + 2}`] = row[key]
-          newTable[index] = { ...newTable[index], ...tempData }
-        }
-      })
-    })
-    return {
-      "?xml": "",
-      SizeMatrix: {
-        Table: newTable
-      }
-    }
-  }
-
-  const processPoSizeTable = (table) => {
-    return {
-      "?xml": "",
-      SizeMatrix: {
-        Table: table
-      }
-    }
-  }
-
-  const processSummarySizeTable = (size_matrix_type) => {
-    return Object.keys(props.summaryTable).map((key) => {
-      const returnDict = {
-        group_type: key,
-        size_matrix_type
-      }
-      if (props.wastageApplied === "N") {
-        return {
-          ...returnDict,
-          size_content: buildXML(formatRowToCol(props.summaryTable[key])),
-          default_size_content: buildXML(
-            formatRowToCol(props.summaryTable[key])
-          )
-        }
-      } else {
-        // just remove "QTY ITEM REF 1 WITH WASTAGE" col for default_size_content
-        const processedDefault = props.summaryTable[key].map((row) => {
-          const tempRow = { ...row }
-          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-          return tempRow
-        })
-        // to xml string
-        const processedDefaultXML = buildXML(formatRowToCol(processedDefault))
-        // preprocess for size_content
-        const processedWastage = props.summaryTable[key].map((row) => {
-          const tempRow = { ...row }
-          tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-          return tempRow
-        })
-        // to xml string
-        const processedWastageXML = buildXML(formatRowToCol(processedWastage))
-        return {
-          ...returnDict,
-          size_content: processedWastageXML,
-          default_size_content: processedDefaultXML
-        }
-      }
-    })
-  }
 
   const handleContactDetailsChange = (value, field) => {
     const tempState = { ...props.contactDetails }
@@ -522,31 +441,9 @@ const InvoiceAndDelivery = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.poOrderReducer.brand,
-  selectedItems: state.poOrderReducer.selectedItems,
-  careData: state.poOrderReducer.careData,
-  washCareData: state.poOrderReducer.washCareData,
-  dynamicFieldData: state.poOrderReducer.dynamicFieldData,
-  fibreInstructionData: state.poOrderReducer.fibreInstructionData,
-  contentCustomNumber: state.poOrderReducer.contentCustomNumber,
-  careCustomNumber: state.poOrderReducer.careCustomNumber,
-  projectionLocation: state.poOrderReducer.projectionLocation,
-  orderReference: state.poOrderReducer.orderReference,
-  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
-  contentNumberData: state.poOrderReducer.contentNumberData,
-  defaultContentData: state.poOrderReducer.defaultContentData,
-  careNumberData: state.poOrderReducer.careNumberData,
-  contentGroup: state.poOrderReducer.contentGroup,
-  coo: state.poOrderReducer.coo,
-  sizeContentData: state.poOrderReducer.sizeContentData,
-  summaryTable: state.poOrderReducer.summaryTable,
-  sizeTable: state.poOrderReducer.sizeTable,
-  defaultSizeTable: state.poOrderReducer.defaultSizeTable,
-  sizeMatrixType: state.poOrderReducer.sizeMatrixType,
   deliveryAddressDetails: state.poOrderReducer.deliveryAddressDetails,
   invoiceAddressDetails: state.poOrderReducer.invoiceAddressDetails,
-  contactDetails: state.poOrderReducer.contactDetails,
-  wastageApplied: state.poOrderReducer.wastageApplied
+  contactDetails: state.poOrderReducer.contactDetails
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)
