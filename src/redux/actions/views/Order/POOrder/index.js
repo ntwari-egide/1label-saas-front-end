@@ -109,3 +109,7 @@ export const setDeliveryAddressDetails = (data) => (dispatch) => {
 export const setContactDetails = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_CONTACT_DETAILS", payload: data })
 }
+
+export const setWastageApplied = (value) => (dispatch) => {
+  dispatch({ type: "SET_WASTAGE_APPLIED", payload: value })
+}

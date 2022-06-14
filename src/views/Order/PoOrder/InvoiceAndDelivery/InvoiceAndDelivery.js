@@ -75,7 +75,7 @@ const InvoiceAndDelivery = (props) => {
         group_type: key,
         size_matrix_type
       }
-      if (!props.wastageApplied) {
+      if (props.wastageApplied === "N") {
         return {
           ...returnDict,
           size_content: buildXML(formatRowToCol(props.summaryTable[key])),
@@ -681,7 +681,8 @@ const mapStateToProps = (state) => ({
   sizeMatrixType: state.poOrderReducer.sizeMatrixType,
   deliveryAddressDetails: state.poOrderReducer.deliveryAddressDetails,
   invoiceAddressDetails: state.poOrderReducer.invoiceAddressDetails,
-  contactDetails: state.poOrderReducer.contactDetails
+  contactDetails: state.poOrderReducer.contactDetails,
+  wastageApplied: state.poOrderReducer.wastageApplied
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

@@ -36,9 +36,6 @@ const PoOrder = (props) => {
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   const [searchParams, setSearchParams] = useState({})
 
-  // data of order size Table
-  const [wastageApplied, setWastageApplied] = useState(false)
-
   const setCurrentStepHelper = (value) => {
     dispatch(setCurrentStep(value))
   }
@@ -115,22 +112,18 @@ const PoOrder = (props) => {
           setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
           combinedPOOrderKey={combinedPOOrderKey}
-          wastageApplied={wastageApplied}
-          setWastageApplied={setWastageApplied}
         />
       ) : props.currentStep === 4 ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
-          wastageApplied={wastageApplied}
         />
       ) : props.currentStep === 5 ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
-          wastageApplied={wastageApplied}
           combinedPOOrderKey={combinedPOOrderKey}
         />
       ) : null}

@@ -22,6 +22,7 @@ const initialState = {
   sizeContentData: [],
   wastage: 0,
   summaryTable: {},
+  wastageApplied: "N",
   // preview and summary states
   sizeTable: "",
   defaultSizeTable: "",
@@ -93,6 +94,8 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, deliveryAddressDetails: action.payload }
     case "SET_PO_CONTACT_DETAILS":
       return { ...state, contactDetails: action.payload }
+    case "SET_WASTAGE_APPLIED":
+      return { ...state, wastageApplied: action.payload }
     default:
       return { ...state }
   }

@@ -20,7 +20,8 @@ import { connect, useDispatch } from "react-redux"
 import {
   setSizeData,
   setWastage,
-  setSizeTableTrigger
+  setSizeTableTrigger,
+  setWastageApplied
 } from "@redux/actions/views/Order/POOrder"
 
 const SizeTable = (props) => {
@@ -84,9 +85,10 @@ const SizeTable = (props) => {
     },
     {
       name: t("ASBAR1"),
-      selector: props.wastageApplied
-        ? "QTY ITEM REF 1 WITH WASTAGE"
-        : "QTY ITEM REF 1"
+      selector:
+        props.wastageApplied === "Y"
+          ? "QTY ITEM REF 1 WITH WASTAGE"
+          : "QTY ITEM REF 1"
     },
     {
       name: t("QTY ITEM REF 2"),
@@ -184,11 +186,11 @@ const SizeTable = (props) => {
       return
     }
     if (operation === "add") {
-      props.setWastageApplied(true)
+      dispatch(setWastageApplied("Y"))
       toast(`${props.wastage * 100}% Wastage Applied.`)
     } else {
       dispatch(setWastage(0))
-      props.setWastageApplied(false)
+      dispatch(setWastageApplied("N"))
       toast("Wastage Reset.")
     }
   }
@@ -347,7 +349,8 @@ const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   sizeContentData: state.poOrderReducer.sizeContentData,
   wastage: state.poOrderReducer.wastage,
-  sizeTableTrigger: state.poOrderReducer.sizeTableTrigger
+  sizeTableTrigger: state.poOrderReducer.sizeTableTrigger,
+  wastageApplied: state.poOrderReducer.wastageApplied
 })
 
 export default connect(mapStateToProps, null)(SizeTable)

@@ -77,9 +77,10 @@ const PreviewAndSummary = (props) => {
     },
     {
       name: t("ASBAR1"),
-      selector: props.wastageApplied
-        ? "QTY ITEM REF 1 WITH WASTAGE"
-        : "QTY ITEM REF 1"
+      selector:
+        props.wastageApplied === "Y"
+          ? "QTY ITEM REF 1 WITH WASTAGE"
+          : "QTY ITEM REF 1"
     },
     {
       name: t("QTY ITEM REF 2"),
@@ -381,7 +382,8 @@ const mapStateToProps = (state) => ({
   selectedItems: state.poOrderReducer.selectedItems,
   sizeContentData: state.poOrderReducer.sizeContentData,
   summaryTable: state.poOrderReducer.summaryTable,
-  defaultSizeTable: state.poOrderReducer.defaultSizeTable
+  defaultSizeTable: state.poOrderReducer.defaultSizeTable,
+  wastageApplied: state.poOrderReducer.wastageApplied
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)
