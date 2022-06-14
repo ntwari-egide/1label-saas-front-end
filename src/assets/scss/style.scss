@@ -349,3 +349,8 @@ body {
 .block-ui-container {
   z-index: 10100 !important;
 }
+
+// for address cards in invoice and delivery pages of order and po order
+.address-card {
+  cursor: pointer;
+}
