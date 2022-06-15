@@ -11,7 +11,7 @@ import ItemList from "./ItemList/ItemList"
 import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
 import { setCurrentStep } from "@redux/actions/views/Order/POOrder"
-import { saveOrder, savePOOrder } from "@redux/actions/views/common"
+import { savePOOrder } from "@redux/actions/views/common"
 
 const stepperMenu = [
   "Listing",
@@ -46,7 +46,7 @@ const PoOrder = (props) => {
       <input
         hidden
         id="save-Draft"
-        onClick={(e) => dispatch(saveOrder("Draft"))}
+        onClick={(e) => dispatch(savePOOrder("Draft"))}
       />
       <input
         hidden
