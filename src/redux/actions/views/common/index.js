@@ -3,6 +3,7 @@ import { getUserData, formatDateYMD } from "@utils"
 import axios from "@axios"
 import { XMLBuilder } from "fast-xml-parser"
 import { sweetAlert } from "@utils"
+import { setLoader } from "@redux/actions/layout"
 
 export const populateData = (module, data) => (dispatch) => {
   const {
@@ -126,6 +127,7 @@ export const populateData = (module, data) => (dispatch) => {
 }
 
 export const saveOrder = (order_status) => (dispatch) => {
+  dispatch(setLoader(true))
   const data = store.getState().orderReducer
 
   const body = {
@@ -247,6 +249,7 @@ export const saveOrder = (order_status) => (dispatch) => {
           )
         }
       }
+      dispatch(setLoader(false))
     })
     .catch((err) => console.log(err))
 }
@@ -336,6 +339,7 @@ const processSummarySizeTable = (data) => {
 }
 
 export const savePOOrder = (order_status) => (dispatch) => {
+  dispatch(setLoader(true))
   const data = store.getState().poOrderReducer
 
   const body = {
@@ -482,6 +486,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
           )
         }
       }
+      dispatch(setLoader(false))
     })
     .catch((err) => console.log(err))
 }
