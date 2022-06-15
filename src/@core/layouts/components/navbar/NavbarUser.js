@@ -43,9 +43,9 @@ const NavbarUser = (props) => {
     }
   }
 
-  function handleSave() {
-    if (document.getElementById("page-specific-save")) {
-      document.getElementById("page-specific-save").click()
+  function handleSave(status) {
+    if (document.getElementById(`save-${status}`)) {
+      document.getElementById(`save-${status}`).click()
     }
   }
 
@@ -131,10 +131,10 @@ const NavbarUser = (props) => {
               <Save
                 className="ficon"
                 id="Save-Draft"
-                onClick={() => handleSave()}
+                onClick={() => handleSave("Draft")}
               />
               <UncontrolledTooltip target="Save-Draft">
-                Save Draft
+                Save Draft Order
               </UncontrolledTooltip>
             </NavLink>
           </NavItem>
@@ -147,10 +147,10 @@ const NavbarUser = (props) => {
             <Save
               className="ficon"
               id="Save-Confirm"
-              onClick={() => handleSave()}
+              onClick={() => handleSave("Confirm")}
             />
             <UncontrolledTooltip target="Save-Confirm">
-              Save Confirm
+              Save Confirm Order
             </UncontrolledTooltip>
           </NavLink>
         </NavItem>
