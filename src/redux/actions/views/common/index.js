@@ -233,17 +233,17 @@ export const saveOrder = (order_status) => (dispatch) => {
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
           sweetAlert(
-            (title = `${order_status} Order Save Failed!`),
-            (text = res.data.status_description),
-            (icon = "error"),
-            (btnType = "danger")
+            `${order_status} Order Save Failed!`,
+            res.data.status_description,
+            "error",
+            "danger"
           )
         } else {
           sweetAlert(
-            (title = `${order_status} Order Save Failed!`),
-            (text = ""),
-            (icon = "success"),
-            (btnType = "success")
+            `${order_status} Order Save Failed!`,
+            "",
+            "success",
+            "success"
           )
         }
       }
@@ -468,17 +468,17 @@ export const savePOOrder = (order_status) => (dispatch) => {
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
           sweetAlert(
-            (title = `${order_status} Order Save Failed!`),
-            (text = res.data.status_description),
-            (icon = "error"),
-            (btnType = "danger")
+            `${order_status} Order Save Failed!`,
+            res.data.status_description,
+            "error",
+            "danger"
           )
         } else {
           sweetAlert(
-            (title = `${order_status} Order Save Failed!`),
-            (text = ""),
-            (icon = "success"),
-            (btnType = "success")
+            `${order_status} Order Save Failed!`,
+            "",
+            "success",
+            "success"
           )
         }
       }
