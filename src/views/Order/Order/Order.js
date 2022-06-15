@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
 import { setCurrentStep } from "@redux/actions/views/Order/Order"
 import { toggleSaveBtnStatus } from "@redux/actions/layout"
+import { saveOrder, savePOOrder } from "@redux/actions/views/common"
 
 const stepperMenu = [
   "Select Item",
@@ -53,6 +54,16 @@ const Order = (props) => {
 
   return (
     <div>
+      <input
+        hidden
+        id="save-Draft"
+        onClick={(e) => dispatch(saveOrder("Draft"))}
+      />
+      <input
+        hidden
+        id="save-Confirm"
+        onClick={(e) => dispatch(savePOOrder("Confirm"))}
+      />
       <div style={{ display: "flex" }}>
         <h2>{t("Order")}</h2>
         <div
