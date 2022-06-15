@@ -25,6 +25,7 @@ const initialState = {
   sizeData: [],
   defaultSizeData: [],
   // invoice and delivery data
+  clientDetails: {},
   invoiceAddressDetails: {},
   deliveryAddressDetails: {},
   contactDetails: {},
@@ -91,6 +92,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, deliveryAddressDetails: action.payload }
     case "SET_CONTACT_DETAILS":
       return { ...state, contactDetails: action.payload }
+    case "SET_CLIENT_DETAILS":
+      return { ...state, clientDetails: action.payload }
     default:
       return state
   }

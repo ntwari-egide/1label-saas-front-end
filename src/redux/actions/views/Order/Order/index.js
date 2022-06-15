@@ -136,6 +136,10 @@ export const setContactDetails = (data) => (dispatch) => {
   dispatch({ type: "SET_CONTACT_DETAILS", payload: data })
 }
 
+export const setClientDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_CLIENT_DETAILS", payload: data })
+}
+
 export const handleFibreChange =
   (e, index, fibreInstructionState, defaultContentState, brand) =>
   (dispatch) => {

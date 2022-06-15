@@ -28,6 +28,7 @@ const initialState = {
   defaultSizeTable: "",
   sizeMatrixType: "",
   // invoice and delivery data
+  clientDetails: {},
   invoiceAddressDetails: {},
   deliveryAddressDetails: {},
   contactDetails: {},
@@ -96,6 +97,8 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, contactDetails: action.payload }
     case "SET_WASTAGE_APPLIED":
       return { ...state, wastageApplied: action.payload }
+    case "SET_CLIENT_DETAILS":
+      return { ...state, clientDetails: action.payload }
     default:
       return { ...state }
   }
