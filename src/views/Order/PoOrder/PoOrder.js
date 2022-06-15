@@ -12,6 +12,7 @@ import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
 import { setCurrentStep } from "@redux/actions/views/Order/POOrder"
 import { savePOOrder } from "@redux/actions/views/common"
+import { toggleSaveBtnStatus } from "@redux/actions/layout"
 
 const stepperMenu = [
   "Listing",
@@ -40,6 +41,14 @@ const PoOrder = (props) => {
   const setCurrentStepHelper = (value) => {
     dispatch(setCurrentStep(value))
   }
+
+  useEffect(() => {
+    dispatch(toggleSaveBtnStatus(true))
+
+    return () => {
+      dispatch(toggleSaveBtnStatus(false))
+    }
+  }, [])
 
   return (
     <div>
