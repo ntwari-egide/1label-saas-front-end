@@ -102,11 +102,10 @@ const InvoiceAndDelivery = (props) => {
     Object.keys(addressListTypes).map((addType) => {
       body.address_type = addType
       axios
-        .post("/Client/GetClientAddressList", body)
+        .post("/Client/GetClientAddressList", { ...body })
         .then((res) => {
           if (res.status === 200) {
             // addressListTypes[addType](res?.data)
-            console.log(addType)
             res.data.map((add, index) =>
               fetchAddressDetails(
                 addType,
