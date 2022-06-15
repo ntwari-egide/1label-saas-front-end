@@ -133,23 +133,13 @@ export const deleteCookie = (name) => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/`
 }
 
-export const showSuccessMsg = (title) => {
-  MySwal.fire({
+export const sweetAlert = (title, text, icon, btnType) => {
+  return MySwal.fire({
     title,
-    icon: "success",
+    text,
+    icon,
     customClass: {
-      confirmButton: "btn btn-primary"
-    },
-    buttonsStyling: false
-  })
-}
-
-export const showErrorMsg = (title) => {
-  MySwal.fire({
-    title,
-    icon: "error",
-    customClass: {
-      confirmButton: "btn btn-danger"
+      confirmButton: `btn btn-${btnType}`
     },
     buttonsStyling: false
   })
