@@ -2,6 +2,7 @@ import { store } from "@redux/storeConfig/store"
 import { getUserData, formatDateYMD } from "@utils"
 import axios from "@axios"
 import { XMLBuilder } from "fast-xml-parser"
+import { sweetAlert } from "@utils"
 
 export const populateData = (module, data) => (dispatch) => {
   const {
@@ -230,6 +231,21 @@ export const saveOrder = (order_status) => (dispatch) => {
     .post("Order/SaveOrder", body)
     .then((res) => {
       if (res.status === 200) {
+        if (res.data.status && res.data.status === "Fail") {
+          sweetAlert(
+            (title = `${order_status} Order Save Failed!`),
+            (text = res.data.status_description),
+            (icon = "error"),
+            (btnType = "danger")
+          )
+        } else {
+          sweetAlert(
+            (title = `${order_status} Order Save Failed!`),
+            (text = ""),
+            (icon = "success"),
+            (btnType = "success")
+          )
+        }
       }
     })
     .catch((err) => console.log(err))
@@ -450,6 +466,21 @@ export const savePOOrder = (order_status) => (dispatch) => {
     .post("Order/SaveOrder", body)
     .then((res) => {
       if (res.status === 200) {
+        if (res.data.status && res.data.status === "Fail") {
+          sweetAlert(
+            (title = `${order_status} Order Save Failed!`),
+            (text = res.data.status_description),
+            (icon = "error"),
+            (btnType = "danger")
+          )
+        } else {
+          sweetAlert(
+            (title = `${order_status} Order Save Failed!`),
+            (text = ""),
+            (icon = "success"),
+            (btnType = "success")
+          )
+        }
       }
     })
     .catch((err) => console.log(err))
