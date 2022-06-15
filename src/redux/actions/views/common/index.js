@@ -240,7 +240,7 @@ export const saveOrder = (order_status) => (dispatch) => {
           )
         } else {
           sweetAlert(
-            `${order_status} Order Save Failed!`,
+            `${order_status} Order Save Successful`,
             "",
             "success",
             "success"
@@ -475,7 +475,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
           )
         } else {
           sweetAlert(
-            `${order_status} Order Save Failed!`,
+            `${order_status} Order Save Successful`,
             "",
             "success",
             "success"
