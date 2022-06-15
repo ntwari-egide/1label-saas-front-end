@@ -28,6 +28,8 @@ import { connect, useDispatch } from "react-redux"
 import { setSizeTableTrigger } from "@redux/actions/views/Order/POOrder"
 import { populateData } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
+import { setLoader } from "@redux/actions/layout"
+import { sweetAlert } from "@utils"
 
 const Listing = (props) => {
   // constants
@@ -128,6 +130,8 @@ const Listing = (props) => {
       alert("Please Item/s to proceed with your order")
       return
     }
+    setOrderLoader(true)
+    dispatch(setLoader(true))
     // props.setCurrentStep(2)
     addPoOrder()
   }
@@ -145,9 +149,10 @@ const Listing = (props) => {
       .then((res) => {
         if (res.status === 200) {
           dispatch(populateData("POOrder", res.data[0]))
-          setOrderLoader(false)
           props.setCurrentStep(1)
         }
+        setOrderLoader(false)
+        dispatch(setLoader(false))
       })
       .catch((err) => console.log(err))
   }
@@ -232,7 +237,6 @@ const Listing = (props) => {
   }
 
   const addPoOrder = () => {
-    setOrderLoader(true)
     const body = {
       brand_key: props.searchParams.brand ? props.searchParams.brand : "",
       order_user: getUserData().admin,
@@ -248,15 +252,14 @@ const Listing = (props) => {
             props.setIsPoOrderTemp("Y")
             fetchPOOrderDetails(res.data.status_description, "Y")
           } else {
-            return MySwal.fire({
-              title: "Order Failed",
-              text: res.data.status_description,
-              icon: "error",
-              customClass: {
-                confirmButton: "btn btn-danger"
-              },
-              buttonsStyling: false
-            })
+            dispatch(setLoader(false))
+            setOrderLoader(false)
+            sweetAlert(
+              "Order Failed",
+              res.data.status_description,
+              "error",
+              "danger"
+            )
           }
         }
       })
