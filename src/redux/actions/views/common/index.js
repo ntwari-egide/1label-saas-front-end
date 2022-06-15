@@ -124,7 +124,7 @@ export const populateData = (module, data) => (dispatch) => {
   }
 }
 
-export const saveOrder = (clientDetails) => (dispatch) => {
+export const saveOrder = (order_status) => (dispatch) => {
   const data = store.getState().orderReducer
 
   const body = {
@@ -132,12 +132,12 @@ export const saveOrder = (clientDetails) => (dispatch) => {
     order_user: getUserData().admin,
     order_no: "",
     num: "",
-    order_status: "Draft",
+    order_status,
     is_copy_order: "N",
     po_number: data.orderReference,
     factory_code: "",
     location_code: data.projectionLocation ? data.projectionLocation : "",
-    draft_order_email: clientDetails.draft_email,
+    draft_order_email: data.clientDetails?.draft_email || "",
     approver_email_address: "", // to be
     order_expdate_delivery_date: formatDateYMD(
       new Date(data.expectedDeliveryDate)
@@ -319,7 +319,7 @@ const processSummarySizeTable = (data) => {
   }
 }
 
-export const savePOOrder = (clientDetails) => (dispatch) => {
+export const savePOOrder = (order_status) => (dispatch) => {
   const data = store.getState().poOrderReducer
 
   const body = {
@@ -328,12 +328,12 @@ export const savePOOrder = (clientDetails) => (dispatch) => {
     order_no: "",
     guid_key: data.combinedPOOrderKey,
     num: "",
-    order_status: "Draft",
+    order_status,
     is_copy_order: "N",
     po_number: data.orderReference,
     factory_code: "",
     location_code: data.projectionLocation ? data.projectionLocation : "",
-    draft_order_email: clientDetails.draft_email,
+    draft_order_email: data.clientDetails?.draft_email || "",
     approver_email_address: "",
     order_expdate_delivery_date: formatDateYMD(
       new Date(data.expectedDeliveryDate)
