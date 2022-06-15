@@ -19,20 +19,19 @@ import { getUserData } from "@utils"
 import {
   setDeliveryAddressDetails,
   setInvoiceAddressDetails,
-  setContactDetails
+  setContactDetails,
+  setClientDetails
 } from "@redux/actions/views/Order/Order"
-import { saveOrder } from "@redux/actions/views/common"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [clientDetails, setClientDetails] = useState({})
   const [, setInvoiceAddressList] = useState({})
   const [, setDeiveryAddresList] = useState({})
   const [, setContactInfo] = useState({})
   const [invoiceDetailsList, setInvoiceDetailsList] = useState([])
   const [deliveryDetailsList, setDeliveryDetailsList] = useState([])
-  const [contactDetailsList, setContactDetailsList] = useState([])
+  const [, setContactDetailsList] = useState([])
   const [invoiceId, setInvoiceId] = useState(0)
   const [deliveryId, setDeliveryId] = useState(0)
 
@@ -68,7 +67,7 @@ const InvoiceAndDelivery = (props) => {
       .post("/Client/GetClientDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          setClientDetails(res?.data)
+          dispatch(setClientDetails(res?.data))
         }
       })
       .catch((err) => console.log(err))
@@ -314,7 +313,7 @@ const InvoiceAndDelivery = (props) => {
                         <div>
                           <Button
                             onClick={() => {
-                              dispatch(saveOrder(clientDetails))
+                              // dispatch(saveOrder(props.clientDetails))
                             }}
                             style={{ width: "100%" }}
                             color="primary"

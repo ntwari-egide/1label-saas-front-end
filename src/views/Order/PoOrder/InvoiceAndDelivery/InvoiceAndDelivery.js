@@ -20,13 +20,13 @@ import { savePOOrder } from "@redux/actions/views/common"
 import {
   setInvoiceAddressDetails,
   setDeliveryAddressDetails,
-  setContactDetails
+  setContactDetails,
+  setClientDetails
 } from "@redux/actions/views/Order/POOrder"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [clientDetails, setClientDetails] = useState({})
   const [, setInvoiceAddressList] = useState({})
   const [, setDeiveryAddresList] = useState({})
   const [, setContactInfo] = useState({})
@@ -68,7 +68,7 @@ const InvoiceAndDelivery = (props) => {
       .post("/Client/GetClientDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          setClientDetails(res?.data)
+          dispatch(setClientDetails(res?.data))
         }
       })
       .catch((err) => console.log(err))
@@ -329,7 +329,7 @@ const InvoiceAndDelivery = (props) => {
                         <div>
                           <Button
                             onClick={() => {
-                              dispatch(savePOOrder(clientDetails))
+                              // dispatch(savePOOrder(clientDetails))
                             }}
                             style={{ width: "100%" }}
                             color="primary"
