@@ -13,13 +13,19 @@ import { connect } from "react-redux"
 // style={{ height: 'fit-content', minHeight: '100vh' }}
 
 const App = (props) => (
-  <BlockUi
-    tag="body"
-    blocking={props.loading}
-    loader={<Spinner size="lg" color="primary" />}
-  >
-    <Router />
-  </BlockUi>
+  <div>
+    {/*}
+      wrapped in div because of react-block-ui
+      for when the pages are more then 100vh in height
+     */}
+    <BlockUi
+      tag="body"
+      blocking={props.loading}
+      loader={<Spinner size="lg" color="primary" />}
+    >
+      <Router />
+    </BlockUi>
+  </div>
 )
 
 const mapStateToProps = (state) => {
