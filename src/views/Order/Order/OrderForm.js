@@ -249,7 +249,7 @@ const OrderForm = (props) => {
               tempIconTranslation[icon.icon_type_id] = res.data.map((opt) => ({
                 value: opt.guid_key,
                 label: opt.gb_translation,
-                icon: <img src={opt.icon_file} />,
+                icon: <img src={opt.icon_file} style={{ maxHeight: "30px" }} />,
                 iconGroup,
                 iconTypeId: icon.icon_type_id
               }))
