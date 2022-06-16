@@ -1,5 +1,6 @@
 import axios from "@axios"
 import { XMLParser } from "fast-xml-parser"
+import { matchContentNumber } from "@redux/actions/views/common"
 
 const formatColToRow = (xmlStr) => {
   const parser = new XMLParser()
