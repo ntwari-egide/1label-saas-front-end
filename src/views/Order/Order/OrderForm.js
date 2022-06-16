@@ -804,17 +804,8 @@ const OrderForm = (props) => {
                     <Row style={{ marginBottom: "10px" }}>
                       <Col xs="12" sm="12" md="9" lg="9" xl="9">
                         <Input
-                          value={
-                            data?.cont_translation ? data?.cont_translation : ""
-                          }
-                          onChange={(e) => {
-                            const tempState = props.defaultContentData
-                            tempState[index] = {
-                              ...tempState[index],
-                              cont_translation: e.target.value
-                            }
-                            dispatch(setDefaultContentData([...tempState]))
-                          }}
+                          value={data?.cont_translation || ""}
+                          disabled={true}
                         />
                       </Col>
                     </Row>
