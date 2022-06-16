@@ -136,7 +136,15 @@ export const deleteCookie = (name) => {
 export const sweetAlert = (title, text, icon, btnType) => {
   return MySwal.fire({
     title,
-    text,
+    html: (
+      <ul>
+        {text.split("\r\n").map((str) => {
+          if (str.length) {
+            return <li>{str}</li>
+          }
+        })}
+      </ul>
+    ),
     icon,
     customClass: {
       confirmButton: `btn btn-${btnType}`
