@@ -4,6 +4,57 @@ import axios from "@axios"
 import { XMLBuilder } from "fast-xml-parser"
 import { sweetAlert } from "@utils"
 import { setLoader } from "@redux/actions/layout"
+import { setContentNumberData } from "@redux/actions/views/Order/Order"
+
+export const matchContentNumber = (module) => (dispatch) => {
+  let state
+  if (module === "Order") {
+    state = store.getState().orderReducer
+  } else {
+    state = store.getState().poOrderReducer
+  }
+  // fetches content and care option value as per change in props.fibreInstructionData and props.careData
+  const body = {
+    brand_key: state.brand ? state.brand.value : "",
+    order_user: getUserData().admin,
+    custom_number: state.custom_number || "",
+    content_group: "A",
+    content: state.fibreInstructionData.map((data, index) => ({
+      cont_key: data.cont_key,
+      part_key: data.part_key,
+      percentage: data.en_percent,
+      seqno: (index + 1) * 10
+    })),
+    default_content: state.defaultContentData.map((cont, index) => ({
+      cont_key: cont,
+      seqno: (index + 1) * 10
+    })),
+    care: state.careData.map((data, index) => ({
+      care_key: data.cont_key,
+      seqno: (index + 1) * 10
+    })),
+    icon: Object.values(state.washCareData).map((obj, index) => ({
+      ...obj,
+      seqno: (index + 1) * 10
+    }))
+  }
+  axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
+    if (res.status === 200) {
+      const {
+        setContentNumberData,
+        setCareNumberData
+      } = require(`@redux/actions/views/Order/${module}`)
+      if (res.data.content_number) {
+        dispatch(
+          setContentNumberData({ value: res.data.content_number, label: "" })
+        )
+      }
+      if (res.data.care_number) {
+        dispatch(setCareNumberData({ value: res.data.care_number, label: "" }))
+      }
+    }
+  })
+}
 
 export const populateData = (module, data) => (dispatch) => {
   const {
