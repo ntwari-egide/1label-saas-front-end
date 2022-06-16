@@ -36,6 +36,7 @@ import {
   setContentGroup,
   setCoo
 } from "@redux/actions/views/Order/POOrder"
+import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
 
 const OrderForm = (props) => {
@@ -210,6 +211,7 @@ const OrderForm = (props) => {
             cont_translation: res.data[0]?.gb_translation
           }
           dispatch(setDefaultContentData([...tempDefData]))
+          dispatch(matchContentNumber("POOrder"))
         }
       })
       .catch((err) => console.log(err))
@@ -659,6 +661,7 @@ const OrderForm = (props) => {
                                     dispatch(
                                       setFibreInstructionData([...tempData])
                                     )
+                                    dispatch(matchContentNumber("POOrder"))
                                   }}
                                 />
                               </Col>
@@ -838,11 +841,13 @@ const OrderForm = (props) => {
                               )}
                               onChange={(e) => {
                                 const tempData = props.careData
-                                props.careData[index] = {
+                                tempData[index] = {
                                   ...props.careData[index],
-                                  cont_key: e.value
+                                  cont_key: e.value,
+                                  care_translation: e.label
                                 }
                                 dispatch(setCareData([...tempData]))
+                                dispatch(matchContentNumber("POOrder"))
                               }}
                             />
                           </Col>
@@ -935,6 +940,7 @@ const OrderForm = (props) => {
                                   ...tempData
                                 })
                               )
+                              dispatch(matchContentNumber("POOrder"))
                             }}
                             getOptionLabel={(e) => (
                               <div>
