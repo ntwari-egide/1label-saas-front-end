@@ -44,14 +44,15 @@ export const matchContentNumber = (module) => (dispatch) => {
         setContentNumberData,
         setCareNumberData
       } = require(`@redux/actions/views/Order/${module}`)
-      if (res.data.content_number) {
-        dispatch(
-          setContentNumberData({ value: res.data.content_number, label: "" })
-        )
-      }
-      if (res.data.care_number) {
-        dispatch(setCareNumberData({ value: res.data.care_number, label: "" }))
-      }
+      dispatch(
+        setContentNumberData({
+          value: res.data.content_number || "",
+          label: ""
+        })
+      )
+      dispatch(
+        setCareNumberData({ value: res.data.care_number || "", label: "" })
+      )
     }
   })
 }
