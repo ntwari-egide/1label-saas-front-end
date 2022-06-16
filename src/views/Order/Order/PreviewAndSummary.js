@@ -83,7 +83,7 @@ const PreviewAndSummary = (props) => {
   const fetchSizeTableDetails = (guid_key) => {
     setLoading(true)
     const body = {
-      guid_key: 134023 // static for now
+      guid_key
     }
     axios
       .post("/SizeTable/GetSizeTableDetail", body)

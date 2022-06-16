@@ -202,10 +202,10 @@ const PreviewAndSummary = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchSizeTableDetails = () => {
+  const fetchSizeTableDetails = (guid_key) => {
     setLoading(true)
     const body = {
-      guid_key: 134023
+      guid_key
     }
     axios
       .post("/SizeTable/GetSizeTableDetail", body)
