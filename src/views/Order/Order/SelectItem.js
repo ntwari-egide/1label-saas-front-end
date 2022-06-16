@@ -23,6 +23,8 @@ import {
 } from "@redux/actions/views/Order/Order"
 import { getUserData } from "@utils"
 
+let timerId = null
+
 const SelectItem = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -31,7 +33,19 @@ const SelectItem = (props) => {
   const [itemList, setItemList] = useState([])
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [loader, setLoader] = useState(false)
+  const [refSearch, setRefSearch] = useState(false)
 
+  // Other Functions
+  const debounceSearch = (item_ref) => {
+    if (timerId) {
+      clearTimeout(timerId)
+    }
+    timerId = setTimeout(() => {
+      fetchItemList(props.brand, props.itemType, item_ref, true)
+    }, [400])
+  }
+
+  // API Services
   const fetchBrandList = () => {
     const body = {
       order_user: getUserData().admin
@@ -65,13 +79,22 @@ const SelectItem = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchItemList = (brand = "", item_type = "") => {
+  const fetchItemList = (
+    brand = "",
+    item_type = "",
+    item_ref = "",
+    refSearch
+  ) => {
+    if (refSearch) {
+      setRefSearch(true)
+    }
     setLoader(true)
     setVisibleCardIndex(0)
     const body = {
       order_user: getUserData().admin,
       brand_key: brand ? brand?.value : "",
-      item_ref_type: item_type ? item_type?.value : ""
+      item_ref_type: item_type ? item_type?.label : "",
+      item_ref: item_ref || ""
     }
     axios
       .post("/Item/GetItemRefList", body)
@@ -79,6 +102,9 @@ const SelectItem = (props) => {
         if (res.status === 200) {
           setLoader(false)
           setItemList(res.data)
+          if (refSearch) {
+            setRefSearch(false)
+          }
         }
       })
       .catch((err) => console.log(err))
@@ -87,7 +113,7 @@ const SelectItem = (props) => {
   useEffect(() => {
     fetchBrandList()
     fetchItemTypeOptions()
-    fetchItemList(props.brand, props.item_type)
+    fetchItemList(props.brand, props.itemType, props.itemRef)
   }, [])
 
   // useEffect(() => {
@@ -121,18 +147,28 @@ const SelectItem = (props) => {
           />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Input placeholder={t("ITEM")} disabled={loader} />
+          <Input
+            placeholder={t("ITEM")}
+            value={props.itemRef}
+            onChange={(e) => {
+              props.setItemRef(e.target.value)
+              debounceSearch(e.target.value)
+            }}
+            disabled={loader && !refSearch}
+          />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
           <Select
             className="React"
             classNamePrefix="select"
             placeholder={t("ITEM TYPE")}
-            value={props.itemType}
+            value={itemTypeOptions.filter(
+              (opt) => opt.value === props.itemType?.value
+            )}
             options={itemTypeOptions}
             onChange={(e) => {
               props.setItemType(e)
-              fetchItemList(props.brand, e)
+              fetchItemList(props.brand, e, props.itemRef)
             }}
             isClearable={true}
             isDisabled={loader}
@@ -153,7 +189,9 @@ const SelectItem = (props) => {
                     </CardHeader>
                     <CardBody>
                       <Row style={{ marginBottom: "10px" }}>
-                        <Col>{item.item_ref}</Col>
+                        <Col style={{ fontWeight: "700" }}>
+                          <h7>{item.item_ref}</h7>
+                        </Col>
                       </Row>
                       <Row style={{ marginBottom: "10px" }}>
                         <Col>{item.item_ref_desc}</Col>
