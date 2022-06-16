@@ -169,6 +169,7 @@ export const handleFibreChange =
           }
           // props.setDefaultContentData([...tempDefData])
           dispatch(setDefaultContentData([...tempDefData]))
+          dispatch(matchContentNumber("Order"))
         }
       })
       .catch((err) => console.log(err))
