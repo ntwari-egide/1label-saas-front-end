@@ -586,9 +586,17 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
-                        value={contentGroupOptions["A"]?.filter(
-                          (opt) => opt.label === props.contentNumberData?.label
-                        )}
+                        value={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]?.filter(
+                                (opt) =>
+                                  opt.label === props.contentNumberData?.label
+                              )
+                            : contentGroupOptions["A"]?.filter(
+                                (opt) =>
+                                  opt.label === props.contentNumberData?.label
+                              )
+                        }
                         options={
                           isContentSettingCommon
                             ? contentGroupOptions["ABC"]
@@ -647,6 +655,7 @@ const OrderForm = (props) => {
                                     dispatch(
                                       setFibreInstructionData([...tempData])
                                     )
+                                    dispatch(matchContentNumber("Order"))
                                   }}
                                 />
                               </Col>
@@ -777,9 +786,17 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
-                        value={contentGroupOptions["BC"]?.filter(
-                          (opt) => opt.value === props.careNumberData?.value
-                        )}
+                        value={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]?.filter(
+                                (opt) =>
+                                  opt.value === props.careNumberData?.value
+                              )
+                            : contentGroupOptions["BC"]?.filter(
+                                (opt) =>
+                                  opt.value === props.careNumberData?.value
+                              )
+                        }
                         options={
                           isContentSettingCommon
                             ? contentGroupOptions["ABC"]
@@ -838,6 +855,7 @@ const OrderForm = (props) => {
                                   cont_key: e.value
                                 }
                                 dispatch(setCareData([...tempData]))
+                                dispatch(matchContentNumber("Order"))
                               }}
                             />
                           </Col>
@@ -930,6 +948,7 @@ const OrderForm = (props) => {
                                   ...tempData
                                 })
                               )
+                              dispatch(matchContentNumber("Order"))
                             }}
                             getOptionLabel={(e) => (
                               <div>
