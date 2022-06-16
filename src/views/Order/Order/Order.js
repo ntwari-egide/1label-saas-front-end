@@ -27,8 +27,10 @@ const Order = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   // APP states
+  // item list states
+  const [itemType, setItemType] = useState({})
+  const [itemRef, setItemRef] = useState("")
   const [lastStep] = useState(stepperMenu.length - 1)
-  const [itemType, setItemType] = useState("")
 
   // summary states
   const [sizeMatrixSelect, setSizeMatrixSelect] = useState({})
@@ -109,6 +111,8 @@ const Order = (props) => {
           lastStep={lastStep}
           itemType={itemType}
           setItemType={setItemType}
+          itemRef={itemRef}
+          setItemRef={setItemRef}
         />
       ) : props.currentStep === 1 ? (
         <OrderForm
