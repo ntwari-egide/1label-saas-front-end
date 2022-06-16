@@ -39,6 +39,7 @@ import {
   setDynamicFieldData,
   setContentGroup
 } from "@redux/actions/views/Order/Order"
+import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
 
 let timerId = null
@@ -69,43 +70,9 @@ const OrderForm = (props) => {
     }
 
     timerId = setTimeout(() => {
-      matchContentNumber()
+      // matchContentNumber()
       timerId = null
     }, 400)
-  }
-
-  const matchContentNumber = () => {
-    // fetches content and care option value as per change in props.fibreInstructionData and props.careData
-    const body = {
-      brand_key: props.brand ? props.brand.value : "",
-      order_user: getUserData().admin,
-      custom_number: "Test Number-jia",
-      content_group: "A",
-      content: props.fibreInstructionData.map((data, index) => ({
-        cont_key: data.cont_key,
-        part_key: data.part_key,
-        percentage: data.en_percent,
-        seqno: (index + 1) * 10
-      })),
-      default_content: props.defaultContentData.map((cont, index) => ({
-        cont_key: cont,
-        seqno: (index + 1) * 10
-      })),
-      care: props.careData.map((data, index) => ({
-        care_key: data.cont_key,
-        seqno: (index + 1) * 10
-      })),
-      icon: Object.values(props.washCareData).map((obj, index) => ({
-        ...obj,
-        seqno: (index + 1) * 10
-      }))
-    }
-    console.log("match body", body)
-    axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
-      if (res.status === 200) {
-        console.log("match content", res)
-      }
-    })
   }
 
   // API services
@@ -629,8 +596,6 @@ const OrderForm = (props) => {
                         }
                         onChange={(e) => {
                           dispatch(setContentNumberData(e))
-                          // props.setContentNumberData(e)
-                          // fetchContentNumberDetail(e.value, e.label)
                           dispatch(
                             fetchContentNumberDetail(
                               e.value,
@@ -822,7 +787,6 @@ const OrderForm = (props) => {
                         }
                         onChange={(e) => {
                           dispatch(setCareNumberData(e))
-                          // fetchContentNumberDetail(e.value, e.label)
                           dispatch(
                             fetchContentNumberDetail(
                               e.value,
