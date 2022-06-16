@@ -337,10 +337,17 @@ const OrderForm = (props) => {
       .post("/Translation/GetDefaultContentByContentKey", body)
       .then((res) => {
         if (res.status === 200) {
-          tempData[index] = {
+          if (
+            tempData
+              .map((data) => data.cont_key)
+              .includes(res.data[0]?.guid_key)
+          ) {
+            return
+          }
+          tempData.push({
             cont_key: res.data[0]?.guid_key,
             cont_translation: res.data[0]?.gb_translation
-          }
+          })
           dispatch(setDefaultContentData([...tempData]))
         }
       })
