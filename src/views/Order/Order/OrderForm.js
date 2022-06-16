@@ -249,13 +249,7 @@ const OrderForm = (props) => {
               tempIconTranslation[icon.icon_type_id] = res.data.map((opt) => ({
                 value: opt.guid_key,
                 label: opt.gb_translation,
-                icon: (
-                  <img
-                    src={
-                      "https://portalpredeploy.1-label.com/upload/layout_file/icon/Icon_A_9f215010-c75f-4257-b27f-7cbf74740274.jpg"
-                    }
-                  />
-                ),
+                icon: <img src={opt.icon_file} />,
                 iconGroup,
                 iconTypeId: icon.icon_type_id
               }))
