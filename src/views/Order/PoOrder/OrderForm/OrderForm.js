@@ -606,9 +606,17 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
-                        value={contentGroupOptions["A"]?.filter(
-                          (opt) => opt.label === props.contentNumberData?.label
-                        )}
+                        value={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]?.filter(
+                                (opt) =>
+                                  opt.label === props.contentNumberData?.label
+                              )
+                            : contentGroupOptions["A"]?.filter(
+                                (opt) =>
+                                  opt.label === props.contentNumberData?.label
+                              )
+                        }
                         options={
                           isContentSettingCommon
                             ? contentGroupOptions["ABC"]
@@ -791,9 +799,17 @@ const OrderForm = (props) => {
                       <Select
                         className="React"
                         classNamePrefix="select"
-                        value={contentGroupOptions["BC"]?.filter(
-                          (opt) => opt.value === props.careNumberData?.value
-                        )}
+                        value={
+                          isContentSettingCommon
+                            ? contentGroupOptions["ABC"]?.filter(
+                                (opt) =>
+                                  opt.value === props.careNumberData?.value
+                              )
+                            : contentGroupOptions["BC"]?.filter(
+                                (opt) =>
+                                  opt.value === props.careNumberData?.value
+                              )
+                        }
                         options={
                           isContentSettingCommon
                             ? contentGroupOptions["ABC"]
