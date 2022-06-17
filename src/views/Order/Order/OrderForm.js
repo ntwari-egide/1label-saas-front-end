@@ -38,7 +38,6 @@ import {
 } from "@redux/actions/views/Order/Order"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
-import { XMLParser } from "fast-xml-parser"
 
 let timerId = null
 const OrderForm = (props) => {
