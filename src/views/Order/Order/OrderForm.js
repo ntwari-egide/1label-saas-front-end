@@ -164,15 +164,15 @@ const OrderForm = (props) => {
     const tempData = [...props.fibreInstructionData]
     tempData[index] = {
       ...props.fibreInstructionData[index],
-      cont_key: e.value,
-      cont_translation: e.label
+      cont_key: e?.value || "",
+      cont_translation: e?.label || ""
     }
     dispatch(setFibreInstructionData([...tempData]))
     // fetching default content for fabric and updating default content state
     let tempDefData = [...props.defaultContentData]
     const body = {
-      brand_key: props.brand.value || "",
-      cont_key: e.value || "",
+      brand_key: props.brand?.value || "",
+      cont_key: e?.value || "",
       page_type: "content"
     }
     axios
@@ -782,6 +782,7 @@ const OrderForm = (props) => {
                                     )
                                     dispatch(matchContentNumber("Order"))
                                   }}
+                                  isClearable={true}
                                 />
                               </Col>
                               <Col xs="12" sm="12" md="3" lg="3" xl="3">
@@ -796,6 +797,7 @@ const OrderForm = (props) => {
                                   onChange={(e) => {
                                     handleFibreChange(e, index)
                                   }}
+                                  isClearable={true}
                                 />
                               </Col>
                               <Col xs="12" sm="12" md="2" lg="2" xl="2">
