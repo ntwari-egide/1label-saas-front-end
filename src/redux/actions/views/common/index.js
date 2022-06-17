@@ -20,17 +20,17 @@ export const matchContentNumber = (module) => (dispatch) => {
     custom_number: state.custom_number || "",
     content_group: "A",
     content: state.fibreInstructionData.map((data, index) => ({
-      cont_key: data.cont_key,
-      part_key: data.part_key,
-      percentage: data.en_percent,
+      cont_key: data.cont_key || "",
+      part_key: data.part_key || "",
+      percentage: data.en_percent || "",
       seqno: (index + 1) * 10
     })),
     default_content: state.defaultContentData.map((cont, index) => ({
-      cont_key: cont,
+      cont_key: cont || "",
       seqno: (index + 1) * 10
     })),
     care: state.careData.map((data, index) => ({
-      care_key: data.cont_key,
+      care_key: data.cont_key || "",
       seqno: (index + 1) * 10
     })),
     icon: Object.values(state.washCareData).map((obj, index) => ({
