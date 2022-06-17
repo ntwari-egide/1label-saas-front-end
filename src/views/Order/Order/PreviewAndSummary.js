@@ -91,9 +91,9 @@ const PreviewAndSummary = (props) => {
         if (res.status === 200) {
           //  set size content if available only if not previously set
           if (res?.data[0]?.size_content) {
-            dispatch(setSizeTable(res?.data[0]?.size_content)) // to send it to invoice and delivery for save order
+            dispatch(setSizeTable(res.data[0]?.size_content)) // to send it to invoice and delivery for save order
             dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
-            dispatch(setSizeData(res?.data[0]?.size_content))
+            dispatch(setSizeData(res.data[0]?.size_content))
           }
           // set default size content if available
           if (res?.data[0]?.default_size_content) {
@@ -197,12 +197,12 @@ const PreviewAndSummary = (props) => {
         </Row>
         <Row>
           <Col>
-            {props.sizeData.length > 0 ? (
+            {props.sizeData?.length > 0 ? (
               <DataTable
                 progressPending={loading}
                 progressComponent={<Spinner />}
                 data={props.sizeData}
-                columns={sizeCols}
+                columns={props.sizeTableCols}
               />
             ) : null}
           </Col>
@@ -226,7 +226,8 @@ const mapStateToProps = (state) => ({
   sizeTable: state.orderReducer.sizeTable,
   defaultSizeTable: state.orderReducer.defaultSizeTable,
   sizeData: state.orderReducer.sizeData,
-  defaultSizeData: state.orderReducer.defaultSizeData
+  defaultSizeData: state.orderReducer.defaultSizeData,
+  sizeTableCols: state.orderReducer.sizeTableCols
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)
