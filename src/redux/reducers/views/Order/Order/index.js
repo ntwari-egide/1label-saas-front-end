@@ -19,6 +19,7 @@ const initialState = {
   dynamicFieldData: {},
   contentGroup: "",
   // size table data
+  sizeTableCols: [],
   sizeMatrixType: "",
   sizeTable: "",
   defaultSizeTable: "",
@@ -94,6 +95,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, contactDetails: action.payload }
     case "SET_CLIENT_DETAILS":
       return { ...state, clientDetails: action.payload }
+    case "SET_SIZE_TABLE_COLS":
+      return { ...state, sizeTableCols: action.payload }
     default:
       return state
   }
