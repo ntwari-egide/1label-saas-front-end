@@ -5,6 +5,7 @@ import { matchContentNumber } from "@redux/actions/views/common"
 const formatColToRow = (xmlStr) => {
   const parser = new XMLParser()
   const jsObj = parser.parse(xmlStr)
+  console.log("size obj", jsObj)
   const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
   let data = [] // initialized data to fill row by row
   let currentRow = 0 + 2 // because actual data begins at Column2
@@ -16,6 +17,7 @@ const formatColToRow = (xmlStr) => {
     data.push(row) // push the row to data
     currentRow += 1 // increment row count
   }
+  console.log("processed", data)
   return data
 }
 
@@ -144,6 +146,7 @@ export const setClientDetails = (data) => (dispatch) => {
 export const handleFibreChange =
   (e, index, fibreInstructionState, defaultContentState, brand) =>
   (dispatch) => {
+    console.log(e)
     // updating the fibreInstructionData state.
     const tempData = [...fibreInstructionState]
     tempData[index] = {
@@ -157,18 +160,35 @@ export const handleFibreChange =
     let tempDefData = [...defaultContentState]
     const body = {
       brand_key: brand.value || "",
-      cont_key: e.value,
+      cont_key: e.value || "",
       page_type: "content"
     }
     axios
       .post("/Translation/GetDefaultContentByContentKey", body)
       .then((res) => {
         if (res.status === 200) {
-          tempDefData[index] = {
+          if (
+            tempDefData
+              .map((data) => data.cont_key)
+              .includes(res.data[0]?.guid_key)
+          ) {
+            return
+          }
+          tempDefData.push({
             cont_key: res.data[0]?.guid_key,
             cont_translation: res.data[0]?.gb_translation
+          })
+          // remove all empty entries if presenet after the initial load
+          tempDefData.map((data, index) => {
+            if (!data.length) {
+              tempDefData.splice(index, 1)
+            }
+          })
+          // push one empty to atleast display
+          if (!tempDefData.length) {
+            tempDefData.push({})
           }
-          // props.setDefaultContentData([...tempDefData])
+          dispatch(setDefaultContentData([...tempData]))
           dispatch(setDefaultContentData([...tempDefData]))
           dispatch(matchContentNumber("Order"))
         }
@@ -200,7 +220,16 @@ export const fetchDefaultContentData =
             cont_key: res.data[0]?.guid_key,
             cont_translation: res.data[0]?.gb_translation
           })
-          // props.setDefaultContentData([...tempData])
+          // remove all empty entries if presenet after the initial load
+          tempData.map((data, index) => {
+            if (!data.length) {
+              tempData.splice(index, 1)
+            }
+          })
+          // push one empty to atleast display
+          if (!tempData.length) {
+            tempData.push({})
+          }
           dispatch(setDefaultContentData([...tempData]))
         }
       })
