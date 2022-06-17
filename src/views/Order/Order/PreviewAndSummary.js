@@ -122,61 +122,36 @@ const PreviewAndSummary = (props) => {
     <Card>
       <CardBody>
         <Row>
-          <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
-            <Card>
-              <CardBody style={{ minHeight: "450px", maxHeight: "450px" }}>
-                <div
-                  style={{ height: "100%", width: "100%", maxHeight: "450px" }}
-                >
-                  <img
-                    style={{
-                      width: "100%",
-                      minHeight: "100%",
-                      maxHeight: "422px",
-                      overflow: "hidden"
-                    }}
-                    src={
-                      "https://demo.i-wanna.com/1Label_New_Order_System/html/html/Order/ArtWork/Item/Lanius%20GmbH.jpg"
-                    }
-                  />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <h4>Preview Item 1: LNU-LNU-LANIUS-CARE-02</h4>
-              </CardFooter>
-            </Card>
-          </Col>
-          <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
-            <Card>
-              <CardBody
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  maxHeight: "450px",
-                  objectFit: "cover"
-                }}
-              >
-                <div
-                  style={{ height: "100%", width: "100%", maxHeight: "450px" }}
-                >
-                  <img
+          {props.selectedItems.map((itm) => (
+            <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
+              <Card>
+                <CardBody style={{ minHeight: "450px", maxHeight: "450px" }}>
+                  <div
                     style={{
                       height: "100%",
                       width: "100%",
-                      maxHeight: "422px",
-                      overflow: "hidden"
+                      maxHeight: "450px"
                     }}
-                    src={
-                      "https://demo.i-wanna.com/1Label_New_Order_System/html/html/Order/ArtWork/Item/Nike.jpg"
-                    }
-                  />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <h4>Preview Item 2: Ind-Ind-INDISKA-SOCK-HT</h4>
-              </CardFooter>
-            </Card>
-          </Col>
+                  >
+                    <img
+                      style={{
+                        width: "100%",
+                        minHeight: "100%",
+                        maxHeight: "422px",
+                        overflow: "hidden"
+                      }}
+                      src={
+                        "https://demo.i-wanna.com/1Label_New_Order_System/html/html/Order/ArtWork/Item/Lanius%20GmbH.jpg"
+                      }
+                    />
+                  </div>
+                </CardBody>
+                <CardFooter>
+                  <h4>{itm.item_ref}</h4>
+                </CardFooter>
+              </Card>
+            </Col>
+          ))}
         </Row>
         <Row style={{ marginBottom: "10px" }}>
           <Col
