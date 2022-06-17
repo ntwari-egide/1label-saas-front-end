@@ -24,11 +24,8 @@ import {
   setExpectedDeliveryDate,
   setProjectionLocation,
   setOrderReference,
-  fetchMinExpectedDeliveryDate,
   setCoo,
-  fetchContentNumberDetail,
   setContentNumberData,
-  handleFibreChange,
   setDefaultContentData,
   setFibreInstructionData,
   setCareData,
@@ -41,6 +38,7 @@ import {
 } from "@redux/actions/views/Order/Order"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
+import { XMLParser } from "fast-xml-parser"
 
 let timerId = null
 const OrderForm = (props) => {
@@ -75,7 +73,140 @@ const OrderForm = (props) => {
     }, 400)
   }
 
+  // other functions
+
+  const processDefaultContent = (data) => {
+    // get unique values
+    const processed = [...new Set(data.map((d) => d?.cont_translation))]
+    // delete empty entries
+    processed.map((data, index) => {
+      if (!data?.length) {
+        processed.splice(index, 1)
+      }
+    })
+    // push at least one to render in case of empty
+    if (!processed?.length) {
+      processed.push("")
+    }
+    return processed
+  }
+
   // API services
+  const fetchDefaultContentData = (contKey, index, tempData) => {
+    // fetches default Content Data as per option selected in fabric select field.
+    const body = {
+      brand_key: props.brand.value || "",
+      cont_key: contKey,
+      page_type: "content"
+    }
+
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          tempData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
+          dispatch(setDefaultContentData([...tempData]))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const fetchContentNumberDetail = (content_number_key, style_number) => {
+    // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
+    const body = {
+      order_user: "innoa",
+      content_number_key,
+      brand_key: props.brand.value || "",
+      style_number
+    }
+    axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
+      if (res.status === 200) {
+        if (res.data.content) {
+          dispatch(
+            setFibreInstructionData(
+              res.data.content.map((data, index) => ({ ...data, id: index }))
+            )
+          )
+          const tempDefaultContentData = []
+          res?.data?.content?.map((cont, index) => {
+            // fetches default content data for fabric
+            fetchDefaultContentData(
+              cont.cont_key,
+              index,
+              tempDefaultContentData
+            )
+          })
+        }
+        if (res.data.care) {
+          dispatch(setCareData(res.data.care))
+        }
+        if (res.data.icon) {
+          const tempData = {}
+          res?.data?.icon.map((icon) => {
+            tempData[icon.icon_type_id] = {
+              icon_group: icon.icon_group,
+              icon_type_id: icon.icon_type_id,
+              sys_icon_key: icon.sys_icon_key
+            }
+          })
+          // props.setWashCareData({ ...tempData })
+          dispatch(setWashCareData({ ...tempData }))
+        }
+      }
+    })
+  }
+
+  const handleFibreChange = (e, index) => {
+    // updating the fibreInstructionData state.
+    const tempData = [...props.fibreInstructionData]
+    tempData[index] = {
+      ...props.fibreInstructionData[index],
+      cont_key: e.value,
+      cont_translation: e.label
+    }
+    dispatch(setFibreInstructionData([...tempData]))
+    // fetching default content for fabric and updating default content state
+    let tempDefData = [...props.defaultContentData]
+    const body = {
+      brand_key: props.brand.value || "",
+      cont_key: e.value || "",
+      page_type: "content"
+    }
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          tempDefData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
+          dispatch(setDefaultContentData([...tempData]))
+          dispatch(setDefaultContentData([...tempDefData]))
+          dispatch(matchContentNumber("Order"))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const fetchMinExpectedDeliveryDate = () => {
+    // min delivery date for Expected Delivery Date field
+    const body = {
+      brand_key: props.brand.value || "",
+      erp_id: 8,
+      item_key: props.selectedItems.map((item) => item.guid_key) || ""
+    }
+
+    axios.post("/Order/GetMinExpectedDeliveryDate", body).then((res) => {
+      dispatch({
+        type: "SET_MIN_EXPECTED_DELIVERY_DATE",
+        payload: res.data.min_delivery_date
+      })
+    })
+  }
+
   const fetchItemInfoData = () => {
     const body = {
       guid_key: "204681f9-c63a-435c-96e9-e6838ed56775"
@@ -477,7 +608,7 @@ const OrderForm = (props) => {
     fetchContentTranslationList()
     fetchProductLocationList()
     // fetchMinDeliveryDate()
-    dispatch(fetchMinExpectedDeliveryDate(props.brand, props.selectedItems))
+    fetchMinExpectedDeliveryDate()
   }, [])
 
   return (
@@ -604,13 +735,7 @@ const OrderForm = (props) => {
                         }
                         onChange={(e) => {
                           dispatch(setContentNumberData(e))
-                          dispatch(
-                            fetchContentNumberDetail(
-                              e.value,
-                              e.label,
-                              props.brand
-                            )
-                          )
+                          fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
                     </Col>
@@ -669,15 +794,7 @@ const OrderForm = (props) => {
                                     (opt) => opt.value === rec?.cont_key
                                   )}
                                   onChange={(e) => {
-                                    dispatch(
-                                      handleFibreChange(
-                                        e,
-                                        index,
-                                        props.fibreInstructionData,
-                                        props.defaultContentData,
-                                        props.brand
-                                      )
-                                    )
+                                    handleFibreChange(e, index)
                                   }}
                                 />
                               </Col>
@@ -768,16 +885,30 @@ const OrderForm = (props) => {
                       </Label>
                     </Col>
                   </Row>
-                  {props.defaultContentData.map((data, index) => (
-                    <Row style={{ marginBottom: "10px" }}>
-                      <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                        <Input
-                          value={data?.cont_translation || ""}
-                          disabled={true}
-                        />
-                      </Col>
-                    </Row>
-                  ))}
+                  {/*}
+                  {props.defaultContentData.map((data, index) => {
+                    console.log(data)
+                    return (
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Input
+                            value={data?.cont_translation || ""}
+                            disabled={true}
+                          />
+                        </Col>
+                      </Row>
+                    )
+                  })}
+    */}
+                  {processDefaultContent(props.defaultContentData).map(
+                    (item) => (
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Input value={item ? item : ""} disabled={true} />
+                        </Col>
+                      </Row>
+                    )
+                  )}
                   <Row style={{ marginBottom: "10px" }}>
                     <Col xs="12" sm="12" md="1" lg="1" xl="1">
                       <Label style={{ marginTop: "12px" }}>Care:</Label>
@@ -804,13 +935,7 @@ const OrderForm = (props) => {
                         }
                         onChange={(e) => {
                           dispatch(setCareNumberData(e))
-                          dispatch(
-                            fetchContentNumberDetail(
-                              e.value,
-                              e.label,
-                              props.brand
-                            )
-                          )
+                          fetchContentNumberDetail(e.value, e.label)
                         }}
                       />
                     </Col>
