@@ -74,8 +74,8 @@ export const populateData = (module, data) => (dispatch) => {
     setDefaultContentData,
     setCoo,
     setShrinkagePercentage,
-    setSizeData,
-    setDefaultSizeData,
+    setSizeTable,
+    setDefaultSizeTable,
     setBrand
   } = require(`@redux/actions/views/Order/${module}`)
   if (data.brand_key) {
@@ -171,10 +171,10 @@ export const populateData = (module, data) => (dispatch) => {
     dispatch(setShrinkagePercentage(data.shrinkage_percentage))
   }
   if (data.size_content) {
-    dispatch(setSizeData(data.size_content))
+    dispatch(setSizeTable(data.size_content))
   }
   if (data.default_size_content && module === "Order") {
-    dispatch(setDefaultSizeData(data.default_size_content))
+    dispatch(setDefaultSizeTable(data.default_size_content))
   }
 }
 
