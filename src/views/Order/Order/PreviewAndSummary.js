@@ -7,7 +7,7 @@ import {
   Spinner,
   Row,
   Col,
-  Label
+  Button
 } from "reactstrap"
 import DataTable from "react-data-table-component"
 import Select from "react-select"
@@ -21,6 +21,7 @@ import {
   setSizeTable,
   setDefaultSizeTable,
   setSizeData,
+  setWastage,
   setDefaultSizeData
 } from "@redux/actions/views/Order/Order"
 import { formatColToRow } from "@utils"
@@ -32,6 +33,8 @@ const PreviewAndSummary = (props) => {
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
   const [cols, setCols] = useState([])
+  const [wastageStatus, setWastageStatus] = useState(false)
+  const [wastageOptions, setWastageOptions] = useState([])
 
   // other functions
   const populateCols = (xmlStr) => {
@@ -44,13 +47,20 @@ const PreviewAndSummary = (props) => {
       name: "Sr No.",
       selector: "Sequence"
     })
-    // pushing country size col
-    jsObj?.SizeMatrix?.Table?.map((col) => {
-      cols.push({
-        name: col.Column1,
-        selector: col.Column1
+    // pushing size col
+    if (jsObj?.SizeMatrix?.Table[0]) {
+      jsObj?.SizeMatrix?.Table?.map((col) => {
+        cols.push({
+          name: col.Column1,
+          selector: col.Column1
+        })
       })
-    })
+    } else {
+      cols.push({
+        name: jsObj?.SizeMatrix?.Table?.Column1,
+        selector: jsObj?.SizeMatrix?.Table?.Column1
+      })
+    }
     // pushing item ref cols
     props.selectedItems.map((_, itm_index) => {
       cols.push({
@@ -101,6 +111,25 @@ const PreviewAndSummary = (props) => {
   }
 
   // API Sevices
+  const fetchWastageList = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : ""
+    }
+    axios
+      .post("/Brand/GetWastageList", body)
+      .then((res) => {
+        if (res.status === 200) {
+          if (res.data[0]?.show_status === "Y") {
+            setWastageStatus(true)
+          } else {
+            setWastageStatus(false)
+          }
+          setWastageOptions(res.data[0]?.wastage_value)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const fetchSizeTableList = () => {
     const body = {
       brand_key: props.brand?.value,
@@ -132,6 +161,7 @@ const PreviewAndSummary = (props) => {
       .then((res) => {
         if (res.status === 200) {
           //  set size content if available
+          console.log("res", res)
           if (res?.data[0]?.size_content) {
             dispatch(setSizeTable(res.data[0]?.size_content)) // to send it to invoice and delivery for save order
             dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
@@ -146,14 +176,15 @@ const PreviewAndSummary = (props) => {
               )
             )
           }
-          setLoading(false)
         }
+        setLoading(false)
       })
       .catch((err) => console.log(err))
   }
 
   useEffect(() => {
     fetchSizeTableList()
+    fetchWastageList()
   }, [])
 
   useEffect(() => {
@@ -232,6 +263,7 @@ const PreviewAndSummary = (props) => {
               options={sizeMatrixOptions}
               onChange={(e) => {
                 setLoading(true)
+                setCols([])
                 fetchSizeTableDetails(e.value)
                 props.setSizeMatrixSelect(e)
               }}
@@ -241,19 +273,66 @@ const PreviewAndSummary = (props) => {
         </Row>
         <Row>
           <Col>
-            {/*}
-            {props.sizeData?.length > 0 ? (
-              <DataTable
-                progressPending={loading}
-                progressComponent={<Spinner />}
-                data={props.sizeData}
-                columns={cols}
-              />
-            ) : null}
-    */}
-            {props.sizeData?.length > 0 ? (
+            {loading ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "200px"
+                }}
+              >
+                <Spinner color="primary" />
+              </div>
+            ) : (
               <DataTable data={props.sizeData} columns={cols} />
-            ) : null}
+            )}
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "20px" }}>
+          <Col xs="12" sm="12" md="2" lg="1" xl="1">
+            <div
+              style={{
+                display: "flex",
+                height: "100%",
+                width: "100%",
+                alignItems: "center"
+              }}
+            >
+              <div>Wastage:</div>
+            </div>
+          </Col>
+          <Col xs="12" sm="12" md="3" lg="2" xl="2">
+            <Select
+              className="React"
+              classNamePrefix="select"
+              options={wastageOptions}
+              value={wastageOptions.filter(
+                (opt) => opt.value === props.wastage
+              )}
+              onChange={(e) => dispatch(setWastage(e.value))}
+              // isDisabled={!wastageStatus}
+            />
+          </Col>
+          <Col xs="12" sm="12" md="7" lg="4" xl="4">
+            <Button
+              color="primary"
+              style={{
+                marginRight: "5px",
+                paddingLeft: "10px",
+                paddingRight: "10px"
+              }}
+              // onClick={() => handleAddResetWastage("add")}
+            >
+              Add Wastage
+            </Button>
+            <Button
+              color="primary"
+              style={{ paddingLeft: "10px", paddingRight: "10px" }}
+              // onClick={() => handleAddResetWastage("reset")}
+            >
+              Reset Wastage
+            </Button>
           </Col>
         </Row>
       </CardBody>
@@ -275,7 +354,8 @@ const mapStateToProps = (state) => ({
   sizeTable: state.orderReducer.sizeTable,
   defaultSizeTable: state.orderReducer.defaultSizeTable,
   sizeData: state.orderReducer.sizeData,
-  defaultSizeData: state.orderReducer.defaultSizeData
+  defaultSizeData: state.orderReducer.defaultSizeData,
+  wastage: state.orderReducer.wastage
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)
