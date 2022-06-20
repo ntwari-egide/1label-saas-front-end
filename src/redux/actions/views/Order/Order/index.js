@@ -122,3 +122,7 @@ export const setContactDetails = (data) => (dispatch) => {
 export const setClientDetails = (data) => (dispatch) => {
   dispatch({ type: "SET_CLIENT_DETAILS", payload: data })
 }
+
+export const setWastage = (value) => (dispatch) => {
+  dispatch({ type: "SET_WASTAGE", payload: value })
+}

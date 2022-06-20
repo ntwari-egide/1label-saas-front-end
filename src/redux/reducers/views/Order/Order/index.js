@@ -24,6 +24,7 @@ const initialState = {
   defaultSizeTable: "",
   sizeData: [],
   defaultSizeData: [],
+  wastage: 0,
   // invoice and delivery data
   clientDetails: {},
   invoiceAddressDetails: {},
@@ -94,6 +95,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, contactDetails: action.payload }
     case "SET_CLIENT_DETAILS":
       return { ...state, clientDetails: action.payload }
+    case "SET_WASTAGE":
+      return { ...state, wastage: action.payload }
     default:
       return state
   }
