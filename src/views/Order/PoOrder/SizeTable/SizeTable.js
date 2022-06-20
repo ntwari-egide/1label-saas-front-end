@@ -5,6 +5,7 @@ import {
   Col,
   Card,
   Button,
+  Input,
   CardHeader,
   CardBody,
   CardFooter
@@ -13,7 +14,6 @@ import Footer from "../../../CommonFooter"
 import axios from "@axios"
 import Select from "react-select"
 import DataTable from "react-data-table-component"
-import { XMLParser } from "fast-xml-parser"
 import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 import { connect, useDispatch } from "react-redux"
@@ -23,6 +23,7 @@ import {
   setSizeTableTrigger,
   setWastageApplied
 } from "@redux/actions/views/Order/POOrder"
+import { formatColToRow } from "@utils"
 
 const SizeTable = (props) => {
   const { t } = useTranslation()
@@ -30,122 +31,72 @@ const SizeTable = (props) => {
   const [wastageStatus, setWastageStatus] = useState(true)
   const [wastageOptions, setWastageOptions] = useState([])
   const [loader, setLoader] = useState(true)
+  const [cols, setCols] = useState([])
 
-  const sizeCols = [
-    {
-      name: t("SIZE DESCRIPTION"),
-      selector: "Size Description",
-      sortable: true
-    },
-    {
-      name: t("SIZE"),
-      selector: "Size",
-      sortable: true
-    },
-    {
-      name: t("SUPPLIER REF"),
-      selector: "Supplier Ref",
-      sortable: false
-    },
-    {
-      name: t("SUPPLIER COLOR"),
-      selector: "Supplier Colour",
-      sortable: false
-    },
-    {
-      name: t("OPTION ID"),
-      selector: "Option ID",
-      sortable: false
-    },
-    {
-      name: t("BUYING GROUP ID"),
-      selector: "Buying Group ID",
-      sortable: false
-    },
-    {
-      name: t("PRODUCT GROUP DESCRIPTION"),
-      selector: "Product Group Description",
-      width: "200px",
-      sortable: false
-    },
-    {
-      name: t("SKU Code"),
-      selector: "SKU Code",
-      sortable: false
-    },
-    {
-      name: t("STYLE NUMBER"),
-      selector: "Style Number",
-      sortable: false
-    },
-    {
-      name: t("BARCODE"),
-      selector: "Barcode",
-      sortable: false
-    },
-    {
-      name: t("ASBAR1"),
-      selector:
-        props.wastageApplied === "Y"
-          ? "QTY ITEM REF 1 WITH WASTAGE"
-          : "QTY ITEM REF 1"
-    },
-    {
-      name: t("QTY ITEM REF 2"),
-      selector: "QTY ITEM REF 2"
-    },
-    {
-      name: t("QTY ITEM REF 3"),
-      selector: "QTY ITEM REF 3"
-    },
-    {
-      name: t("QTY ITEM REF 4"),
-      selector: "QTY ITEM REF 4"
-    },
-    {
-      name: t("QTY ITEM REF 5"),
-      selector: "QTY ITEM REF 5"
-    },
-    {
-      name: t("QTY ITEM REF 6"),
-      selector: "QTY ITEM REF 6"
-    },
-    {
-      name: t("QTY ITEM REF 7"),
-      selector: "QTY ITEM REF 7"
-    },
-    {
-      name: t("QTY ITEM REF 8"),
-      selector: "QTY ITEM REF 8"
-    },
-    {
-      name: t("QTY ITEM REF 9"),
-      selector: "QTY ITEM REF 9"
-    },
-    {
-      name: t("QTY ITEM REF 10"),
-      selector: "QTY ITEM REF 10"
-    },
-    {
-      name: t("UPC/EAN CODE"),
-      selector: "UPC/EAN CODE"
-    }
-  ]
-
-  const formatColToRow = (xmlStr) => {
-    const parser = new XMLParser()
-    const jsObj = parser.parse(xmlStr)
-    const table = []
-    const nRows = Object.keys(jsObj?.SizeMatrix?.Table[0]).length - 2 // gets the no of rows
-    for (let i = 0; i < nRows; i++) {
-      // for no of rows push row
-      const tempRow = {}
-      jsObj?.SizeMatrix?.Table.map((col) => {
-        tempRow[col.Column1] = col[`Column${i + 2}`]
+  const populateCols = (table, tabIndex) => {
+    // dynamically assigning cols to data-table
+    const cols = []
+    // pushing known static cols
+    cols.push({
+      name: "Sr No.",
+      selector: "Sequence"
+    })
+    // pushing size col
+    if (table.length) {
+      Object.keys(table[0]).map((key) => {
+        cols.push({
+          name: key,
+          selector: key
+        })
       })
-      table.push({ ...tempRow })
     }
-    return table
+    // pushing item ref cols
+    props.selectedItems.map((_, itm_index) => {
+      cols.push({
+        name: `QTY ITEM REF ${itm_index}`,
+        selector: `QTY ITEM REF ${itm_index}`,
+        cell: (row, index, col) => {
+          return (
+            <div>
+              <Input
+                value={
+                  props.sizeData[tabIndex][index]
+                    ? props.sizeData[tabIndex][index][col.selector]
+                    : ""
+                }
+                onChange={(e) => {
+                  const tempState = [...props.sizeData]
+                  row[col.selector] = e.target.value
+                  tempState[tabIndex][index] = row
+                  dispatch(setSizeData(tempState))
+                }}
+              />
+            </div>
+          )
+        }
+      })
+    })
+    cols.push({
+      name: "UPC/EAN CODE",
+      selector: "UPC/EAN CODE",
+      cell: (row, index, col) => (
+        <div>
+          <Input
+            value={
+              props.sizeData[index] ? props.sizeData[index][col.selector] : ""
+            }
+            onChange={(e) => {
+              const tempState = [...props.sizeData]
+              row[col.selector] = e.target.value
+              tempState[index] = row
+              // dispatch(setSizeData(tempState))
+            }}
+          />
+        </div>
+      )
+    })
+    // finally assign it to state
+    return cols
   }
 
   const handleAddResetWastage = (operation) => {
@@ -156,7 +107,7 @@ const SizeTable = (props) => {
     try {
       // actual algo
       // iterates throuch size content data and returns the same object with modifications to size_content field
-      const tempState = props.sizeContentData.map((data) => ({
+      const tempState = props.sizeData.map((data) => ({
         ...data,
         size_content: data.size_content.map((row) => {
           const tempRow = { ...row }
@@ -243,8 +194,8 @@ const SizeTable = (props) => {
   }
 
   // useEffect(() => {
-  //   console.log("props.sizeContentData", props.sizeContentData)
-  // }, [props.sizeContentData])
+  //   console.log("props.sizeData", props.sizeData)
+  // }, [props.sizeData])
 
   useEffect(() => {
     if (props.sizeTableTrigger) {
@@ -254,6 +205,20 @@ const SizeTable = (props) => {
     }
     fetchWastageList()
   }, [])
+
+  useEffect(() => {
+    if (!cols.length && props.sizeData.length) {
+      const tempCols = []
+      props.sizeData.map((data, index) => {
+        tempCols[index] = populateCols(data.size_content, index)
+      })
+      setCols(tempCols)
+    }
+  }, [props.sizeData])
+
+  useEffect(() => {
+    console.log("cols", cols)
+  }, [cols])
 
   return (
     <Card>
@@ -276,11 +241,11 @@ const SizeTable = (props) => {
           </div>
         ) : (
           <div>
-            {props.sizeContentData.map((data) => (
+            {props.sizeData.map((data, index) => (
               <Row style={{ margin: 0, marginBottom: "20px" }}>
                 <DataTable
                   data={data.size_content}
-                  columns={sizeCols}
+                  columns={cols[index]}
                   noHeader={true}
                 />
               </Row>
@@ -347,10 +312,11 @@ const SizeTable = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
-  sizeContentData: state.poOrderReducer.sizeContentData,
+  sizeData: state.poOrderReducer.sizeData,
   wastage: state.poOrderReducer.wastage,
   sizeTableTrigger: state.poOrderReducer.sizeTableTrigger,
-  wastageApplied: state.poOrderReducer.wastageApplied
+  wastageApplied: state.poOrderReducer.wastageApplied,
+  selectedItems: state.poOrderReducer.selectedItems
 })
 
 export default connect(mapStateToProps, null)(SizeTable)
