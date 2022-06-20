@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import {
   Card,
+  Input,
   CardBody,
   CardFooter,
   Spinner,
@@ -14,6 +15,7 @@ import Footer from "../../CommonFooter"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
+import { XMLParser } from "fast-xml-parser"
 import {
   setSizeMatrixType,
   setSizeTable,
@@ -21,6 +23,7 @@ import {
   setSizeData,
   setDefaultSizeData
 } from "@redux/actions/views/Order/Order"
+import { formatColToRow } from "@utils"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -28,35 +31,74 @@ const PreviewAndSummary = (props) => {
   // App States
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
+  const [cols, setCols] = useState([])
 
-  const sizeCols = [
-    {
-      name: t("Sr No."),
-      selector: "Sequence",
-      sortable: true
-    },
-    {
-      name: t("SIZE"),
-      selector: "SIZE",
-      sortable: true
-    },
-    {
-      name: t("QTY ITEM REF 0"),
-      selector: "QTY ITEM REF 0"
-    },
-    {
-      name: t("QTY ITEM REF 1"),
-      selector: "QTY ITEM REF 1"
-    },
-    {
-      name: t("QTY ITEM REF 2"),
-      selector: "QTY ITEM REF 2"
-    },
-    {
-      name: t("UPC/EAN CODE"),
-      selector: "UPC/EAN CODE"
-    }
-  ]
+  // other functions
+  const populateCols = (xmlStr) => {
+    // dynamically assigning cols to data-table
+    const parser = new XMLParser()
+    const jsObj = parser.parse(xmlStr)
+    const cols = []
+    // pushing known static cols
+    cols.push({
+      name: "Sr No.",
+      selector: "Sequence"
+    })
+    // pushing country size col
+    jsObj?.SizeMatrix?.Table?.map((col) => {
+      cols.push({
+        name: col.Column1,
+        selector: col.Column1
+      })
+    })
+    // pushing item ref cols
+    props.selectedItems.map((_, itm_index) => {
+      cols.push({
+        name: `QTY ITEM REF ${itm_index}`,
+        selector: `QTY ITEM REF ${itm_index}`,
+        cell: (row, index, col) => {
+          return (
+            <div>
+              <Input
+                value={
+                  props.sizeData[index]
+                    ? props.sizeData[index][col.selector]
+                    : ""
+                }
+                onChange={(e) => {
+                  const tempState = [...props.sizeData]
+                  row[col.selector] = e.target.value
+                  tempState[index] = row
+                  dispatch(setSizeData(tempState))
+                }}
+              />
+            </div>
+          )
+        }
+      })
+    })
+    cols.push({
+      name: "UPC/EAN CODE",
+      selector: "UPC/EAN CODE",
+      cell: (row, index, col) => (
+        <div>
+          <Input
+            value={
+              props.sizeData[index] ? props.sizeData[index][col.selector] : ""
+            }
+            onChange={(e) => {
+              const tempState = [...props.sizeData]
+              row[col.selector] = e.target.value
+              tempState[index] = row
+              dispatch(setSizeData(tempState))
+            }}
+          />
+        </div>
+      )
+    })
+    // finally assign it to state
+    setCols(cols)
+  }
 
   // API Sevices
   const fetchSizeTableList = () => {
@@ -89,16 +131,20 @@ const PreviewAndSummary = (props) => {
       .post("/SizeTable/GetSizeTableDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          //  set size content if available only if not previously set
+          //  set size content if available
           if (res?.data[0]?.size_content) {
             dispatch(setSizeTable(res.data[0]?.size_content)) // to send it to invoice and delivery for save order
             dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
-            dispatch(setSizeData(res.data[0]?.size_content))
+            dispatch(setSizeData(formatColToRow(res.data[0]?.size_content)))
           }
           // set default size content if available
           if (res?.data[0]?.default_size_content) {
             dispatch(setDefaultSizeTable(res?.data[0]?.default_size_content)) // to send it to invoice and delivery for save order
-            dispatch(setDefaultSizeData(res?.data[0]?.default_size_content))
+            dispatch(
+              setDefaultSizeData(
+                formatColToRow(res?.data[0]?.default_size_content)
+              )
+            )
           }
           setLoading(false)
         }
@@ -110,13 +156,11 @@ const PreviewAndSummary = (props) => {
     fetchSizeTableList()
   }, [])
 
-  // useEffect(() => {
-  //   console.log("sizeData", sizeData)
-  // }, [sizeData])
-
-  // useEffect(() => {
-  //   console.log("sizeData", sizeData)
-  // }, [sizeData])
+  useEffect(() => {
+    if (props.sizeData?.length && props.sizeTable?.length && !cols.length) {
+      populateCols(props.sizeTable)
+    }
+  }, [props.sizeData])
 
   return (
     <Card>
@@ -197,13 +241,18 @@ const PreviewAndSummary = (props) => {
         </Row>
         <Row>
           <Col>
+            {/*}
             {props.sizeData?.length > 0 ? (
               <DataTable
                 progressPending={loading}
                 progressComponent={<Spinner />}
                 data={props.sizeData}
-                columns={props.sizeTableCols}
+                columns={cols}
               />
+            ) : null}
+    */}
+            {props.sizeData?.length > 0 ? (
+              <DataTable data={props.sizeData} columns={cols} />
             ) : null}
           </Col>
         </Row>
@@ -226,8 +275,7 @@ const mapStateToProps = (state) => ({
   sizeTable: state.orderReducer.sizeTable,
   defaultSizeTable: state.orderReducer.defaultSizeTable,
   sizeData: state.orderReducer.sizeData,
-  defaultSizeData: state.orderReducer.defaultSizeData,
-  sizeTableCols: state.orderReducer.sizeTableCols
+  defaultSizeData: state.orderReducer.defaultSizeData
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)
