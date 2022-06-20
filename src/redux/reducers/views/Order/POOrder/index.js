@@ -19,9 +19,9 @@ const initialState = {
   contentGroup: "",
   coo: "",
   // size table states
-  sizeContentData: [],
+  sizeData: [],
   wastage: 0,
-  summaryTable: {},
+  summaryTable: [],
   wastageApplied: "N",
   // preview and summary states
   sizeTable: "",
@@ -74,7 +74,7 @@ const poOrderReduced = (state = initialState, action) => {
     case "SET_PO_COO":
       return { ...state, coo: action.payload }
     case "SET_PO_SIZE_CONTENT_DATA":
-      return { ...state, sizeContentData: action.payload }
+      return { ...state, sizeData: action.payload }
     case "SET_PO_WASTAGE":
       return { ...state, wastage: action.payload }
     case "SET_PO_SUMMARY_TABLE":

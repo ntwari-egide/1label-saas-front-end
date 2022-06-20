@@ -145,14 +145,14 @@ const PreviewAndSummary = (props) => {
 
   const calculateSummaryTable = () => {
     // get all the content group
-    let groupTypes = props.sizeContentData.map((data) => data.group_type)
+    let groupTypes = props.sizeData.map((data) => data.group_type)
     // remove duplicate
     groupTypes = [...new Set(groupTypes)]
     // get all table with same group type to process summary table
     const tempState = {} // init temp state for summary data
     groupTypes.map((groupType) => {
       const tempTable = [] // init temp table for every group type
-      const contentGroupArr = props.sizeContentData.filter(
+      const contentGroupArr = props.sizeData.filter(
         (data) => data.group_type === groupType
       )
       // iterate through tables with common group id
@@ -380,7 +380,7 @@ const PreviewAndSummary = (props) => {
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   selectedItems: state.poOrderReducer.selectedItems,
-  sizeContentData: state.poOrderReducer.sizeContentData,
+  sizeData: state.poOrderReducer.sizeData,
   summaryTable: state.poOrderReducer.summaryTable,
   defaultSizeTable: state.poOrderReducer.defaultSizeTable,
   wastageApplied: state.poOrderReducer.wastageApplied
