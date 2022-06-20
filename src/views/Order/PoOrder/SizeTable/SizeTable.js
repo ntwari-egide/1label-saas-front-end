@@ -36,6 +36,7 @@ const SizeTable = (props) => {
   const populateCols = (table, tabIndex) => {
     // dynamically assigning cols to data-table
     const cols = []
+    const tables = props.sizeData.map((data) => data.size_content)
     // pushing known static cols
     cols.push({
       name: "Sr No.",
@@ -60,14 +61,19 @@ const SizeTable = (props) => {
             <div>
               <Input
                 value={
-                  props.sizeData[tabIndex][index]
-                    ? props.sizeData[tabIndex][index][col.selector]
+                  tables[tabIndex][index]
+                    ? tables[tabIndex][index][col.selector]
                     : ""
                 }
                 onChange={(e) => {
+                  const tempTable = tables[tabIndex]
                   const tempState = [...props.sizeData]
                   row[col.selector] = e.target.value
-                  tempState[tabIndex][index] = row
+                  tempTable[index] = row
+                  tempState[tabIndex] = {
+                    ...tempState[tabIndex],
+                    size_content: tempTable
+                  }
                   dispatch(setSizeData(tempState))
                 }}
               />
@@ -83,13 +89,20 @@ const SizeTable = (props) => {
         <div>
           <Input
             value={
-              props.sizeData[index] ? props.sizeData[index][col.selector] : ""
+              tables[tabIndex][index]
+                ? tables[tabIndex][index][col.selector]
+                : ""
             }
             onChange={(e) => {
+              const tempTable = tables[tabIndex]
               const tempState = [...props.sizeData]
               row[col.selector] = e.target.value
-              tempState[index] = row
-              // dispatch(setSizeData(tempState))
+              tempTable[index] = row
+              tempState[tabIndex] = {
+                ...tempState[tabIndex],
+                size_content: tempTable
+              }
+              dispatch(setSizeData(tempState))
             }}
           />
         </div>
