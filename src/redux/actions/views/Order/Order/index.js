@@ -101,10 +101,7 @@ export const setSizeData = (data) => (dispatch) => {
 }
 
 export const setDefaultSizeData = (data) => (dispatch) => {
-  dispatch({
-    type: "SET_DEFAULT_SIZE_DATA",
-    payload: data
-  })
+  dispatch({ type: "SET_DEFAULT_SIZE_DATA", payload: data })
 }
 
 export const setDeliveryAddressDetails = (data) => (dispatch) => {
@@ -125,4 +122,8 @@ export const setClientDetails = (data) => (dispatch) => {
 
 export const setWastage = (value) => (dispatch) => {
   dispatch({ type: "SET_WASTAGE", payload: value })
+}
+
+export const setWastageApplied = (value) => (dispatch) => {
+  dispatch({ type: "SET_WASTAGE_APPLIED", payload: value })
 }

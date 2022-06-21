@@ -25,6 +25,7 @@ const initialState = {
   sizeData: [],
   defaultSizeData: [],
   wastage: 0,
+  wastageApplied: "N",
   // invoice and delivery data
   clientDetails: {},
   invoiceAddressDetails: {},
@@ -97,6 +98,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, clientDetails: action.payload }
     case "SET_WASTAGE":
       return { ...state, wastage: action.payload }
+    case "SET_WAASTAGE_APPLIED":
+      return { ...state, wastageApplied: action.payload }
     default:
       return state
   }
