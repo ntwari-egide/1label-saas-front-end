@@ -190,7 +190,6 @@ export const formatColToRow = (xmlStr) => {
           jsObj?.SizeMatrix?.Table[`Column${currentRow}`]
       }
       row.Sequence = i + 1
-      row["TOTAL QTY"] = 0
       data.push(row) // push the row to data
       currentRow += 1 // increment row count
     }
