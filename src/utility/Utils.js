@@ -158,30 +158,45 @@ export const formatColToRow = (xmlStr) => {
   if (!xmlStr.length) {
     return
   }
-  const parser = new XMLParser()
-  const jsObj = parser.parse(xmlStr)
-  console.log("jsObj", jsObj)
-  // actual algo
-  const nRows = jsObj?.SizeMatrix?.Table[0]
-    ? Object.keys(jsObj?.SizeMatrix?.Table[0]).length - 2 // sometimes good
-    : Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // sometimes shit // gets the no of rows
-  let data = [] // initialized data to fill row by row
-  let currentRow = 0 + 2 // because actual data begins at Column2
-  for (let i = 0; i < nRows; i++) {
-    let row = {} // initialise empty row
-    // if table is array
-    if (jsObj?.SizeMatrix?.Table[0]) {
-      jsObj?.SizeMatrix?.Table.map((col) => {
-        row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
-      })
-    } else {
-      row[jsObj?.SizeMatrix?.Table["Column1"]] =
-        jsObj?.SizeMatrix?.Table[`Column${currentRow}`]
-    }
-    row.Sequence = i + 1
-    data.push(row) // push the row to data
-    currentRow += 1 // increment row count
+  let jsObj
+  try {
+    const parser = new XMLParser()
+    jsObj = parser.parse(xmlStr)
+  } catch (err) {
+    console.log("something went wrong while parsing xml", err)
   }
-  console.log("processed", data)
-  return data
+  console.log("jsObj", jsObj)
+  try {
+    // actual algo
+    const nRows = jsObj?.SizeMatrix?.Table[0]
+      ? Object.keys(jsObj?.SizeMatrix?.Table[0]).length - 2 // sometimes good
+      : Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // sometimes shit // gets the no of rows
+    let data = [] // initialized data to fill row by row
+    let currentRow // because actual data begins at Column2
+    if (jsObj?.SizeMatrix?.Table[0]) {
+      currentRow = 0 + 2 // because actual data begins at Column2
+    } else {
+      currentRow = 0 + 2
+    }
+    for (let i = 0; i < nRows; i++) {
+      let row = {} // initialise empty row
+      // if table is array
+      if (jsObj?.SizeMatrix?.Table[0]) {
+        jsObj?.SizeMatrix?.Table.map((col) => {
+          row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
+        })
+      } else {
+        row[jsObj?.SizeMatrix?.Table["Column1"]] =
+          jsObj?.SizeMatrix?.Table[`Column${currentRow}`]
+      }
+      row.Sequence = i + 1
+      row["TOTAL QTY"] = 0
+      data.push(row) // push the row to data
+      currentRow += 1 // increment row count
+    }
+    console.log("processed", data)
+    return data
+  } catch (err) {
+    console.log("something went wrong while processing parsed xml", err)
+  }
 }
