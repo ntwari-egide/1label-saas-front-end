@@ -16,15 +16,72 @@ import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
 import { XMLParser } from "fast-xml-parser"
+import { toast } from "react-toastify"
 import {
   setSizeMatrixType,
   setSizeTable,
   setDefaultSizeTable,
   setSizeData,
   setWastage,
-  setDefaultSizeData
+  setDefaultSizeData,
+  setWastageApplied,
+  setSelectedItems
 } from "@redux/actions/views/Order/Order"
 import { formatColToRow } from "@utils"
+import { store } from "@redux/storeConfig/store"
+
+const CustomInput = (props) => {
+  const dispatch = useDispatch()
+  const handleQtyChange = (value, row, col, index) => {
+    const tempState = [...store.getState().orderReducer.sizeData]
+    if (value === "") {
+      row[col.selector] = 0
+    }
+    if (value != "" && parseInt(value)) {
+      // update the table
+      row[col.selector] = parseInt(value)
+    }
+    tempState[index] = row
+    console.log("dispatch data", tempState)
+    dispatch(setSizeData(tempState))
+  }
+
+  const calculateTotal = (col, itm_index) => {
+    // update the total in item card
+    const tempRef = [...store.getState().orderReducer.selectedItems]
+    const tempTotal = store
+      .getState()
+      .orderReducer.sizeData.map((row) => row[col.selector])
+      .reduce((a, b) => {
+        if (a && b) {
+          return a + b
+        } else {
+          return a ? a : b ? b : 0
+        }
+      })
+    tempRef[itm_index] = {
+      ...tempRef[itm_index],
+      total: tempTotal
+    }
+    dispatch(setSelectedItems(tempRef))
+  }
+
+  return (
+    <Input
+      value={
+        store.getState().orderReducer.sizeData[props.index]
+          ? store.getState().orderReducer.sizeData[props.index][
+              props.col.selector
+            ]
+          : ""
+      }
+      onChange={(e) => {
+        handleQtyChange(e.target.value, props.row, props.col, props.index)
+        calculateTotal(props.col, props.itm_index)
+      }}
+    />
+  )
+}
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -51,14 +108,14 @@ const PreviewAndSummary = (props) => {
     if (jsObj?.SizeMatrix?.Table[0]) {
       jsObj?.SizeMatrix?.Table?.map((col) => {
         cols.push({
-          name: col.Column1,
-          selector: col.Column1
+          name: String(col.Column1),
+          selector: String(col.Column1)
         })
       })
     } else {
       cols.push({
-        name: jsObj?.SizeMatrix?.Table?.Column1,
-        selector: jsObj?.SizeMatrix?.Table?.Column1
+        name: String(jsObj?.SizeMatrix?.Table?.Column1),
+        selector: String(jsObj?.SizeMatrix?.Table?.Column1)
       })
     }
     // pushing item ref cols
@@ -69,18 +126,11 @@ const PreviewAndSummary = (props) => {
         cell: (row, index, col) => {
           return (
             <div>
-              <Input
-                value={
-                  props.sizeData[index]
-                    ? props.sizeData[index][col.selector]
-                    : ""
-                }
-                onChange={(e) => {
-                  const tempState = [...props.sizeData]
-                  row[col.selector] = e.target.value
-                  tempState[index] = row
-                  dispatch(setSizeData(tempState))
-                }}
+              <CustomInput
+                row={row}
+                col={col}
+                index={index}
+                itm_index={itm_index}
               />
             </div>
           )
@@ -94,10 +144,12 @@ const PreviewAndSummary = (props) => {
         <div>
           <Input
             value={
-              props.sizeData[index] ? props.sizeData[index][col.selector] : ""
+              store.getState().orderReducer.sizeData[index]
+                ? store.getState().orderReducer.sizeData[index][col.selector]
+                : ""
             }
             onChange={(e) => {
-              const tempState = [...props.sizeData]
+              const tempState = [...store.getState().orderReducer.sizeData]
               row[col.selector] = e.target.value
               tempState[index] = row
               dispatch(setSizeData(tempState))
@@ -108,6 +160,53 @@ const PreviewAndSummary = (props) => {
     })
     // finally assign it to state
     setCols(cols)
+  }
+
+  const handleAddResetWastage = (operation) => {
+    // just to avoid computation
+    if (props.wastage === 0) {
+      return
+    }
+    if (operation === "add") {
+      try {
+        // actual algo
+        // iterates throuch size content data and returns the same object with modifications to size_content field
+        const tempState = props.sizeData.map((row) => {
+          Object.keys(row).map((key) => {
+            if (key.includes("QTY ITEM REF")) {
+              row[key] += row[key] * props.wastage
+              row[key] = Math.ceil(row[key])
+            }
+          })
+          return row
+        })
+        // dispatch new state
+        dispatch(setSizeData(tempState))
+        // re-calculate total for itemRef
+        const tempRefState = props.selectedItems.map((item, index) => {
+          let total = 0
+          props.sizeData.map((row) => {
+            if (row[`QTY ITEM REF ${index}`]) {
+              total += row[`QTY ITEM REF ${index}`]
+            }
+          })
+          return { ...item, total }
+        })
+        dispatch(setSizeData(tempRefState))
+        // will need to re-calculate cols to render latest changes
+        populateCols(props.sizeTable)
+      } catch (err) {
+        console.log("Something went wrong while processing wastage", err)
+        dispatch(setWastage(0))
+        return
+      }
+      dispatch(setWastageApplied("Y"))
+      toast(`${props.wastage * 100}% Wastage Applied.`)
+    } else {
+      dispatch(setWastage(0))
+      dispatch(setWastageApplied("N"))
+      toast("Wastage Reset.")
+    }
   }
 
   // API Sevices
@@ -162,19 +261,22 @@ const PreviewAndSummary = (props) => {
         if (res.status === 200) {
           //  set size content if available
           console.log("res", res)
-          if (res?.data[0]?.size_content) {
-            dispatch(setSizeTable(res.data[0]?.size_content)) // to send it to invoice and delivery for save order
-            dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
-            dispatch(setSizeData(formatColToRow(res.data[0]?.size_content)))
-          }
-          // set default size content if available
-          if (res?.data[0]?.default_size_content) {
-            dispatch(setDefaultSizeTable(res?.data[0]?.default_size_content)) // to send it to invoice and delivery for save order
-            dispatch(
-              setDefaultSizeData(
-                formatColToRow(res?.data[0]?.default_size_content)
-              )
-            )
+          const size_content = res.data[0]?.size_content
+          const default_content = res.data[0]?.default_size_content
+          const size_matrix = res.data[0]?.size_matrix_type
+          try {
+            if (size_content) {
+              dispatch(setSizeTable(size_content)) // to send it to invoice and delivery for save order
+              dispatch(setSizeData(formatColToRow(size_content)))
+              dispatch(setSizeMatrixType(size_matrix)) // to send it to invoice and delivery for save order
+            }
+            // set default size content if available
+            if (default_content) {
+              dispatch(setDefaultSizeTable(default_content)) // to send it to invoice and delivery for save order
+              dispatch(setDefaultSizeData(formatColToRow(default_content)))
+            }
+          } catch (err) {
+            console.log(err)
           }
         }
         setLoading(false)
@@ -185,13 +287,28 @@ const PreviewAndSummary = (props) => {
   useEffect(() => {
     fetchSizeTableList()
     fetchWastageList()
+
+    // will need to re-calculate cols on each re-visit
+    if (props.sizeData.length) {
+      populateCols(props.sizeTable)
+    }
+
+    return () => {
+      // because need to re-calculate cols on each re-visit
+      setCols([])
+    }
   }, [])
 
   useEffect(() => {
+    // to calculate when change in sizeData
     if (props.sizeData?.length && props.sizeTable?.length && !cols.length) {
       populateCols(props.sizeTable)
     }
   }, [props.sizeData])
+
+  useEffect(() => {
+    console.log("cols", cols)
+  }, [cols])
 
   return (
     <Card>
@@ -222,7 +339,30 @@ const PreviewAndSummary = (props) => {
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <h4>{itm.item_ref}</h4>
+                  <Row>
+                    <Col
+                      xs={8}
+                      sm={8}
+                      md={8}
+                      lg={8}
+                      xl={8}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <div>
+                        <h5>{itm.item_ref}</h5>
+                      </div>
+                    </Col>
+                    <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+                      <Row>
+                        <Col style={{ textAlign: "center" }}>Total QTY</Col>
+                      </Row>
+                      <Row>
+                        <Col style={{ textAlign: "center" }}>
+                          {itm.total ? itm.total : 0}
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
                 </CardFooter>
               </Card>
             </Col>
@@ -308,10 +448,11 @@ const PreviewAndSummary = (props) => {
               classNamePrefix="select"
               options={wastageOptions}
               value={wastageOptions.filter(
-                (opt) => opt.value === props.wastage
+                (opt) => opt.value === `${props.wastage}`
               )}
-              onChange={(e) => dispatch(setWastage(e.value))}
-              // isDisabled={!wastageStatus}
+              onChange={(e) => dispatch(setWastage(parseFloat(e.value)))}
+              isDisabled={!wastageStatus}
+              menuPlacement={"auto"}
             />
           </Col>
           <Col xs="12" sm="12" md="7" lg="4" xl="4">
@@ -322,14 +463,14 @@ const PreviewAndSummary = (props) => {
                 paddingLeft: "10px",
                 paddingRight: "10px"
               }}
-              // onClick={() => handleAddResetWastage("add")}
+              onClick={() => handleAddResetWastage("add")}
             >
               Add Wastage
             </Button>
             <Button
               color="primary"
               style={{ paddingLeft: "10px", paddingRight: "10px" }}
-              // onClick={() => handleAddResetWastage("reset")}
+              onClick={() => handleAddResetWastage("reset")}
             >
               Reset Wastage
             </Button>
