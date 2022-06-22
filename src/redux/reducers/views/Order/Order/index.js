@@ -99,7 +99,7 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, clientDetails: action.payload }
     case "SET_WASTAGE":
       return { ...state, wastage: action.payload }
-    case "SET_WAASTAGE_APPLIED":
+    case "SET_WASTAGE_APPLIED":
       return { ...state, wastageApplied: action.payload }
     case "SET_COLS":
       return { ...state, cols: action.payload }
