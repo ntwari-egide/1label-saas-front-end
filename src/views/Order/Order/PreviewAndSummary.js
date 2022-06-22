@@ -105,7 +105,7 @@ const PreviewAndSummary = (props) => {
       })
     }
     // pushing item ref cols
-    props.selectedItems.map((_, itm_index) => {
+    props.selectedItems.map((item, itm_index) => {
       cols.push({
         name: `QTY ITEM REF ${itm_index}`,
         selector:
@@ -123,6 +123,7 @@ const PreviewAndSummary = (props) => {
                   handleQtyChange(e.target.value, row, col, index)
                   calculateTotal(col, itm_index)
                 }}
+                disabled={item.is_non_size === "Y"}
               />
             </div>
           )
