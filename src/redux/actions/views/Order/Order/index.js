@@ -127,3 +127,7 @@ export const setWastage = (value) => (dispatch) => {
 export const setWastageApplied = (value) => (dispatch) => {
   dispatch({ type: "SET_WASTAGE_APPLIED", payload: value })
 }
+
+export const setCols = (data) => (dispatch) => {
+  dispatch({ type: "SET_COLS", payload: data })
+}
