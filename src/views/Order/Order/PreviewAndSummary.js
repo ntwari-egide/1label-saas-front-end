@@ -25,24 +25,32 @@ import {
   setWastage,
   setDefaultSizeData,
   setWastageApplied,
+  setCols,
   setSelectedItems
 } from "@redux/actions/views/Order/Order"
 import { formatColToRow } from "@utils"
 import { store } from "@redux/storeConfig/store"
 
-const CustomInput = (props) => {
+const PreviewAndSummary = (props) => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
+  // App States
+  const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [wastageStatus, setWastageStatus] = useState(false)
+  const [wastageOptions, setWastageOptions] = useState([])
+
+  // other functions
   const handleQtyChange = (value, row, col, index) => {
     const tempState = [...store.getState().orderReducer.sizeData]
     if (value === "") {
-      row[col.selector] = 0
+      row = { ...row, [`${col.selector}`]: "" }
     }
     if (value != "" && parseInt(value)) {
       // update the table
-      row[col.selector] = parseInt(value)
+      row = { ...row, [`${col.selector}`]: parseInt(value) }
     }
     tempState[index] = row
-    console.log("dispatch data", tempState)
     dispatch(setSizeData(tempState))
   }
 
@@ -66,35 +74,13 @@ const CustomInput = (props) => {
     dispatch(setSelectedItems(tempRef))
   }
 
-  return (
-    <Input
-      value={
-        store.getState().orderReducer.sizeData[props.index]
-          ? store.getState().orderReducer.sizeData[props.index][
-              props.col.selector
-            ]
-          : ""
-      }
-      onChange={(e) => {
-        handleQtyChange(e.target.value, props.row, props.col, props.index)
-        calculateTotal(props.col, props.itm_index)
-      }}
-    />
-  )
-}
-
-const PreviewAndSummary = (props) => {
-  const { t } = useTranslation()
-  const dispatch = useDispatch()
-  // App States
-  const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [cols, setCols] = useState([])
-  const [wastageStatus, setWastageStatus] = useState(false)
-  const [wastageOptions, setWastageOptions] = useState([])
-
-  // other functions
-  const populateCols = (xmlStr) => {
+  const populateCols = (xmlStr, wastageStatus) => {
+    let wastageApp
+    if (wastageStatus) {
+      wastageApp = wastageStatus
+    } else {
+      wastageApp = props.wastageApplied
+    }
     // dynamically assigning cols to data-table
     const parser = new XMLParser()
     const jsObj = parser.parse(xmlStr)
@@ -122,15 +108,21 @@ const PreviewAndSummary = (props) => {
     props.selectedItems.map((_, itm_index) => {
       cols.push({
         name: `QTY ITEM REF ${itm_index}`,
-        selector: `QTY ITEM REF ${itm_index}`,
+        selector:
+          wastageApp === "N"
+            ? `QTY_ITEM_REF_${itm_index}`
+            : `QTY_ITEM_REF_${itm_index}_WITH_WASTAGE`,
         cell: (row, index, col) => {
           return (
             <div>
-              <CustomInput
-                row={row}
-                col={col}
-                index={index}
-                itm_index={itm_index}
+              <Input
+                key={`${index}-${col?.selector}`}
+                id={`${index}-${col?.selector}`}
+                value={row[col.selector]}
+                onChange={(e) => {
+                  handleQtyChange(e.target.value, row, col, index)
+                  calculateTotal(col, itm_index)
+                }}
               />
             </div>
           )
@@ -143,11 +135,7 @@ const PreviewAndSummary = (props) => {
       cell: (row, index, col) => (
         <div>
           <Input
-            value={
-              store.getState().orderReducer.sizeData[index]
-                ? store.getState().orderReducer.sizeData[index][col.selector]
-                : ""
-            }
+            value={row[col.selector]}
             onChange={(e) => {
               const tempState = [...store.getState().orderReducer.sizeData]
               row[col.selector] = e.target.value
@@ -159,7 +147,7 @@ const PreviewAndSummary = (props) => {
       )
     })
     // finally assign it to state
-    setCols(cols)
+    dispatch(setCols(cols))
   }
 
   const handleAddResetWastage = (operation) => {
@@ -168,39 +156,44 @@ const PreviewAndSummary = (props) => {
       return
     }
     if (operation === "add") {
+      // adding wastage to sizeData
       try {
         // actual algo
         // iterates throuch size content data and returns the same object with modifications to size_content field
         const tempState = props.sizeData.map((row) => {
           Object.keys(row).map((key) => {
-            if (key.includes("QTY ITEM REF")) {
-              row[key] += row[key] * props.wastage
-              row[key] = Math.ceil(row[key])
+            if (key.includes("QTY_ITEM_REF")) {
+              let newVal = row[key] + row[key] * props.wastage
+              newVal = Math.ceil(newVal)
+              row = { ...row, [`${key}_WITH_WASTAGE`]: newVal }
             }
           })
           return row
         })
         // dispatch new state
-        dispatch(setSizeData(tempState))
+        dispatch(setSizeData([...tempState]))
         // re-calculate total for itemRef
         const tempRefState = props.selectedItems.map((item, index) => {
           let total = 0
-          props.sizeData.map((row) => {
-            if (row[`QTY ITEM REF ${index}`]) {
-              total += row[`QTY ITEM REF ${index}`]
+          tempState.map((row) => {
+            if (row[`QTY_ITEM_REF_${index}_WITH_WASTAGE`]) {
+              total += row[`QTY_ITEM_REF_${index}_WITH_WASTAGE`]
             }
           })
           return { ...item, total }
         })
-        dispatch(setSizeData(tempRefState))
+        dispatch(setSelectedItems(tempRefState))
         // will need to re-calculate cols to render latest changes
-        populateCols(props.sizeTable)
+        populateCols(props.sizeTable, "Y")
+        dispatch(setWastageApplied("Y"))
       } catch (err) {
         console.log("Something went wrong while processing wastage", err)
+        alert(
+          "Something went wrong while processing wastage. Please try again later"
+        )
         dispatch(setWastage(0))
         return
       }
-      dispatch(setWastageApplied("Y"))
       toast(`${props.wastage * 100}% Wastage Applied.`)
     } else {
       dispatch(setWastage(0))
@@ -260,12 +253,20 @@ const PreviewAndSummary = (props) => {
       .then((res) => {
         if (res.status === 200) {
           //  set size content if available
-          console.log("res", res)
           const size_content = res.data[0]?.size_content
           const default_content = res.data[0]?.default_size_content
           const size_matrix = res.data[0]?.size_matrix_type
           try {
             if (size_content) {
+              // process sizeData before dispatch
+              let tempData = formatColToRow(size_content)
+              tempData = tempData.map((row) => {
+                props.selectedItems.map((item, index) => {
+                  row[`QTY ITEM REF ${index}`] = ""
+                })
+                row["UPC/EAN CODE"] = ""
+                return row
+              })
               dispatch(setSizeTable(size_content)) // to send it to invoice and delivery for save order
               dispatch(setSizeData(formatColToRow(size_content)))
               dispatch(setSizeMatrixType(size_matrix)) // to send it to invoice and delivery for save order
@@ -287,28 +288,34 @@ const PreviewAndSummary = (props) => {
   useEffect(() => {
     fetchSizeTableList()
     fetchWastageList()
-
-    // will need to re-calculate cols on each re-visit
-    if (props.sizeData.length) {
-      populateCols(props.sizeTable)
-    }
-
-    return () => {
-      // because need to re-calculate cols on each re-visit
-      setCols([])
-    }
   }, [])
 
   useEffect(() => {
+    return () => {
+      dispatch(setCols([]))
+    }
+  }, [])
+
+  // useEffect(() => {
+  //   if (
+  //     !props.cols.length &&
+  //     props.sizeData?.length &&
+  //     props.sizeTable?.length
+  //   ) {
+  //     populateCols(props.sizeTable)
+  //   }
+  // }, [])
+
+  useEffect(() => {
     // to calculate when change in sizeData
-    if (props.sizeData?.length && props.sizeTable?.length && !cols.length) {
+    if (
+      !props.cols.length &&
+      props.sizeData?.length &&
+      props.sizeTable?.length
+    ) {
       populateCols(props.sizeTable)
     }
   }, [props.sizeData])
-
-  useEffect(() => {
-    console.log("cols", cols)
-  }, [cols])
 
   return (
     <Card>
@@ -403,7 +410,7 @@ const PreviewAndSummary = (props) => {
               options={sizeMatrixOptions}
               onChange={(e) => {
                 setLoading(true)
-                setCols([])
+                dispatch(setCols([]))
                 fetchSizeTableDetails(e.value)
                 props.setSizeMatrixSelect(e)
               }}
@@ -425,7 +432,7 @@ const PreviewAndSummary = (props) => {
                 <Spinner color="primary" />
               </div>
             ) : (
-              <DataTable data={props.sizeData} columns={cols} />
+              <DataTable data={props.sizeData} columns={props.cols} />
             )}
           </Col>
         </Row>
@@ -496,7 +503,9 @@ const mapStateToProps = (state) => ({
   defaultSizeTable: state.orderReducer.defaultSizeTable,
   sizeData: state.orderReducer.sizeData,
   defaultSizeData: state.orderReducer.defaultSizeData,
-  wastage: state.orderReducer.wastage
+  wastage: state.orderReducer.wastage,
+  cols: state.orderReducer.cols,
+  wastageApplied: state.orderReducer.wastageApplied
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)
