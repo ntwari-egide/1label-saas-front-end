@@ -17,10 +17,7 @@ import {
 import { ArrowRight, ArrowLeft } from "react-feather"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
-import {
-  setBrand,
-  handleSelectedItemsChange
-} from "@redux/actions/views/Order/Order"
+import { setBrand, setSelectedItems } from "@redux/actions/views/Order/Order"
 import { getUserData } from "@utils"
 
 let timerId = null
@@ -43,6 +40,42 @@ const SelectItem = (props) => {
     timerId = setTimeout(() => {
       fetchItemList(props.brand, props.itemType, item_ref, true)
     }, [400])
+  }
+
+  const fetchItemRefDetails = (item, index, latestState) => {
+    const body = {
+      guid_key: item.guid_key
+    }
+
+    axios
+      .post("/Item/GetItemRefDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          latestState[index] = {
+            ...latestState[index],
+            is_non_size: res.data[0].is_non_size
+          }
+          dispatch(setSelectedItems(latestState))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const handleSelectedItemsChange = (item) => {
+    let tempList = [...props.selectedItems]
+    // if already in list then removes else appends
+    if (tempList.map((item) => item.guid_key).includes(item.guid_key)) {
+      tempList.splice(
+        tempList.map((item) => item.guid_key).indexOf(item.guid_key),
+        1
+      )
+      dispatch(setSelectedItems(tempList))
+    } else {
+      const finState = [item, ...tempList]
+      dispatch(setSelectedItems(finState))
+      const index = finState.map((item) => item.guid_key).indexOf(item.guid_key)
+      fetchItemRefDetails(item, index, finState)
+    }
   }
 
   // API Services
@@ -205,9 +238,7 @@ const SelectItem = (props) => {
                           .map((item) => item.guid_key)
                           .includes(item.guid_key)}
                         onChange={() => {
-                          dispatch(
-                            handleSelectedItemsChange(item, props.selectedItems)
-                          )
+                          handleSelectedItemsChange(item)
                         }}
                       />
                     </CardFooter>
