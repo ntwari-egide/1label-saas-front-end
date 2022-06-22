@@ -43,13 +43,8 @@ const PreviewAndSummary = (props) => {
   // other functions
   const handleQtyChange = (value, row, col, index) => {
     const tempState = [...store.getState().orderReducer.sizeData]
-    if (value === "") {
-      row = { ...row, [`${col.selector}`]: "" }
-    }
-    if (value != "" && parseInt(value)) {
-      // update the table
-      row = { ...row, [`${col.selector}`]: parseInt(value) }
-    }
+    // update the table
+    row = { ...row, [`${col.selector}`]: parseInt(value) }
     tempState[index] = row
     dispatch(setSizeData(tempState))
   }
@@ -118,7 +113,7 @@ const PreviewAndSummary = (props) => {
               <Input
                 key={`${index}-${col?.selector}`}
                 id={`${index}-${col?.selector}`}
-                value={row[col.selector]}
+                value={row[col.selector] ? row[col.selector] : ""}
                 onChange={(e) => {
                   handleQtyChange(e.target.value, row, col, index)
                   calculateTotal(col, itm_index)
@@ -139,7 +134,7 @@ const PreviewAndSummary = (props) => {
             value={row[col.selector]}
             onChange={(e) => {
               const tempState = [...store.getState().orderReducer.sizeData]
-              row[col.selector] = e.target.value
+              row = { ...row, [`${col.selector}`]: e.target.value }
               tempState[index] = row
               dispatch(setSizeData(tempState))
             }}
@@ -344,7 +339,7 @@ const PreviewAndSummary = (props) => {
     <Card>
       <CardBody>
         <Row>
-          {props.selectedItems.map((itm) => (
+          {props.selectedItems.map((itm, index) => (
             <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
               <Card>
                 <CardBody style={{ minHeight: "450px", maxHeight: "450px" }}>
@@ -369,7 +364,7 @@ const PreviewAndSummary = (props) => {
                   </div>
                 </CardBody>
                 <CardFooter>
-                  <Row>
+                  <Row style={{ height: "60px" }}>
                     <Col
                       xs={8}
                       sm={8}
@@ -382,14 +377,42 @@ const PreviewAndSummary = (props) => {
                         <h5>{itm.item_ref}</h5>
                       </div>
                     </Col>
-                    <Col xs={4} sm={4} md={4} lg={4} xl={4}>
+                    <Col
+                      xs={4}
+                      sm={4}
+                      md={4}
+                      lg={4}
+                      xl={4}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-around"
+                      }}
+                    >
                       <Row>
                         <Col style={{ textAlign: "center" }}>Total QTY</Col>
                       </Row>
                       <Row>
-                        <Col style={{ textAlign: "center" }}>
-                          {itm.total ? itm.total : 0}
-                        </Col>
+                        {itm.is_non_size === "N" ? (
+                          <Col style={{ textAlign: "center" }}>
+                            {itm.total ? itm.total : 0}
+                          </Col>
+                        ) : (
+                          <Col style={{ textAlign: "center" }}>
+                            <Input
+                              value={itm.total ? itm.total : 0}
+                              style={{ textAlign: "center", height: "35px" }}
+                              onChange={(e) => {
+                                const tempState = [...props.selectedItems]
+                                tempState[index] = {
+                                  ...tempState[index],
+                                  total: parseInt(e.target.value)
+                                }
+                                dispatch(setSelectedItems(tempState))
+                              }}
+                            />
+                          </Col>
+                        )}
                       </Row>
                     </Col>
                   </Row>
