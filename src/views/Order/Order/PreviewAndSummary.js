@@ -196,6 +196,21 @@ const PreviewAndSummary = (props) => {
       }
       toast(`${props.wastage * 100}% Wastage Applied.`)
     } else {
+      // re calculate total for selected items in case wastage was applied
+      if (props.wastageApplied === "Y") {
+        const tempRefState = props.selectedItems.map((item, index) => {
+          let total = 0
+          props.sizeData.map((row) => {
+            if (row[`QTY_ITEM_REF_${index}`]) {
+              total += row[`QTY_ITEM_REF_${index}`]
+            }
+          })
+          return { ...item, total }
+        })
+        dispatch(setSelectedItems(tempRefState))
+      }
+      // will need to recalculate cols since change in selector field
+      populateCols(props.sizeTable, "N")
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
       toast("Wastage Reset.")
