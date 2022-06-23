@@ -8,7 +8,7 @@ const initialState = {
   defaultContentData: [""],
   dynamicFieldData: {},
   selectedItems: [],
-  projectionLocation: "",
+  productionLocation: "",
   expectedDeliveryDate: "",
   minExpectedDeliveryDate: "",
   orderReference: "",
@@ -60,7 +60,7 @@ const orderReducer = (state = initialState, action) => {
     case "SET_MIN_EXPECTED_DELIVERY_DATE":
       return { ...state, minExpectedDeliveryDate: action.payload }
     case "SET_PROJECTION_LOCATION":
-      return { ...state, projectionLocation: action.payload }
+      return { ...state, productionLocation: action.payload }
     case "SET_COO":
       return { ...state, coo: action.payload }
     case "SET_CONTENT_NUMBER_DATA":

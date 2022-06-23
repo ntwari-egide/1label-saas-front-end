@@ -545,7 +545,6 @@ const mapStateToProps = (state) => ({
   contactDetails: state.orderReducer.contactDetails,
   orderReference: state.orderReducer.orderReference,
   expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
-  projectionLocation: state.projectionLocation
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

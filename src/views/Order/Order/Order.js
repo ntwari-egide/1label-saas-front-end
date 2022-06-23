@@ -37,7 +37,7 @@ const Order = (props) => {
 
   // validations for OrderForm Component
   const [orderFormManFields, setOrderFormManFields] = useState({
-    projectionLocation: false,
+    productionLocation: false,
     expectedDeliveryDate: false,
     orderReference: false
   })
@@ -96,7 +96,7 @@ const Order = (props) => {
           selectedItems: props.selectedItems,
           orderFormManFields: {
             expectedDeliveryDate: props.expectedDeliveryDate,
-            projectionLocation: props.projectionLocation,
+            productionLocation: props.productionLocation,
             orderReference: props.orderReference
           }
         }}
@@ -155,7 +155,7 @@ const Order = (props) => {
 
 const mapStateToProps = (state) => ({
   selectedItems: state.orderReducer.selectedItems,
-  projectionLocation: state.orderReducer.projectionLocation,
+  productionLocation: state.orderReducer.productionLocation,
   orderReference: state.orderReducer.orderReference,
   expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
   currentStep: state.orderReducer.currentStep

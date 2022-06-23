@@ -55,7 +55,7 @@ const OrderForm = (props) => {
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
-  const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
+  const [productionLocationOptions, setProjectionLocationOptions] = useState([])
   const [contentGroupOptions, setContentGroupOptions] = useState({})
   const [washCareOptions, setWashCareOptions] = useState({})
   const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
@@ -647,9 +647,9 @@ const OrderForm = (props) => {
             <Select
               className="React"
               classNamePrefix="select"
-              options={projectionLocationOptions}
-              value={projectionLocationOptions.filter(
-                (opt) => opt.label === props.projectionLocation
+              options={productionLocationOptions}
+              value={productionLocationOptions.filter(
+                (opt) => opt.label === props.productionLocation
               )}
               onChange={(e) => {
                 dispatch(setProjectionLocation(e.label))
@@ -1102,7 +1102,7 @@ const OrderForm = (props) => {
             orderFormManFields: {
               orderReference: props.orderReference,
               minExpectedDeliveryDate: props.expectedDeliveryDate,
-              projectionLocation: props.projectionLocation
+              productionLocation: props.productionLocation
             }
           }}
         />
@@ -1116,7 +1116,7 @@ const mapStateToProps = (state) => ({
   selectedItems: state.orderReducer.selectedItems,
   expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
   minExpectedDeliveryDate: state.orderReducer.minExpectedDeliveryDate,
-  projectionLocation: state.orderReducer.projectionLocation,
+  productionLocation: state.orderReducer.productionLocation,
   orderReference: state.orderReducer.orderReference,
   careData: state.orderReducer.careData,
   fibreInstructionData: state.orderReducer.fibreInstructionData,
