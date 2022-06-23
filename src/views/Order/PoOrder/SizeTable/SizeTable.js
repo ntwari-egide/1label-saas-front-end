@@ -50,24 +50,36 @@ const SizeTable = (props) => {
     dispatch(setSizeData(tempState))
   }
 
-  const populateCols = (table, tabIndex) => {
+  const populateCols = (table, tabIndex, wastageStatus) => {
+    let wastageApplied
+    if (wastageStatus) {
+      wastageApplied = wastageStatus
+    } else {
+      wastageApplied = props.wastageApplied
+    }
+    console.log("wastage status", wastageApplied)
     // dynamically assigning cols to data-table
     const cols = []
     // pushing known static cols
     // pushing size col
     if (table.length) {
       Object.keys(table[0]).map((key) => {
-        cols.push({
-          name: key,
-          selector: key
-        })
+        if (!key.includes("QTY_ITEM_REF")) {
+          cols.push({
+            name: key,
+            selector: key
+          })
+        }
       })
     }
     // pushing item ref cols
     props.selectedItems.map((_, itm_index) => {
       cols.push({
         name: `QTY ITEM REF ${itm_index}`,
-        selector: `QTY ITEM REF ${itm_index}`,
+        selector:
+          wastageApplied === "N"
+            ? `QTY_ITEM_REF_${itm_index}`
+            : `QTY_ITEM_REF_${itm_index}_WITH_WASTAGE`,
         cell: (row, index, col) => {
           return (
             <div>
@@ -125,42 +137,45 @@ const SizeTable = (props) => {
     if (props.wastage === 0) {
       return
     }
-    try {
-      // actual algo
-      // iterates throuch size content data and returns the same object with modifications to size_content field
-      const tempState = props.sizeData.map((data) => ({
-        ...data,
-        size_content: data.size_content.map((row) => {
-          const tempRow = { ...row }
-          // because value 0 will escape the following loop.
-          if (tempRow["QTY ITEM REF 1"] === 0) {
-            tempRow["QTY ITEM REF 1 WITH WASTAGE"] = 0
-          }
-          if (tempRow["QTY ITEM REF 1"]) {
-            if (operation === "add") {
-              tempRow["QTY ITEM REF 1 WITH WASTAGE"] =
-                tempRow["QTY ITEM REF 1"] +
-                props.wastage * tempRow["QTY ITEM REF 1"]
-              tempRow["QTY ITEM REF 1 WITH WASTAGE"] = Math.ceil(
-                tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-              )
-            } else {
-              delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-            }
-          }
-          return tempRow
-        })
-      }))
-      dispatch(setSizeData([...tempState]))
-    } catch (err) {
-      console.log("Something went wrong while processing wastage")
-      dispatch(setWastage(0))
-      return
-    }
     if (operation === "add") {
-      dispatch(setWastageApplied("Y"))
-      toast(`${props.wastage * 100}% Wastage Applied.`)
+      try {
+        // actual algo
+        // iterates throuch size content data and returns the same object with modifications to size_content field
+        const tempState = props.sizeData.map((data) => ({
+          ...data,
+          size_content: data.size_content.map((row) => {
+            Object.keys(row).map((key) => {
+              if (key.includes("QTY_ITEM_REF")) {
+                row[`${key}_WITH_WASTAGE`] = Math.ceil(
+                  row[key] + row[key] * props.wastage
+                )
+              }
+            })
+            return row
+          })
+        }))
+        dispatch(setWastageApplied("Y"))
+        dispatch(setSizeData([...tempState]))
+        // will have to recalculate cols to render
+        const tempCols = []
+        props.sizeData.map((data, index) => {
+          tempCols[index] = populateCols(data.size_content, index, "Y")
+        })
+        setCols(tempCols)
+        toast(`${props.wastage * 100}% Wastage Applied.`)
+      } catch (err) {
+        alert(
+          "Something went wrong while processing wastage. Please try again later"
+        )
+        console.log("Something went wrong while processing wastage", err)
+        dispatch(setWastage(0))
+      }
     } else {
+      const tempCols = []
+      props.sizeData.map((data, index) => {
+        tempCols[index] = populateCols(data.size_content, index, "N")
+      })
+      setCols(tempCols)
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
       toast("Wastage Reset.")
