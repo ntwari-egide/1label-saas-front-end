@@ -39,6 +39,7 @@ const PreviewAndSummary = (props) => {
   const [loading, setLoading] = useState(false)
   const [wastageStatus, setWastageStatus] = useState(false)
   const [wastageOptions, setWastageOptions] = useState([])
+  const [showSizeData, setShowSizeData] = useState(true)
 
   // other functions
   const handleQtyChange = (value, row, col, index) => {
@@ -250,12 +251,16 @@ const PreviewAndSummary = (props) => {
       .post("/SizeTable/GetSizeTableList", body)
       .then((res) => {
         if (res.status === 200) {
-          setSizeMatrixOptions(
-            res.data.map((sz) => ({
-              value: sz.guid_key,
-              label: sz.size_matrix_type
-            }))
-          )
+          if (res.data.length) {
+            setSizeMatrixOptions(
+              res.data.map((sz) => ({
+                value: sz.guid_key,
+                label: sz.size_matrix_type
+              }))
+            )
+          } else {
+            setShowSizeData(false)
+          }
         }
       })
       .catch((err) => console.log(err))
@@ -421,114 +426,118 @@ const PreviewAndSummary = (props) => {
             </Col>
           ))}
         </Row>
-        <Row style={{ marginBottom: "10px" }}>
-          <Col
-            xs="12"
-            sm="12"
-            md="3"
-            lg="1.5"
-            xl="1.5"
-            style={{
-              marginRight: "0px",
-              paddingRight: "0px",
-              maxWidth: "150px"
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "end",
-                width: "100%",
-                height: "100%",
-                alignItems: "center"
-              }}
-            >
-              <div>Size Matrix Type:</div>
-            </div>
-          </Col>
-          <Col xs="12" sm="12" md="5" lg="5" xl="5">
-            <Select
-              className="React"
-              classNamePrefix="select"
-              value={sizeMatrixOptions.filter(
-                (opt) => opt.value === props.sizeMatrixSelect.value
-              )}
-              options={sizeMatrixOptions}
-              onChange={(e) => {
-                setLoading(true)
-                dispatch(setCols([]))
-                fetchSizeTableDetails(e.value)
-                props.setSizeMatrixSelect(e)
-              }}
-              menuPlacement={"auto"}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            {loading ? (
-              <div
+        {showSizeData ? (
+          <div>
+            <Row style={{ marginBottom: "10px" }}>
+              <Col
+                xs="12"
+                sm="12"
+                md="3"
+                lg="1.5"
+                xl="1.5"
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "200px"
+                  marginRight: "0px",
+                  paddingRight: "0px",
+                  maxWidth: "150px"
                 }}
               >
-                <Spinner color="primary" />
-              </div>
-            ) : (
-              <DataTable data={props.sizeData} columns={props.cols} />
-            )}
-          </Col>
-        </Row>
-        <Row style={{ marginTop: "20px" }}>
-          <Col xs="12" sm="12" md="2" lg="1" xl="1">
-            <div
-              style={{
-                display: "flex",
-                height: "100%",
-                width: "100%",
-                alignItems: "center"
-              }}
-            >
-              <div>Wastage:</div>
-            </div>
-          </Col>
-          <Col xs="12" sm="12" md="3" lg="2" xl="2">
-            <Select
-              className="React"
-              classNamePrefix="select"
-              options={wastageOptions}
-              value={wastageOptions.filter(
-                (opt) => opt.value === `${props.wastage}`
-              )}
-              onChange={(e) => dispatch(setWastage(parseFloat(e.value)))}
-              isDisabled={!wastageStatus}
-              menuPlacement={"auto"}
-            />
-          </Col>
-          <Col xs="12" sm="12" md="7" lg="4" xl="4">
-            <Button
-              color="primary"
-              style={{
-                marginRight: "5px",
-                paddingLeft: "10px",
-                paddingRight: "10px"
-              }}
-              onClick={() => handleAddResetWastage("add")}
-            >
-              Add Wastage
-            </Button>
-            <Button
-              color="primary"
-              style={{ paddingLeft: "10px", paddingRight: "10px" }}
-              onClick={() => handleAddResetWastage("reset")}
-            >
-              Reset Wastage
-            </Button>
-          </Col>
-        </Row>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "end",
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center"
+                  }}
+                >
+                  <div>Size Matrix Type:</div>
+                </div>
+              </Col>
+              <Col xs="12" sm="12" md="5" lg="5" xl="5">
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  value={sizeMatrixOptions.filter(
+                    (opt) => opt.value === props.sizeMatrixSelect.value
+                  )}
+                  options={sizeMatrixOptions}
+                  onChange={(e) => {
+                    setLoading(true)
+                    dispatch(setCols([]))
+                    fetchSizeTableDetails(e.value)
+                    props.setSizeMatrixSelect(e)
+                  }}
+                  menuPlacement={"auto"}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                {loading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "200px"
+                    }}
+                  >
+                    <Spinner color="primary" />
+                  </div>
+                ) : (
+                  <DataTable data={props.sizeData} columns={props.cols} />
+                )}
+              </Col>
+            </Row>
+            <Row style={{ marginTop: "20px" }}>
+              <Col xs="12" sm="12" md="2" lg="1" xl="1">
+                <div
+                  style={{
+                    display: "flex",
+                    height: "100%",
+                    width: "100%",
+                    alignItems: "center"
+                  }}
+                >
+                  <div>Wastage:</div>
+                </div>
+              </Col>
+              <Col xs="12" sm="12" md="3" lg="2" xl="2">
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  options={wastageOptions}
+                  value={wastageOptions.filter(
+                    (opt) => opt.value === `${props.wastage}`
+                  )}
+                  onChange={(e) => dispatch(setWastage(parseFloat(e.value)))}
+                  isDisabled={!wastageStatus}
+                  menuPlacement={"auto"}
+                />
+              </Col>
+              <Col xs="12" sm="12" md="7" lg="4" xl="4">
+                <Button
+                  color="primary"
+                  style={{
+                    marginRight: "5px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px"
+                  }}
+                  onClick={() => handleAddResetWastage("add")}
+                >
+                  Add Wastage
+                </Button>
+                <Button
+                  color="primary"
+                  style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                  onClick={() => handleAddResetWastage("reset")}
+                >
+                  Reset Wastage
+                </Button>
+              </Col>
+            </Row>
+          </div>
+        ) : null}
       </CardBody>
       <CardFooter>
         <Footer
