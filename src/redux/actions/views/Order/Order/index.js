@@ -10,7 +10,7 @@ export const setExpectedDeliveryDate = (e) => (dispatch) => {
   dispatch({ type: "SET_EXPECTED_DELIVERY_DATE", payload: e })
 }
 
-export const setProjectionLocation = (label) => (dispatch) => {
+export const setProductionLocation = (label) => (dispatch) => {
   dispatch({ type: "SET_PROJECTION_LOCATION", payload: label })
 }
 

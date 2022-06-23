@@ -22,7 +22,7 @@ import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { connect, useDispatch } from "react-redux"
 import {
   setExpectedDeliveryDate,
-  setProjectionLocation,
+  setProductionLocation,
   setOrderReference,
   setCoo,
   setContentNumberData,
@@ -55,7 +55,7 @@ const OrderForm = (props) => {
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
-  const [productionLocationOptions, setProjectionLocationOptions] = useState([])
+  const [productionLocationOptions, setProductionLocationOptions] = useState([])
   const [contentGroupOptions, setContentGroupOptions] = useState({})
   const [washCareOptions, setWashCareOptions] = useState({})
   const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
@@ -405,7 +405,7 @@ const OrderForm = (props) => {
       .post("/Order/GetLocationList", body)
       .then((res) => {
         if (res.status === 200) {
-          setProjectionLocationOptions(
+          setProductionLocationOptions(
             res.data.map((loc) => ({ value: loc.erp_id, label: loc.erp_name }))
           )
         }
@@ -652,7 +652,7 @@ const OrderForm = (props) => {
                 (opt) => opt.label === props.productionLocation
               )}
               onChange={(e) => {
-                dispatch(setProjectionLocation(e.label))
+                dispatch(setProductionLocation(e.label))
               }}
             />
           </div>
