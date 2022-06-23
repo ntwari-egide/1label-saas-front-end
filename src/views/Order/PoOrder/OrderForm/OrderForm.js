@@ -130,7 +130,8 @@ const OrderForm = (props) => {
                   const tempState = props.dynamicFieldData
                   tempState[field.title] = {
                     ...tempState[field.title],
-                    field_value: e.target.value
+                    field_value: e.target.value,
+                    field_label: e.target.value
                   }
                   dispatch(setDynamicFieldData({ ...tempState }))
                 }}
