@@ -156,6 +156,55 @@ const InvoiceAndDelivery = (props) => {
   return (
     <Card>
       <CardBody>
+        <Row style={{ paddingBottom: "20px" }}>
+          <Col xs="12" sm="12" md="6" lg="3" xl="3">
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Label>Order Number:</Label>
+              </Col>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Input />
+              </Col>
+            </Row>
+          </Col>
+          <Col xs="12" sm="12" md="6" lg="3" xl="3">
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Label>
+                  Customer Order Reference{" "}
+                  <span style={{ color: "red" }}>*</span>
+                </Label>
+              </Col>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Input />
+              </Col>
+            </Row>
+          </Col>
+          <Col xs="12" sm="12" md="6" lg="3" xl="3">
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Label>
+                  Expected Delivery Date <span style={{ color: "red" }}>*</span>
+                </Label>
+              </Col>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Input />
+              </Col>
+            </Row>
+          </Col>
+          <Col xs="12" sm="12" md="6" lg="3" xl="3">
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Label>
+                  Production Location <span style={{ color: "red" }}>*</span>
+                </Label>
+              </Col>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Input />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
         <Row>
           <Col xs="12" sm="12" md="8" lg="8" xl="8">
             <Card>
@@ -273,13 +322,6 @@ const InvoiceAndDelivery = (props) => {
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Address Type")}</Label>
                     <Input style={{ marginBottom: "15px" }} />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Button color="primary">
-                      {t("Save and Deliver Here")}
-                    </Button>
                   </Col>
                 </Row>
               </CardBody>
@@ -448,13 +490,6 @@ const InvoiceAndDelivery = (props) => {
                     <Input style={{ marginBottom: "15px" }} />
                   </Col>
                 </Row>
-                <Row>
-                  <Col>
-                    <Button color="primary">
-                      {t("Save and Deliver Here")}
-                    </Button>
-                  </Col>
-                </Row>
               </CardBody>
             </Card>
           </Col>
@@ -479,9 +514,6 @@ const InvoiceAndDelivery = (props) => {
                         <p>
                           {data?.city}, {data?.country}
                         </p>
-                        {/*
-                    <p>(86) 0755-8215 5991</p>
-              */}
                         <div>
                           <Button style={{ width: "100%" }} color="primary">
                             {t("Delivery To This Address")}
@@ -510,7 +542,10 @@ const InvoiceAndDelivery = (props) => {
 const mapStateToProps = (state) => ({
   invoiceAddressDetails: state.orderReducer.invoiceAddressDetails,
   deliveryAddressDetails: state.orderReducer.deliveryAddressDetails,
-  contactDetails: state.orderReducer.contactDetails
+  contactDetails: state.orderReducer.contactDetails,
+  orderReference: state.orderReducer.orderReference,
+  expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
+  projectionLocation: state.projectionLocation
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)
