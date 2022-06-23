@@ -156,55 +156,6 @@ const InvoiceAndDelivery = (props) => {
   return (
     <Card>
       <CardBody>
-        <Row style={{ paddingBottom: "20px" }}>
-          <Col xs="12" sm="12" md="6" lg="3" xl="3">
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Label>Order Number:</Label>
-              </Col>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Input />
-              </Col>
-            </Row>
-          </Col>
-          <Col xs="12" sm="12" md="6" lg="3" xl="3">
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Label>
-                  Customer Order Reference{" "}
-                  <span style={{ color: "red" }}>*</span>
-                </Label>
-              </Col>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Input />
-              </Col>
-            </Row>
-          </Col>
-          <Col xs="12" sm="12" md="6" lg="3" xl="3">
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Label>
-                  Expected Delivery Date <span style={{ color: "red" }}>*</span>
-                </Label>
-              </Col>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Input />
-              </Col>
-            </Row>
-          </Col>
-          <Col xs="12" sm="12" md="6" lg="3" xl="3">
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Label>
-                  Production Location <span style={{ color: "red" }}>*</span>
-                </Label>
-              </Col>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Input />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
         <Row>
           <Col xs="12" sm="12" md="8" lg="8" xl="8">
             <Card>
@@ -221,7 +172,7 @@ const InvoiceAndDelivery = (props) => {
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Full Name")}</Label>
+                    <Label>{t("Company Name")}</Label>
                     <Input
                       value={props.invoiceAddressDetails?.name}
                       style={{ marginBottom: "15px" }}
@@ -236,62 +187,63 @@ const InvoiceAndDelivery = (props) => {
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Mobile Number")}</Label>
+                    <Label>{t("Contact")}</Label>
                     <Input
-                      value={props.contactDetails?.phone}
+                      value={props.invoiceAddressDetails?.contact_person}
                       style={{ marginBottom: "15px" }}
                       onChange={(e) => {
-                        handleContactDetailsChange(e.target.value, "phone")
+                        handleDetailsChange(
+                          e.target.value,
+                          "contact_person",
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
                       }}
                     />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Flat, House No")}</Label>
+                    <Label>{t("Phone")}</Label>
                     <Input
-                      value={
-                        props.invoiceAddressDetails?.address?.split("|")[0]
-                      }
+                      value={props.invoiceAddressDetails?.phone}
                       style={{ marginBottom: "15px" }}
-                      onChange={(e) =>
-                        handleAddressChange(
+                      onChange={(e) => {
+                        handleDetailsChange(
                           e.target.value,
-                          0,
+                          "phone",
                           setInvoiceAddressDetails,
-                          props.invoiceAddressDetails?.address
+                          props.invoiceAddressDetails
                         )
-                      }
+                      }}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Landmark e.g. near apollo hospital")}</Label>
+                    <Label>{t("Fax")}</Label>
                     <Input
-                      value={
-                        props.invoiceAddressDetails?.address?.split("|")[1]
-                      }
+                      value={props.invoiceAddressDetails?.fax}
                       style={{ marginBottom: "15px" }}
-                      onChange={(e) =>
-                        handleAddressChange(
+                      onChange={(e) => {
+                        handleDetailsChange(
                           e.target.value,
-                          1,
+                          "fax",
                           setInvoiceAddressDetails,
-                          props.invoiceAddressDetails?.address
+                          props.invoiceAddressDetails
                         )
-                      }
+                      }}
                     />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Town/City")}</Label>
+                    <Label>{t("Email")}</Label>
                     <Input
-                      value={props.invoiceAddressDetails?.city}
+                      value={props.invoiceAddressDetails?.email}
                       style={{ marginBottom: "15px" }}
                       onChange={(e) =>
                         handleDetailsChange(
                           e.target.value,
-                          "city",
+                          "email",
                           setInvoiceAddressDetails,
                           props.invoiceAddressDetails
                         )
@@ -299,14 +251,14 @@ const InvoiceAndDelivery = (props) => {
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Pincode")}</Label>
+                    <Label>{t("Address1")}</Label>
                     <Input
-                      value={props.invoiceAddressDetails?.post_code}
+                      value={props.invoiceAddressDetails?.address}
                       style={{ marginBottom: "15px" }}
                       onChange={(e) =>
                         handleDetailsChange(
                           e.target.value,
-                          "post_code",
+                          "address",
                           setInvoiceAddressDetails,
                           props.invoiceAddressDetails
                         )
@@ -316,12 +268,34 @@ const InvoiceAndDelivery = (props) => {
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("State")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Label>{t("Address2")}</Label>
+                    <Input
+                      value={props.invoiceAddressDetails?.address2}
+                      onChange={(e) => {
+                        handleDetailsChange(
+                          e.target.value,
+                          "address2",
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
+                      }}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Address Type")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Label>{t("Address3")}</Label>
+                    <Input
+                      value={props.invoiceAddressDetails?.address3}
+                      onChange={(e) => {
+                        handleDetailsChange(
+                          e.target.value,
+                          "address3",
+                          setInvoiceAddressDetails,
+                          props.invoiceAddressDetails
+                        )
+                      }}
+                      style={{ marginBottom: "15px" }}
+                    />
                   </Col>
                 </Row>
               </CardBody>
@@ -387,7 +361,7 @@ const InvoiceAndDelivery = (props) => {
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Full Name")}</Label>
+                    <Label>{t("Company Name")}</Label>
                     <Input
                       value={props.deliveryAddressDetails?.name}
                       style={{ marginBottom: "15px" }}
@@ -402,47 +376,48 @@ const InvoiceAndDelivery = (props) => {
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Mobile Number")}</Label>
+                    <Label>{t("Contact")}</Label>
                     <Input
-                      value={props.contactDetails?.phone}
+                      value={props.deliveryAddressDetails?.contact_person}
                       style={{ marginBottom: "15px" }}
                       onChange={(e) => {
-                        handleContactDetailsChange(e.target.value, "phone")
+                        handleDetailsChange(
+                          e.target.value,
+                          "contact_person",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
                       }}
                     />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Flat, House No")}</Label>
+                    <Label>{t("Phone")}</Label>
                     <Input
-                      value={
-                        props.deliveryAddressDetails?.address?.split("|")[0]
-                      }
+                      value={props.deliveryAddressDetails?.phone}
                       style={{ marginBottom: "15px" }}
                       onChange={(e) =>
-                        handleAddressChange(
+                        handleDetailsChange(
                           e.target.value,
-                          0,
+                          "phone",
                           setDeliveryAddressDetails,
-                          props.deliveryAddressDetails?.address
+                          props.deliveryAddressDetails
                         )
                       }
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Landmark e.g. near apollo hospital")}</Label>
+                    <Label>{t("Fax")}</Label>
                     <Input
-                      value={
-                        props.deliveryAddressDetails?.address?.split("|")[1]
-                      }
+                      value={props.deliveryAddressDetails?.fax}
                       style={{ marginBottom: "15px" }}
                       onChange={(e) =>
-                        handleAddressChange(
+                        handleDetailsChange(
                           e.target.value,
-                          1,
+                          "fax",
                           setDeliveryAddressDetails,
-                          props.deliveryAddressDetails?.address
+                          props.deliveryAddressDetails
                         )
                       }
                     />
@@ -450,7 +425,39 @@ const InvoiceAndDelivery = (props) => {
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Town/City")}</Label>
+                    <Label>{t("Email")}</Label>
+                    <Input
+                      value={props.deliveryAddressDetails?.email}
+                      style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "email",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
+                    />
+                  </Col>
+                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
+                    <Label>{t("Country")}</Label>
+                    <Input
+                      value={props.deliveryAddressDetails?.country}
+                      style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "country",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
+                    <Label>{t("City")}</Label>
                     <Input
                       value={props.deliveryAddressDetails?.city}
                       style={{ marginBottom: "15px" }}
@@ -465,7 +472,7 @@ const InvoiceAndDelivery = (props) => {
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Pincode")}</Label>
+                    <Label>{t("Post Code")}</Label>
                     <Input
                       value={props.deliveryAddressDetails?.post_code}
                       style={{ marginBottom: "15px" }}
@@ -482,12 +489,51 @@ const InvoiceAndDelivery = (props) => {
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("State")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Label>{t("Address1")}</Label>
+                    <Input
+                      value={props.deliveryAddressDetails?.address}
+                      style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "address",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
-                    <Label>{t("Address Type")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Label>{t("Address2")}</Label>
+                    <Input
+                      value={props.deliveryAddressDetails?.address2}
+                      style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "address2",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="6" lg="6" xl="6">
+                    <Label>{t("Address3")}</Label>
+                    <Input
+                      value={props.deliveryAddressDetails?.address3}
+                      style={{ marginBottom: "15px" }}
+                      onChange={(e) =>
+                        handleDetailsChange(
+                          e.target.value,
+                          "address3",
+                          setDeliveryAddressDetails,
+                          props.deliveryAddressDetails
+                        )
+                      }
+                    />
                   </Col>
                 </Row>
               </CardBody>
