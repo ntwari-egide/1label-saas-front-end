@@ -90,7 +90,7 @@ const PoOrder = (props) => {
           selectedItems: props.selectedItems,
           orderFormManFields: {
             orderReference: props.orderReference,
-            projectionLocation: props.projectionLocation,
+            productionLocation: props.productionLocation,
             expectedDeliveryDate: props.expectedDeliveryDate
           }
         }}
@@ -156,7 +156,7 @@ const mapStateToProps = (state) => ({
   currentStep: state.poOrderReducer.currentStep,
   selectedItems: state.poOrderReducer.selectedItems,
   orderReference: state.poOrderReducer.orderReference,
-  projectionLocation: state.poOrderReducer.projectionLocation,
+  productionLocation: state.poOrderReducer.productionLocation,
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate
 })
 

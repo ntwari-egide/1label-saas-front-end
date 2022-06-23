@@ -56,7 +56,7 @@ const OrderForm = (props) => {
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
-  const [projectionLocationOptions, setProjectionLocationOptions] = useState([])
+  const [productionLocationOptions, setProjectionLocationOptions] = useState([])
   const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
 
   const renderSwitch = (field) => {
@@ -546,9 +546,9 @@ const OrderForm = (props) => {
             <Select
               className="React"
               classNamePrefix="select"
-              options={projectionLocationOptions}
-              value={projectionLocationOptions.filter(
-                (opt) => opt.label === props.projectionLocation
+              options={productionLocationOptions}
+              value={productionLocationOptions.filter(
+                (opt) => opt.label === props.productionLocation
               )}
               onChange={(e) => dispatch(setProjectionLocation(e.label))}
             />
@@ -988,7 +988,7 @@ const OrderForm = (props) => {
             orderFormManFields: {
               orderReference: props.orderReference,
               expectedDeliveryDate: props.expectedDeliveryDate,
-              projectionLocation: props.projectionLocation
+              productionLocation: props.productionLocation
             }
           }}
           currentStep={props.currentStep}
@@ -1008,7 +1008,7 @@ const mapStateToProps = (state) => ({
   fibreInstructionData: state.poOrderReducer.fibreInstructionData,
   contentCustomNumber: state.poOrderReducer.contentCustomNumber,
   careCustomNumber: state.poOrderReducer.careCustomNumber,
-  projectionLocation: state.poOrderReducer.projectionLocation,
+  productionLocation: state.poOrderReducer.productionLocation,
   orderReference: state.poOrderReducer.orderReference,
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
   contentNumberData: state.poOrderReducer.contentNumberData,

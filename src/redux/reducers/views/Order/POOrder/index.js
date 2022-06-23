@@ -10,7 +10,7 @@ const initialState = {
   fibreInstructionData: [{}],
   careCustomNumber: "",
   contentCustomNumber: "",
-  projectionLocation: "",
+  productionLocation: "",
   orderReference: "",
   expectedDeliveryDate: "",
   contentNumberData: {},
@@ -58,7 +58,7 @@ const poOrderReduced = (state = initialState, action) => {
     case "SET_PO_CONTENT_CUSTOM_NUMBER":
       return { ...state, contentCustomNumber: action.payload }
     case "SET_PO_PROJECTION_LOCATION":
-      return { ...state, projectionLocation: action.payload }
+      return { ...state, productionLocation: action.payload }
     case "SET_PO_ORDER_REFERENCE":
       return { ...state, orderReference: action.payload }
     case "SET_PO_EXPECTED_DELIVERY_DATE":
