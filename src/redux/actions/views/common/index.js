@@ -67,7 +67,7 @@ export const populateData = (module, data) => (dispatch) => {
     setContentCustomNumber,
     setSelectedItems,
     setExpectedDeliveryDate,
-    setProjectionLocation,
+    setProductionLocation,
     setOrderReference,
     setContentNumberData,
     setCareNumberData,
@@ -159,7 +159,7 @@ export const populateData = (module, data) => (dispatch) => {
     )
   }
   if (data.location_code) {
-    dispatch(setProjectionLocation(data.location_code))
+    dispatch(setProductionLocation(data.location_code))
   }
   if (data.po_number) {
     dispatch(setOrderReference(data.po_number))
@@ -191,7 +191,7 @@ export const saveOrder = (order_status) => (dispatch) => {
     is_copy_order: "N",
     po_number: data.orderReference,
     factory_code: "",
-    location_code: data.projectionLocation ? data.projectionLocation : "",
+    location_code: data.productionLocation ? data.productionLocation : "",
     draft_order_email: data.clientDetails?.draft_email || "",
     approver_email_address: "", // to be
     order_expdate_delivery_date: formatDateYMD(
@@ -404,7 +404,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
     is_copy_order: "N",
     po_number: data.orderReference,
     factory_code: "",
-    location_code: data.projectionLocation ? data.projectionLocation : "",
+    location_code: data.productionLocation ? data.productionLocation : "",
     draft_order_email: data.clientDetails?.draft_email || "",
     approver_email_address: "",
     order_expdate_delivery_date: formatDateYMD(
