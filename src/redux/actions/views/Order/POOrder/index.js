@@ -30,7 +30,7 @@ export const setCareCustomNumber = (value) => (dispatch) => {
   dispatch({ type: "SET_PO_CARE_CUSTOM_NUMBER", payload: value })
 }
 
-export const setProjectionLocation = (value) => (dispatch) => {
+export const setProductionLocation = (value) => (dispatch) => {
   dispatch({ type: "SET_PO_PROJECTION_LOCATION", payload: value })
 }
 

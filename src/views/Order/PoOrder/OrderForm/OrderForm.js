@@ -27,7 +27,7 @@ import {
   setFibreInstructionData,
   setContentCustomNumber,
   setCareCustomNumber,
-  setProjectionLocation,
+  setProductionLocation,
   setOrderReference,
   setExpectedDeliveryDate,
   setContentNumberData,
@@ -56,7 +56,7 @@ const OrderForm = (props) => {
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
-  const [productionLocationOptions, setProjectionLocationOptions] = useState([])
+  const [productionLocationOptions, setProductionLocationOptions] = useState([])
   const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
 
   const renderSwitch = (field) => {
@@ -469,7 +469,7 @@ const OrderForm = (props) => {
       .post("/Order/GetLocationList", body)
       .then((res) => {
         if (res.status === 200) {
-          setProjectionLocationOptions(
+          setProductionLocationOptions(
             res.data.map((loc) => ({ value: loc.erp_id, label: loc.erp_name }))
           )
         }
@@ -550,7 +550,7 @@ const OrderForm = (props) => {
               value={productionLocationOptions.filter(
                 (opt) => opt.label === props.productionLocation
               )}
-              onChange={(e) => dispatch(setProjectionLocation(e.label))}
+              onChange={(e) => dispatch(setProductionLocation(e.label))}
             />
           </div>
         </Col>
