@@ -163,26 +163,25 @@ const OrderForm = (props) => {
     const tempData = [...props.fibreInstructionData]
     tempData[index] = {
       ...props.fibreInstructionData[index],
-      cont_key: e?.value || "",
-      cont_translation: e?.label || ""
+      cont_key: e ? e.value : "",
+      cont_translation: e ? e.label : ""
     }
     dispatch(setFibreInstructionData([...tempData]))
     // fetching default content for fabric and updating default content state
-    let tempDefData = [...props.defaultContentData]
     const body = {
       brand_key: props.brand?.value || "",
-      cont_key: e?.value || "",
+      cont_key: e ? e.value : "",
       page_type: "content"
     }
     axios
       .post("/Translation/GetDefaultContentByContentKey", body)
       .then((res) => {
+        let tempDefData = [...props.defaultContentData]
         if (res.status === 200) {
           tempDefData[index] = {
             cont_key: res.data[0]?.guid_key,
             cont_translation: res.data[0]?.gb_translation
           }
-          dispatch(setDefaultContentData([...tempData]))
           dispatch(setDefaultContentData([...tempDefData]))
           dispatch(matchContentNumber("Order"))
         }
@@ -734,9 +733,15 @@ const OrderForm = (props) => {
                             : contentGroupOptions["A"]
                         }
                         onChange={(e) => {
-                          dispatch(setContentNumberData(e))
-                          fetchContentNumberDetail(e.value, e.label)
+                          dispatch(setContentNumberData(e ? e : {}))
+                          if (e) {
+                            fetchContentNumberDetail(e.value, e.label)
+                          } else {
+                            // to handle isClearable event
+                            dispatch(setFibreInstructionData([{}]))
+                          }
                         }}
+                        isClearable={true}
                       />
                     </Col>
                   </Row>
@@ -772,10 +777,11 @@ const OrderForm = (props) => {
                                   )}
                                   onChange={(e) => {
                                     const tempData = props.fibreInstructionData
+                                    // ternary to handle isClearable event
                                     tempData[index] = {
                                       ...props.fibreInstructionData[index],
-                                      part_key: e.value,
-                                      part_translation: e.label
+                                      part_key: e ? e.value : "",
+                                      part_translation: e ? e.label : ""
                                     }
                                     dispatch(
                                       setFibreInstructionData([...tempData])
@@ -806,6 +812,9 @@ const OrderForm = (props) => {
                                   value={
                                     props.fibreInstructionData[index]
                                       ?.en_percent
+                                      ? props.fibreInstructionData[index]
+                                          ?.en_percent
+                                      : ""
                                   }
                                   onChange={(e) => {
                                     const tempData = props.fibreInstructionData
@@ -936,9 +945,14 @@ const OrderForm = (props) => {
                             : contentGroupOptions["BC"]
                         }
                         onChange={(e) => {
-                          dispatch(setCareNumberData(e))
-                          fetchContentNumberDetail(e.value, e.label)
+                          dispatch(setCareNumberData(e ? e : {}))
+                          if (e) {
+                            fetchContentNumberDetail(e.value, e.label)
+                          } else {
+                            dispatch(setCareNumberData({}))
+                          }
                         }}
+                        isClearable={true}
                       />
                     </Col>
                   </Row>
@@ -979,11 +993,12 @@ const OrderForm = (props) => {
                                 const tempData = props.careData
                                 props.careData[index] = {
                                   ...props.careData[index],
-                                  cont_key: e.value
+                                  cont_key: e ? e.value : ""
                                 }
                                 dispatch(setCareData([...tempData]))
                                 dispatch(matchContentNumber("Order"))
                               }}
+                              isClearable={true}
                             />
                           </Col>
                           <Col xs="12" sm="12" md="1" lg="1" xl="1">
@@ -1065,9 +1080,9 @@ const OrderForm = (props) => {
                             onChange={(e) => {
                               const tempData = {}
                               tempData[iconObj.icon_type_id] = {
-                                sys_icon_key: e.value,
-                                icon_type_id: e.iconTypeId,
-                                icon_group: e.iconGroup
+                                sys_icon_key: e ? e.value : "",
+                                icon_type_id: e ? e.iconTypeId : "",
+                                icon_group: e ? e.iconGroup : ""
                               }
                               dispatch(
                                 setWashCareData({
@@ -1083,6 +1098,7 @@ const OrderForm = (props) => {
                                 {e.label}
                               </div>
                             )}
+                            isClearable={true}
                           />
                         </Col>
                       </Row>
