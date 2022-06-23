@@ -33,15 +33,27 @@ const SizeTable = (props) => {
   const [loader, setLoader] = useState(true)
   const [cols, setCols] = useState([])
 
+  // other functions
+  const handleQtyChange = (value, col, index, tabIndex) => {
+    const tempState = [...props.sizeData]
+    const tempTable = tempState[tabIndex].size_content
+    let tempRow = tempTable[index]
+    tempRow = {
+      ...tempRow,
+      [`${col.selector}`]: isNaN(parseInt(value)) ? null : parseInt(value)
+    }
+    tempTable[index] = tempRow
+    tempState[tabIndex] = {
+      ...tempState[tabIndex],
+      size_content: [...tempTable]
+    }
+    dispatch(setSizeData(tempState))
+  }
+
   const populateCols = (table, tabIndex) => {
     // dynamically assigning cols to data-table
     const cols = []
-    const tables = props.sizeData.map((data) => data.size_content)
     // pushing known static cols
-    cols.push({
-      name: "Sr No.",
-      selector: "Sequence"
-    })
     // pushing size col
     if (table.length) {
       Object.keys(table[0]).map((key) => {
@@ -61,20 +73,16 @@ const SizeTable = (props) => {
             <div>
               <Input
                 value={
-                  tables[tabIndex][index]
-                    ? tables[tabIndex][index][col.selector]
+                  props.sizeData[tabIndex]
+                    ? props.sizeData[tabIndex].size_content[index][col.selector]
+                      ? props.sizeData[tabIndex].size_content[index][
+                          col.selector
+                        ]
+                      : ""
                     : ""
                 }
                 onChange={(e) => {
-                  const tempTable = tables[tabIndex]
-                  const tempState = [...props.sizeData]
-                  row[col.selector] = e.target.value
-                  tempTable[index] = row
-                  tempState[tabIndex] = {
-                    ...tempState[tabIndex],
-                    size_content: tempTable
-                  }
-                  dispatch(setSizeData(tempState))
+                  handleQtyChange(e.target.value, col, index, tabIndex)
                 }}
               />
             </div>
@@ -89,18 +97,18 @@ const SizeTable = (props) => {
         <div>
           <Input
             value={
-              tables[tabIndex][index]
-                ? tables[tabIndex][index][col.selector]
+              props.sizeData[tabIndex]
+                ? props.sizeData[tabIndex].size_content[index][col.selector]
                 : ""
             }
             onChange={(e) => {
-              const tempTable = tables[tabIndex]
               const tempState = [...props.sizeData]
+              const tempTable = tempState[tabIndex].size_content
               row[col.selector] = e.target.value
               tempTable[index] = row
               tempState[tabIndex] = {
                 ...tempState[tabIndex],
-                size_content: tempTable
+                size_content: [...tempTable]
               }
               dispatch(setSizeData(tempState))
             }}
