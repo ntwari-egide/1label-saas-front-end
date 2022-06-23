@@ -263,6 +263,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }
+                      disabled={true}
                     />
                   </Col>
                 </Row>
@@ -280,6 +281,7 @@ const InvoiceAndDelivery = (props) => {
                         )
                       }}
                       style={{ marginBottom: "15px" }}
+                      disabled={true}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -294,6 +296,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }}
+                      disabled={true}
                       style={{ marginBottom: "15px" }}
                     />
                   </Col>
@@ -452,6 +455,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={true}
                     />
                   </Col>
                 </Row>
@@ -469,6 +473,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={true}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -484,6 +489,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={true}
                     />
                   </Col>
                 </Row>
@@ -501,6 +507,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={true}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -516,6 +523,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={true}
                     />
                   </Col>
                 </Row>
@@ -533,6 +541,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={true}
                     />
                   </Col>
                 </Row>
