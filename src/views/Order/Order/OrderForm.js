@@ -642,7 +642,7 @@ const OrderForm = (props) => {
               className="React"
               classNamePrefix="select"
               options={productionLocationOptions}
-              value={productionLocationOptions.filter(
+              value={productionLocationOptions?.filter(
                 (opt) => opt.label === props.productionLocation
               )}
               onChange={(e) => {
@@ -772,7 +772,7 @@ const OrderForm = (props) => {
                                   className="React"
                                   classNamePrefix="select"
                                   options={componentOptions}
-                                  value={componentOptions.filter(
+                                  value={componentOptions?.filter(
                                     (opt) => opt.value === rec?.part_key
                                   )}
                                   onChange={(e) => {
@@ -797,7 +797,7 @@ const OrderForm = (props) => {
                                   className="React"
                                   classNamePrefix="select"
                                   options={fabricOptions}
-                                  value={fabricOptions.filter(
+                                  value={fabricOptions?.filter(
                                     (opt) => opt.value === rec?.cont_key
                                   )}
                                   onChange={(e) => {
@@ -993,7 +993,7 @@ const OrderForm = (props) => {
                               className="React"
                               classNamePrefix="select"
                               options={additionalCareOptions}
-                              value={additionalCareOptions.filter(
+                              value={additionalCareOptions?.filter(
                                 (opt) => opt.value === rec.cont_key
                               )}
                               onChange={(e) => {
@@ -1076,7 +1076,9 @@ const OrderForm = (props) => {
                             options={washCareOptions[iconObj?.icon_type_id]}
                             value={
                               washCareOptions[iconObj?.icon_type_id]
-                                ? washCareOptions[iconObj?.icon_type_id].filter(
+                                ? washCareOptions[
+                                    iconObj?.icon_type_id
+                                  ]?.filter(
                                     (opt) =>
                                       opt.value ===
                                       props.washCareData[iconObj?.icon_type_id]
