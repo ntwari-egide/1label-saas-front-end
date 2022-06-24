@@ -84,7 +84,6 @@ const ItemList = (props) => {
   }
 
   useEffect(() => {
-    fetchBrandList()
     fetchItemTypeOptions()
     fetchItemList(props.brand, props.item_type)
   }, [])
@@ -98,25 +97,27 @@ const ItemList = (props) => {
 
   return (
     <Card>
-      <CardHeader style={{ flexGrow: 1 }}>
-        <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Input placeholder={t("ITEM")} disabled={loader} />
-        </Col>
-        <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Select
-            className="React"
-            classNamePrefix="select"
-            placeholder={t("ITEM TYPE")}
-            value={props.itemType}
-            options={itemTypeOptions}
-            onChange={(e) => {
-              props.setItemType(e)
-              fetchItemList(props.brand, e)
-            }}
-            isClearable={true}
-            isDisabled={loader}
-          />
-        </Col>
+      <CardHeader>
+        <Row style={{ width: "100%", margin: "0" }}>
+          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
+            <Input placeholder={t("ITEM")} disabled={loader} />
+          </Col>
+          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
+            <Select
+              className="React"
+              classNamePrefix="select"
+              placeholder={t("ITEM TYPE")}
+              value={props.itemType}
+              options={itemTypeOptions}
+              onChange={(e) => {
+                props.setItemType(e)
+                fetchItemList(props.brand, e)
+              }}
+              isClearable={true}
+              isDisabled={loader}
+            />
+          </Col>
+        </Row>
       </CardHeader>
       <CardBody style={{ minHeight: "520px" }}>
         <Row style={{ margin: "0rem", minHeight: "520px" }}>
