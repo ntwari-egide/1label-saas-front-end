@@ -8,6 +8,7 @@ const Stepper = (props) => {
 
   const normalSelectedItemValidation = (menuItem) => {
     if (
+      props.component === "Order" &&
       menuItem != "Select Item" &&
       props.validationFields?.selectedItems &&
       props.validationFields?.selectedItems?.length <= 0
@@ -20,7 +21,15 @@ const Stepper = (props) => {
 
   const poSelectedItemsValidation = (menuItem) => {
     if (
-      menuItem === "Listing" &&
+      [
+        "Item List",
+        "PO Order Size Table",
+        "Order Form",
+        "Preview Item & Summary Size Table",
+        "Invoice & Delivery Date",
+        "Payment",
+        "Direct Print"
+      ].includes(menuItem) &&
       props.component === "POOrder" &&
       props.validationFields?.poSelectedItems &&
       props.validationFields?.poSelectedItems?.length <= 0
@@ -31,8 +40,16 @@ const Stepper = (props) => {
     return true
   }
 
-  const poItemListValidation = () => {
+  const poItemListValidation = (menuItem) => {
     if (
+      [
+        "PO Order Size Table",
+        "Order Form",
+        "Preview Item & Summary Size Table",
+        "Invoice & Delivery Date",
+        "Payment",
+        "Direct Print"
+      ].includes(menuItem) &&
       props.component === "POOrder" &&
       props.validationFields?.selectedItems &&
       props.validationFields?.selectedItems?.length <= 0
@@ -98,7 +115,7 @@ const Stepper = (props) => {
                   normalSelectedItemValidation(menuItem) &&
                   poSelectedItemsValidation(menuItem) &&
                   normalOrderFormManFieldsValidation(menuItem) &&
-                  poItemListValidation() &&
+                  poItemListValidation(menuItem) &&
                   poOrderFormManFieldsValidation(menuItem)
                 ) {
                   props.setCurrentStep(index)
