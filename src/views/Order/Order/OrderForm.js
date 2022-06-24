@@ -717,20 +717,26 @@ const OrderForm = (props) => {
                         className="React"
                         classNamePrefix="select"
                         value={
-                          isContentSettingCommon
+                          props.contentGroup === "ABC"
                             ? contentGroupOptions["ABC"]?.filter(
                                 (opt) =>
                                   opt.label === props.contentNumberData?.label
                               )
-                            : contentGroupOptions["A"]?.filter(
+                            : props.contentGroup === "A/BC"
+                            ? contentGroupOptions["A"]?.filter(
                                 (opt) =>
                                   opt.label === props.contentNumberData?.label
                               )
+                            : contentGroupOptions["AB"]?.filter(
+                                opt.label === props.contentNumberData?.label
+                              )
                         }
                         options={
-                          isContentSettingCommon
+                          props.contentGroup === "ABC"
                             ? contentGroupOptions["ABC"]
-                            : contentGroupOptions["A"]
+                            : props.contentGroup === "A/BC"
+                            ? contentGroupOptions["A"]
+                            : contentGroupOptions["AB"]
                         }
                         onChange={(e) => {
                           dispatch(setContentNumberData(e ? e : {}))
@@ -929,20 +935,27 @@ const OrderForm = (props) => {
                         className="React"
                         classNamePrefix="select"
                         value={
-                          isContentSettingCommon
+                          props.contentGroup === "ABC"
                             ? contentGroupOptions["ABC"]?.filter(
                                 (opt) =>
                                   opt.value === props.careNumberData?.value
                               )
-                            : contentGroupOptions["BC"]?.filter(
+                            : props.contentGroup === "A/BC"
+                            ? contentGroupOptions["BC"]?.filter(
+                                (opt) =>
+                                  opt.value === props.careNumberData?.value
+                              )
+                            : contentGroupOptions["C"]?.filter(
                                 (opt) =>
                                   opt.value === props.careNumberData?.value
                               )
                         }
                         options={
-                          isContentSettingCommon
+                          props.contentGroup === "ABC"
                             ? contentGroupOptions["ABC"]
-                            : contentGroupOptions["BC"]
+                            : props.contentGroup === "A/BC"
+                            ? contentGroupOptions["BC"]
+                            : contentGroupOptions["C"]
                         }
                         onChange={(e) => {
                           dispatch(setCareNumberData(e ? e : {}))
