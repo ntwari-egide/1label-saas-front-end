@@ -261,6 +261,12 @@ const OrderForm = (props) => {
             setIsContentSettingCommon(false)
           }
           fetchContentNumberList(res.data[0]?.content_model?.split("/")) // passes content_group as an array
+          // fetch select fields and respective data for wash care symbol section
+          if (res.data[0]?.display_footwear_icon?.length) {
+            fetchIconSequenceList(res.data[0]?.display_footwear_icon)
+          } else {
+            console.log("Err Msg:", "Footwear display status not received")
+          }
           // assign section titles
           if (res.data[0]?.acontent_title) {
             setContentName(res.data[0]?.acontent_title)
@@ -381,12 +387,15 @@ const OrderForm = (props) => {
     let tempIconSeq = []
     let tempIconTranslation = {}
     iconGroups.map((iconGroup) => {
+      // do not fetch for footwear if not required
+      if (showFootwear === "N" && iconGroup === "B") {
+        return
+      }
       const body = {
         brand_key: props.brand ? props.brand.value : "",
         icon_group: iconGroup,
         icon_key: ""
       }
-
       axios
         .post("/ContentNumber/GetIconSequence", body)
         .then((res) => {
@@ -527,7 +536,6 @@ const OrderForm = (props) => {
     fetchItemInfoData()
     fetchItemInfoFields()
     fetchContentNumberSettings()
-    fetchIconSequenceList()
     fetchContentTranslationList()
     fetchProductLocationList()
   }, [])
