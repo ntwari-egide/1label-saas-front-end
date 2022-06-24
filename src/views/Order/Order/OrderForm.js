@@ -731,7 +731,16 @@ const OrderForm = (props) => {
                             fetchContentNumberDetail(e.value, e.label)
                           } else {
                             // to handle isClearable event
-                            dispatch(setFibreInstructionData([{}]))
+                            if (props.contentGroup === "A/BC") {
+                              dispatch(setFibreInstructionData([{}]))
+                            } else if (props.contentGroup === "AB/C") {
+                              dispatch(setFibreInstructionData([{}]))
+                              dispatch(setCareData([{}]))
+                            } else {
+                              dispatch(setFibreInstructionData([{}]))
+                              dispatch(setWashCareData([{}]))
+                              dispatch(setCareData([{}]))
+                            }
                           }
                         }}
                         isClearable={true}
@@ -949,7 +958,16 @@ const OrderForm = (props) => {
                           if (e) {
                             fetchContentNumberDetail(e.value, e.label)
                           } else {
-                            dispatch(setCareNumberData({}))
+                            if (props.contentGroup === "A/BC") {
+                              dispatch(setWashCareData([{}]))
+                              dispatch(setCareData([{}]))
+                            } else if (props.contentGroup === "AB/C") {
+                              dispatch(setWashCareData([{}]))
+                            } else {
+                              dispatch(setFibreInstructionData([{}]))
+                              dispatch(setWashCareData([{}]))
+                              dispatch(setCareData([{}]))
+                            }
                           }
                         }}
                         isClearable={true}
