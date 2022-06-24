@@ -117,4 +117,3 @@ export const setWastageApplied = (value) => (dispatch) => {
 export const setClientDetails = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_CLIENT_DETAILS", payload: data })
 }
-}
