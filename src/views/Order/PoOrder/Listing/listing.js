@@ -527,6 +527,12 @@ const Listing = (props) => {
                   props.setpoSelectedItems(e.selectedRows)
                 }}
                 style={{ minHeight: "300px" }}
+                persistTableHead={true}
+                noDataComponent={
+                  <div style={{ padding: "20px", paddingTop: "30px" }}>
+                    <h5>Search using the form to display data.</h5>
+                  </div>
+                }
               />
             ) : (
               <div

@@ -485,7 +485,19 @@ const PreviewAndSummary = (props) => {
                     <Spinner color="primary" />
                   </div>
                 ) : (
-                  <DataTable data={props.sizeData} columns={props.cols} />
+                  <div style={{ minHeight: "175px" }}>
+                    <DataTable
+                      data={props.sizeData}
+                      columns={props.cols}
+                      noHeader={true}
+                      persistTableHead={true}
+                      noDataComponent={
+                        <div style={{ padding: "20px" }}>
+                          <h5>Select a size matrix type to display data.</h5>
+                        </div>
+                      }
+                    />
+                  </div>
                 )}
               </Col>
             </Row>
