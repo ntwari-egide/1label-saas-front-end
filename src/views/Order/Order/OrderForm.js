@@ -232,21 +232,6 @@ const OrderForm = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchSizeTableList = () => {
-    const body = {
-      brand_key: props.brand ? props.brand.value : "",
-      item_key: props.selectedItems.map((item) => item.guid_key),
-      query_str: ""
-    }
-
-    axios
-      .post("/SizeTable/GetSizeTableList", body)
-      .then((res) => {
-        // console.log("sizetablelist", res)
-      })
-      .catch((err) => console.log(err))
-  }
-
   const fetchContentNumberSettings = () => {
     // fetches content model either of: "ABC" or "A/BC"
     const body = {
@@ -260,6 +245,12 @@ const OrderForm = (props) => {
           dispatch(setContentGroup(res.data[0]?.content_model)) // to send to invoice and delivery for save order api
           // sets state to determine options for care and content for different content settings namely A/BC and ABC
           fetchContentNumberList(res.data[0]?.content_model.split("/")) // passes content_group as an array
+        }
+        // fetch select fields and respective data for wash care symbol section
+        if (res.data[0]?.display_footwear_icon?.length) {
+          fetchIconSequenceList(res.data[0]?.display_footwear_icon)
+        } else {
+          console.log("Err Msg:", "Footwear display status not received")
         }
       })
       .catch((err) => console.log(err))
@@ -289,12 +280,16 @@ const OrderForm = (props) => {
     })
   }
 
-  const fetchIconSequenceList = () => {
+  const fetchIconSequenceList = (showFootwear) => {
     // fetched icon sequence list
     const iconGroups = ["A", "B"]
     let tempIconSeq = []
     let tempIconTranslation = {}
     iconGroups.map((iconGroup) => {
+      // do not fetch for footwear if not required
+      if (showFootwear === "N" && iconGroup === "B") {
+        return
+      }
       const body = {
         brand_key: props.brand ? props.brand.value : "",
         icon_group: iconGroup,
@@ -594,10 +589,8 @@ const OrderForm = (props) => {
 
   useEffect(() => {
     fetchContentNumberSettings()
-    fetchSizeTableList()
     fetchItemInfoData()
     fetchItemInfoFields()
-    fetchIconSequenceList()
     fetchContentTranslationList()
     fetchProductLocationList()
     // fetchMinDeliveryDate()
