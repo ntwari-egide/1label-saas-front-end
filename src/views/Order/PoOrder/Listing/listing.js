@@ -21,11 +21,11 @@ import Flatpickr from "react-flatpickr"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { formatDateYMD } from "@utils"
 import Footer from "../../../CommonFooter"
-import Swal from "sweetalert2"
-import withReactContent from "sweetalert2-react-content"
-const MySwal = withReactContent(Swal)
 import { connect, useDispatch } from "react-redux"
-import { setSizeTableTrigger } from "@redux/actions/views/Order/POOrder"
+import {
+  setSizeTableTrigger,
+  setBrand
+} from "@redux/actions/views/Order/POOrder"
 import { populateData } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
 import { setLoader } from "@redux/actions/layout"
@@ -300,6 +300,7 @@ const Listing = (props) => {
               )}
               onChange={(e) => {
                 props.setSearchParams({ ...props.searchParams, brand: e.value })
+                dispatch(setBrand(e))
               }}
             />
           </Col>
