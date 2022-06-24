@@ -972,6 +972,9 @@ const OrderForm = (props) => {
                                 {e.label}
                               </div>
                             )}
+                            filterOption={(options, query) =>
+                              options.data.label.includes(query)
+                            }
                           />
                         </Col>
                       </Row>
