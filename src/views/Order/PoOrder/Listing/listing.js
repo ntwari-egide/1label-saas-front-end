@@ -92,7 +92,7 @@ const Listing = (props) => {
             className="badge-glow"
             pill
             color={
-              row.order_status === "Confirm"
+              row.order_status === "COMPLETE"
                 ? "success"
                 : row.order_status === "New"
                 ? "danger"
@@ -203,7 +203,7 @@ const Listing = (props) => {
 
   const fetchOrderStatus = () => {
     axios
-      .post("/Order/GetOrderStatus")
+      .post("/Order/GetPOOrderStatus")
       .then((res) => {
         if (res.status === 200) {
           setOrderStatusOptions(
