@@ -58,6 +58,10 @@ const OrderForm = (props) => {
   const [additionalCareOptions, setAdditionalCareOptions] = useState([])
   const [productionLocationOptions, setProductionLocationOptions] = useState([])
   const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
+  // content setting data
+  const [contentName, setContentName] = useState("")
+  const [careName, setCareName] = useState("")
+  const [iconName, setIconName] = useState("")
 
   const renderSwitch = (field) => {
     // renders dynamic fields under Item Info
@@ -257,6 +261,22 @@ const OrderForm = (props) => {
             setIsContentSettingCommon(false)
           }
           fetchContentNumberList(res.data[0]?.content_model?.split("/")) // passes content_group as an array
+          // assign section titles
+          if (res.data[0]?.acontent_title) {
+            setContentName(res.data[0]?.acontent_title)
+          } else {
+            console.log("Err Msg:", "acontent_title not received")
+          }
+          if (res.data[0]?.bcontent_title) {
+            setCareName(res.data[0]?.acontent_title)
+          } else {
+            console.log("Err Msg:", "bcontent_title not received")
+          }
+          if (res.data[0]?.ccontent_title) {
+            setIconName(res.data[0]?.acontent_title)
+          } else {
+            console.log("Err Msg:", "ccontent_title not received")
+          }
         }
       })
       .catch((err) => console.log(err))
@@ -608,7 +628,7 @@ const OrderForm = (props) => {
                 <CardBody>
                   <Row style={{ marginBottom: "10px" }}>
                     <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                      <Label style={{ marginTop: "12px" }}>Content#</Label>
+                      <Label style={{ marginTop: "12px" }}>{contentName}</Label>
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
                       <Select
@@ -806,7 +826,7 @@ const OrderForm = (props) => {
                   ))}
                   <Row style={{ marginBottom: "10px" }}>
                     <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                      <Label style={{ marginTop: "12px" }}>Care:</Label>
+                      <Label style={{ marginTop: "12px" }}>{careName}</Label>
                     </Col>
                     <Col xs="12" sm="12" md="9" lg="9" xl="9">
                       <Select
