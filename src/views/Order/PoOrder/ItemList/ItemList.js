@@ -27,7 +27,6 @@ import { getUserData } from "@utils"
 const ItemList = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [brandOptions, setBrandOptions] = useState([])
   const [itemTypeOptions, setItemTypeOptions] = useState([])
   const [itemList, setItemList] = useState([])
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
@@ -46,22 +45,6 @@ const ItemList = (props) => {
     } else {
       dispatch(setSelectedItems([...tempList, item]))
     }
-  }
-
-  const fetchBrandList = () => {
-    const body = {
-      order_user: getUserData().admin
-    }
-    axios
-      .post("/Brand/GetBrandListByClient", body)
-      .then((res) => {
-        if (res.status === 200) {
-          setBrandOptions(
-            res.data.map((br) => ({ value: br.guid_key, label: br.brand_name }))
-          )
-        }
-      })
-      .catch((err) => console.log(err))
   }
 
   const fetchItemTypeOptions = () => {
@@ -116,26 +99,6 @@ const ItemList = (props) => {
   return (
     <Card>
       <CardHeader style={{ flexGrow: 1 }}>
-        <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Select
-            className="React"
-            classNamePrefix="select"
-            placeholder={t("BRAND")}
-            value={
-              props.brand
-                ? brandOptions.filter((br) => br.value === props.brand.value)
-                : ""
-            }
-            options={brandOptions}
-            onChange={(e) => {
-              if (e) {
-                fetchItemList(e, props.itemType)
-              }
-            }}
-            isClearable={true}
-            isDisabled={loader}
-          />
-        </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
           <Input placeholder={t("ITEM")} disabled={loader} />
         </Col>
