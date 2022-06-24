@@ -381,7 +381,7 @@ const OrderForm = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchIconSequenceList = () => {
+  const fetchIconSequenceList = (showFootwear) => {
     // fetched icon sequence list
     const iconGroups = ["A", "B"]
     let tempIconSeq = []
