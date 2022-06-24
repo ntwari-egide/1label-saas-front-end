@@ -112,12 +112,7 @@ const SelectItem = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchItemList = (
-    brand = "",
-    item_type = "",
-    item_ref = "",
-    refSearch
-  ) => {
+  const fetchItemList = (brand, item_type, item_ref, refSearch) => {
     if (refSearch) {
       setRefSearch(true)
     }
@@ -125,7 +120,7 @@ const SelectItem = (props) => {
     setVisibleCardIndex(0)
     const body = {
       order_user: getUserData().admin,
-      brand_key: brand ? brand?.value : "",
+      brand_key: brand ? brand.value : "",
       item_ref_type: item_type ? item_type?.label : "",
       item_ref: item_ref || ""
     }
@@ -172,8 +167,8 @@ const SelectItem = (props) => {
             }
             options={brandOptions}
             onChange={(e) => {
-              dispatch(setBrand(e))
-              fetchItemList(e, props.itemType)
+              dispatch(setBrand(e ? e : {}))
+              fetchItemList(e ? e : {}, props.itemType)
             }}
             isClearable={true}
             isDisabled={loader}
@@ -200,8 +195,8 @@ const SelectItem = (props) => {
             )}
             options={itemTypeOptions}
             onChange={(e) => {
-              props.setItemType(e)
-              fetchItemList(props.brand, e, props.itemRef)
+              props.setItemType(e ? e : {})
+              fetchItemList(props.brand, e ? e : {}, props.itemRef)
             }}
             isClearable={true}
             isDisabled={loader}
