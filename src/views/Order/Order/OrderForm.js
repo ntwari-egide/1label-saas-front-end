@@ -58,7 +58,6 @@ const OrderForm = (props) => {
   const [productionLocationOptions, setProductionLocationOptions] = useState([])
   const [contentGroupOptions, setContentGroupOptions] = useState({})
   const [washCareOptions, setWashCareOptions] = useState({})
-  const [isContentSettingCommon, setIsContentSettingCommon] = useState("")
 
   // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
   const debounceFun = () => {
@@ -260,11 +259,6 @@ const OrderForm = (props) => {
         if (res.status === 200) {
           dispatch(setContentGroup(res.data[0]?.content_model)) // to send to invoice and delivery for save order api
           // sets state to determine options for care and content for different content settings namely A/BC and ABC
-          if (res.data[0]?.content_model === "ABC") {
-            setIsContentSettingCommon(true)
-          } else {
-            setIsContentSettingCommon(false)
-          }
           fetchContentNumberList(res.data[0]?.content_model.split("/")) // passes content_group as an array
         }
       })
