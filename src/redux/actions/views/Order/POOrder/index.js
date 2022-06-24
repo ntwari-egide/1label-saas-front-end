@@ -111,9 +111,10 @@ export const setContactDetails = (data) => (dispatch) => {
 }
 
 export const setWastageApplied = (value) => (dispatch) => {
-  dispatch({ type: "SET_WASTAGE_APPLIED", payload: value })
+  dispatch({ type: "SET_PO_WASTAGE_APPLIED", payload: value })
 }
 
 export const setClientDetails = (data) => (dispatch) => {
-  dispatch({ type: "SET_CLIENT_DETAILS", payload: data })
+  dispatch({ type: "SET_PO_CLIENT_DETAILS", payload: data })
+}
 }

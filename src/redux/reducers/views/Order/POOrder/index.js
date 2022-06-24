@@ -95,9 +95,9 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, deliveryAddressDetails: action.payload }
     case "SET_PO_CONTACT_DETAILS":
       return { ...state, contactDetails: action.payload }
-    case "SET_WASTAGE_APPLIED":
+    case "SET_PO_WASTAGE_APPLIED":
       return { ...state, wastageApplied: action.payload }
-    case "SET_CLIENT_DETAILS":
+    case "SET_PO_CLIENT_DETAILS":
       return { ...state, clientDetails: action.payload }
     default:
       return { ...state }
