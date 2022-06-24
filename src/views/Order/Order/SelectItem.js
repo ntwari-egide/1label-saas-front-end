@@ -169,6 +169,7 @@ const SelectItem = (props) => {
             onChange={(e) => {
               dispatch(setBrand(e ? e : {}))
               fetchItemList(e ? e : {}, props.itemType)
+              dispatch(setSelectedItems([]))
             }}
             isClearable={true}
             isDisabled={loader}
