@@ -4,7 +4,6 @@ import axios from "@axios"
 import { XMLBuilder } from "fast-xml-parser"
 import { sweetAlert } from "@utils"
 import { setLoader } from "@redux/actions/layout"
-import { setContentNumberData } from "@redux/actions/views/Order/Order"
 
 export const matchContentNumber = (module) => (dispatch) => {
   let state
@@ -18,7 +17,7 @@ export const matchContentNumber = (module) => (dispatch) => {
     brand_key: state.brand ? state.brand.value : "",
     order_user: getUserData().admin,
     custom_number: state.custom_number || "",
-    content_group: "A",
+    content_group: state.contentGroup,
     content: state.fibreInstructionData.map((data, index) => ({
       cont_key: data.cont_key || "",
       part_key: data.part_key || "",
