@@ -348,6 +348,8 @@ const PreviewAndSummary = (props) => {
                 setLoading(true)
                 fetchSizeTableDetails(e.value)
               }}
+              menuPlacement={"auto"}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
           </Col>
         </Row>

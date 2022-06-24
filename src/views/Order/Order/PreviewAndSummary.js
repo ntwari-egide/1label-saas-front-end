@@ -468,6 +468,7 @@ const PreviewAndSummary = (props) => {
                     props.setSizeMatrixSelect(e)
                   }}
                   menuPlacement={"auto"}
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                 />
               </Col>
             </Row>
@@ -525,6 +526,8 @@ const PreviewAndSummary = (props) => {
                   onChange={(e) => dispatch(setWastage(parseFloat(e.value)))}
                   isDisabled={!wastageStatus}
                   menuPlacement={"auto"}
+                  menuPortalTarget={document.body}
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                 />
               </Col>
               <Col xs="12" sm="12" md="7" lg="4" xl="4">

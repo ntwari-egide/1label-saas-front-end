@@ -311,6 +311,8 @@ const SizeTable = (props) => {
               )}
               onChange={(e) => dispatch(setWastage(e.value))}
               isDisabled={!wastageStatus}
+              menuPlacement={"auto"}
+              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             />
           </Col>
           <Col xs="12" sm="12" md="7" lg="4" xl="4">
