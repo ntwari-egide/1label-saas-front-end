@@ -2,7 +2,7 @@ const initialState = {
   currentStep: 0,
   // po item list states
   selectedItems: [],
-  // po order states
+  // po order form
   brand: {},
   careData: [{}],
   washCareData: [],
@@ -18,6 +18,7 @@ const initialState = {
   careNumberData: {},
   contentGroup: "",
   coo: "",
+  brandDetails,
   // size table states
   sizeData: [],
   wastage: 0,
@@ -99,6 +100,8 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, wastageApplied: action.payload }
     case "SET_PO_CLIENT_DETAILS":
       return { ...state, clientDetails: action.payload }
+    case "SET_PO_BRAND_DETAILS":
+      return { ...state, brandDetails: action.payload }
     default:
       return { ...state }
   }
