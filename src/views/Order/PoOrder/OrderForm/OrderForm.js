@@ -570,7 +570,7 @@ const OrderForm = (props) => {
           />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          {props.brandDetails.is_show_expected_date === "Y" ? (
+          {props.brandDetails?.is_show_expected_date === "Y" ? (
             <div>
               <Label>{t("Expected Delivery Date")}</Label>
               <span className="text-danger">*</span>
@@ -594,7 +594,7 @@ const OrderForm = (props) => {
           )}
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          {props.brandDetails.display_location_code ? (
+          {props.brandDetails?.display_location_code ? (
             <div>
               <Label>{t("Projection Location")}</Label>
               <span className="text-danger">*</span>
@@ -619,7 +619,7 @@ const OrderForm = (props) => {
         <Row style={{ margin: "0" }}>
           <Col>
             {itemInfoFields.length > 0 ? (
-              props.brandDetails.display_dynamic_field === "Y" ? (
+              props.brandDetails?.display_dynamic_field === "Y" ? (
                 <Card>
                   <CardHeader
                     style={{ cursor: "pointer" }}
@@ -662,7 +662,7 @@ const OrderForm = (props) => {
         </Row>
         <Row style={{ margin: "0" }}>
           <Col>
-            {props.brandDetails.display_Content === "Y" ? (
+            {props.brandDetails?.display_Content === "Y" ? (
               <Card>
                 <CardHeader
                   style={{ cursor: "pointer" }}
