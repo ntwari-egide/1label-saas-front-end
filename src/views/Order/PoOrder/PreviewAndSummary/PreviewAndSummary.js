@@ -303,70 +303,62 @@ const PreviewAndSummary = (props) => {
             </Card>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            {Object.keys(props.summaryTable).map((key) => (
-              <DataTable
-                data={props.summaryTable[key]}
-                columns={sizeCols}
-                noHeader={true}
-              />
-            ))}
-          </Col>
-        </Row>
-        <Row style={{ marginBottom: "10px", marginTop: "10px" }}>
-          <Col
-            xs="12"
-            sm="12"
-            md="3"
-            lg="1.5"
-            xl="1.5"
-            style={{
-              marginRight: "0px",
-              paddingRight: "0px",
-              maxWidth: "150px"
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "end",
-                width: "100%",
-                height: "100%",
-                alignItems: "center"
-              }}
-            >
-              <div>Size Matrix Type:</div>
-            </div>
-          </Col>
-          <Col xs="12" sm="12" md="5" lg="5" xl="5">
-            <Select
-              className="React"
-              classNamePrefix="select"
-              options={sizeMatrixOptions}
-              onChange={(e) => {
-                setLoading(true)
-                fetchSizeTableDetails(e.value)
-              }}
-              menuPlacement={"auto"}
-              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-            />
-          </Col>
-        </Row>
-        {/*}
-        <Row>
-          <Col>
-            {sizeData.length > 0 ? (
-              <DataTable
-                progressPending={loading}
-                progressComponent={<Spinner />}
-                data={sizeData}
-                columns={sizeCols}
-              />
-            ) : null}
-          </Col>
-        </Row>
-    */}
+        {props.brandDetails.display_SizeTable === "Y" ? (
+          <div>
+            <Row style={{ marginBottom: "10px", marginTop: "10px" }}>
+              <Col
+                xs="12"
+                sm="12"
+                md="3"
+                lg="1.5"
+                xl="1.5"
+                style={{
+                  marginRight: "0px",
+                  paddingRight: "0px",
+                  maxWidth: "150px"
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "end",
+                    width: "100%",
+                    height: "100%",
+                    alignItems: "center"
+                  }}
+                >
+                  <div>Size Matrix Type:</div>
+                </div>
+              </Col>
+              <Col xs="12" sm="12" md="5" lg="5" xl="5">
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  options={sizeMatrixOptions}
+                  onChange={(e) => {
+                    setLoading(true)
+                    fetchSizeTableDetails(e.value)
+                  }}
+                  menuPlacement={"auto"}
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                {Object.keys(props.summaryTable).map((key) => (
+                  <DataTable
+                    data={props.summaryTable[key]}
+                    columns={sizeCols}
+                    noHeader={true}
+                  />
+                ))}
+              </Col>
+            </Row>
+          </div>
+        ) : (
+          <></>
+        )}
       </CardBody>
       <CardFooter>
         <Footer
@@ -385,7 +377,8 @@ const mapStateToProps = (state) => ({
   sizeData: state.poOrderReducer.sizeData,
   summaryTable: state.poOrderReducer.summaryTable,
   defaultSizeTable: state.poOrderReducer.defaultSizeTable,
-  wastageApplied: state.poOrderReducer.wastageApplied
+  wastageApplied: state.poOrderReducer.wastageApplied,
+  brandDetails: state.poOrderReducer.brandDetails
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)

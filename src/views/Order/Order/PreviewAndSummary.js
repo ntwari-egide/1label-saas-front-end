@@ -322,16 +322,6 @@ const PreviewAndSummary = (props) => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   if (
-  //     !props.cols.length &&
-  //     props.sizeData?.length &&
-  //     props.sizeTable?.length
-  //   ) {
-  //     populateCols(props.sizeTable)
-  //   }
-  // }, [])
-
   useEffect(() => {
     // to calculate when change in sizeData
     if (
@@ -429,133 +419,141 @@ const PreviewAndSummary = (props) => {
             </Col>
           ))}
         </Row>
-        {showSizeData ? (
-          <div>
-            <Row style={{ marginBottom: "10px" }}>
-              <Col
-                xs="12"
-                sm="12"
-                md="3"
-                lg="1.5"
-                xl="1.5"
-                style={{
-                  marginRight: "0px",
-                  paddingRight: "0px",
-                  maxWidth: "150px"
-                }}
-              >
-                <div
+        {props.brandDetails.display_SizeTable === "Y" ? (
+          showSizeData ? (
+            <div>
+              <Row style={{ marginBottom: "10px" }}>
+                <Col
+                  xs="12"
+                  sm="12"
+                  md="3"
+                  lg="1.5"
+                  xl="1.5"
                   style={{
-                    display: "flex",
-                    justifyContent: "end",
-                    width: "100%",
-                    height: "100%",
-                    alignItems: "center"
+                    marginRight: "0px",
+                    paddingRight: "0px",
+                    maxWidth: "150px"
                   }}
                 >
-                  <div>Size Matrix Type:</div>
-                </div>
-              </Col>
-              <Col xs="12" sm="12" md="5" lg="5" xl="5">
-                <Select
-                  className="React"
-                  classNamePrefix="select"
-                  value={sizeMatrixOptions.filter(
-                    (opt) => opt.value === props.sizeMatrixSelect.value
-                  )}
-                  options={sizeMatrixOptions}
-                  onChange={(e) => {
-                    setLoading(true)
-                    dispatch(setCols([]))
-                    fetchSizeTableDetails(e.value)
-                    props.setSizeMatrixSelect(e)
-                  }}
-                  menuPlacement={"auto"}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                {loading ? (
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "200px"
+                      justifyContent: "end",
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center"
                     }}
                   >
-                    <Spinner color="primary" />
+                    <div>Size Matrix Type:</div>
                   </div>
-                ) : (
-                  <div style={{ minHeight: "175px" }}>
-                    <DataTable
-                      data={props.sizeData}
-                      columns={props.cols}
-                      noHeader={true}
-                      persistTableHead={true}
-                      noDataComponent={
-                        <div style={{ padding: "20px" }}>
-                          <h5>Select a size matrix type to display data.</h5>
-                        </div>
-                      }
-                    />
-                  </div>
-                )}
-              </Col>
-            </Row>
-            <Row style={{ marginTop: "20px" }}>
-              <Col xs="12" sm="12" md="2" lg="1" xl="1">
-                <div
-                  style={{
-                    display: "flex",
-                    height: "100%",
-                    width: "100%",
-                    alignItems: "center"
-                  }}
-                >
-                  <div>Wastage:</div>
-                </div>
-              </Col>
-              <Col xs="12" sm="12" md="3" lg="2" xl="2">
-                <Select
-                  className="React"
-                  classNamePrefix="select"
-                  options={wastageOptions}
-                  value={wastageOptions.filter(
-                    (opt) => opt.value === `${props.wastage}`
+                </Col>
+                <Col xs="12" sm="12" md="5" lg="5" xl="5">
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    value={sizeMatrixOptions.filter(
+                      (opt) => opt.value === props.sizeMatrixSelect.value
+                    )}
+                    options={sizeMatrixOptions}
+                    onChange={(e) => {
+                      setLoading(true)
+                      dispatch(setCols([]))
+                      fetchSizeTableDetails(e.value)
+                      props.setSizeMatrixSelect(e)
+                    }}
+                    menuPlacement={"auto"}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 })
+                    }}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  {loading ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "200px"
+                      }}
+                    >
+                      <Spinner color="primary" />
+                    </div>
+                  ) : (
+                    <div style={{ minHeight: "175px" }}>
+                      <DataTable
+                        data={props.sizeData}
+                        columns={props.cols}
+                        noHeader={true}
+                        persistTableHead={true}
+                        noDataComponent={
+                          <div style={{ padding: "20px" }}>
+                            <h5>Select a size matrix type to display data.</h5>
+                          </div>
+                        }
+                      />
+                    </div>
                   )}
-                  onChange={(e) => dispatch(setWastage(parseFloat(e.value)))}
-                  isDisabled={!wastageStatus}
-                  menuPlacement={"auto"}
-                  menuPortalTarget={document.body}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                />
-              </Col>
-              <Col xs="12" sm="12" md="7" lg="4" xl="4">
-                <Button
-                  color="primary"
-                  style={{
-                    marginRight: "5px",
-                    paddingLeft: "10px",
-                    paddingRight: "10px"
-                  }}
-                  onClick={() => handleAddResetWastage("add")}
-                >
-                  Add Wastage
-                </Button>
-                <Button
-                  color="primary"
-                  style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                  onClick={() => handleAddResetWastage("reset")}
-                >
-                  Reset Wastage
-                </Button>
-              </Col>
-            </Row>
-          </div>
-        ) : null}
+                </Col>
+              </Row>
+              <Row style={{ marginTop: "20px" }}>
+                <Col xs="12" sm="12" md="2" lg="1" xl="1">
+                  <div
+                    style={{
+                      display: "flex",
+                      height: "100%",
+                      width: "100%",
+                      alignItems: "center"
+                    }}
+                  >
+                    <div>Wastage:</div>
+                  </div>
+                </Col>
+                <Col xs="12" sm="12" md="3" lg="2" xl="2">
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    options={wastageOptions}
+                    value={wastageOptions.filter(
+                      (opt) => opt.value === `${props.wastage}`
+                    )}
+                    onChange={(e) => dispatch(setWastage(parseFloat(e.value)))}
+                    isDisabled={!wastageStatus}
+                    menuPlacement={"auto"}
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 })
+                    }}
+                  />
+                </Col>
+                <Col xs="12" sm="12" md="7" lg="4" xl="4">
+                  <Button
+                    color="primary"
+                    style={{
+                      marginRight: "5px",
+                      paddingLeft: "10px",
+                      paddingRight: "10px"
+                    }}
+                    onClick={() => handleAddResetWastage("add")}
+                  >
+                    Add Wastage
+                  </Button>
+                  <Button
+                    color="primary"
+                    style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                    onClick={() => handleAddResetWastage("reset")}
+                  >
+                    Reset Wastage
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          ) : null
+        ) : (
+          <></>
+        )}
       </CardBody>
       <CardFooter>
         <Footer
@@ -578,7 +576,8 @@ const mapStateToProps = (state) => ({
   defaultSizeData: state.orderReducer.defaultSizeData,
   wastage: state.orderReducer.wastage,
   cols: state.orderReducer.cols,
-  wastageApplied: state.orderReducer.wastageApplied
+  wastageApplied: state.orderReducer.wastageApplied,
+  brandDetails: state.orderReducer.brandDetails
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)
