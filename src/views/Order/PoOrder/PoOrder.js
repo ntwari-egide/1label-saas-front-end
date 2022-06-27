@@ -97,6 +97,7 @@ const PoOrder = (props) => {
         stepperMenu={stepperMenu}
         currentStep={props.currentStep}
         setCurrentStep={setCurrentStepHelper}
+        brandDetails={props.brandDetails}
       />
       {props.currentStep === 0 ? (
         <Listing
@@ -157,7 +158,8 @@ const mapStateToProps = (state) => ({
   selectedItems: state.poOrderReducer.selectedItems,
   orderReference: state.poOrderReducer.orderReference,
   productionLocation: state.poOrderReducer.productionLocation,
-  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate
+  expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
+  brandDetails: state.poOrderReducer.brandDetails
 })
 
 export default connect(mapStateToProps, null)(PoOrder)

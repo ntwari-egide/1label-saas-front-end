@@ -103,6 +103,7 @@ const Order = (props) => {
         setOrderFormManFields={setOrderFormManFields}
         orderFormManFields={orderFormManFields}
         setOrderFormManFields={setOrderFormManFields}
+        brandDetails={props.brandDetails}
       />
       {props.currentStep === 0 ? (
         <SelectItem
@@ -158,7 +159,8 @@ const mapStateToProps = (state) => ({
   productionLocation: state.orderReducer.productionLocation,
   orderReference: state.orderReducer.orderReference,
   expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
-  currentStep: state.orderReducer.currentStep
+  currentStep: state.orderReducer.currentStep,
+  brandDetails: state.orderReducer.brandDetails
 })
 
 export default connect(mapStateToProps, null)(Order)

@@ -63,22 +63,35 @@ const Stepper = (props) => {
   const normalOrderFormManFieldsValidation = (menuItem) => {
     // to end the loop when one of the man fields is empty
     let localFlag = true
-    if (props.validationFields?.orderFormManFields) {
-      Object.keys(props.validationFields.orderFormManFields).map((field) => {
-        if (
-          props.component === "Order" &&
-          props.validationFields.orderFormManFields[field].length <= 0 &&
-          props.currentStep === 1 &&
-          localFlag &&
-          menuItem != "Select Item"
-        ) {
-          const tempState = props.orderFormManFields
-          tempState[field] = true
-          props.setOrderFormManFields({ ...tempState })
-          alert("Please enter mandatory fields")
-          localFlag = false
-        }
-      })
+    if (props.component === "Order") {
+      if (props.validationFields?.orderFormManFields) {
+        Object.keys(props.validationFields.orderFormManFields).map((field) => {
+          if (
+            field === "productionLocation" &&
+            props.brandDetails?.display_location_code === "N"
+          ) {
+            return
+          }
+          if (
+            field === "expectedDeliveryDate" &&
+            props.brandDetails?.is_show_expected_date === "N"
+          ) {
+            return
+          }
+          if (
+            props.validationFields.orderFormManFields[field].length <= 0 &&
+            props.currentStep === 1 &&
+            localFlag &&
+            menuItem != "Select Item"
+          ) {
+            const tempState = props.orderFormManFields
+            tempState[field] = true
+            props.setOrderFormManFields({ ...tempState })
+            alert("Please enter mandatory fields")
+            localFlag = false
+          }
+        })
+      }
     }
     return localFlag
   }
@@ -86,19 +99,32 @@ const Stepper = (props) => {
   const poOrderFormManFieldsValidation = (menuItem) => {
     // to end the loop when one of the man fields is empty
     let localFlag = true
-    if (props.validationFields?.orderFormManFields) {
-      Object.keys(props.validationFields.orderFormManFields).map((field) => {
-        if (
-          props.component === "POOrder" &&
-          props.validationFields.orderFormManFields[field].length <= 0 &&
-          props.currentStep === 3 &&
-          localFlag &&
-          !["Listing", "Item List", "PO Order Size Table"].includes(menuItem)
-        ) {
-          alert("Please enter mandatory fields to proceed")
-          localFlag = false
-        }
-      })
+    if (props.component === "POOrder") {
+      if (props.validationFields?.orderFormManFields) {
+        Object.keys(props.validationFields.orderFormManFields).map((field) => {
+          if (
+            field === "productionLocation" &&
+            props.brandDetails?.display_location_code === "N"
+          ) {
+            return
+          }
+          if (
+            field === "expectedDeliveryDate" &&
+            props.brandDetails?.is_show_expected_date === "N"
+          ) {
+            return
+          }
+          if (
+            props.validationFields.orderFormManFields[field].length <= 0 &&
+            props.currentStep === 3 &&
+            localFlag &&
+            !["Listing", "Item List", "PO Order Size Table"].includes(menuItem)
+          ) {
+            alert("Please enter mandatory fields to proceed")
+            localFlag = false
+          }
+        })
+      }
     }
     return localFlag
   }
