@@ -34,7 +34,8 @@ import {
   setContentCustomNumber,
   setCareCustomNumber,
   setDynamicFieldData,
-  setContentGroup
+  setContentGroup,
+  setBrandDetails
 } from "@redux/actions/views/Order/Order"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -94,6 +95,22 @@ const OrderForm = (props) => {
   }
 
   // API services
+
+  const fetchBrandDetails = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : ""
+    }
+
+    axios
+      .post("/brand/GetBrandDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(setBrandDetails(res.data))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const fetchDefaultContentData = (contKey, index, tempData) => {
     // fetches default Content Data as per option selected in fabric select field.
     const body = {
@@ -613,8 +630,8 @@ const OrderForm = (props) => {
     fetchItemInfoFields()
     fetchContentTranslationList()
     fetchProductLocationList()
-    // fetchMinDeliveryDate()
     fetchMinExpectedDeliveryDate()
+    fetchBrandDetails()
   }, [])
 
   return (

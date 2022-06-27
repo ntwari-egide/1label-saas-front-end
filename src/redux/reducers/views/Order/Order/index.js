@@ -18,6 +18,7 @@ const initialState = {
   contentCustomNumber: "",
   dynamicFieldData: {},
   contentGroup: "",
+  brandDetails: {},
   // size table data
   sizeMatrixType: "",
   sizeTable: "",
@@ -103,6 +104,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, wastageApplied: action.payload }
     case "SET_COLS":
       return { ...state, cols: action.payload }
+    case "SET_BRAND_DETAILS":
+      return { ...state, brandDetails: action.payload }
     default:
       return state
   }

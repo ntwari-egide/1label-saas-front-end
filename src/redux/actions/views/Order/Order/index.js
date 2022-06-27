@@ -117,3 +117,7 @@ export const setWastageApplied = (value) => (dispatch) => {
 export const setCols = (data) => (dispatch) => {
   dispatch({ type: "SET_COLS", payload: data })
 }
+
+export const setBrandDetails = (data) => (dispatch) => {
+  dispatch({ type: "SET_BRAND_DETAILS", payload: data })
+}
