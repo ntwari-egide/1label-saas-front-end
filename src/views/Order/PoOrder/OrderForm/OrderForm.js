@@ -274,12 +274,12 @@ const OrderForm = (props) => {
             console.log("Err Msg:", "acontent_title not received")
           }
           if (res.data[0]?.bcontent_title) {
-            setCareName(res.data[0]?.acontent_title)
+            setCareName(res.data[0]?.bcontent_title)
           } else {
             console.log("Err Msg:", "bcontent_title not received")
           }
           if (res.data[0]?.ccontent_title) {
-            setIconName(res.data[0]?.acontent_title)
+            setIconName(res.data[0]?.ccontent_title)
           } else {
             console.log("Err Msg:", "ccontent_title not received")
           }
