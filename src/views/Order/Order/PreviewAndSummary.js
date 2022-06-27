@@ -259,7 +259,10 @@ const PreviewAndSummary = (props) => {
               }))
             )
           } else {
+            // do not render size table section if no size matrix options
             setShowSizeData(false)
+            // reset size table data if no size matrix options.
+            dispatch(setSizeData([]))
           }
         }
       })
