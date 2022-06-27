@@ -144,14 +144,6 @@ const SelectItem = (props) => {
     fetchItemList(props.brand, props.itemType, props.itemRef)
   }, [])
 
-  // useEffect(() => {
-  //   console.log("selectedItems", props.selectedItems)
-  // }, [props.selectedItems])
-
-  // useEffect(() => {
-  //   console.log("brand redux", props.brand)
-  // }, [props.brand])
-
   return (
     <Card>
       <CardHeader style={{ flexGrow: 1 }}>
@@ -210,7 +202,7 @@ const SelectItem = (props) => {
             itemList
               .slice(visibleCardIndex, visibleCardIndex + 6)
               .map((item, index) => (
-                <Col xs="12" sm="6" md="2" lg="2">
+                <Col xs="12" sm="6" md="2" lg="2" key={`${item}-${index}`}>
                   <Card style={{ minHeight: "493px" }}>
                     <CardHeader>
                       <div>{item.brand_name}</div>
