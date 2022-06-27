@@ -183,9 +183,9 @@ const Listing = (props) => {
 
   const fetchOrderDetails = (brand_key, order_no, is_po_order_temp) => {
     const body = {
-      // order_user: "innoa",
+      order_user: getUserData().admin,
       brand_key,
-      order_no,
+      order_no: [order_no.split("-")[0], order_no.split("-")[1]].join("-"),
       is_po_order_temp
     }
 
@@ -193,20 +193,25 @@ const Listing = (props) => {
       .post("/Order/GetOrderDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          let module = "Order"
-          if (is_po_order_temp === "Y") {
-            module = "POOrder"
+          if (res.data[0]) {
+            let module = "Order"
+            if (is_po_order_temp === "Y") {
+              module = "POOrder"
+            }
+            if (module === "POOrder") {
+              const {
+                setCurrentStep
+              } = require(`@redux/actions/views/Order/POOrder`)
+              dispatch(setCurrentStep(1))
+            }
+            // populate state ap per data received
+            dispatch(populateData(module, res.data[0]))
+            // push to page
+            history.push(`/${module}`)
+            dispatch(setLoader(false))
+          } else {
+            console.log("Err Msg: No Data for order details")
           }
-          const {
-            setBrand,
-            setCurrentStep
-          } = require(`@redux/actions/views/Order/${module}`)
-          history.push(`/${module}`)
-          // dispatch brand key here to start fetching dynamic form fields
-          dispatch(setBrand({ value: brand_key, label: "" }))
-          dispatch(populateData(module, res.data[0]))
-          dispatch(setCurrentStep(1))
-          dispatch(setLoader(false))
         }
       })
       .catch((err) => console.log(err))
@@ -280,8 +285,7 @@ const Listing = (props) => {
     } else {
       dispatch(setIsOrderConfirmed(false))
     }
-    dispatch(setSelectedOrder(e))
-    props.setCurrentStep(1)
+    fetchOrderDetails(e.brand_guid_key, e.order_no, e.is_po_order_temp)
   }
 
   // API Services
