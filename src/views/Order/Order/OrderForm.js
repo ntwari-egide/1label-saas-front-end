@@ -673,7 +673,7 @@ const OrderForm = (props) => {
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           {props.brandDetails?.display_location_code === "Y" ? (
             <div>
-              <Label>{t("Projection Location")}</Label>
+              <Label>{t("Production Location")}</Label>
               <span className="text-danger">*</span>
               <div style={{ margin: "5px" }}>
                 <Select
@@ -1202,10 +1202,11 @@ const OrderForm = (props) => {
           validationFields={{
             orderFormManFields: {
               orderReference: props.orderReference,
-              minExpectedDeliveryDate: props.expectedDeliveryDate,
+              expectedDeliveryDate: props.expectedDeliveryDate,
               productionLocation: props.productionLocation
             }
           }}
+          brandDetails={props.brandDetails}
         />
       </CardFooter>
     </Card>

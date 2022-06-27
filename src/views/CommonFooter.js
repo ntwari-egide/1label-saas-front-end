@@ -29,6 +29,18 @@ const Footer = (props) => {
     if (props.validationFields?.orderFormManFields) {
       Object.keys(props.validationFields?.orderFormManFields).map((key) => {
         if (
+          key === "expectedDeliveryDate" &&
+          props.brandDetails?.is_show_expected_date === "N"
+        ) {
+          return
+        }
+        if (
+          key === "productionLocation" &&
+          props.brandDetails?.display_location_code === "N"
+        ) {
+          return
+        }
+        if (
           props.validationFields?.orderFormManFields[key].length <= 0 &&
           localFlag
         ) {
