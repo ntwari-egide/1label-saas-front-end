@@ -306,7 +306,7 @@ const OrderForm = (props) => {
           if (res.status === 200) {
             tempData[content_group] = res.data.map((opt) => ({
               value: opt.guid_key,
-              label: opt.style_number
+              label: opt.custom_number
             }))
             setContentGroupOptions({ ...tempData })
           }
