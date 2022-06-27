@@ -34,7 +34,8 @@ import {
   setDefaultContentData,
   setCareNumberData,
   setContentGroup,
-  setCoo
+  setCoo,
+  setBrandDetails
 } from "@redux/actions/views/Order/POOrder"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -223,6 +224,21 @@ const OrderForm = (props) => {
   }
 
   // API services
+  const fetchBrandDetails = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : ""
+    }
+
+    axios
+      .post("/brand/GetBrandDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(setBrandDetails(res.data))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const fetchItemInfoFields = () => {
     const body = {
       brand_key: props.brand ? props.brand.value : "",
@@ -538,6 +554,7 @@ const OrderForm = (props) => {
     fetchContentNumberSettings()
     fetchContentTranslationList()
     fetchProductLocationList()
+    fetchBrandDetails()
   }, [])
 
   return (
@@ -553,72 +570,94 @@ const OrderForm = (props) => {
           />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          <Label>{t("Expected Delivery Date")}</Label>
-          <span className="text-danger">*</span>
-          <Flatpickr
-            className="form-control"
-            value={props.expectedDeliveryDate ? props.expectedDeliveryDate : ""}
-            style={{ margin: "5px" }}
-            options={{
-              minDate: props.minExpectedDeliveryDate
-            }}
-            onChange={(e) => {
-              dispatch(setExpectedDeliveryDate(e))
-            }}
-            disabled={false}
-          />
+          {props.brandDetails.is_show_expected_date === "Y" ? (
+            <div>
+              <Label>{t("Expected Delivery Date")}</Label>
+              <span className="text-danger">*</span>
+              <Flatpickr
+                className="form-control"
+                value={
+                  props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
+                }
+                style={{ margin: "5px" }}
+                options={{
+                  minDate: props.minExpectedDeliveryDate
+                }}
+                onChange={(e) => {
+                  dispatch(setExpectedDeliveryDate(e))
+                }}
+                disabled={false}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          <Label>{t("Projection Location")}</Label>
-          <span className="text-danger">*</span>
-          <div style={{ margin: "5px" }}>
-            <Select
-              className="React"
-              classNamePrefix="select"
-              options={productionLocationOptions}
-              value={productionLocationOptions.filter(
-                (opt) => opt.label === props.productionLocation
-              )}
-              onChange={(e) => dispatch(setProductionLocation(e.label))}
-            />
-          </div>
+          {props.brandDetails.display_location_code ? (
+            <div>
+              <Label>{t("Projection Location")}</Label>
+              <span className="text-danger">*</span>
+              <div style={{ margin: "5px" }}>
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  options={productionLocationOptions}
+                  value={productionLocationOptions.filter(
+                    (opt) => opt.label === props.productionLocation
+                  )}
+                  onChange={(e) => dispatch(setProductionLocation(e.label))}
+                />
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
         </Col>
       </CardHeader>
       <CardBody>
         <Row style={{ margin: "0" }}>
           <Col>
-            <Card>
-              <CardHeader
-                style={{ cursor: "pointer" }}
-                onClick={() => setItemInfoCollapse(!itemInfoCollapse)}
+            {itemInfoFields.length > 0 ? (
+              props.brandDetails.display_dynamic_field === "Y" ? (
+                <Card>
+                  <CardHeader
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setItemInfoCollapse(!itemInfoCollapse)}
+                  >
+                    <div>
+                      <h4 className="text-primary">{t("Item Info")}</h4>
+                    </div>
+                  </CardHeader>
+                  <Collapse isOpen={itemInfoCollapse}>
+                    <CardBody>
+                      {itemInfoFields.length > 0 ? (
+                        itemInfoFields.map((field) => {
+                          return renderSwitch(field)
+                        })
+                      ) : (
+                        <></>
+                      )}
+                    </CardBody>
+                  </Collapse>
+                </Card>
+              ) : (
+                <></>
+              )
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  height: "400px",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
               >
                 <div>
-                  <h4 className="text-primary">{t("Item Info")}</h4>
+                  <Spinner color="primary" />
                 </div>
-              </CardHeader>
-              <Collapse isOpen={itemInfoCollapse}>
-                <CardBody>
-                  {itemInfoFields.length > 0 ? (
-                    itemInfoFields.map((field) => {
-                      return renderSwitch(field)
-                    })
-                  ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        height: "400px",
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                    >
-                      <div>
-                        <Spinner color="primary" />
-                      </div>
-                    </div>
-                  )}
-                </CardBody>
-              </Collapse>
-            </Card>
+              </div>
+            )}
           </Col>
         </Row>
         <Row style={{ margin: "0" }}>
@@ -634,204 +673,221 @@ const OrderForm = (props) => {
               </CardHeader>
               <Collapse isOpen={careContentCollapse}>
                 <CardBody>
-                  <Row style={{ marginBottom: "10px" }}>
-                    <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                      <Label style={{ marginTop: "12px" }}>{contentName}</Label>
-                    </Col>
-                    <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Select
-                        className="React"
-                        classNamePrefix="select"
-                        value={
-                          isContentSettingCommon
-                            ? contentGroupOptions["ABC"]?.filter(
-                                (opt) =>
-                                  opt.label === props.contentNumberData?.label
+                  {props.brandDetails.display_Content === "Y" ? (
+                    <div>
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                          <Label style={{ marginTop: "12px" }}>
+                            {contentName}
+                          </Label>
+                        </Col>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Select
+                            className="React"
+                            classNamePrefix="select"
+                            value={
+                              isContentSettingCommon
+                                ? contentGroupOptions["ABC"]?.filter(
+                                    (opt) =>
+                                      opt.label ===
+                                      props.contentNumberData?.label
+                                  )
+                                : contentGroupOptions["A"]?.filter(
+                                    (opt) =>
+                                      opt.label ===
+                                      props.contentNumberData?.label
+                                  )
+                            }
+                            options={
+                              isContentSettingCommon
+                                ? contentGroupOptions["ABC"]
+                                : contentGroupOptions["A"]
+                            }
+                            onChange={(e) => {
+                              dispatch(setContentNumberData(e ? e : {}))
+                              if (e) {
+                                fetchContentNumberDetail(e.value, e.label)
+                              }
+                            }}
+                            isClearable={true}
+                          />
+                        </Col>
+                      </Row>
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                          <Label style={{ marginTop: "12px" }}>
+                            Save/Edit:
+                          </Label>
+                        </Col>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Input
+                            value={props.contentCustomNumber}
+                            onChange={(e) =>
+                              dispatch(setContentCustomNumber(e.target.value))
+                            }
+                          />
+                        </Col>
+                      </Row>
+                      <Card>
+                        <CardHeader>
+                          <h5>{t("Fibre Instructions")}</h5>
+                        </CardHeader>
+                        <CardBody>
+                          {props.fibreInstructionData
+                            ? props.fibreInstructionData.map((rec, index) => (
+                                <Row style={{ marginBottom: "5px" }}>
+                                  <Col xs="12" sm="12" md="4" lg="4" xl="4">
+                                    <Label>Component</Label>
+                                    <Select
+                                      className="React"
+                                      classNamePrefix="select"
+                                      options={componentOptions}
+                                      value={componentOptions.filter(
+                                        (opt) => opt.value === rec?.part_key
+                                      )}
+                                      onChange={(e) => {
+                                        const tempData =
+                                          props.fibreInstructionData
+                                        tempData[index] = {
+                                          ...props.fibreInstructionData[index],
+                                          part_key: e ? e.value : "",
+                                          part_translation: e ? e.label : ""
+                                        }
+                                        dispatch(
+                                          setFibreInstructionData([...tempData])
+                                        )
+                                        dispatch(matchContentNumber("POOrder"))
+                                      }}
+                                      isClearable={true}
+                                    />
+                                  </Col>
+                                  <Col xs="12" sm="12" md="3" lg="3" xl="3">
+                                    <Label>Fabric</Label>
+                                    <Select
+                                      className="React"
+                                      classNamePrefix="select"
+                                      options={fabricOptions}
+                                      value={fabricOptions.filter(
+                                        (opt) => opt.value === rec?.cont_key
+                                      )}
+                                      onChange={(e) => {
+                                        handleFibreChange(e, index)
+                                      }}
+                                      isClearable={true}
+                                    />
+                                  </Col>
+                                  <Col xs="12" sm="12" md="2" lg="2" xl="2">
+                                    <Label>%</Label>
+                                    <Input
+                                    // value={
+                                    //   props.fibreInstructionData[index]
+                                    //     ?.en_percent
+                                    // }
+                                    // onChange={(e) => {
+                                    //   const tempData = props.fibreInstructionData
+                                    //   tempData[index] = {
+                                    //     ...props.fibreInstructionData[index],
+                                    //     en_percent: e.target.value
+                                    //   }
+                                    //   props.setFibreInstructionData([...tempData])
+                                    //   debounceFun()
+                                    // }}
+                                    />
+                                  </Col>
+                                  <Col
+                                    xs="12"
+                                    sm="12"
+                                    md="1"
+                                    lg="1"
+                                    xl="1"
+                                    style={{ marginTop: "23px" }}
+                                  >
+                                    <Button
+                                      style={{ padding: "7px" }}
+                                      outline
+                                      className="btn btn-outline-danger"
+                                      onClick={() => {
+                                        let tempData =
+                                          props.fibreInstructionData
+                                        tempData.splice(index, 1)
+                                        dispatch(
+                                          setFibreInstructionData([...tempData])
+                                        )
+                                        tempData = props.defaultContentData
+                                        tempData.splice(index, 1)
+                                        dispatch(
+                                          setDefaultContentData([...tempData])
+                                        )
+                                      }}
+                                    >
+                                      <div style={{ display: "flex" }}>
+                                        <X />
+                                        <div style={{ marginTop: "5px" }}>
+                                          Delete
+                                        </div>
+                                      </div>
+                                    </Button>
+                                  </Col>
+                                </Row>
+                              ))
+                            : null}
+                        </CardBody>
+                        <CardFooter>
+                          <Button
+                            onClick={() => {
+                              const tempFibreInstructions =
+                                props.fibreInstructionData
+                              tempFibreInstructions.push({})
+                              dispatch(
+                                setFibreInstructionData([
+                                  ...tempFibreInstructions
+                                ])
                               )
-                            : contentGroupOptions["A"]?.filter(
-                                (opt) =>
-                                  opt.label === props.contentNumberData?.label
+                              const tempDefaultContent =
+                                props.defaultContentData
+                              tempDefaultContent.push("")
+                              dispatch(
+                                setDefaultContentData([...tempDefaultContent])
                               )
-                        }
-                        options={
-                          isContentSettingCommon
-                            ? contentGroupOptions["ABC"]
-                            : contentGroupOptions["A"]
-                        }
-                        onChange={(e) => {
-                          dispatch(setContentNumberData(e ? e : {}))
-                          if (e) {
-                            fetchContentNumberDetail(e.value, e.label)
-                          }
-                        }}
-                        isClearable={true}
-                      />
-                    </Col>
-                  </Row>
-                  <Row style={{ marginBottom: "10px" }}>
-                    <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                      <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
-                    </Col>
-                    <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                      <Input
-                        value={props.contentCustomNumber}
-                        onChange={(e) =>
-                          dispatch(setContentCustomNumber(e.target.value))
-                        }
-                      />
-                    </Col>
-                  </Row>
-                  <Card>
-                    <CardHeader>
-                      <h5>{t("Fibre Instructions")}</h5>
-                    </CardHeader>
-                    <CardBody>
-                      {props.fibreInstructionData
-                        ? props.fibreInstructionData.map((rec, index) => (
-                            <Row style={{ marginBottom: "5px" }}>
-                              <Col xs="12" sm="12" md="4" lg="4" xl="4">
-                                <Label>Component</Label>
-                                <Select
-                                  className="React"
-                                  classNamePrefix="select"
-                                  options={componentOptions}
-                                  value={componentOptions.filter(
-                                    (opt) => opt.value === rec?.part_key
-                                  )}
-                                  onChange={(e) => {
-                                    const tempData = props.fibreInstructionData
-                                    tempData[index] = {
-                                      ...props.fibreInstructionData[index],
-                                      part_key: e ? e.value : "",
-                                      part_translation: e ? e.label : ""
-                                    }
-                                    dispatch(
-                                      setFibreInstructionData([...tempData])
-                                    )
-                                    dispatch(matchContentNumber("POOrder"))
-                                  }}
-                                  isClearable={true}
-                                />
-                              </Col>
-                              <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                                <Label>Fabric</Label>
-                                <Select
-                                  className="React"
-                                  classNamePrefix="select"
-                                  options={fabricOptions}
-                                  value={fabricOptions.filter(
-                                    (opt) => opt.value === rec?.cont_key
-                                  )}
-                                  onChange={(e) => {
-                                    handleFibreChange(e, index)
-                                  }}
-                                  isClearable={true}
-                                />
-                              </Col>
-                              <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                                <Label>%</Label>
-                                <Input
-                                // value={
-                                //   props.fibreInstructionData[index]
-                                //     ?.en_percent
-                                // }
-                                // onChange={(e) => {
-                                //   const tempData = props.fibreInstructionData
-                                //   tempData[index] = {
-                                //     ...props.fibreInstructionData[index],
-                                //     en_percent: e.target.value
-                                //   }
-                                //   props.setFibreInstructionData([...tempData])
-                                //   debounceFun()
-                                // }}
-                                />
-                              </Col>
-                              <Col
-                                xs="12"
-                                sm="12"
-                                md="1"
-                                lg="1"
-                                xl="1"
-                                style={{ marginTop: "23px" }}
-                              >
-                                <Button
-                                  style={{ padding: "7px" }}
-                                  outline
-                                  className="btn btn-outline-danger"
-                                  onClick={() => {
-                                    let tempData = props.fibreInstructionData
-                                    tempData.splice(index, 1)
-                                    dispatch(
-                                      setFibreInstructionData([...tempData])
-                                    )
-                                    tempData = props.defaultContentData
-                                    tempData.splice(index, 1)
-                                    dispatch(
-                                      setDefaultContentData([...tempData])
-                                    )
-                                  }}
-                                >
-                                  <div style={{ display: "flex" }}>
-                                    <X />
-                                    <div style={{ marginTop: "5px" }}>
-                                      Delete
-                                    </div>
-                                  </div>
-                                </Button>
-                              </Col>
-                            </Row>
-                          ))
-                        : null}
-                    </CardBody>
-                    <CardFooter>
-                      <Button
-                        onClick={() => {
-                          const tempFibreInstructions =
-                            props.fibreInstructionData
-                          tempFibreInstructions.push({})
-                          dispatch(
-                            setFibreInstructionData([...tempFibreInstructions])
-                          )
-                          const tempDefaultContent = props.defaultContentData
-                          tempDefaultContent.push("")
-                          dispatch(
-                            setDefaultContentData([...tempDefaultContent])
-                          )
-                        }}
-                        color="primary"
-                        style={{ padding: "10px" }}
-                      >
-                        <Plus />
-                        Add New
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                  <Row>
-                    <Col>
-                      <Label style={{ marginTop: "12px" }}>
-                        Default Content:
-                      </Label>
-                    </Col>
-                  </Row>
-                  {props.defaultContentData.map((data, index) => (
-                    <Row style={{ marginBottom: "10px" }}>
-                      <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                        <Input
-                        // value={
-                        //   data?.cont_translation ? data?.cont_translation : ""
-                        // }
-                        // onChange={(e) => {
-                        //   const tempState = props.defaultContentData
-                        //   tempState[index] = {
-                        //     ...tempState[index],
-                        //     cont_translation: e.target.value
-                        //   }
-                        //   props.setDefaultContentData([...tempState])
-                        // }}
-                        />
-                      </Col>
-                    </Row>
-                  ))}
+                            }}
+                            color="primary"
+                            style={{ padding: "10px" }}
+                          >
+                            <Plus />
+                            Add New
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                      <Row>
+                        <Col>
+                          <Label style={{ marginTop: "12px" }}>
+                            Default Content:
+                          </Label>
+                        </Col>
+                      </Row>
+                      {props.defaultContentData.map((data, index) => (
+                        <Row style={{ marginBottom: "10px" }}>
+                          <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                            <Input
+                            // value={
+                            //   data?.cont_translation ? data?.cont_translation : ""
+                            // }
+                            // onChange={(e) => {
+                            //   const tempState = props.defaultContentData
+                            //   tempState[index] = {
+                            //     ...tempState[index],
+                            //     cont_translation: e.target.value
+                            //   }
+                            //   props.setDefaultContentData([...tempState])
+                            // }}
+                            />
+                          </Col>
+                        </Row>
+                      ))}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                   <Row style={{ marginBottom: "10px" }}>
                     <Col xs="12" sm="12" md="1" lg="1" xl="1">
                       <Label style={{ marginTop: "12px" }}>{careName}</Label>
@@ -1055,7 +1111,8 @@ const mapStateToProps = (state) => ({
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
   contentNumberData: state.poOrderReducer.contentNumberData,
   defaultContentData: state.poOrderReducer.defaultContentData,
-  careNumberData: state.poOrderReducer.careNumberData
+  careNumberData: state.poOrderReducer.careNumberData,
+  brandDetails: state.poOrderReducer.brandDetails
 })
 
 export default connect(mapStateToProps, null)(OrderForm)
