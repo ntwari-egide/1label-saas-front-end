@@ -18,7 +18,7 @@ const initialState = {
   careNumberData: {},
   contentGroup: "",
   coo: "",
-  brandDetails,
+  brandDetails: {},
   // size table states
   sizeData: [],
   wastage: 0,
