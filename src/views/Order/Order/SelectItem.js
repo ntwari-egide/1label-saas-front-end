@@ -71,7 +71,7 @@ const SelectItem = (props) => {
       )
       dispatch(setSelectedItems(tempList))
     } else {
-      const finState = [item, ...tempList]
+      const finState = [...tempList, item]
       dispatch(setSelectedItems(finState))
       const index = finState.map((item) => item.guid_key).indexOf(item.guid_key)
       fetchItemRefDetails(item, index, finState)
