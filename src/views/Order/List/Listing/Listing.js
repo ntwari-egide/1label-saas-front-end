@@ -282,8 +282,6 @@ const Listing = (props) => {
   const handleRowDoubleClick = (e) => {
     if (e.order_status === "Confirm") {
       dispatch(setIsOrderConfirmed(true))
-    } else {
-      dispatch(setIsOrderConfirmed(false))
     }
     fetchOrderDetails(e.brand_guid_key, e.order_no, e.is_po_order_temp)
   }
