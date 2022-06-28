@@ -32,6 +32,26 @@ const ItemList = (props) => {
   const [visibleCardIndex, setVisibleCardIndex] = useState(0)
   const [loader, setLoader] = useState(false)
 
+  // other functions
+  const fetchItemRefDetails = (item, index, latestState) => {
+    const body = {
+      guid_key: item.guid_key
+    }
+
+    axios
+      .post("/Item/GetItemRefDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          latestState[index] = {
+            ...latestState[index],
+            is_non_size: res.data[0].is_non_size
+          }
+          dispatch(setSelectedItems(latestState))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const handleCheckListChange = (item) => {
     let tempList = props.selectedItems
     if (
