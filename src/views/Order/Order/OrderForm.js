@@ -687,7 +687,7 @@ const OrderForm = (props) => {
                 onChange={(e) => {
                   dispatch(setExpectedDeliveryDate(e))
                 }}
-                disabled={false}
+                disabled={props.isOrderConfirmed}
               />
             </div>
           ) : (

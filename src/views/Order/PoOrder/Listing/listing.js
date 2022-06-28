@@ -422,6 +422,7 @@ const Listing = (props) => {
                     })
                   }}
                   options={{ dateFormat: "d-m-Y" }}
+                  disabled={props.isOrderConfirmed}
                 />
               </Col>
             </Row>
@@ -446,6 +447,7 @@ const Listing = (props) => {
                     })
                   }}
                   options={{ dateFormat: "d-m-Y" }}
+                  disabled={props.isOrderConfirmed}
                 />
               </Col>
             </Row>
@@ -519,7 +521,8 @@ const Listing = (props) => {
                   color: "primary",
                   icon: <Check className="vx-icon" size={15} />,
                   label: "",
-                  size: "md"
+                  size: "md",
+                  disabled: props.isOrderConfirmed
                 }}
                 // pagination={true}
                 fixedHeader={true}

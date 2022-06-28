@@ -228,6 +228,7 @@ const SelectItem = (props) => {
                         onChange={() => {
                           handleSelectedItemsChange(item)
                         }}
+                        disabled={props.isOrderConfirmed}
                       />
                     </CardFooter>
                   </Card>

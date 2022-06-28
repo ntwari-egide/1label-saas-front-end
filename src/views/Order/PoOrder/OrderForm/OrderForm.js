@@ -595,7 +595,7 @@ const OrderForm = (props) => {
                 onChange={(e) => {
                   dispatch(setExpectedDeliveryDate(e))
                 }}
-                disabled={false}
+                disabled={props.isOrderConfirmed}
               />
             </div>
           ) : (
@@ -1200,7 +1200,7 @@ const mapStateToProps = (state) => ({
   defaultContentData: state.poOrderReducer.defaultContentData,
   careNumberData: state.poOrderReducer.careNumberData,
   brandDetails: state.poOrderReducer.brandDetails,
-  isOrderConfirmed: state.itemReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

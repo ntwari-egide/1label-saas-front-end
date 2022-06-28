@@ -150,6 +150,7 @@ const ItemList = (props) => {
                           ?.map((item) => item.guid_key)
                           .includes(item.guid_key)}
                         onChange={() => handleCheckListChange(item)}
+                        disabled={props.isOrderConfirmed}
                       />
                     </CardFooter>
                   </Card>
