@@ -138,8 +138,17 @@ const InvoiceAndDelivery = (props) => {
       .post("/Client/GetClientAddressDetail", body)
       .then((res) => {
         if (res.status === 200) {
+          // set initial data in form
           if (index === 0) {
             dispatch(dispatchFun(res?.data[0]))
+          }
+          // to open card of initial address
+          if (addType === "invoice" && index === 0) {
+            setInvoiceId(res.data[0].guid_key)
+          }
+          // to open card of initial address
+          if (addType === "delivery" && index === 0) {
+            setDeliveryId(res.data[0].guid_key)
           }
           tempDetailsList[index] = res.data[0]
           setDetailsListFun([...tempDetailsList])

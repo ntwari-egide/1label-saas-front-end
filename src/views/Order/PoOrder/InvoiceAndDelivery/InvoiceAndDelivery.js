@@ -139,8 +139,17 @@ const InvoiceAndDelivery = (props) => {
       .post("/Client/GetClientAddressDetail", body)
       .then((res) => {
         if (res.status === 200) {
+          // set initial data in form
           if (index === 0) {
             dispatch(dispatchFun(res?.data[0]))
+          }
+          // to open card of initial address
+          if (addType === "invoice" && index === 0) {
+            setInvoiceId(res.data[0].guid_key)
+          }
+          // to open card of initial address
+          if (addType === "delivery" && index === 0) {
+            setDeliveryId(res.data[0].guid_key)
           }
           tempDetailsList[index] = res.data[0]
           setDetailsListFun([...tempDetailsList])
@@ -153,18 +162,6 @@ const InvoiceAndDelivery = (props) => {
     fetchUserInfo()
     fetchClientAddressList()
   }, [])
-
-  // useEffect(() => {
-  //   console.log("del list", deliveryDetailsList)
-  // }, [deliveryDetailsList])
-
-  // useEffect(() => {
-  //   console.log("inv list", invoiceDetailsList)
-  // }, [invoiceDetailsList])
-
-  // useEffect(() => {
-  //   console.log("con list", contactDetailsList)
-  // }, [contactDetailsList])
 
   return (
     <Card>
@@ -351,9 +348,6 @@ const InvoiceAndDelivery = (props) => {
                         <p>
                           {data?.city}, {data?.country}
                         </p>
-                        {/*
-                        <p>(86) 0755-8215 5991</p>
-              */}
                         <div>
                           <Button
                             onClick={() => {
