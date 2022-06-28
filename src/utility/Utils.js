@@ -199,3 +199,9 @@ export const formatColToRow = (xmlStr) => {
     console.log("something went wrong while processing parsed xml", err)
   }
 }
+
+export const resetTotal = (itemList) => {
+  if (itemList.length) {
+    return itemList.map((item) => ({ ...item, total: 0 }))
+  }
+}
