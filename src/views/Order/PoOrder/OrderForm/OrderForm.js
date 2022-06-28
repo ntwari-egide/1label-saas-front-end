@@ -113,6 +113,7 @@ const OrderForm = (props) => {
                   }
                   dispatch(setDynamicFieldData({ ...tempData }))
                 }}
+                isDisabled={props.isOrderConfirmed}
               />
             </Col>
           </Row>
@@ -146,6 +147,7 @@ const OrderForm = (props) => {
                   }
                   dispatch(setDynamicFieldData({ ...tempState }))
                 }}
+                disable={props.isOrderConfirmed}
               />
             </Col>
           </Row>
@@ -573,6 +575,7 @@ const OrderForm = (props) => {
             value={props.orderReference}
             onChange={(e) => dispatch(setOrderReference(e.target.value))}
             style={{ margin: "5px" }}
+            disable={props.isOrderConfirmed}
           />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
@@ -613,6 +616,7 @@ const OrderForm = (props) => {
                     (opt) => opt.label === props.productionLocation
                   )}
                   onChange={(e) => dispatch(setProductionLocation(e.label))}
+                  isDisabled={props.isOrderConfirmed}
                 />
               </div>
             </div>
@@ -713,6 +717,7 @@ const OrderForm = (props) => {
                             }
                           }}
                           isClearable={true}
+                          isDisabled={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -726,6 +731,7 @@ const OrderForm = (props) => {
                           onChange={(e) =>
                             dispatch(setContentCustomNumber(e.target.value))
                           }
+                          disable={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -767,6 +773,7 @@ const OrderForm = (props) => {
                                       })
                                     }
                                     onBlur={() => setComponentTip({})}
+                                    isDisabled={props.isOrderConfirmed}
                                   />
                                   <div>
                                     <Popover
@@ -820,6 +827,7 @@ const OrderForm = (props) => {
                                       })
                                     }
                                     onBlur={() => setFabricTip({})}
+                                    isDisabled={props.isOrderConfirmed}
                                   />
                                   <div>
                                     <Popover
@@ -845,19 +853,20 @@ const OrderForm = (props) => {
                                 <Col xs="12" sm="12" md="2" lg="2" xl="2">
                                   <Label>%</Label>
                                   <Input
-                                  // value={
-                                  //   props.fibreInstructionData[index]
-                                  //     ?.en_percent
-                                  // }
-                                  // onChange={(e) => {
-                                  //   const tempData = props.fibreInstructionData
-                                  //   tempData[index] = {
-                                  //     ...props.fibreInstructionData[index],
-                                  //     en_percent: e.target.value
-                                  //   }
-                                  //   props.setFibreInstructionData([...tempData])
-                                  //   debounceFun()
-                                  // }}
+                                    // value={
+                                    //   props.fibreInstructionData[index]
+                                    //     ?.en_percent
+                                    // }
+                                    // onChange={(e) => {
+                                    //   const tempData = props.fibreInstructionData
+                                    //   tempData[index] = {
+                                    //     ...props.fibreInstructionData[index],
+                                    //     en_percent: e.target.value
+                                    //   }
+                                    //   props.setFibreInstructionData([...tempData])
+                                    //   debounceFun()
+                                    // }}
+                                    disable={props.isOrderConfirmed}
                                   />
                                 </Col>
                                 <Col
@@ -933,17 +942,18 @@ const OrderForm = (props) => {
                       <Row style={{ marginBottom: "10px" }}>
                         <Col xs="12" sm="12" md="9" lg="9" xl="9">
                           <Input
-                          // value={
-                          //   data?.cont_translation ? data?.cont_translation : ""
-                          // }
-                          // onChange={(e) => {
-                          //   const tempState = props.defaultContentData
-                          //   tempState[index] = {
-                          //     ...tempState[index],
-                          //     cont_translation: e.target.value
-                          //   }
-                          //   props.setDefaultContentData([...tempState])
-                          // }}
+                            // value={
+                            //   data?.cont_translation ? data?.cont_translation : ""
+                            // }
+                            // onChange={(e) => {
+                            //   const tempState = props.defaultContentData
+                            //   tempState[index] = {
+                            //     ...tempState[index],
+                            //     cont_translation: e.target.value
+                            //   }
+                            //   props.setDefaultContentData([...tempState])
+                            // }}
+                            disable={props.isOrderConfirmed}
                           />
                         </Col>
                       </Row>
@@ -979,6 +989,7 @@ const OrderForm = (props) => {
                             }
                           }}
                           isClearable={true}
+                          isDisabled={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -992,6 +1003,7 @@ const OrderForm = (props) => {
                           onChange={(e) =>
                             dispatch(setCareCustomNumber(e.target.value))
                           }
+                          disable={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -1028,6 +1040,7 @@ const OrderForm = (props) => {
                                   dispatch(matchContentNumber("POOrder"))
                                 }}
                                 isClearable={true}
+                                isDisabled={props.isOrderConfirmed}
                               />
                             </Col>
                             <Col xs="12" sm="12" md="1" lg="1" xl="1">
@@ -1138,6 +1151,7 @@ const OrderForm = (props) => {
                                 options.data.label.includes(query)
                               }
                               isClearable={true}
+                              isDisabled={props.isOrderConfirmed}
                             />
                           </Col>
                         </Row>
@@ -1185,7 +1199,8 @@ const mapStateToProps = (state) => ({
   contentNumberData: state.poOrderReducer.contentNumberData,
   defaultContentData: state.poOrderReducer.defaultContentData,
   careNumberData: state.poOrderReducer.careNumberData,
-  brandDetails: state.poOrderReducer.brandDetails
+  brandDetails: state.poOrderReducer.brandDetails,
+  isOrderConfirmed: state.itemReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

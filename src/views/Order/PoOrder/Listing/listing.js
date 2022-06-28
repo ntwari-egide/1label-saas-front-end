@@ -302,6 +302,7 @@ const Listing = (props) => {
                 props.setSearchParams({ ...props.searchParams, brand: e.value })
                 dispatch(setBrand(e))
               }}
+              isDisabled={props.isOrderConfirmed}
             />
           </Col>
         </Row>
@@ -320,6 +321,7 @@ const Listing = (props) => {
                       cid: e.target.value
                     })
                   }
+                  disabled={props.isOrderConfirmed}
                 />
               </Col>
             </Row>
@@ -342,6 +344,7 @@ const Listing = (props) => {
                       factoryNo: e.target.value
                     })
                   }
+                  disabled={props.isOrderConfirmed}
                 />
               </Col>
             </Row>
@@ -362,6 +365,7 @@ const Listing = (props) => {
                       poNo: e.target.value
                     })
                   }
+                  disabled={props.isOrderConfirmed}
                 />
               </Col>
             </Row>
@@ -386,6 +390,7 @@ const Listing = (props) => {
                       orderStatus: e.value.toString()
                     })
                   }
+                  isDisabled={props.isOrderConfirmed}
                 />
               </Col>
             </Row>
@@ -564,4 +569,8 @@ const Listing = (props) => {
   )
 }
 
-export default connect(null, null)(Listing)
+const mapStateToProps = (state) => ({
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
+})
+
+export default connect(mapStateToProps, null)(Listing)

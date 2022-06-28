@@ -341,6 +341,7 @@ const PreviewAndSummary = (props) => {
                   }}
                   menuPlacement={"auto"}
                   styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  isDisabled={props.isOrderConfirmed}
                 />
               </Col>
             </Row>
@@ -378,7 +379,8 @@ const mapStateToProps = (state) => ({
   summaryTable: state.poOrderReducer.summaryTable,
   defaultSizeTable: state.poOrderReducer.defaultSizeTable,
   wastageApplied: state.poOrderReducer.wastageApplied,
-  brandDetails: state.poOrderReducer.brandDetails
+  brandDetails: state.poOrderReducer.brandDetails,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)

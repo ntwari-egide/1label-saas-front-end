@@ -16,7 +16,6 @@ import Footer from "../../../CommonFooter"
 import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
 import { getUserData } from "@utils"
-import { savePOOrder } from "@redux/actions/views/common"
 import {
   setInvoiceAddressDetails,
   setDeliveryAddressDetails,
@@ -198,6 +197,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -208,6 +208,7 @@ const InvoiceAndDelivery = (props) => {
                       onChange={(e) => {
                         handleContactDetailsChange(e.target.value, "phone")
                       }}
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -228,6 +229,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails?.address
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -246,6 +248,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails?.address
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -263,6 +266,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -278,17 +282,24 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("State")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      style={{ marginBottom: "15px" }}
+                      disabled={props.isOrderConfirmed}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Address Type")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      style={{ marginBottom: "15px" }}
+                      disabled={props.isOrderConfirmed}
+                    />
                   </Col>
                 </Row>
                 <Row>
@@ -373,6 +384,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -383,6 +395,7 @@ const InvoiceAndDelivery = (props) => {
                       onChange={(e) => {
                         handleContactDetailsChange(e.target.value, "phone")
                       }}
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -403,6 +416,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails?.address
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -421,6 +435,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails?.address
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -438,6 +453,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -453,17 +469,24 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
                 <Row>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("State")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      style={{ marginBottom: "15px" }}
+                      disabled={props.isOrderConfirmed}
+                    />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
                     <Label>{t("Address Type")}</Label>
-                    <Input style={{ marginBottom: "15px" }} />
+                    <Input
+                      style={{ marginBottom: "15px" }}
+                      disabled={props.isOrderConfirmed}
+                    />
                   </Col>
                 </Row>
                 <Row>
@@ -529,7 +552,8 @@ const InvoiceAndDelivery = (props) => {
 const mapStateToProps = (state) => ({
   deliveryAddressDetails: state.poOrderReducer.deliveryAddressDetails,
   invoiceAddressDetails: state.poOrderReducer.invoiceAddressDetails,
-  contactDetails: state.poOrderReducer.contactDetails
+  contactDetails: state.poOrderReducer.contactDetails,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)

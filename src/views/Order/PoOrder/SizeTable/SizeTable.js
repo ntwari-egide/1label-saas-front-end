@@ -96,6 +96,7 @@ const SizeTable = (props) => {
                 onChange={(e) => {
                   handleQtyChange(e.target.value, col, index, tabIndex)
                 }}
+                disable={props.isOrderConfirmed}
               />
             </div>
           )
@@ -124,6 +125,7 @@ const SizeTable = (props) => {
               }
               dispatch(setSizeData(tempState))
             }}
+            disable={props.isOrderConfirmed}
           />
         </div>
       )
@@ -313,6 +315,7 @@ const SizeTable = (props) => {
               isDisabled={!wastageStatus}
               menuPlacement={"auto"}
               styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+              isDisabled={props.isOrderConfirmed}
             />
           </Col>
           <Col xs="12" sm="12" md="7" lg="4" xl="4">
@@ -354,7 +357,8 @@ const mapStateToProps = (state) => ({
   wastage: state.poOrderReducer.wastage,
   sizeTableTrigger: state.poOrderReducer.sizeTableTrigger,
   wastageApplied: state.poOrderReducer.wastageApplied,
-  selectedItems: state.poOrderReducer.selectedItems
+  selectedItems: state.poOrderReducer.selectedItems,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(SizeTable)

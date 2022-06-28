@@ -100,7 +100,10 @@ const ItemList = (props) => {
       <CardHeader>
         <Row style={{ width: "100%", margin: "0" }}>
           <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-            <Input placeholder={t("ITEM")} disabled={loader} />
+            <Input
+              placeholder={t("ITEM")}
+              disabled={loader || props.isOrderConfirmed}
+            />
           </Col>
           <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
             <Select
@@ -114,7 +117,7 @@ const ItemList = (props) => {
                 fetchItemList(props.brand, e)
               }}
               isClearable={true}
-              isDisabled={loader}
+              isDisabled={loader || props.isOrderConfirmed}
             />
           </Col>
         </Row>
@@ -207,7 +210,8 @@ const ItemList = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
-  selectedItems: state.poOrderReducer.selectedItems
+  selectedItems: state.poOrderReducer.selectedItems,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(ItemList)
