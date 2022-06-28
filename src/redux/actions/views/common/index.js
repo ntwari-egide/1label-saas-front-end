@@ -138,16 +138,36 @@ export const populateData = (module, data) => (dispatch) => {
     }
   }
   if (data.item_ref) {
-    dispatch(
-      setSelectedItems(
-        data.item_ref.map((item) => {
-          const tempData = item
-          tempData["guid_key"] = tempData.item_key
-          delete tempData["item_key"]
-          return tempData
+    const tempData = data.item_ref.map((item) => {
+      const tempData = item
+      tempData["guid_key"] = tempData.item_key
+      delete tempData["item_key"]
+      return tempData
+    })
+
+    // update for non_size items
+    tempData.map((item, index) => {
+      const body = {
+        guid_key: item.guid_key
+      }
+
+      axios
+        .post("/Item/GetItemRefDetail", body)
+        .then((res) => {
+          if (res.status === 200) {
+            tempData[index] = {
+              ...tempData[index],
+              is_non_size: res.data[0]?.is_non_size
+            }
+            dispatch(setSelectedItems(tempData))
+          }
+          // stop loader
+          if (index === tempData.length) {
+            dispatch(setLoader(false))
+          }
         })
-      )
-    )
+        .catch((err) => console.log(err))
+    })
   }
   if (
     data.order_expdate_delivery_date &&

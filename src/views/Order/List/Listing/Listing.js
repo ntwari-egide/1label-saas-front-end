@@ -208,7 +208,6 @@ const Listing = (props) => {
             dispatch(populateData(module, res.data[0]))
             // push to page
             history.push(`/${module}`)
-            dispatch(setLoader(false))
           } else {
             console.log("Err Msg: No Data for order details")
           }
