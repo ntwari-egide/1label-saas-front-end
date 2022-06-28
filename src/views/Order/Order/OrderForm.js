@@ -12,7 +12,10 @@ import {
   Row,
   Col,
   Input,
-  Button
+  Button,
+  Popover,
+  PopoverHeader,
+  PopoverBody
 } from "reactstrap"
 import { X, Plus } from "react-feather"
 import Footer from "../../CommonFooter"
@@ -63,6 +66,9 @@ const OrderForm = (props) => {
   const [contentName, setContentName] = useState("")
   const [careName, setCareName] = useState("")
   const [iconName, setIconName] = useState("")
+  // states for custom tooltip
+  const [componentTip, setComponentTip] = useState({})
+  const [fabricTip, setFabricTip] = useState({})
 
   // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
   const debounceFun = () => {
@@ -632,6 +638,21 @@ const OrderForm = (props) => {
     fetchBrandDetails()
   }, [])
 
+  useEffect(() => {
+    console.log("componentTip", componentTip)
+  }, [componentTip])
+
+  useEffect(() => {
+    console.log(
+      Object.keys(componentTip).length
+        ? Object.keys(componentTip)[0]
+        : "default",
+      Object.keys(componentTip).length
+        ? componentTip[Object.keys(componentTip)[0]]
+        : false
+    )
+  })
+
   return (
     <Card>
       <CardHeader>
@@ -833,6 +854,7 @@ const OrderForm = (props) => {
                                 <Col xs="12" sm="12" md="4" lg="4" xl="4">
                                   <Label>Component</Label>
                                   <Select
+                                    id={`component-select-${index}`}
                                     className="React"
                                     classNamePrefix="select"
                                     options={componentOptions}
@@ -853,12 +875,52 @@ const OrderForm = (props) => {
                                       )
                                       dispatch(matchContentNumber("Order"))
                                     }}
+                                    onFocus={() => {
+                                      setComponentTip({
+                                        [`component-select-${index}`]: true
+                                      })
+                                    }}
+                                    onBlur={() => {
+                                      setComponentTip({})
+                                    }}
                                     isClearable={true}
                                   />
+                                  <div>
+                                    <Popover
+                                      target={`component-select-${index}`}
+                                      isOpen={
+                                        componentTip[
+                                          `component-select-${index}`
+                                        ]
+                                          ? componentTip[
+                                              `component-select-${index}`
+                                            ]
+                                          : false
+                                      }
+                                    >
+                                      <PopoverHeader>Tip </PopoverHeader>
+                                      <PopoverBody>
+                                        <ol type="i">
+                                          <li>
+                                            Style containing two or more garment
+                                            components of different textile
+                                            fibre, each component must be
+                                            stated. e.g. lining, padding etc..
+                                          </li>
+                                          <li>
+                                            However if a component is less than
+                                            30% of the total garment it must not
+                                            be mentioned. e.g. rib
+                                          </li>
+                                        </ol>
+                                      </PopoverBody>
+                                    </Popover>
+                                  </div>
                                 </Col>
                                 <Col xs="12" sm="12" md="3" lg="3" xl="3">
                                   <Label>Fabric</Label>
                                   <Select
+                                    id={`fabric-select-${index}`}
                                     className="React"
                                     classNamePrefix="select"
                                     options={fabricOptions}
@@ -869,7 +931,35 @@ const OrderForm = (props) => {
                                       handleFibreChange(e, index)
                                     }}
                                     isClearable={true}
+                                    onFocus={() => {
+                                      setFabricTip({
+                                        [`fabric-select-${index}`]: true
+                                      })
+                                    }}
+                                    onBlur={() => {
+                                      setFabricTip({})
+                                    }}
                                   />
+                                  <div>
+                                    <Popover
+                                      target={`fabric-select-${index}`}
+                                      isOpen={
+                                        fabricTip[`fabric-select-${index}`]
+                                          ? fabricTip[`fabric-select-${index}`]
+                                          : false
+                                      }
+                                    >
+                                      <PopoverHeader>Tip</PopoverHeader>
+                                      <PopoverBody>
+                                        <p>
+                                          Fabrics that are made up of multiple
+                                          layer must call out each other
+                                          seperately. Contact CS for help on
+                                          correct setup
+                                        </p>
+                                      </PopoverBody>
+                                    </Popover>
+                                  </div>
                                 </Col>
                                 <Col xs="12" sm="12" md="2" lg="2" xl="2">
                                   <Label>%</Label>
