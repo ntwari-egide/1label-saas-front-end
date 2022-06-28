@@ -3,7 +3,7 @@ import { Fragment, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import UserDropdown from "./UserDropdown"
 import IntlDropdown from "./IntlDropdown"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector, connect } from "react-redux"
 import axios from "@axios"
 
 // ** Third Party Components
@@ -18,11 +18,6 @@ import {
   CornerDownLeft,
   Printer,
   RefreshCw,
-  DownloadCloud,
-  DollarSign,
-  AlignJustify,
-  Columns,
-  Calendar,
   Search
 } from "react-feather"
 import { NavItem, NavLink, UncontrolledTooltip } from "reactstrap"
@@ -126,7 +121,7 @@ const NavbarUser = (props) => {
           <NavItem className="d-none d-lg-block">
             <NavLink
               className="nav-link-style"
-              // disabled={!navbarBtnStatus.saveBtn}
+              disabled={props.isOrderConfirmed}
             >
               <Save
                 className="ficon"
@@ -140,10 +135,7 @@ const NavbarUser = (props) => {
           </NavItem>
         ) : null}
         <NavItem className="d-none d-lg-block">
-          <NavLink
-            className="nav-link-style"
-            // disabled={!navbarBtnStatus.saveBtn}
-          >
+          <NavLink className="nav-link-style" disabled={props.isOrderConfirmed}>
             <Save
               className="ficon"
               id="Save-Confirm"
@@ -233,4 +225,8 @@ const NavbarUser = (props) => {
   )
 }
 
-export default NavbarUser
+const mapStateToProps = (state) => ({
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
+})
+
+export default connect(mapStateToProps, null)(NavbarUser)
