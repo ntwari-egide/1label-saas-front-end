@@ -485,6 +485,7 @@ const OrderForm = (props) => {
                   }
                   dispatch(setDynamicFieldData({ ...tempState }))
                 }}
+                isDisabled={props.isOrderConfirmed}
               />
             </Col>
           </Row>
@@ -518,6 +519,7 @@ const OrderForm = (props) => {
                   }
                   dispatch(setDynamicFieldData({ ...tempState }))
                 }}
+                disabled={props.isOrderConfirmed}
               />
             </Col>
           </Row>
@@ -665,6 +667,7 @@ const OrderForm = (props) => {
               dispatch(setOrderReference(e.target.value))
             }}
             style={{ margin: "5px" }}
+            disabled={props.isOrderConfirmed}
           />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
@@ -707,6 +710,7 @@ const OrderForm = (props) => {
                   onChange={(e) => {
                     dispatch(setProductionLocation(e.label))
                   }}
+                  isDisabled={props.isOrderConfirmed}
                 />
               </div>
             </div>
@@ -827,6 +831,7 @@ const OrderForm = (props) => {
                             }
                           }}
                           isClearable={true}
+                          isDisabled={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -840,6 +845,7 @@ const OrderForm = (props) => {
                           onChange={(e) =>
                             dispatch(setContentCustomNumber(e.target.value))
                           }
+                          disabled={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -884,6 +890,7 @@ const OrderForm = (props) => {
                                       setComponentTip({})
                                     }}
                                     isClearable={true}
+                                    isDisabled={props.isOrderConfirmed}
                                   />
                                   <div>
                                     <Popover
@@ -939,6 +946,7 @@ const OrderForm = (props) => {
                                     onBlur={() => {
                                       setFabricTip({})
                                     }}
+                                    isDisabled={props.isOrderConfirmed}
                                   />
                                   <div>
                                     <Popover
@@ -983,6 +991,7 @@ const OrderForm = (props) => {
                                       )
                                       debounceFun()
                                     }}
+                                    disabled={props.isOrderConfirmed}
                                   />
                                 </Col>
                                 <Col
@@ -1058,7 +1067,11 @@ const OrderForm = (props) => {
                       (item) => (
                         <Row style={{ marginBottom: "10px" }}>
                           <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                            <Input value={item ? item : ""} disabled={true} />
+                            <Input
+                              value={item ? item : ""}
+                              disabled={true}
+                              disabled={props.isOrderConfirmed}
+                            />
                           </Col>
                         </Row>
                       )
@@ -1112,6 +1125,7 @@ const OrderForm = (props) => {
                             }
                           }}
                           isClearable={true}
+                          isDisabled={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -1125,6 +1139,7 @@ const OrderForm = (props) => {
                           onChange={(e) =>
                             dispatch(setCareCustomNumber(e.target.value))
                           }
+                          disabled={props.isOrderConfirmed}
                         />
                       </Col>
                     </Row>
@@ -1160,6 +1175,7 @@ const OrderForm = (props) => {
                                   dispatch(matchContentNumber("Order"))
                                 }}
                                 isClearable={true}
+                                isDisabled={props.isOrderConfirmed}
                               />
                             </Col>
                             <Col xs="12" sm="12" md="1" lg="1" xl="1">
@@ -1270,6 +1286,7 @@ const OrderForm = (props) => {
                                 options.data.label.includes(query)
                               }
                               isClearable={true}
+                              isDisabled={props.isOrderConfirmed}
                             />
                           </Col>
                         </Row>
@@ -1320,7 +1337,8 @@ const mapStateToProps = (state) => ({
   careCustomNumber: state.orderReducer.careCustomNumber,
   dynamicFieldData: state.orderReducer.dynamicFieldData,
   contentGroup: state.orderReducer.contentGroup,
-  brandDetails: state.orderReducer.brandDetails
+  brandDetails: state.orderReducer.brandDetails,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

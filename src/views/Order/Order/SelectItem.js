@@ -164,7 +164,7 @@ const SelectItem = (props) => {
               dispatch(setSelectedItems([]))
             }}
             isClearable={true}
-            isDisabled={loader}
+            isDisabled={loader || props.isOrderConfirmed}
           />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
@@ -175,7 +175,7 @@ const SelectItem = (props) => {
               props.setItemRef(e.target.value)
               debounceSearch(e.target.value)
             }}
-            disabled={loader && !refSearch}
+            disabled={(loader && !refSearch) || props.isOrderConfirmed}
           />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
@@ -192,7 +192,7 @@ const SelectItem = (props) => {
               fetchItemList(props.brand, e ? e : {}, props.itemRef)
             }}
             isClearable={true}
-            isDisabled={loader}
+            isDisabled={loader || props.isOrderConfirmed}
           />
         </Col>
       </CardHeader>
@@ -288,7 +288,8 @@ const SelectItem = (props) => {
 
 const mapStateToProps = (state) => ({
   brand: state.orderReducer.brand,
-  selectedItems: state.orderReducer.selectedItems
+  selectedItems: state.orderReducer.selectedItems,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(SelectItem)

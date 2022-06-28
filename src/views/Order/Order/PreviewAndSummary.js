@@ -119,7 +119,7 @@ const PreviewAndSummary = (props) => {
                   handleQtyChange(e.target.value, row, col, index)
                   calculateTotal(col, itm_index)
                 }}
-                disabled={item.is_non_size === "Y"}
+                disabled={item.is_non_size === "Y" || props.isOrderConfirmed}
               />
             </div>
           )
@@ -139,6 +139,7 @@ const PreviewAndSummary = (props) => {
               tempState[index] = row
               dispatch(setSizeData(tempState))
             }}
+            disabled={props.isOrderConfirmed}
           />
         </div>
       )
@@ -408,6 +409,7 @@ const PreviewAndSummary = (props) => {
                                 }
                                 dispatch(setSelectedItems(tempState))
                               }}
+                              disabled={props.isOrderConfirmed}
                             />
                           </Col>
                         )}
@@ -465,6 +467,7 @@ const PreviewAndSummary = (props) => {
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 })
                     }}
+                    isDisabled={props.isOrderConfirmed}
                   />
                 </Col>
               </Row>
@@ -526,6 +529,7 @@ const PreviewAndSummary = (props) => {
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 })
                     }}
+                    isDisabled={props.isOrderConfirmed}
                   />
                 </Col>
                 <Col xs="12" sm="12" md="7" lg="4" xl="4">
@@ -577,7 +581,8 @@ const mapStateToProps = (state) => ({
   wastage: state.orderReducer.wastage,
   cols: state.orderReducer.cols,
   wastageApplied: state.orderReducer.wastageApplied,
-  brandDetails: state.orderReducer.brandDetails
+  brandDetails: state.orderReducer.brandDetails,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(PreviewAndSummary)

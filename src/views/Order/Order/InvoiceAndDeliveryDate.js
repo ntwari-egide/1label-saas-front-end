@@ -184,6 +184,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -199,6 +200,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }}
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -216,6 +218,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }}
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -231,6 +234,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }}
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -248,6 +252,7 @@ const InvoiceAndDelivery = (props) => {
                           props.invoiceAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -376,6 +381,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -391,6 +397,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }}
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -408,6 +415,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -423,6 +431,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                 </Row>
@@ -440,6 +449,7 @@ const InvoiceAndDelivery = (props) => {
                           props.deliveryAddressDetails
                         )
                       }
+                      disabled={props.isOrderConfirmed}
                     />
                   </Col>
                   <Col xs="12" sm="12" md="6" lg="6" xl="6">
@@ -599,7 +609,8 @@ const mapStateToProps = (state) => ({
   deliveryAddressDetails: state.orderReducer.deliveryAddressDetails,
   contactDetails: state.orderReducer.contactDetails,
   orderReference: state.orderReducer.orderReference,
-  expectedDeliveryDate: state.orderReducer.expectedDeliveryDate
+  expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)
