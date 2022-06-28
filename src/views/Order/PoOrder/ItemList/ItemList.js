@@ -63,10 +63,14 @@ const ItemList = (props) => {
       )
       dispatch(setSelectedItems([...tempList]))
     } else {
-      dispatch(setSelectedItems([...tempList, item]))
+      const finState = [...tempList, item]
+      dispatch(setSelectedItems(finState))
+      const index = finState.map((item) => item.guid_key).indexOf(item.guid_key)
+      fetchItemRefDetails(item, index, finState)
     }
   }
 
+  // API Services
   const fetchItemTypeOptions = () => {
     axios
       .post("/Item/GetItemTypeList")
