@@ -30,6 +30,7 @@ import {
 } from "@redux/actions/views/Order/Order"
 import { formatColToRow } from "@utils"
 import { store } from "@redux/storeConfig/store"
+import { resetTotal } from "@utils"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -462,6 +463,10 @@ const PreviewAndSummary = (props) => {
                       dispatch(setCols([]))
                       fetchSizeTableDetails(e.value)
                       props.setSizeMatrixSelect(e)
+                      // reset total for selected items
+                      dispatch(
+                        setSelectedItems(resetTotal([...props.selectedItems]))
+                      )
                     }}
                     menuPlacement={"auto"}
                     styles={{
