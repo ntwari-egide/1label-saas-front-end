@@ -540,22 +540,6 @@ const OrderForm = (props) => {
     })
   }
 
-  // useEffect(() => {
-  //   console.log("dynamicFieldData", props.dynamicFieldData)
-  // }, [props.dynamicFieldData])
-  //
-  // useEffect(() => {
-  //   console.log("washCareData", props.washCareData)
-  // }, [props.washCareData])
-  //
-  // useEffect(() => {
-  //   console.log("isContentSettingCommon", isContentSettingCommon)
-  // }, [isContentSettingCommon])
-  //
-  // useEffect(() => {
-  //   console.log("contentGroupOptions", contentGroupOptions)
-  // }, [contentGroupOptions])
-
   useEffect(() => {
     fetchItemInfoData()
     fetchItemInfoFields()
@@ -853,19 +837,22 @@ const OrderForm = (props) => {
                                 <Col xs="12" sm="12" md="2" lg="2" xl="2">
                                   <Label>%</Label>
                                   <Input
-                                    // value={
-                                    //   props.fibreInstructionData[index]
-                                    //     ?.en_percent
-                                    // }
-                                    // onChange={(e) => {
-                                    //   const tempData = props.fibreInstructionData
-                                    //   tempData[index] = {
-                                    //     ...props.fibreInstructionData[index],
-                                    //     en_percent: e.target.value
-                                    //   }
-                                    //   props.setFibreInstructionData([...tempData])
-                                    //   debounceFun()
-                                    // }}
+                                    value={
+                                      props.fibreInstructionData[index]
+                                        ?.en_percent
+                                    }
+                                    onChange={(e) => {
+                                      const tempData =
+                                        props.fibreInstructionData
+                                      tempData[index] = {
+                                        ...props.fibreInstructionData[index],
+                                        en_percent: e.target.value
+                                      }
+                                      dispatch(
+                                        setFibreInstructionData([...tempData])
+                                      )
+                                      // debounceFun()
+                                    }}
                                     disable={props.isOrderConfirmed}
                                   />
                                 </Col>
