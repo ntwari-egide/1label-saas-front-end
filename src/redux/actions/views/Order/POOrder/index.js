@@ -63,6 +63,46 @@ export const setCoo = (value) => (dispatch) => {
 }
 
 export const setSizeData = (data) => (dispatch) => {
+  // remove all the columns for empty data
+  const tempData = structuredClone(data)
+  try {
+    tempData.forEach((d, tIndex) => {
+      // to record empty cols
+      const recordDict = {}
+      d.size_content.forEach((row) => {
+        Object.keys(row).forEach((colName) => {
+          if (!colName.includes("QTY ITEM REF")) {
+            return
+          }
+          // record in dict if entry is empty
+          if (!String(row[colName]).length) {
+            if (recordDict[colName]) {
+              recordDict[colName] += 1
+            } else {
+              recordDict[colName] = 1
+            }
+          }
+        })
+      })
+      // iterate through recordDict
+      Object.keys(recordDict).forEach((key) => {
+        // check if the data was empty for all rows and delete if yes
+        if (recordDict[key] === d.size_content.length) {
+          d.size_content.map((_, rIndex) => {
+            delete tempData[tIndex].size_content[rIndex][key]
+          })
+        }
+      })
+    })
+    console.log("tempData", tempData)
+    dispatch({ type: "SET_PO_SIZE_CONTENT_DATA", payload: tempData })
+    return
+  } catch (err) {
+    console.log(
+      "something went wrong while filtering the data for empty cols",
+      err
+    )
+  }
   dispatch({ type: "SET_PO_SIZE_CONTENT_DATA", payload: data })
 }
 
