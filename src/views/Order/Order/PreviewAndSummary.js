@@ -108,8 +108,8 @@ const PreviewAndSummary = (props) => {
         name: item.item_ref,
         selector:
           wastageApp === "N"
-            ? `QTY_ITEM_REF_${itm_index + 1}`
-            : `QTY_ITEM_REF_${itm_index + 1}_WITH_WASTAGE`,
+            ? `QTY ITEM REF ${itm_index + 1}`
+            : `QTY ITEM REF ${itm_index + 1} WITH WASTAGE`,
         cell: (row, index, col) => {
           return (
             <div>
@@ -162,10 +162,10 @@ const PreviewAndSummary = (props) => {
         // iterates throuch size content data and returns the same object with modifications to size_content field
         const tempState = props.sizeData.map((row) => {
           Object.keys(row).map((key) => {
-            if (key.includes("QTY_ITEM_REF")) {
+            if (key.includes("QTY ITEM REF")) {
               let newVal = row[key] + row[key] * props.wastage
               newVal = Math.ceil(newVal)
-              row = { ...row, [`${key}_WITH_WASTAGE`]: newVal }
+              row = { ...row, [`${key} WITH WASTAGE`]: newVal }
             }
           })
           return row
@@ -176,8 +176,8 @@ const PreviewAndSummary = (props) => {
         const tempRefState = props.selectedItems.map((item, index) => {
           let total = 0
           tempState.map((row) => {
-            if (row[`QTY_ITEM_REF_${index + 1}_WITH_WASTAGE`]) {
-              total += row[`QTY_ITEM_REF_${index + 1}_WITH_WASTAGE`]
+            if (row[`QTY ITEM REF ${index + 1} WITH WASTAGE`]) {
+              total += row[`QTY ITEM REF ${index + 1} WITH WASTAGE`]
             }
           })
           return { ...item, total }

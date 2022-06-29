@@ -84,10 +84,10 @@ const SelectItem = (props) => {
         const tempData = [...props.sizeData]
         tempData.forEach((row, rIndex) => {
           Object.keys(row).forEach((colName) => {
-            if (colName.includes("QTY_ITEM_REF")) {
+            if (colName.includes("QTY ITEM REF")) {
               // can either decreament this or increment the index
               // did so cuz will have to decreamnt this later anyway
-              const itemNo = parseInt(colName.split("_")[3]) - 1
+              const itemNo = parseInt(colName.split(" ")[3]) - 1
               // no need to rename previous cols
               if (itemNo < index) {
                 return
@@ -99,10 +99,10 @@ const SelectItem = (props) => {
               }
               // rename all the other columns
               // calculate the new name
-              const oldName = colName.split("_")
+              const oldName = colName.split(" ")
               // decrement the count in the name
               oldName[3] = itemNo
-              const newName = oldName.join("_")
+              const newName = oldName.join(" ")
               // create entry with new name
               tempData[rIndex][newName] = tempData[rIndex][colName]
               // delete old entry
