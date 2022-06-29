@@ -235,73 +235,90 @@ const PreviewAndSummary = (props) => {
     calculateSummaryTable()
   }, [])
 
-  // useEffect(() => {
-  //   console.log("sizeData", sizeData)
-  // }, [sizeData])
-
-  // useEffect(() => {
-  //   console.log("summaryTable", props.summaryTable)
-  // }, [props.summaryTable])
-
   return (
     <Card>
       <CardBody>
         <Row>
-          <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
-            <Card>
-              <CardBody style={{ minHeight: "450px", maxHeight: "450px" }}>
-                <div
-                  style={{ height: "100%", width: "100%", maxHeight: "450px" }}
-                >
-                  <img
-                    style={{
-                      width: "100%",
-                      minHeight: "100%",
-                      maxHeight: "422px",
-                      overflow: "hidden"
-                    }}
-                    src={
-                      "https://demo.i-wanna.com/1Label_New_Order_System/html/html/Order/ArtWork/Item/Lanius%20GmbH.jpg"
-                    }
-                  />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <h4>Preview Item 1: LNU-LNU-LANIUS-CARE-02</h4>
-              </CardFooter>
-            </Card>
-          </Col>
-          <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
-            <Card>
-              <CardBody
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  maxHeight: "450px",
-                  objectFit: "cover"
-                }}
-              >
-                <div
-                  style={{ height: "100%", width: "100%", maxHeight: "450px" }}
-                >
-                  <img
+          {props.selectedItems.map((item) => (
+            <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
+              <Card>
+                <CardBody style={{ minHeight: "450px", maxHeight: "450px" }}>
+                  <div
                     style={{
                       height: "100%",
                       width: "100%",
-                      maxHeight: "422px",
-                      overflow: "hidden"
+                      maxHeight: "450px"
                     }}
-                    src={
-                      "https://demo.i-wanna.com/1Label_New_Order_System/html/html/Order/ArtWork/Item/Nike.jpg"
-                    }
-                  />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <h4>Preview Item 2: Ind-Ind-INDISKA-SOCK-HT</h4>
-              </CardFooter>
-            </Card>
-          </Col>
+                  >
+                    <img
+                      style={{
+                        width: "100%",
+                        minHeight: "100%",
+                        maxHeight: "422px",
+                        overflow: "hidden"
+                      }}
+                      src={item.layout_file ? item.layout_file : ""}
+                    />
+                  </div>
+                </CardBody>
+                <CardFooter>
+                  <Row style={{ height: "60px" }}>
+                    <Col
+                      xs={8}
+                      sm={8}
+                      md={8}
+                      lg={8}
+                      xl={8}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <div>
+                        <h5>{item.item_ref}</h5>
+                      </div>
+                    </Col>
+                    <Col
+                      xs={4}
+                      sm={4}
+                      md={4}
+                      lg={4}
+                      xl={4}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-around"
+                      }}
+                    >
+                      <Row>
+                        <Col style={{ textAlign: "center" }}>Total QTY</Col>
+                      </Row>
+                      <Row>
+                        {item.is_non_size === "N" ? (
+                          <Col style={{ textAlign: "center" }}>
+                            {item.total ? item.total : 0}
+                          </Col>
+                        ) : (
+                          <Col style={{ textAlign: "center" }}>
+                            <Input
+                              value={item.total ? item.total : 0}
+                              style={{ textAlign: "center", height: "35px" }}
+                              onChange={(e) => {
+                                const tempState = [...props.selectedItems]
+                                tempState[index] = {
+                                  ...tempState[index],
+                                  total: parseInt(e.target.value)
+                                }
+                                dispatch(setSelectedItems(tempState))
+                              }}
+                              disabled={props.isOrderConfirmed}
+                            />
+                          </Col>
+                        )}
+                      </Row>
+                    </Col>
+                  </Row>
+                </CardFooter>
+              </Card>
+            </Col>
+          ))}
         </Row>
         {props.brandDetails.display_SizeTable === "Y" ? (
           <div>
