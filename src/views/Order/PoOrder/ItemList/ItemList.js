@@ -69,32 +69,34 @@ const ItemList = (props) => {
       )
       dispatch(setSelectedItems([...tempList]))
       try {
+        // recalculate size table data
+        // works for both case with wastage and without wastage
         const tempData = [...props.sizeData]
-        tempData.forEach((table, tIndex) => {
-          table.forEach((row, rIndex) => {
+        tempData.forEach((data, tIndex) => {
+          data.size_content.forEach((row, rIndex) => {
             Object.keys(row).forEach((colName) => {
-              if (colName.includes("QTY_ITEM_REF")) {
-                const itemNo = parseInt(colName.split("_")[3])
+              if (colName.includes("QTY ITEM REF")) {
+                const itemNo = parseInt(colName.split(" ")[3]) - 1
                 // no need to rename previous cols
                 if (itemNo < index) {
                   return
                 }
                 // delete the item
                 if (itemNo === index) {
-                  delete tempData[tIndex][rIndex][colName]
+                  delete tempData[tIndex].size_content[rIndex][colName]
                   return
                 }
                 // rename all the other columns
                 // calculate the new name
-                const oldName = colName.split("_")
+                const oldName = colName.split(" ")
                 // decrement the count in the name
-                oldName[3] = itemNo - 1
-                const newName = oldName.join("_")
+                oldName[3] = itemNo
+                const newName = oldName.join(" ")
                 // create entry with new name
-                tempData[tIndex][rIndex][newName] =
-                  tempData[tIndex][rIndex][colName]
+                tempData[tIndex].size_content[rIndex][newName] =
+                  tempData[tIndex].size_content[rIndex][colName]
                 // delete old entry
-                delete tempData[tIndex][rIndex][colName]
+                delete tempData[tIndex].size_content[rIndex][colName]
               }
             })
           })
@@ -278,7 +280,8 @@ const ItemList = (props) => {
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   selectedItems: state.poOrderReducer.selectedItems,
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  sizeData: state.poOrderReducer.sizeData
 })
 
 export default connect(mapStateToProps, null)(ItemList)
