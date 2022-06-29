@@ -524,6 +524,7 @@ const PreviewAndSummary = (props) => {
                       paddingRight: "10px"
                     }}
                     onClick={() => handleAddResetWastage("add")}
+                    disabled={props.wastageApplied === "Y"}
                   >
                     Add Wastage
                   </Button>
