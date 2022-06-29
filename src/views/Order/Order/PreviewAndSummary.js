@@ -41,6 +41,7 @@ const PreviewAndSummary = (props) => {
   const [wastageStatus, setWastageStatus] = useState(false)
   const [wastageOptions, setWastageOptions] = useState([])
   const [showSizeData, setShowSizeData] = useState(true)
+  const [cols, setCols] = useState([])
 
   // other functions
   const handleQtyChange = (value, row, col, index) => {
@@ -146,7 +147,7 @@ const PreviewAndSummary = (props) => {
       )
     })
     // finally assign it to state
-    dispatch(setCols(cols))
+    setCols(cols)
   }
 
   const handleAddResetWastage = (operation) => {
@@ -319,18 +320,8 @@ const PreviewAndSummary = (props) => {
   }, [])
 
   useEffect(() => {
-    return () => {
-      dispatch(setCols([]))
-    }
-  }, [])
-
-  useEffect(() => {
     // to calculate when change in sizeData
-    if (
-      !props.cols.length &&
-      props.sizeData?.length &&
-      props.sizeTable?.length
-    ) {
+    if (!cols.length && props.sizeData?.length && props.sizeTable?.length) {
       populateCols(props.sizeTable)
     }
   }, [props.sizeData])
@@ -460,7 +451,7 @@ const PreviewAndSummary = (props) => {
                     options={sizeMatrixOptions}
                     onChange={(e) => {
                       setLoading(true)
-                      dispatch(setCols([]))
+                      setCols([])
                       fetchSizeTableDetails(e.value)
                       props.setSizeMatrixSelect(e)
                       // reset total for selected items
@@ -493,7 +484,7 @@ const PreviewAndSummary = (props) => {
                     <div style={{ minHeight: "175px" }}>
                       <DataTable
                         data={props.sizeData}
-                        columns={props.cols}
+                        columns={cols}
                         noHeader={true}
                         persistTableHead={true}
                         noDataComponent={
