@@ -193,7 +193,6 @@ export const formatColToRow = (xmlStr) => {
       data.push(row) // push the row to data
       currentRow += 1 // increment row count
     }
-    console.log("processed", data)
     return data
   } catch (err) {
     console.log("something went wrong while processing parsed xml", err)

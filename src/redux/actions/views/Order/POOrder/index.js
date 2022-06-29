@@ -94,7 +94,6 @@ export const setSizeData = (data) => (dispatch) => {
         }
       })
     })
-    console.log("tempData", tempData)
     dispatch({ type: "SET_PO_SIZE_CONTENT_DATA", payload: tempData })
     return
   } catch (err) {
