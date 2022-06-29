@@ -59,10 +59,15 @@ const SizeTable = (props) => {
     }
     // dynamically assigning cols to data-table
     const cols = []
+    // pushing sr no
+    cols.push({
+      name: "Sr No.",
+      selector: "Sequence"
+    })
     // pushing size col
     if (table.length) {
       Object.keys(table[0]).map((key) => {
-        if (!key.includes("QTY_ITEM_REF")) {
+        if (!key.includes("QTY ITEM REF") && !key.includes("Sequence")) {
           cols.push({
             name: key,
             selector: key
@@ -70,10 +75,11 @@ const SizeTable = (props) => {
         }
       })
     }
+
     // pushing item ref cols
-    props.selectedItems.map((_, itm_index) => {
+    props.selectedItems.map((item, itm_index) => {
       cols.push({
-        name: `QTY ITEM REF ${itm_index + 1}`,
+        name: item.item_ref,
         selector:
           wastageApplied === "N"
             ? `QTY ITEM REF ${itm_index + 1}`
@@ -145,8 +151,8 @@ const SizeTable = (props) => {
           ...data,
           size_content: data.size_content.map((row) => {
             Object.keys(row).map((key) => {
-              if (key.includes("QTY_ITEM_REF")) {
-                row[`${key}_WITH_WASTAGE`] = Math.ceil(
+              if (key.includes("QTY ITEM REF")) {
+                row[`${key} WITH WASTAGE`] = Math.ceil(
                   row[key] + row[key] * props.wastage
                 )
               }
