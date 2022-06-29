@@ -38,6 +38,9 @@ const PoOrder = (props) => {
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
   const [searchParams, setSearchParams] = useState({})
 
+  // dynamic columns data
+  const [cols, setCols] = useState([])
+
   const setCurrentStepHelper = (value) => {
     dispatch(setCurrentStep(value))
   }
@@ -133,6 +136,8 @@ const PoOrder = (props) => {
           setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
           combinedPOOrderKey={combinedPOOrderKey}
+          cols={cols}
+          setCols={setCols}
         />
       ) : props.currentStep === 4 ? (
         <PreviewAndSummary

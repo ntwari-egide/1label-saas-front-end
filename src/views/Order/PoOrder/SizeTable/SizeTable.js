@@ -31,7 +31,6 @@ const SizeTable = (props) => {
   const [wastageStatus, setWastageStatus] = useState(true)
   const [wastageOptions, setWastageOptions] = useState([])
   const [loader, setLoader] = useState(true)
-  const [cols, setCols] = useState([])
 
   // other functions
   const handleQtyChange = (value, col, index, tabIndex) => {
@@ -167,7 +166,7 @@ const SizeTable = (props) => {
         props.sizeData.map((data, index) => {
           tempCols[index] = populateCols(data.size_content, index, "Y")
         })
-        setCols(tempCols)
+        props.setCols(tempCols)
         toast(`${props.wastage * 100}% Wastage Applied.`)
       } catch (err) {
         alert(
@@ -181,7 +180,7 @@ const SizeTable = (props) => {
       props.sizeData.map((data, index) => {
         tempCols[index] = populateCols(data.size_content, index, "N")
       })
-      setCols(tempCols)
+      props.setCols(tempCols)
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
       toast("Wastage Reset.")
@@ -249,16 +248,22 @@ const SizeTable = (props) => {
   }, [])
 
   useEffect(() => {
-    if (!cols.length && props.sizeData.length) {
+    if (!props.cols.length && props.sizeData.length) {
       const tempCols = []
       props.sizeData.map((data, index) => {
         if (data.size_content?.length) {
           tempCols[index] = populateCols(data.size_content, index)
         }
       })
-      setCols(tempCols)
+      props.setCols(tempCols)
     }
   }, [props.sizeData])
+
+  useEffect(() => {
+    return () => {
+      props.setCols([])
+    }
+  }, [])
 
   return (
     <Card>
@@ -285,7 +290,7 @@ const SizeTable = (props) => {
               <Row style={{ margin: 0, marginBottom: "20px" }}>
                 <DataTable
                   data={data.size_content}
-                  columns={cols[index]}
+                  columns={props.cols[index]}
                   noHeader={true}
                 />
               </Row>
