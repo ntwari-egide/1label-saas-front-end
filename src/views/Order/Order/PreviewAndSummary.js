@@ -108,8 +108,8 @@ const PreviewAndSummary = (props) => {
         name: item.item_ref,
         selector:
           wastageApp === "N"
-            ? `QTY_ITEM_REF_${itm_index}`
-            : `QTY_ITEM_REF_${itm_index}_WITH_WASTAGE`,
+            ? `QTY_ITEM_REF_${itm_index + 1}`
+            : `QTY_ITEM_REF_${itm_index + 1}_WITH_WASTAGE`,
         cell: (row, index, col) => {
           return (
             <div>
@@ -176,8 +176,8 @@ const PreviewAndSummary = (props) => {
         const tempRefState = props.selectedItems.map((item, index) => {
           let total = 0
           tempState.map((row) => {
-            if (row[`QTY_ITEM_REF_${index}_WITH_WASTAGE`]) {
-              total += row[`QTY_ITEM_REF_${index}_WITH_WASTAGE`]
+            if (row[`QTY_ITEM_REF_${index + 1}_WITH_WASTAGE`]) {
+              total += row[`QTY_ITEM_REF_${index + 1}_WITH_WASTAGE`]
             }
           })
           return { ...item, total }
