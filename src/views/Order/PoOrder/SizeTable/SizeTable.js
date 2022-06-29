@@ -57,10 +57,8 @@ const SizeTable = (props) => {
     } else {
       wastageApplied = props.wastageApplied
     }
-    console.log("wastage status", wastageApplied)
     // dynamically assigning cols to data-table
     const cols = []
-    // pushing known static cols
     // pushing size col
     if (table.length) {
       Object.keys(table[0]).map((key) => {
@@ -75,11 +73,11 @@ const SizeTable = (props) => {
     // pushing item ref cols
     props.selectedItems.map((_, itm_index) => {
       cols.push({
-        name: `QTY ITEM REF ${itm_index}`,
+        name: `QTY ITEM REF ${itm_index + 1}`,
         selector:
           wastageApplied === "N"
-            ? `QTY_ITEM_REF_${itm_index}`
-            : `QTY_ITEM_REF_${itm_index}_WITH_WASTAGE`,
+            ? `QTY ITEM REF ${itm_index + 1}`
+            : `QTY ITEM REF ${itm_index + 1} WITH WASTAGE`,
         cell: (row, index, col) => {
           return (
             <div>
@@ -248,15 +246,13 @@ const SizeTable = (props) => {
     if (!cols.length && props.sizeData.length) {
       const tempCols = []
       props.sizeData.map((data, index) => {
-        tempCols[index] = populateCols(data.size_content, index)
+        if (data.size_content?.length) {
+          tempCols[index] = populateCols(data.size_content, index)
+        }
       })
       setCols(tempCols)
     }
   }, [props.sizeData])
-
-  useEffect(() => {
-    console.log("cols", cols)
-  }, [cols])
 
   return (
     <Card>
