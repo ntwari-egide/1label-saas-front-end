@@ -105,7 +105,7 @@ const PreviewAndSummary = (props) => {
     // pushing item ref cols
     props.selectedItems.map((item, itm_index) => {
       cols.push({
-        name: `QTY ITEM REF ${itm_index}`,
+        name: item.item_ref,
         selector:
           wastageApp === "N"
             ? `QTY_ITEM_REF_${itm_index}`
@@ -285,28 +285,15 @@ const PreviewAndSummary = (props) => {
           const size_content = res.data[0]?.size_content
           const default_content = res.data[0]?.default_size_content
           const size_matrix = res.data[0]?.size_matrix_type
-          try {
-            if (size_content) {
-              // process sizeData before dispatch
-              let tempData = formatColToRow(size_content)
-              tempData = tempData.map((row) => {
-                props.selectedItems.map((item, index) => {
-                  row[`QTY ITEM REF ${index}`] = ""
-                })
-                row["UPC/EAN CODE"] = ""
-                return row
-              })
-              dispatch(setSizeTable(size_content)) // to send it to invoice and delivery for save order
-              dispatch(setSizeData(formatColToRow(size_content)))
-              dispatch(setSizeMatrixType(size_matrix)) // to send it to invoice and delivery for save order
-            }
-            // set default size content if available
-            if (default_content) {
-              dispatch(setDefaultSizeTable(default_content)) // to send it to invoice and delivery for save order
-              dispatch(setDefaultSizeData(formatColToRow(default_content)))
-            }
-          } catch (err) {
-            console.log(err)
+          if (size_content) {
+            dispatch(setSizeTable(size_content)) // to send it to invoice and delivery for save order
+            dispatch(setSizeData(formatColToRow(size_content)))
+            dispatch(setSizeMatrixType(size_matrix)) // to send it to invoice and delivery for save order
+          }
+          // set default size content if available
+          if (default_content) {
+            dispatch(setDefaultSizeTable(default_content)) // to send it to invoice and delivery for save order
+            dispatch(setDefaultSizeData(formatColToRow(default_content)))
           }
         }
         setLoading(false)
