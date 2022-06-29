@@ -20,7 +20,8 @@ import { ArrowRight, ArrowLeft } from "react-feather"
 import { connect, useDispatch } from "react-redux"
 import {
   setSelectedItems,
-  setSizeTableTrigger
+  setSizeTableTrigger,
+  setSizeData
 } from "@redux/actions/views/Order/POOrder"
 import { getUserData } from "@utils"
 
@@ -54,6 +55,11 @@ const ItemList = (props) => {
 
   const handleCheckListChange = (item) => {
     let tempList = props.selectedItems
+    // index to later use to process size data
+    const index = props.selectedItems
+      .map((item) => item.guid_key)
+      .indexOf(item.guid_key)
+
     if (
       props.selectedItems.map((item) => item.guid_key).includes(item.guid_key)
     ) {
@@ -62,6 +68,42 @@ const ItemList = (props) => {
         1
       )
       dispatch(setSelectedItems([...tempList]))
+      try {
+        const tempData = [...props.sizeData]
+        tempData.forEach((table, tIndex) => {
+          table.forEach((row, rIndex) => {
+            Object.keys(row).forEach((colName) => {
+              if (colName.includes("QTY_ITEM_REF")) {
+                const itemNo = parseInt(colName.split("_")[3])
+                // no need to rename previous cols
+                if (itemNo < index) {
+                  return
+                }
+                // delete the item
+                if (itemNo === index) {
+                  delete tempData[tIndex][rIndex][colName]
+                  return
+                }
+                // rename all the other columns
+                // calculate the new name
+                const oldName = colName.split("_")
+                // decrement the count in the name
+                oldName[3] = itemNo - 1
+                const newName = oldName.join("_")
+                // create entry with new name
+                tempData[tIndex][rIndex][newName] =
+                  tempData[tIndex][rIndex][colName]
+                // delete old entry
+                delete tempData[tIndex][rIndex][colName]
+              }
+            })
+          })
+        })
+        // finally dispatch the data
+        dispatch(setSizeData([...tempData]))
+      } catch (err) {
+        console.log("Something went wrong while re-calculating size data", err)
+      }
     } else {
       const finState = [...tempList, item]
       dispatch(setSelectedItems(finState))

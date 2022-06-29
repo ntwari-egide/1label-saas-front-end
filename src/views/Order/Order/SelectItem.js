@@ -17,7 +17,11 @@ import {
 import { ArrowRight, ArrowLeft } from "react-feather"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
-import { setBrand, setSelectedItems } from "@redux/actions/views/Order/Order"
+import {
+  setBrand,
+  setSelectedItems,
+  setSizeData
+} from "@redux/actions/views/Order/Order"
 import { getUserData } from "@utils"
 
 let timerId = null
@@ -63,6 +67,10 @@ const SelectItem = (props) => {
 
   const handleSelectedItemsChange = (item) => {
     let tempList = [...props.selectedItems]
+    // index to later use to process size data
+    const index = props.selectedItems
+      .map((item) => item.guid_key)
+      .indexOf(item.guid_key)
     // if already in list then removes else appends
     if (tempList.map((item) => item.guid_key).includes(item.guid_key)) {
       tempList.splice(
@@ -70,6 +78,41 @@ const SelectItem = (props) => {
         1
       )
       dispatch(setSelectedItems(tempList))
+      try {
+        // recalculate size table data
+        // works for both case with wastage and without wastage
+        const tempData = [...props.sizeData]
+        tempData.forEach((row, rIndex) => {
+          Object.keys(row).forEach((colName) => {
+            if (colName.includes("QTY_ITEM_REF")) {
+              const itemNo = parseInt(colName.split("_")[3])
+              // no need to rename previous cols
+              if (itemNo < index) {
+                return
+              }
+              // delete the item
+              if (itemNo === index) {
+                delete tempData[rIndex][colName]
+                return
+              }
+              // rename all the other columns
+              // calculate the new name
+              const oldName = colName.split("_")
+              // decrement the count in the name
+              oldName[3] = itemNo - 1
+              const newName = oldName.join("_")
+              // create entry with new name
+              tempData[rIndex][newName] = tempData[rIndex][colName]
+              // delete old entry
+              delete tempData[rIndex][colName]
+            }
+          })
+        })
+        // finally dispatch the data
+        dispatch(setSizeData([...tempData]))
+      } catch (err) {
+        console.log("Something went wrong while re-calculating size data", err)
+      }
     } else {
       const finState = [...tempList, item]
       dispatch(setSelectedItems(finState))
@@ -290,7 +333,8 @@ const SelectItem = (props) => {
 const mapStateToProps = (state) => ({
   brand: state.orderReducer.brand,
   selectedItems: state.orderReducer.selectedItems,
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  sizeData: state.orderReducer.sizeData
 })
 
 export default connect(mapStateToProps, null)(SelectItem)
