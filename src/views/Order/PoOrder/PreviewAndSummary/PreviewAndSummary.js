@@ -13,7 +13,7 @@ import {
   setDefaultSizeTable,
   setSizeMatrixType
 } from "@redux/actions/views/Order/POOrder"
-import { calculateSummaryTable } from "@utils"
+import { calculateSummaryTable, calculateSummaryCols } from "@utils"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -23,107 +23,7 @@ const PreviewAndSummary = (props) => {
   const [defaultSizeData, setDefaultSizeData] = useState(null)
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
-
-  const sizeCols = [
-    {
-      name: t("SIZE DESCRIPTION"),
-      selector: "Size Description",
-      sortable: true
-    },
-    {
-      name: t("SIZE"),
-      selector: "Size",
-      sortable: true
-    },
-    {
-      name: t("SUPPLIER REF"),
-      selector: "Supplier Ref",
-      sortable: false
-    },
-    {
-      name: t("SUPPLIER COLOR"),
-      selector: "Supplier Colour",
-      sortable: false
-    },
-    {
-      name: t("OPTION ID"),
-      selector: "Option ID",
-      sortable: false
-    },
-    {
-      name: t("BUYING GROUP ID"),
-      selector: "Buying Group ID",
-      sortable: false
-    },
-    {
-      name: t("PRODUCT GROUP DESCRIPTION"),
-      selector: "Product Group Description",
-      width: "200px",
-      sortable: false
-    },
-    {
-      name: t("SKU Code"),
-      selector: "SKU Code",
-      sortable: false
-    },
-    {
-      name: t("STYLE NUMBER"),
-      selector: "Style Number",
-      sortable: false
-    },
-    {
-      name: t("BARCODE"),
-      selector: "Barcode",
-      sortable: false
-    },
-    {
-      name: t("ASBAR1"),
-      selector:
-        props.wastageApplied === "Y"
-          ? "QTY ITEM REF 1 WITH WASTAGE"
-          : "QTY ITEM REF 1"
-    },
-    {
-      name: t("QTY ITEM REF 2"),
-      selector: "QTY ITEM REF 2"
-    },
-    {
-      name: t("QTY ITEM REF 3"),
-      selector: "QTY ITEM REF 3"
-    },
-    {
-      name: t("QTY ITEM REF 4"),
-      selector: "QTY ITEM REF 4"
-    },
-    {
-      name: t("QTY ITEM REF 5"),
-      selector: "QTY ITEM REF 5"
-    },
-    {
-      name: t("QTY ITEM REF 6"),
-      selector: "QTY ITEM REF 6"
-    },
-    {
-      name: t("QTY ITEM REF 7"),
-      selector: "QTY ITEM REF 7"
-    },
-    {
-      name: t("QTY ITEM REF 8"),
-      selector: "QTY ITEM REF 8"
-    },
-    {
-      name: t("QTY ITEM REF 9"),
-      selector: "QTY ITEM REF 9"
-    },
-    {
-      name: t("QTY ITEM REF 10"),
-      selector: "QTY ITEM REF 10"
-    },
-    {
-      name: t("UPC/EAN CODE"),
-      selector: "UPC/EAN CODE"
-    }
-  ]
+  const [summaryCols, setSummaryCols] = useState([])
 
   // Other Functions
   const formatColToRow = (xmlStr) => {
@@ -148,6 +48,10 @@ const PreviewAndSummary = (props) => {
     dispatch(
       setSummaryTable(calculateSummaryTable(structuredClone(props.sizeData)))
     )
+  }
+
+  const processSummaryCols = () => {
+    setSummaryCols(calculateSummaryCols(props.cols[0]))
   }
 
   // API Sevices
@@ -203,7 +107,12 @@ const PreviewAndSummary = (props) => {
   useEffect(() => {
     fetchSizeTableList()
     processSummaryTable()
+    processSummaryCols(props.cols[0])
   }, [])
+
+  useEffect(() => {
+    console.log(summaryCols)
+  }, [summaryCols])
 
   return (
     <Card>
@@ -337,7 +246,7 @@ const PreviewAndSummary = (props) => {
                 {Object.keys(props.summaryTable).map((key) => (
                   <DataTable
                     data={props.summaryTable[key]}
-                    columns={sizeCols}
+                    columns={summaryCols}
                     noHeader={true}
                   />
                 ))}

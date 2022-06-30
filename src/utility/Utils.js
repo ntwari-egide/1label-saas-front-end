@@ -241,3 +241,20 @@ export const calculateSummaryTable = (sizeData) => {
   })
   return tempState
 }
+
+export const calculateSummaryCols = (sizeCols) => {
+  const cols = []
+  if (sizeCols.length) {
+    sizeCols.forEach((col) => {
+      const tempCol = { ...col }
+      if (col.selector.includes("QTY ITEM REF")) {
+        // get rid of custom input cell
+        delete tempCol.cell
+        cols.push(tempCol)
+      } else {
+        cols.push(tempCol)
+      }
+    })
+  }
+  return cols
+}
