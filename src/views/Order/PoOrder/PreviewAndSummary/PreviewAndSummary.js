@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react"
-import { Card, CardBody, CardFooter, Spinner, Row, Col } from "reactstrap"
+import {
+  Input,
+  Card,
+  CardBody,
+  CardFooter,
+  Spinner,
+  Row,
+  Col
+} from "reactstrap"
 import DataTable from "react-data-table-component"
-import Select from "react-select"
 import Footer from "../../../CommonFooter"
 import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
@@ -326,16 +333,13 @@ const PreviewAndSummary = (props) => {
                 </div>
               </Col>
               <Col xs="12" sm="12" md="5" lg="5" xl="5">
-                <Select
-                  className="React"
-                  classNamePrefix="select"
-                  options={sizeMatrixOptions}
+                <Input
+                  value={props.sizeMatrixType || ""}
                   onChange={(e) => {
-                    setLoading(true)
-                    fetchSizeTableDetails(e.value)
+                    // setLoading(true)
+                    // fetchSizeTableDetails(e.value)
+                    dispatch(setSizeMatrixType(e.target.value))
                   }}
-                  menuPlacement={"auto"}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                   isDisabled={props.isOrderConfirmed}
                 />
               </Col>
@@ -375,6 +379,7 @@ const mapStateToProps = (state) => ({
   defaultSizeTable: state.poOrderReducer.defaultSizeTable,
   wastageApplied: state.poOrderReducer.wastageApplied,
   brandDetails: state.poOrderReducer.brandDetails,
+  sizeMatrixType: state.poOrderReducer.sizeMatrixType,
   isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 
