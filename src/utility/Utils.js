@@ -204,3 +204,40 @@ export const resetTotal = (itemList) => {
     return itemList.map((item) => ({ ...item, total: 0 }))
   }
 }
+
+export const calculateSummaryTable = (sizeData) => {
+  // get all the content group
+  let groupTypes = sizeData.map((data) => data.group_type)
+  // remove duplicate
+  groupTypes = [...new Set(groupTypes)]
+  // get all table with same group type to process summary table
+  const tempState = {} // init temp state for summary data
+  groupTypes.map((groupType) => {
+    const tempTable = [] // init temp table for every group type
+    const contentGroupArr = sizeData.filter(
+      (data) => data.group_type === groupType
+    )
+    // iterate through tables with common group id
+    contentGroupArr.map((data, tabIndex) => {
+      // iterate through rows of table
+      data.size_content?.map((row, index) => {
+        // initi temp table
+        if (tabIndex === 0) {
+          tempTable.push(row)
+        } else {
+          const tempRow = { ...tempTable[index] }
+          if (tempTable[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
+            tempRow["QTY ITEM REF 1 WITH WASTAGE"] +=
+              row["QTY ITEM REF 1 WITH WASTAGE"]
+          }
+          if (tempRow["QTY ITEM REF 1"]) {
+            tempRow["QTY ITEM REF 1"] += row["QTY ITEM REF 1"]
+            tempTable[index] = tempRow
+          }
+        }
+      })
+    })
+    tempState[groupType] = tempTable
+  })
+  return tempState
+}
