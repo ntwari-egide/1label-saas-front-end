@@ -121,37 +121,8 @@ const PreviewAndSummary = (props) => {
     return tempState
   }
 
-  const formatColToRow = (xmlStr) => {
-    let jsObj
-    try {
-      const parser = new XMLParser()
-      jsObj = parser.parse(xmlStr)
-    } catch (err) {
-      console.log("Something went wrong while parsing xml", err)
-    }
-    try {
-      const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
-      let data = [] // initialized data to fill row by row
-      let currentRow = 0 + 2 // because actual data begins at Column2
-      for (let i = 0; i < nRows; i++) {
-        let row = {} // initialise empty row
-        jsObj?.SizeMatrix?.Table.map((col) => {
-          row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
-        })
-        data.push(row) // push the row to data
-        currentRow += 1 // increment row count
-      }
-      return data
-    } catch (err) {
-      console.log("Something went wrong while processing size data", err)
-      return []
-    }
-  }
-
   const processSummaryTable = () => {
-    dispatch(
-      setSummaryTable(calculateSummaryTable(structuredClone(props.sizeData)))
-    )
+    dispatch(setSummaryTable(calculateSummaryTable(props.sizeData)))
   }
 
   const processSummaryCols = () => {
@@ -348,6 +319,7 @@ const PreviewAndSummary = (props) => {
               <Col>
                 {Object.keys(props.summaryTable).map((key) => (
                   <DataTable
+                    key={`data-table-${key}`}
                     data={props.summaryTable[key]}
                     columns={summaryCols}
                     noHeader={true}
