@@ -80,14 +80,13 @@ const Stepper = (props) => {
           }
           if (
             props.validationFields.orderFormManFields[field].length <= 0 &&
-            props.currentStep === 1 &&
             localFlag &&
-            menuItem != "Select Item"
+            !["Select Item", "Order Form"].includes(menuItem)
           ) {
             const tempState = props.orderFormManFields
             tempState[field] = true
             props.setOrderFormManFields({ ...tempState })
-            alert("Please enter mandatory fields")
+            alert("Please enter mandatory fields of Order Form to proceed")
             localFlag = false
           }
         })
