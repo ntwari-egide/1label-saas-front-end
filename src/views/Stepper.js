@@ -54,7 +54,7 @@ const Stepper = (props) => {
       props.validationFields?.selectedItems &&
       props.validationFields?.selectedItems?.length <= 0
     ) {
-      alert("Please select an item to continue")
+      alert("Please select an item in Item List page to continue")
       return false
     }
     return true
@@ -116,11 +116,15 @@ const Stepper = (props) => {
           }
           if (
             props.validationFields.orderFormManFields[field].length <= 0 &&
-            props.currentStep === 3 &&
             localFlag &&
-            !["Listing", "Item List", "PO Order Size Table"].includes(menuItem)
+            ![
+              "Listing",
+              "Item List",
+              "PO Order Size Table",
+              "Order Form"
+            ].includes(menuItem)
           ) {
-            alert("Please enter mandatory fields to proceed")
+            alert("Please enter mandatory fields of Order Form to proceed")
             localFlag = false
           }
         })
