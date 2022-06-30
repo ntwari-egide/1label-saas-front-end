@@ -213,6 +213,14 @@ const SizeTable = (props) => {
             )
           )
         }
+        // process and assign dynamic cols
+        const tempCols = []
+        props.sizeData.map((data, index) => {
+          if (data.size_content?.length) {
+            tempCols[index] = populateCols(data.size_content, index)
+          }
+        })
+        props.setCols(tempCols)
         dispatch(setSizeTableTrigger(false))
         setLoader(false)
       })
@@ -238,10 +246,6 @@ const SizeTable = (props) => {
       .catch((err) => console.log(err))
   }
 
-  // useEffect(() => {
-  //   console.log("props.sizeData", props.sizeData)
-  // }, [props.sizeData])
-
   useEffect(() => {
     if (props.sizeTableTrigger) {
       fetchSizeTable()
@@ -262,12 +266,6 @@ const SizeTable = (props) => {
       props.setCols(tempCols)
     }
   }, [props.sizeData])
-
-  useEffect(() => {
-    return () => {
-      props.setCols([])
-    }
-  }, [])
 
   return (
     <Card>

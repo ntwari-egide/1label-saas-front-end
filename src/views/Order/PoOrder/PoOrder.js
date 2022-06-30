@@ -144,6 +144,7 @@ const PoOrder = (props) => {
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
+          cols={cols}
         />
       ) : props.currentStep === 5 ? (
         <InvoiceAndDelivery
