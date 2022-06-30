@@ -39,11 +39,7 @@ const SizeTable = (props) => {
     let tempRow = tempTable[index]
     tempRow = {
       ...tempRow,
-      [`${col.selector}`]: isNaN(parseInt(value))
-        ? value.length
-          ? null
-          : 0
-        : parseInt(value)
+      [`${col.selector}`]: isNaN(parseInt(value)) ? 0 : parseInt(value)
     }
     tempTable[index] = tempRow
     tempState[tabIndex] = {
