@@ -22,7 +22,7 @@ const initialState = {
   // size table states
   sizeData: [],
   wastage: 0,
-  summaryTable: [],
+  summaryTable: {},
   wastageApplied: "N",
   // preview and summary states
   sizeTable: "",

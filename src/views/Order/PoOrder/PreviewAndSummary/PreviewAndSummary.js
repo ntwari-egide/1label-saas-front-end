@@ -11,9 +11,9 @@ import {
   setSummaryTable,
   setSizeTable,
   setDefaultSizeTable,
-  setSizeMatrixType
+  setSizeMatrixType,
+  setSelectedItems
 } from "@redux/actions/views/Order/POOrder"
-import { calculateSummaryTable, calculateSummaryCols } from "@utils"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -26,6 +26,83 @@ const PreviewAndSummary = (props) => {
   const [summaryCols, setSummaryCols] = useState([])
 
   // Other Functions
+  const calculateSummaryCols = (sizeCols) => {
+    const cols = []
+    if (sizeCols.length) {
+      sizeCols.forEach((col) => {
+        const tempCol = { ...col }
+        if (col.selector.includes("QTY ITEM REF")) {
+          // get rid of custom input cell
+          delete tempCol.cell
+          cols.push(tempCol)
+        } else {
+          cols.push(tempCol)
+        }
+      })
+    }
+    return cols
+  }
+
+  const calculateTotal = (itemList, summaryTable) => {
+    console.log("summaryTable", summaryTable)
+    const tempList = [...itemList]
+    tempList.forEach((_, itmIndex) => {
+      let total = 0
+      Object.keys(summaryTable).forEach((key) => {
+        summaryTable[key].forEach((row) => {
+          console.log("row", row)
+          if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
+            total += row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]
+          } else {
+            total += row[`QTY ITEM REF ${itmIndex + 1}`]
+          }
+        })
+      })
+      tempList[itmIndex] = {
+        ...tempList[itmIndex],
+        total
+      }
+    })
+    return tempList
+  }
+
+  const calculateSummaryTable = (sizeData) => {
+    // get all the content group
+    let groupTypes = sizeData.map((data) => data.group_type)
+    // remove duplicate
+    groupTypes = [...new Set(groupTypes)]
+    // get all table with same group type to process summary table
+    const tempState = {} // init temp state for summary data
+    groupTypes.map((groupType) => {
+      const tempTable = [] // init temp table for every group type
+      const contentGroupArr = sizeData.filter(
+        (data) => data.group_type === groupType
+      )
+      // iterate through tables with common group id
+      contentGroupArr.map((data, tabIndex) => {
+        // iterate through rows of table
+        data.size_content?.map((row, rindex) => {
+          // initi temp table
+          if (tabIndex === 0) {
+            tempTable.push(row)
+          } else {
+            const tempRow = { ...tempTable[rindex] }
+            Object.keys(tempRow).forEach((key) => {
+              if (key.includes("QTY ITEM REF")) {
+                if (tempTable[rindex][key]) {
+                  tempRow[key] += row[key]
+                }
+              }
+              tempTable[rindex] = tempRow
+            })
+          }
+        })
+      })
+      tempState[groupType] = tempTable
+    })
+    return tempState
+  }
+
   const formatColToRow = (xmlStr) => {
     const parser = new XMLParser()
     const jsObj = parser.parse(xmlStr)
@@ -47,6 +124,9 @@ const PreviewAndSummary = (props) => {
   const processSummaryTable = () => {
     dispatch(
       setSummaryTable(calculateSummaryTable(structuredClone(props.sizeData)))
+    )
+    dispatch(
+      setSelectedItems(calculateTotal(props.selectedItems, props.summaryTable))
     )
   }
 
@@ -109,10 +189,6 @@ const PreviewAndSummary = (props) => {
     processSummaryTable()
     processSummaryCols(props.cols[0])
   }, [])
-
-  useEffect(() => {
-    console.log(summaryCols)
-  }, [summaryCols])
 
   return (
     <Card>
