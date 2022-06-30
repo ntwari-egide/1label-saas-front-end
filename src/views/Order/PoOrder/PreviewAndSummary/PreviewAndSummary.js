@@ -19,8 +19,6 @@ const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   // App States
-  const [sizeData, setSizeData] = useState([])
-  const [defaultSizeData, setDefaultSizeData] = useState(null)
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
   const [summaryCols, setSummaryCols] = useState([])
@@ -188,14 +186,10 @@ const PreviewAndSummary = (props) => {
           if (res?.data[0]?.size_content) {
             dispatch(setSizeTable(res?.data[0]?.size_content)) // to send it to invoice and delivery for save order
             dispatch(setSizeMatrixType(res.data[0]?.size_matrix_type)) // to send it to invoice and delivery for save order
-            setSizeData(formatColToRow(res?.data[0]?.size_content))
           }
           // set default size content if available
           if (res?.data[0]?.default_size_content) {
             dispatch(setDefaultSizeTable(res?.data[0]?.default_size_content)) // to send it to invoice and delivery for save order
-            setDefaultSizeData(
-              formatColToRow(res?.data[0]?.default_size_content)
-            )
           }
           setLoading(false)
         }
