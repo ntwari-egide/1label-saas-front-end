@@ -165,7 +165,6 @@ export const formatColToRow = (xmlStr) => {
   } catch (err) {
     console.log("something went wrong while parsing xml", err)
   }
-  console.log("jsObj", jsObj)
   try {
     // actual algo
     const nRows = jsObj?.SizeMatrix?.Table[0]
