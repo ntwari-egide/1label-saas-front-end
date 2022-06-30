@@ -44,13 +44,11 @@ const PreviewAndSummary = (props) => {
   }
 
   const calculateTotal = (itemList, summaryTable) => {
-    console.log("summaryTable", summaryTable)
     const tempList = [...itemList]
     tempList.forEach((_, itmIndex) => {
       let total = 0
       Object.keys(summaryTable).forEach((key) => {
         summaryTable[key].forEach((row) => {
-          console.log("row", row)
           if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
             total += row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]
           } else {
@@ -125,9 +123,6 @@ const PreviewAndSummary = (props) => {
     dispatch(
       setSummaryTable(calculateSummaryTable(structuredClone(props.sizeData)))
     )
-    dispatch(
-      setSelectedItems(calculateTotal(props.selectedItems, props.summaryTable))
-    )
   }
 
   const processSummaryCols = () => {
@@ -189,6 +184,16 @@ const PreviewAndSummary = (props) => {
     processSummaryTable()
     processSummaryCols(props.cols[0])
   }, [])
+
+  useEffect(() => {
+    if (Object.keys(props.summaryTable).length) {
+      dispatch(
+        setSelectedItems(
+          calculateTotal(props.selectedItems, props.summaryTable)
+        )
+      )
+    }
+  }, [props.summaryTable])
 
   return (
     <Card>
