@@ -76,37 +76,37 @@ const PreviewAndSummary = (props) => {
   const calculateSummaryTable = (sizeData) => {
     const tempState = {} // init temp state for summary data
     try {
-      // get all the content group
-      let groupTypes = sizeData.map((data) => data.group_type)
-      // remove duplicate
-      groupTypes = [...new Set(groupTypes)]
-      // get all table with same group type to process summary table
-      groupTypes.map((groupType) => {
-        const tempTable = [] // init temp table for every group type
-        const contentGroupArr = sizeData.filter(
-          (data) => data.group_type === groupType
-        )
-        // iterate through tables with common group id
-        contentGroupArr.map((data, tabIndex) => {
-          // iterate through rows of table
-          data.size_content?.map((row, rindex) => {
-            // initi temp table
-            if (tabIndex === 0) {
-              tempTable.push(row)
+      // get all unique content groups
+      const contentGroups = [
+        ...new Set(sizeData.map((data) => data.group_type))
+      ]
+      // for each group calculate summary table
+      contentGroups.map((group) => {
+        //get all the table with same group
+        const tables = sizeData
+          .filter((data) => data.group_type === group)
+          .map((data) => data.size_content)
+        // calculate summary table
+        const tempTable = []
+        tables.forEach((table, tIndex) => {
+          table.forEach((row, rIndex) => {
+            if (tIndex === 0) {
+              tempTable.push({ ...row })
             } else {
-              const tempRow = { ...tempTable[rindex] }
-              Object.keys(tempRow).forEach((key) => {
-                if (key.includes("QTY ITEM REF")) {
-                  if (tempTable[rindex][key]) {
-                    tempRow[key] += row[key]
+              let tempRow = tempTable[rIndex]
+              Object.keys(row).forEach((col) => {
+                if (col.includes("QTY ITEM REF")) {
+                  tempRow = {
+                    ...tempRow,
+                    [`${col}`]: tempRow[col] + row[col]
                   }
                 }
-                tempTable[rindex] = tempRow
               })
+              tempTable[rIndex] = tempRow
             }
           })
         })
-        tempState[groupType] = tempTable
+        tempState[group] = tempTable
       })
     } catch (err) {
       console.log("Something went wrong while processing summary table", err)
