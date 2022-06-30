@@ -220,20 +220,20 @@ export const calculateSummaryTable = (sizeData) => {
     // iterate through tables with common group id
     contentGroupArr.map((data, tabIndex) => {
       // iterate through rows of table
-      data.size_content?.map((row, index) => {
+      data.size_content?.map((row, rindex) => {
         // initi temp table
         if (tabIndex === 0) {
           tempTable.push(row)
         } else {
-          const tempRow = { ...tempTable[index] }
-          if (tempTable[index]["QTY ITEM REF 1 WITH WASTAGE"]) {
-            tempRow["QTY ITEM REF 1 WITH WASTAGE"] +=
-              row["QTY ITEM REF 1 WITH WASTAGE"]
-          }
-          if (tempRow["QTY ITEM REF 1"]) {
-            tempRow["QTY ITEM REF 1"] += row["QTY ITEM REF 1"]
-            tempTable[index] = tempRow
-          }
+          const tempRow = { ...tempTable[rindex] }
+          Object.keys(tempRow).forEach((key) => {
+            if (key.includes("QTY ITEM REF")) {
+              if (tempTable[rindex][key]) {
+                tempRow[key] += row[key]
+              }
+            }
+            tempTable[rindex] = tempRow
+          })
         }
       })
     })
