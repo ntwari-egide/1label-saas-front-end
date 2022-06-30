@@ -28,95 +28,119 @@ const PreviewAndSummary = (props) => {
   // Other Functions
   const calculateSummaryCols = (sizeCols) => {
     const cols = []
-    if (sizeCols.length) {
-      sizeCols.forEach((col) => {
-        const tempCol = { ...col }
-        if (col.selector.includes("QTY ITEM REF")) {
-          // get rid of custom input cell
-          delete tempCol.cell
-          cols.push(tempCol)
-        } else {
-          cols.push(tempCol)
-        }
-      })
+    try {
+      if (sizeCols.length) {
+        sizeCols.forEach((col) => {
+          const tempCol = { ...col }
+          if (col.selector.includes("QTY ITEM REF")) {
+            // get rid of custom input cell
+            delete tempCol.cell
+            cols.push(tempCol)
+          } else {
+            cols.push(tempCol)
+          }
+        })
+      }
+    } catch (err) {
+      console.log("Something went wrong while processing summary table", err)
     }
     return cols
   }
 
   const calculateTotal = (itemList, summaryTable) => {
     const tempList = [...itemList]
-    tempList.forEach((_, itmIndex) => {
-      let total = 0
-      Object.keys(summaryTable).forEach((key) => {
-        summaryTable[key].forEach((row) => {
-          if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
-            total += row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]
-          } else {
-            total += row[`QTY ITEM REF ${itmIndex + 1}`]
-          }
+    try {
+      tempList.forEach((_, itmIndex) => {
+        let total = 0
+        Object.keys(summaryTable).forEach((key) => {
+          summaryTable[key].forEach((row) => {
+            if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
+              total += row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]
+            } else {
+              total += row[`QTY ITEM REF ${itmIndex + 1}`]
+            }
+          })
         })
+        tempList[itmIndex] = {
+          ...tempList[itmIndex],
+          total
+        }
       })
-      tempList[itmIndex] = {
-        ...tempList[itmIndex],
-        total
-      }
-    })
+    } catch (err) {
+      console.log(
+        "something went wrong while processing total for item ref",
+        err
+      )
+    }
     return tempList
   }
 
   const calculateSummaryTable = (sizeData) => {
-    // get all the content group
-    let groupTypes = sizeData.map((data) => data.group_type)
-    // remove duplicate
-    groupTypes = [...new Set(groupTypes)]
-    // get all table with same group type to process summary table
     const tempState = {} // init temp state for summary data
-    groupTypes.map((groupType) => {
-      const tempTable = [] // init temp table for every group type
-      const contentGroupArr = sizeData.filter(
-        (data) => data.group_type === groupType
-      )
-      // iterate through tables with common group id
-      contentGroupArr.map((data, tabIndex) => {
-        // iterate through rows of table
-        data.size_content?.map((row, rindex) => {
-          // initi temp table
-          if (tabIndex === 0) {
-            tempTable.push(row)
-          } else {
-            const tempRow = { ...tempTable[rindex] }
-            Object.keys(tempRow).forEach((key) => {
-              if (key.includes("QTY ITEM REF")) {
-                if (tempTable[rindex][key]) {
-                  tempRow[key] += row[key]
+    try {
+      // get all the content group
+      let groupTypes = sizeData.map((data) => data.group_type)
+      // remove duplicate
+      groupTypes = [...new Set(groupTypes)]
+      // get all table with same group type to process summary table
+      groupTypes.map((groupType) => {
+        const tempTable = [] // init temp table for every group type
+        const contentGroupArr = sizeData.filter(
+          (data) => data.group_type === groupType
+        )
+        // iterate through tables with common group id
+        contentGroupArr.map((data, tabIndex) => {
+          // iterate through rows of table
+          data.size_content?.map((row, rindex) => {
+            // initi temp table
+            if (tabIndex === 0) {
+              tempTable.push(row)
+            } else {
+              const tempRow = { ...tempTable[rindex] }
+              Object.keys(tempRow).forEach((key) => {
+                if (key.includes("QTY ITEM REF")) {
+                  if (tempTable[rindex][key]) {
+                    tempRow[key] += row[key]
+                  }
                 }
-              }
-              tempTable[rindex] = tempRow
-            })
-          }
+                tempTable[rindex] = tempRow
+              })
+            }
+          })
         })
+        tempState[groupType] = tempTable
       })
-      tempState[groupType] = tempTable
-    })
+    } catch (err) {
+      console.log("Something went wrong while processing summary table", err)
+    }
     return tempState
   }
 
   const formatColToRow = (xmlStr) => {
-    const parser = new XMLParser()
-    const jsObj = parser.parse(xmlStr)
-    console.log("jsObj", jsObj)
-    const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
-    let data = [] // initialized data to fill row by row
-    let currentRow = 0 + 2 // because actual data begins at Column2
-    for (let i = 0; i < nRows; i++) {
-      let row = {} // initialise empty row
-      jsObj?.SizeMatrix?.Table.map((col) => {
-        row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
-      })
-      data.push(row) // push the row to data
-      currentRow += 1 // increment row count
+    let jsObj
+    try {
+      const parser = new XMLParser()
+      jsObj = parser.parse(xmlStr)
+    } catch (err) {
+      console.log("Something went wrong while parsing xml", err)
     }
-    return data
+    try {
+      const nRows = Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // gets the no of rows
+      let data = [] // initialized data to fill row by row
+      let currentRow = 0 + 2 // because actual data begins at Column2
+      for (let i = 0; i < nRows; i++) {
+        let row = {} // initialise empty row
+        jsObj?.SizeMatrix?.Table.map((col) => {
+          row[col["Column1"]] = col[`Column${currentRow}`] // row[column_name] = column_value
+        })
+        data.push(row) // push the row to data
+        currentRow += 1 // increment row count
+      }
+      return data
+    } catch (err) {
+      console.log("Something went wrong while processing size data", err)
+      return []
+    }
   }
 
   const processSummaryTable = () => {
