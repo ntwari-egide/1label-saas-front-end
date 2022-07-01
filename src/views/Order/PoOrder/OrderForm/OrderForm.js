@@ -565,28 +565,24 @@ const OrderForm = (props) => {
           />
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
-          {props.brandDetails?.is_show_expected_date === "Y" ? (
-            <div>
-              <Label>{t("Expected Delivery Date")}</Label>
-              <span className="text-danger">*</span>
-              <Flatpickr
-                className="form-control"
-                value={
-                  props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
-                }
-                style={{ margin: "5px" }}
-                options={{
-                  minDate: props.minExpectedDeliveryDate
-                }}
-                onChange={(e) => {
-                  dispatch(setExpectedDeliveryDate(e))
-                }}
-                disabled={props.isOrderConfirmed}
-              />
-            </div>
-          ) : (
-            <></>
-          )}
+          <div>
+            <Label>{t("Expected Delivery Date")}</Label>
+            <span className="text-danger">*</span>
+            <Flatpickr
+              className="form-control"
+              value={
+                props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
+              }
+              style={{ margin: "5px" }}
+              options={{
+                minDate: props.minExpectedDeliveryDate
+              }}
+              onChange={(e) => {
+                dispatch(setExpectedDeliveryDate(e))
+              }}
+              disabled={props.isOrderConfirmed}
+            />
+          </div>
         </Col>
         <Col xs="12" sm="12" md="6" lg="4" xl="4">
           {props.brandDetails?.display_location_code ? (
