@@ -4,6 +4,7 @@ import axios from "@axios"
 import { XMLBuilder } from "fast-xml-parser"
 import { sweetAlert } from "@utils"
 import { setLoader } from "@redux/actions/layout"
+import { history } from "@redux/history"
 
 export const matchContentNumber = (module) => (dispatch) => {
   let state
@@ -329,6 +330,9 @@ export const saveOrder = (order_status) => (dispatch) => {
           )
         }
       }
+      if (store.listReducer.isOrderNew) {
+        history.push("/List")
+      }
       dispatch(setLoader(false))
     })
     .catch((err) => console.log(err))
@@ -567,6 +571,9 @@ export const savePOOrder = (order_status) => (dispatch) => {
             "success"
           )
         }
+      }
+      if (store.listReducer.isOrderNew) {
+        history.push("/List")
       }
       dispatch(setLoader(false))
     })
