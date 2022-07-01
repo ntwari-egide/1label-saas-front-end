@@ -67,7 +67,7 @@ const PreviewAndSummary = (props) => {
       })
     tempRef[itm_index] = {
       ...tempRef[itm_index],
-      total: tempTotal
+      qty: tempTotal
     }
     dispatch(setSelectedItems(tempRef))
   }
@@ -191,7 +191,7 @@ const PreviewAndSummary = (props) => {
               total += row[`QTY ITEM REF ${index + 1} WITH WASTAGE`]
             }
           })
-          return { ...item, total }
+          return { ...item, qty: total }
         })
         dispatch(setSelectedItems(tempRefState))
         // will need to re-calculate cols to render latest changes
@@ -217,7 +217,7 @@ const PreviewAndSummary = (props) => {
                 total += row[`QTY_ITEM_REF_${index}`]
               }
             })
-            return { ...item, total }
+            return { ...item, qty: total }
           })
           dispatch(setSelectedItems(tempRefState))
         }
@@ -384,18 +384,18 @@ const PreviewAndSummary = (props) => {
                       <Row>
                         {itm.is_non_size === "N" ? (
                           <Col style={{ textAlign: "center" }}>
-                            {itm.total ? itm.total : 0}
+                            {itm.qty ? itm.qty : 0}
                           </Col>
                         ) : (
                           <Col style={{ textAlign: "center" }}>
                             <Input
-                              value={itm.total ? itm.total : 0}
+                              value={itm.qty ? itm.qty : 0}
                               style={{ textAlign: "center", height: "35px" }}
                               onChange={(e) => {
                                 const tempState = [...props.selectedItems]
                                 tempState[index] = {
                                   ...tempState[index],
-                                  total: parseInt(e.target.value)
+                                  qty: parseInt(e.target.value)
                                 }
                                 dispatch(setSelectedItems(tempState))
                               }}

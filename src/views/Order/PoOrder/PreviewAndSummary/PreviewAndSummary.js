@@ -1,16 +1,7 @@
 import { useState, useEffect } from "react"
-import {
-  Input,
-  Card,
-  CardBody,
-  CardFooter,
-  Spinner,
-  Row,
-  Col
-} from "reactstrap"
+import { Input, Card, CardBody, CardFooter, Row, Col } from "reactstrap"
 import DataTable from "react-data-table-component"
 import Footer from "../../../CommonFooter"
-import { XMLParser } from "fast-xml-parser"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
@@ -68,7 +59,7 @@ const PreviewAndSummary = (props) => {
         })
         tempList[itmIndex] = {
           ...tempList[itmIndex],
-          total
+          qty: total
         }
       })
     } catch (err) {
@@ -249,18 +240,18 @@ const PreviewAndSummary = (props) => {
                       <Row>
                         {item.is_non_size === "N" ? (
                           <Col style={{ textAlign: "center" }}>
-                            {item.total ? item.total : 0}
+                            {item.qty ? item.qty : 0}
                           </Col>
                         ) : (
                           <Col style={{ textAlign: "center" }}>
                             <Input
-                              value={item.total ? item.total : 0}
+                              value={item.qty ? item.qty : 0}
                               style={{ textAlign: "center", height: "35px" }}
                               onChange={(e) => {
                                 const tempState = [...props.selectedItems]
                                 tempState[index] = {
                                   ...tempState[index],
-                                  total: parseInt(e.target.value)
+                                  qty: parseInt(e.target.value)
                                 }
                                 dispatch(setSelectedItems(tempState))
                               }}
