@@ -573,63 +573,6 @@ const OrderForm = (props) => {
     }
   }
 
-  // useEffect(() => {
-  //   console.log("props.defaultContentData", props.defaultContentData)
-  // }, [props.defaultContentData])
-
-  useEffect(() => {
-    console.log("props.washCareData", props.washCareData)
-  }, [props.washCareData])
-
-  useEffect(() => {
-    console.log("props.careData", props.careData)
-  }, [props.careData])
-  //
-  // useEffect(() => {
-  //   console.log("additionalCareOptions", additionalCareOptions)
-  // }, [additionalCareOptions])
-
-  // useEffect(() => {
-  //   assignStateToItemInfo(itemInfoFields)
-  // }, [itemInfoFields])
-
-  // useEffect(() => {
-  //   console.log("dynamicFieldData", props.dynamicFieldData)
-  // }, [props.dynamicFieldData])
-  //
-  // useEffect(() => {
-  //   console.log("itemInfoOptions", itemInfoOptions)
-  // }, [itemInfoOptions])
-
-  // useEffect(() => {
-  //   console.log("washCareOptions", washCareOptions)
-  // }, [washCareOptions])
-  //
-  // useEffect(() => {
-  //   console.log("props.washCareData", props.washCareData)
-  // }, [props.washCareData])
-
-  // useEffect(() => {
-  //   console.log("contentGroupOptions", contentGroupOptions)
-  // }, [contentGroupOptions])
-  //
-  // useEffect(() => {
-  //   console.log("componentOptions", componentOptions)
-  // }, [componentOptions])
-
-  // useEffect(() => {
-  //   console.log("props.fibreInstructionData", props.fibreInstructionData)
-  // }, [props.fibreInstructionData])
-
-  // useEffect(() => {
-  //   console.log("contentNumberSettings", contentNumberSettings)
-  // }, [contentNumberSettings])
-
-  // useEffect(() => {
-  //   console.log("iconSequence", iconSequence)
-  // }, [iconSequence])
-  //
-
   useEffect(() => {
     fetchContentNumberSettings()
     fetchItemInfoData()
@@ -639,21 +582,6 @@ const OrderForm = (props) => {
     fetchMinExpectedDeliveryDate()
     fetchBrandDetails()
   }, [])
-
-  useEffect(() => {
-    console.log("componentTip", componentTip)
-  }, [componentTip])
-
-  useEffect(() => {
-    console.log(
-      Object.keys(componentTip).length
-        ? Object.keys(componentTip)[0]
-        : "default",
-      Object.keys(componentTip).length
-        ? componentTip[Object.keys(componentTip)[0]]
-        : false
-    )
-  })
 
   return (
     <Card>
