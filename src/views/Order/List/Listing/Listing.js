@@ -198,12 +198,6 @@ const Listing = (props) => {
             if (is_po_order_temp === "Y") {
               module = "POOrder"
             }
-            if (module === "POOrder") {
-              const {
-                setCurrentStep
-              } = require(`@redux/actions/views/Order/POOrder`)
-              dispatch(setCurrentStep(1))
-            }
             // populate state ap per data received
             dispatch(populateData(module, res.data[0]))
             // push to page

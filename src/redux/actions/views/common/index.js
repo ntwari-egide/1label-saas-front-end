@@ -75,8 +75,14 @@ export const populateData = (module, data) => (dispatch) => {
     setShrinkagePercentage,
     setSizeTable,
     setDefaultSizeTable,
-    setBrand
+    setBrand,
+    setCurrentStep
   } = require(`@redux/actions/views/Order/${module}`)
+  if (module === "POOrder") {
+    dispatch(setCurrentStep(1))
+  } else {
+    dispatch(setCurrentStep(0))
+  }
   if (data.brand_key) {
     dispatch(setBrand({ value: data.brand_key, label: "" }))
   }
