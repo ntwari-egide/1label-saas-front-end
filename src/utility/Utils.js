@@ -137,8 +137,8 @@ export const deleteCookie = (name) => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/`
 }
 
-export const sweetAlert = (title, text, icon, btnType) => {
-  return MySwal.fire({
+export const sweetAlert = async (title, text, icon, btnType) => {
+  return await MySwal.fire({
     title,
     html: (
       <ul>

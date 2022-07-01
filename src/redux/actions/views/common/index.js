@@ -312,7 +312,7 @@ export const saveOrder = (order_status) => (dispatch) => {
   }
   axios
     .post("Order/SaveOrder", body)
-    .then((res) => {
+    .then(async (res) => {
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
           sweetAlert(
@@ -322,16 +322,16 @@ export const saveOrder = (order_status) => (dispatch) => {
             "danger"
           )
         } else {
-          sweetAlert(
+          const confirmation = await sweetAlert(
             `${order_status} Order Save Successful`,
             "",
             "success",
             "success"
           )
+          if (store.listReducer.isOrderNew && confirmation.isConfirmed) {
+            history.push("/List")
+          }
         }
-      }
-      if (store.listReducer.isOrderNew) {
-        history.push("/List")
       }
       dispatch(setLoader(false))
     })
@@ -554,15 +554,18 @@ export const savePOOrder = (order_status) => (dispatch) => {
   }
   axios
     .post("Order/SaveOrder", body)
-    .then((res) => {
+    .then(async (res) => {
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
-          sweetAlert(
+          const confirmation = await sweetAlert(
             `${order_status} Order Save Failed!`,
             res.data.status_description,
             "error",
             "danger"
           )
+          if (store.listReducer.isOrderNew && confirmation) {
+            history.push("/List")
+          }
         } else {
           sweetAlert(
             `${order_status} Order Save Successful`,
@@ -571,9 +574,6 @@ export const savePOOrder = (order_status) => (dispatch) => {
             "success"
           )
         }
-      }
-      if (store.listReducer.isOrderNew) {
-        history.push("/List")
       }
       dispatch(setLoader(false))
     })
