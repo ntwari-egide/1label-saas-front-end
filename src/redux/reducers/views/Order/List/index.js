@@ -1,6 +1,7 @@
 const initialState = {
   isOrderConfirmed: false,
-  selectedOrder: {}
+  selectedOrder: {},
+  isOrderNew: false
 }
 
 const listReducer = (state = initialState, action) => {
@@ -9,6 +10,8 @@ const listReducer = (state = initialState, action) => {
       return { ...state, isOrderConfirmed: action.payload }
     case "SET_SELECTED_ORDER":
       return { ...state, selectedOrder: action.payload }
+    case "SET_IS_ORDER_NEW":
+      return { ...state, isOrderNew }
     default:
       return { ...state }
   }

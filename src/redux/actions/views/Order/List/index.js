@@ -5,3 +5,7 @@ export const setIsOrderConfirmed = (value) => (dispatch) => {
 export const setSelectedOrder = (value) => (dispatch) => {
   dispatch({ type: "SET_SELECTED_ORDER", payload: value })
 }
+
+export const setIsOrderNew = (value) => (dispatch) => {
+  dispatch({ type: "SET_IS_ORDER_NEW", payload: value })
+}
