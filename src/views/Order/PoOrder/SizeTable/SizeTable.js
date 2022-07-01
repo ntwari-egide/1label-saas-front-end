@@ -150,10 +150,21 @@ const SizeTable = (props) => {
           ...data,
           size_content: data.size_content.map((row) => {
             Object.keys(row).map((key) => {
+              // subtracting 0.06 because want to round at 0.55 instead of 0.5
               if (key.includes("QTY ITEM REF")) {
-                row[`${key} WITH WASTAGE`] = Math.ceil(
-                  row[key] + row[key] * props.wastage
-                )
+                if (props.wastageApplied === "N") {
+                  row[`${key} WITH WASTAGE`] = Math.round(
+                    row[key] + row[key] * props.wastage - 0.05
+                  )
+                }
+                if (
+                  props.wastageApplied === "Y" &&
+                  key.includes("WITH WASTAGE")
+                ) {
+                  row[`${key}`] = Math.round(
+                    row[key] + row[key] * props.wastage - 0.05
+                  )
+                }
               }
             })
             return row
@@ -332,7 +343,6 @@ const SizeTable = (props) => {
                 paddingRight: "10px"
               }}
               onClick={() => handleAddResetWastage("add")}
-              disabled={props.wastageApplied === "Y"}
             >
               Add Wastage
             </Button>

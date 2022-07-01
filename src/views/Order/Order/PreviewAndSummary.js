@@ -162,10 +162,21 @@ const PreviewAndSummary = (props) => {
         // iterates throuch size content data and returns the same object with modifications to size_content field
         const tempState = props.sizeData.map((row) => {
           Object.keys(row).map((key) => {
+            // subtracting 0.06 because want to round at 0.55 instead of 0.5
             if (key.includes("QTY ITEM REF")) {
-              let newVal = row[key] + row[key] * props.wastage
-              newVal = Math.ceil(newVal)
-              row = { ...row, [`${key} WITH WASTAGE`]: newVal }
+              if (props.wastageApplied === "N") {
+                row[`${key} WITH WASTAGE`] = Math.round(
+                  row[key] + row[key] * props.wastage - 0.05
+                )
+              }
+              if (
+                props.wastageApplied === "Y" &&
+                key.includes("WITH WASTAGE")
+              ) {
+                row[`${key}`] = Math.round(
+                  row[key] + row[key] * props.wastage - 0.05
+                )
+              }
             }
           })
           return row
@@ -524,7 +535,6 @@ const PreviewAndSummary = (props) => {
                       paddingRight: "10px"
                     }}
                     onClick={() => handleAddResetWastage("add")}
-                    disabled={props.wastageApplied === "Y"}
                   >
                     Add Wastage
                   </Button>
