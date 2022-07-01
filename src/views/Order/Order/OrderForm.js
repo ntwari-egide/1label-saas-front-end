@@ -1067,11 +1067,7 @@ const OrderForm = (props) => {
                       (item) => (
                         <Row style={{ marginBottom: "10px" }}>
                           <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                            <Input
-                              value={item ? item : ""}
-                              disabled={true}
-                              disabled={props.isOrderConfirmed}
-                            />
+                            <Input value={item ? item : ""} disabled={true} />
                           </Col>
                         </Row>
                       )
