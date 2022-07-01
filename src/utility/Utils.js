@@ -61,6 +61,9 @@ export const formatDateYMD = (date) => {
   if (d < 10) {
     d = `0${d}`
   }
+  if (isNaN(date.getFullYear()) || isNaN(d) || isNaN(month)) {
+    return ""
+  }
   return `${date.getFullYear()}-${month}-${d}`
 }
 
