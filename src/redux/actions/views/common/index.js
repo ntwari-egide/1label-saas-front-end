@@ -4,7 +4,7 @@ import axios from "@axios"
 import { XMLBuilder } from "fast-xml-parser"
 import { sweetAlert } from "@utils"
 import { setLoader } from "@redux/actions/layout"
-import { history } from "@redux/history"
+import history from "@src/history"
 
 export const matchContentNumber = (module) => (dispatch) => {
   let state
