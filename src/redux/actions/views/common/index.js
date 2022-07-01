@@ -254,13 +254,18 @@ export const saveOrder = (order_status) => (dispatch) => {
     size_pointer: "",
     coo: data.coo,
     shrinkage_percentage: "",
-    item_ref: data.selectedItems.map((item) => ({
-      item_key: item.guid_key || "",
-      item_ref: item.item_ref || "",
-      qty: item.total || 0,
-      price: item.price || "",
-      currency: item.currency || ""
-    })),
+    item_ref: data.selectedItems
+      .filter((item) => item.is_non_size === "N")
+      .map((item) => {
+        return {
+          item_key: item.guid_key || "",
+          item_ref: item.item_ref || "",
+          qty: item.qty || 0,
+          price: item.price || "",
+          currency: item.currency || "",
+          is_non_size: item.is_non_size || ""
+        }
+      }),
     is_wastage: data.wastageApplied || "",
     update_user: "innoa",
     update_date: formatDateYMD(new Date()),
@@ -464,13 +469,15 @@ export const savePOOrder = (order_status) => (dispatch) => {
     summary_size_table: processSummarySizeTable(data) || "",
     coo: data.coo,
     shrinkage_percentage: "",
-    item_ref: data.selectedItems.map((item) => ({
-      item_key: item.guid_key || "",
-      item_ref: item.item_ref || "",
-      qty: item.total || 0,
-      price: item.price || "",
-      currency: item.currency || ""
-    })),
+    item_ref: data.selectedItems
+      .filter((item) => item.is_non_size === "N")
+      .map((item) => ({
+        item_key: item.guid_key || "",
+        item_ref: item.item_ref || "",
+        qty: item.qty || 0,
+        price: item.price || "",
+        currency: item.currency || ""
+      })),
     is_wastage: data.wastageApplied || "",
     update_user: "innoa",
     update_date: formatDateYMD(new Date()),
@@ -524,13 +531,15 @@ export const savePOOrder = (order_status) => (dispatch) => {
       edi_order_no: "",
       consolidated_id: "",
       group_type: "",
-      item_ref: data.selectedItems.map((item) => ({
-        item_key: item.guid_key || "",
-        item_ref: item.item_ref || "",
-        qty: item.total || 0,
-        price: item.price || "",
-        currency: item.currency || ""
-      })),
+      item_ref: data.selectedItems
+        .filter((item) => item.is_non_size === "N")
+        .map((item) => ({
+          item_key: item.guid_key || "",
+          item_ref: item.item_ref || "",
+          qty: item.qty || 0,
+          price: item.price || "",
+          currency: item.currency || ""
+        })),
       size_matrix_type: data.sizeMatrixType,
       size_content: buildXML(processPoSizeTable(sizeData.size_content)),
       send_date: "",
