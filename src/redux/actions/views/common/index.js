@@ -218,33 +218,33 @@ export const saveOrder = (order_status) => (dispatch) => {
     ),
     invoice_address: [
       {
-        invoice_address_id: data.invoiceAddressDetails?.address_id,
-        invoice_contact_id: data.invoiceAddressDetails?.customer_id,
-        invoice_cpyname: data.invoiceAddressDetails?.name,
-        invoice_contact: data.invoiceAddressDetails?.name,
-        invoice_phone: data.invoiceAddressDetails?.phone,
-        invoice_fax: data.invoiceAddressDetails?.fax,
-        invoice_email: data.invoiceAddressDetails?.email,
-        invoice_addr: data.invoiceAddressDetails?.address,
-        invoice_addr2: data.invoiceAddressDetails?.address2,
-        invoice_addr3: data.invoiceAddressDetails?.address3
+        invoice_address_id: data.invoiceAddressDetails?.address_id || "",
+        invoice_contact_id: data.invoiceAddressDetails?.customer_id || "",
+        invoice_cpyname: data.invoiceAddressDetails?.name || "",
+        invoice_contact: data.invoiceAddressDetails?.name || "",
+        invoice_phone: data.invoiceAddressDetails?.phone || "",
+        invoice_fax: data.invoiceAddressDetails?.fax || "",
+        invoice_email: data.invoiceAddressDetails?.email || "",
+        invoice_addr: data.invoiceAddressDetails?.address || "",
+        invoice_addr2: data.invoiceAddressDetails?.address2 || "",
+        invoice_addr3: data.invoiceAddressDetails?.address3 || ""
       }
     ],
     delivery_address: [
       {
-        delivery_address_id: data.deliveryAddressDetails?.address_id,
-        delivery_contact_id: data.deliveryAddressDetails?.contact_id,
-        delivery_cpyname: data.deliveryAddressDetails?.name,
-        delivery_contact: data.deliveryAddressDetails?.name,
-        delivery_phone: data.deliveryAddressDetails?.phone,
-        delivery_fax: data.deliveryAddressDetails?.fax,
-        delivery_email: data.deliveryAddressDetails?.email,
-        delivery_city: data.deliveryAddressDetails?.city,
-        delivery_country: data.deliveryAddressDetails?.country,
-        delivery_post_code: data.deliveryAddressDetails?.post_code,
-        delivery_addr: data.deliveryAddressDetails?.address,
-        delivery_addr2: data.deliveryAddressDetails?.address2,
-        delivery_addr3: data.deliveryAddressDetails?.address3
+        delivery_address_id: data.deliveryAddressDetails?.address_id || "",
+        delivery_contact_id: data.deliveryAddressDetails?.contact_id || "",
+        delivery_cpyname: data.deliveryAddressDetails?.name || "",
+        delivery_contact: data.deliveryAddressDetails?.name || "",
+        delivery_phone: data.deliveryAddressDetails?.phone || "",
+        delivery_fax: data.deliveryAddressDetails?.fax || "",
+        delivery_email: data.deliveryAddressDetails?.email || "",
+        delivery_city: data.deliveryAddressDetails?.city || "",
+        delivery_country: data.deliveryAddressDetails?.country || "",
+        delivery_post_code: data.deliveryAddressDetails?.post_code || "",
+        delivery_addr: data.deliveryAddressDetails?.address || "",
+        delivery_addr2: data.deliveryAddressDetails?.address2 || "",
+        delivery_addr3: data.deliveryAddressDetails?.address3 || ""
       }
     ],
     dynamic_field: Object.values(data.dynamicFieldData),
@@ -431,33 +431,33 @@ export const savePOOrder = (order_status) => (dispatch) => {
     ),
     invoice_address: [
       {
-        invoice_address_id: data.invoiceAddressDetails?.dyn_address_id,
-        invoice_contact_id: data.contactDetails?.dyn_customer_id,
-        invoice_cpyname: data.invoiceAddressDetails.name,
-        invoice_contact: data.contactDetails?.name,
-        invoice_phone: data.contactDetails?.phone,
-        invoice_fax: data.contactDetails?.fax,
-        invoice_email: data.contactDetails?.email,
-        invoice_addr: data.invoiceAddressDetails?.address,
-        invoice_addr2: data.invoiceAddressDetails?.address2,
-        invoice_addr3: data.invoiceAddressDetails?.address3
+        invoice_address_id: data.invoiceAddressDetails?.dyn_address_id || "",
+        invoice_contact_id: data.invoiceAddressDetails?.dyn_customer_id || "",
+        invoice_cpyname: data.invoiceAddressDetails?.name || "",
+        invoice_contact: data.invoiceAddressDetails?.name || "",
+        invoice_phone: data.invoiceAddressDetails?.phone || "",
+        invoice_fax: data.invoiceAddressDetails?.fax || "",
+        invoice_email: data.invoiceAddressDetails?.email || "",
+        invoice_addr: data.invoiceAddressDetails?.address || "",
+        invoice_addr2: data.invoiceAddressDetails?.address2 || "",
+        invoice_addr3: data.invoiceAddressDetails?.address3 || ""
       }
     ],
     delivery_address: [
       {
-        delivery_address_id: data.deliveryAddressDetails?.dyn_address_id,
-        delivery_contact_id: data.deliveryAddressDetails?.dyn_customer_id,
-        delivery_cpyname: data.deliveryAddressDetails?.name,
-        delivery_contact: data.contactDetails?.name,
-        delivery_phone: data.contactDetails?.phone,
-        delivery_fax: data.contactDetails?.fax,
-        delivery_email: data.contactDetails?.email,
-        delivery_city: data.deliveryAddressDetails?.city,
-        delivery_country: data.deliveryAddressDetails?.country,
-        delivery_post_code: data.deliveryAddressDetails?.post_code,
-        delivery_addr: data.deliveryAddressDetails?.address,
-        delivery_addr2: data.deliveryAddressDetails?.address2,
-        delivery_addr3: data.deliveryAddressDetails?.address3
+        delivery_address_id: data.deliveryAddressDetails?.dyn_address_id || "",
+        delivery_contact_id: data.deliveryAddressDetails?.dyn_customer_id || "",
+        delivery_cpyname: data.deliveryAddressDetails?.name || "",
+        delivery_contact: data.deliveryAddressDetails?.name || "",
+        delivery_phone: data.deliveryAddressDetails?.phone || "",
+        delivery_fax: data.deliveryAddressDetails?.fax || "",
+        delivery_email: data.deliveryAddressDetails?.email || "",
+        delivery_city: data.deliveryAddressDetails?.city || "",
+        delivery_country: data.deliveryAddressDetails?.country || "",
+        delivery_post_code: data.deliveryAddressDetails?.post_code || "",
+        delivery_addr: data.deliveryAddressDetails?.address || "",
+        delivery_addr2: data.deliveryAddressDetails?.address2 || "",
+        delivery_addr3: data.deliveryAddressDetails?.address3 || ""
       }
     ],
     dynamic_field: Object.values(data.dynamicFieldData),
@@ -517,7 +517,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
     production_description: "",
     po_last_update_time: "",
     option_id: "",
-    po_size_tables: data.sizeContentData.map((sizeData) => ({
+    po_size_tables: data.sizeData?.map((sizeData) => ({
       guid_key: "",
       order_key: "",
       brand_key: "",
