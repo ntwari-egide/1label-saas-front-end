@@ -412,7 +412,9 @@ const OrderForm = (props) => {
     let tempIconTranslation = {}
     iconGroups.map((iconGroup) => {
       // do not fetch for footwear if not required
+      console.log(showFootwear, iconGroup)
       if (showFootwear === "N" && iconGroup === "B") {
+        console.log("ret")
         return
       }
       const body = {
@@ -929,18 +931,12 @@ const OrderForm = (props) => {
                       <Row style={{ marginBottom: "10px" }}>
                         <Col xs="12" sm="12" md="9" lg="9" xl="9">
                           <Input
-                            // value={
-                            //   data?.cont_translation ? data?.cont_translation : ""
-                            // }
-                            // onChange={(e) => {
-                            //   const tempState = props.defaultContentData
-                            //   tempState[index] = {
-                            //     ...tempState[index],
-                            //     cont_translation: e.target.value
-                            //   }
-                            //   props.setDefaultContentData([...tempState])
-                            // }}
-                            disable={props.isOrderConfirmed}
+                            value={
+                              data?.cont_translation
+                                ? data?.cont_translation
+                                : ""
+                            }
+                            disable={true}
                           />
                         </Col>
                       </Row>
