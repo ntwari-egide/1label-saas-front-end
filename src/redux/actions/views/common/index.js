@@ -257,7 +257,7 @@ export const saveOrder = (order_status) => (dispatch) => {
     item_ref: data.selectedItems.map((item) => ({
       item_key: item.guid_key || "",
       item_ref: item.item_ref || "",
-      qty: 1, // static for now
+      qty: item.total || 0,
       price: item.price || "",
       currency: item.currency || ""
     })),
@@ -467,7 +467,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
     item_ref: data.selectedItems.map((item) => ({
       item_key: item.guid_key || "",
       item_ref: item.item_ref || "",
-      qty: 1, // static for now
+      qty: item.total || 0,
       price: item.price || "",
       currency: item.currency || ""
     })),
@@ -527,7 +527,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
       item_ref: data.selectedItems.map((item) => ({
         item_key: item.guid_key || "",
         item_ref: item.item_ref || "",
-        qty: 1, // static for now
+        qty: item.total || 0,
         price: item.price || "",
         currency: item.currency || ""
       })),
