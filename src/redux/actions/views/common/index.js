@@ -313,6 +313,7 @@ export const saveOrder = (order_status) => (dispatch) => {
   axios
     .post("Order/SaveOrder", body)
     .then(async (res) => {
+      dispatch(setLoader(false))
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
           sweetAlert(
@@ -333,7 +334,6 @@ export const saveOrder = (order_status) => (dispatch) => {
           }
         }
       }
-      dispatch(setLoader(false))
     })
     .catch((err) => console.log(err))
 }
@@ -555,6 +555,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
   axios
     .post("Order/SaveOrder", body)
     .then(async (res) => {
+      dispatch(setLoader(false))
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
           const confirmation = await sweetAlert(
@@ -575,7 +576,6 @@ export const savePOOrder = (order_status) => (dispatch) => {
           )
         }
       }
-      dispatch(setLoader(false))
     })
     .catch((err) => console.log(err))
 }
