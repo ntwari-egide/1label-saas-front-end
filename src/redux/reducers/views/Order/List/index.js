@@ -1,7 +1,7 @@
 const initialState = {
   isOrderConfirmed: false,
   selectedOrder: {},
-  isOrderNew: false
+  isOrderNew: true
 }
 
 const listReducer = (state = initialState, action) => {

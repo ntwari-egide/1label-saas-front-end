@@ -26,7 +26,8 @@ import history from "@src/history"
 import { populateData } from "@redux/actions/views/common"
 import {
   setIsOrderConfirmed,
-  setSelectedOrder
+  setSelectedOrder,
+  setIsOrderNew
 } from "@redux/actions/views/Order/List"
 import { getUserData } from "@utils"
 import { setLoader } from "@redux/actions/layout"
@@ -276,6 +277,7 @@ const Listing = (props) => {
     if (e.order_status === "Confirm") {
       dispatch(setIsOrderConfirmed(true))
     }
+    dispatch(setIsOrderNew(false))
     fetchOrderDetails(e.brand_guid_key, e.order_no, e.is_po_order_temp)
   }
 
