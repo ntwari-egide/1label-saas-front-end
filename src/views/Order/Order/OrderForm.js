@@ -229,15 +229,6 @@ const OrderForm = (props) => {
     })
   }
 
-  const fetchItemInfoData = () => {
-    const body = {
-      guid_key: "204681f9-c63a-435c-96e9-e6838ed56775"
-    }
-    axios.post("/Item/GetItemRefDetail", body).then((res) => {
-      // console.log(res)
-    })
-  }
-
   const fetchItemInfoFields = () => {
     // fetches dynamic fields under Item Info
     const body = {
