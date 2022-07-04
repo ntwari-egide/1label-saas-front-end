@@ -38,7 +38,7 @@ const PreviewAndSummary = (props) => {
   // App States
   const [sizeMatrixOptions, setSizeMatrixOptions] = useState([])
   const [loading, setLoading] = useState(false)
-  const [wastageStatus, setWastageStatus] = useState(false)
+  const [showWastage, setShowWastage] = useState(false)
   const [wastageOptions, setWastageOptions] = useState([])
   const [showSizeData, setShowSizeData] = useState(true)
   const [cols, setCols] = useState([])
@@ -245,9 +245,9 @@ const PreviewAndSummary = (props) => {
       .then((res) => {
         if (res.status === 200) {
           if (res.data[0]?.show_status === "Y") {
-            setWastageStatus(true)
+            setShowWastage(true)
           } else {
-            setWastageStatus(false)
+            setShowWastage(false)
           }
           setWastageOptions(res.data[0]?.wastage_value)
         }
@@ -502,58 +502,65 @@ const PreviewAndSummary = (props) => {
                   )}
                 </Col>
               </Row>
-              <Row style={{ marginTop: "20px" }}>
-                <Col xs="12" sm="12" md="2" lg="1" xl="1">
-                  <div
-                    style={{
-                      display: "flex",
-                      height: "100%",
-                      width: "100%",
-                      alignItems: "center"
-                    }}
-                  >
-                    <div>Wastage:</div>
-                  </div>
-                </Col>
-                <Col xs="12" sm="12" md="3" lg="2" xl="2">
-                  <Select
-                    className="React"
-                    classNamePrefix="select"
-                    options={wastageOptions}
-                    value={wastageOptions.filter(
-                      (opt) => opt.value === `${props.wastage}`
-                    )}
-                    onChange={(e) => dispatch(setWastage(parseFloat(e.value)))}
-                    isDisabled={!wastageStatus}
-                    menuPlacement={"auto"}
-                    menuPortalTarget={document.body}
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 })
-                    }}
-                    isDisabled={props.isOrderConfirmed}
-                  />
-                </Col>
-                <Col xs="12" sm="12" md="7" lg="4" xl="4">
-                  <Button
-                    color="primary"
-                    style={{
-                      marginRight: "5px",
-                      paddingLeft: "10px",
-                      paddingRight: "10px"
-                    }}
-                    onClick={() => handleAddResetWastage("add")}
-                  >
-                    Add Wastage
-                  </Button>
-                  <Button
-                    color="primary"
-                    style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                    onClick={() => handleAddResetWastage("reset")}
-                  >
-                    Reset Wastage
-                  </Button>
-                </Col>
-              </Row>
+              {showWastage ? (
+                <Row style={{ marginTop: "20px" }}>
+                  <Col xs="12" sm="12" md="2" lg="1" xl="1">
+                    <div
+                      style={{
+                        display: "flex",
+                        height: "100%",
+                        width: "100%",
+                        alignItems: "center"
+                      }}
+                    >
+                      <div>Wastage:</div>
+                    </div>
+                  </Col>
+                  <Col xs="12" sm="12" md="3" lg="2" xl="2">
+                    <Select
+                      className="React"
+                      classNamePrefix="select"
+                      options={wastageOptions}
+                      value={wastageOptions.filter(
+                        (opt) => opt.value === `${props.wastage}`
+                      )}
+                      onChange={(e) =>
+                        dispatch(setWastage(parseFloat(e.value)))
+                      }
+                      isDisabled={!showWastage}
+                      menuPlacement={"auto"}
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 })
+                      }}
+                      isDisabled={props.isOrderConfirmed}
+                    />
+                  </Col>
+                  <Col xs="12" sm="12" md="7" lg="4" xl="4">
+                    <Button
+                      color="primary"
+                      style={{
+                        marginRight: "5px",
+                        paddingLeft: "10px",
+                        paddingRight: "10px"
+                      }}
+                      onClick={() => handleAddResetWastage("add")}
+                    >
+                      Add Wastage
+                    </Button>
+                    <Button
+                      color="primary"
+                      style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                      onClick={() => handleAddResetWastage("reset")}
+                      disabled={props.wastaje === 0}
+                    >
+                      Reset Wastage
+                    </Button>
+                  </Col>
+                </Row>
+              ) : (
+                <></>
+              )}
             </div>
           ) : null
         ) : (
