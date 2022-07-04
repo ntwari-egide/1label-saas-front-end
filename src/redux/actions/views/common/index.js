@@ -164,7 +164,7 @@ export const populateData = (module, data) => (dispatch) => {
           if (res.status === 200) {
             tempData[index] = {
               ...tempData[index],
-              is_non_size: res.data[0]?.is_non_size
+              ...res.data[0]
             }
             dispatch(setSelectedItems(tempData))
           }

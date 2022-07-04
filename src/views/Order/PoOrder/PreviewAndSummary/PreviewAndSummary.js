@@ -204,7 +204,7 @@ const PreviewAndSummary = (props) => {
                         maxHeight: "422px",
                         overflow: "hidden"
                       }}
-                      src={item.layout_file ? item.layout_file : ""}
+                      src={item.layout_file || ""}
                     />
                   </div>
                 </CardBody>
