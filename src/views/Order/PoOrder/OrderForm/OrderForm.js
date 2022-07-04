@@ -994,7 +994,7 @@ const OrderForm = (props) => {
                         <Row>
                           <Col>
                             <Label>
-                              Additional Care & Mandatory Statements{" "}
+                              Additional Care & Mandatory Statements
                             </Label>
                           </Col>
                         </Row>
@@ -1006,13 +1006,13 @@ const OrderForm = (props) => {
                                 classNamePrefix="select"
                                 options={additionalCareOptions}
                                 value={additionalCareOptions.filter(
-                                  (opt) => opt.value === rec.cont_key
+                                  (opt) => opt.value === rec.care_key
                                 )}
                                 onChange={(e) => {
                                   const tempData = props.careData
                                   tempData[index] = {
                                     ...props.careData[index],
-                                    cont_key: e ? e.value : "",
+                                    care_key: e ? e.value : "",
                                     care_translation: e ? e.label : ""
                                   }
                                   dispatch(setCareData([...tempData]))

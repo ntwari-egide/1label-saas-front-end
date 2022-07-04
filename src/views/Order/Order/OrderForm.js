@@ -1089,7 +1089,7 @@ const OrderForm = (props) => {
                                   const tempData = props.careData
                                   props.careData[index] = {
                                     ...props.careData[index],
-                                    cont_key: e ? e.value : ""
+                                    care_key: e ? e.value : ""
                                   }
                                   dispatch(setCareData([...tempData]))
                                   dispatch(matchContentNumber("Order"))
@@ -1258,7 +1258,8 @@ const mapStateToProps = (state) => ({
   dynamicFieldData: state.orderReducer.dynamicFieldData,
   contentGroup: state.orderReducer.contentGroup,
   brandDetails: state.orderReducer.brandDetails,
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  isOrderNew: state.listReducer.isOrderNew
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

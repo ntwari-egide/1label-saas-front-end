@@ -302,7 +302,7 @@ export const saveOrder = (order_status) => (dispatch) => {
           seqno: (index + 1) * 10
         })),
         care: data.careData.map((data, index) => ({
-          care_key: data.cont_key,
+          care_key: data.care_key,
           seqno: (index + 1) * 10
         })),
         icon: Object.values(data.washCareData)?.map((obj, index) => ({
@@ -516,7 +516,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
           seqno: (index + 1) * 10
         })),
         care: data.careData.map((data, index) => ({
-          care_key: data.cont_key,
+          care_key: data.care_key,
           seqno: (index + 1) * 10
         })),
         icon: Object.values(data.washCareData)?.map((obj, index) => ({
