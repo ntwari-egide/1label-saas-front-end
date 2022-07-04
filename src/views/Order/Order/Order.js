@@ -32,9 +32,6 @@ const Order = (props) => {
   const [itemRef, setItemRef] = useState("")
   const [lastStep] = useState(stepperMenu.length - 1)
 
-  // summary states
-  const [sizeMatrixSelect, setSizeMatrixSelect] = useState({})
-
   // validations for OrderForm Component
   const [orderFormManFields, setOrderFormManFields] = useState({
     productionLocation: false,
@@ -128,8 +125,6 @@ const Order = (props) => {
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
-          sizeMatrixSelect={sizeMatrixSelect}
-          setSizeMatrixSelect={setSizeMatrixSelect}
         />
       ) : props.currentStep === 3 ? (
         <InvoiceAndDelivery
