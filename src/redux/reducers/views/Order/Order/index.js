@@ -105,7 +105,7 @@ const orderReducer = (state = initialState, action) => {
     case "SET_BRAND_DETAILS":
       return { ...state, brandDetails: action.payload }
     case "SET_ITEM_INFO_FIELDS":
-      return { ...state, itemInfoFields: action.paylod }
+      return { ...state, itemInfoFields: action.payload }
     default:
       return state
   }
