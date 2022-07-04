@@ -637,9 +637,9 @@ const OrderForm = (props) => {
       <CardBody>
         <Row style={{ margin: "0" }}>
           <Col>
-            {itemInfoFields.length > 0 ? (
+            {props.brandDetails.display_dynamic_field === "Y" ? (
               <div>
-                {props.brandDetails.display_dynamic_field === "Y" ? (
+                {props.itemInfoFields.length ? (
                   <Card>
                     <CardHeader
                       style={{ cursor: "pointer" }}
@@ -651,18 +651,14 @@ const OrderForm = (props) => {
                     </CardHeader>
                     <Collapse isOpen={itemInfoCollapse}>
                       <CardBody>
-                        {itemInfoFields.length > 0 ? (
-                          itemInfoFields.map((field) => {
-                            return renderSwitch(field)
-                          })
-                        ) : (
-                          <></>
-                        )}
+                        {props.itemInfoFields?.map((field) => {
+                          return renderSwitch(field)
+                        })}
                       </CardBody>
                     </Collapse>
                   </Card>
                 ) : (
-                  <></>
+                  <div></div>
                 )}
               </div>
             ) : (
