@@ -57,156 +57,182 @@ export const matchContentNumber = (module) => (dispatch) => {
   })
 }
 
-export const populateData = (module, data) => (dispatch) => {
-  const {
-    setDynamicFieldData,
-    setCareData,
-    setFibreInstructionData,
-    setWashCareData,
-    setCareCustomNumber,
-    setContentCustomNumber,
-    setSelectedItems,
-    setExpectedDeliveryDate,
-    setProductionLocation,
-    setOrderReference,
-    setContentNumberData,
-    setCareNumberData,
-    setDefaultContentData,
-    setCoo,
-    setShrinkagePercentage,
-    setSizeTable,
-    setDefaultSizeTable,
-    setBrand,
-    setCurrentStep,
-    setSizeMatrixType
-  } = require(`@redux/actions/views/Order/${module}`)
-  if (module === "POOrder") {
-    dispatch(setCurrentStep(1))
-  } else {
-    dispatch(setCurrentStep(0))
-  }
-  if (data.brand_key) {
-    dispatch(setBrand({ value: data.brand_key, label: "" }))
-  }
-  if (data.dynamic_field) {
-    dispatch(setDynamicFieldData(data.dynamic_field))
-  }
-  if (data.contents[0]) {
-    const contData = data.contents[0]
-    if (contData.care) {
-      dispatch(setCareData(contData.care))
+export const populateData =
+  (module, data, brand_key, order_no, is_po_order_temp) => (dispatch) => {
+    const {
+      setDynamicFieldData,
+      setCareData,
+      setFibreInstructionData,
+      setWashCareData,
+      setCareCustomNumber,
+      setContentCustomNumber,
+      setSelectedItems,
+      setExpectedDeliveryDate,
+      setProductionLocation,
+      setOrderReference,
+      setContentNumberData,
+      setCareNumberData,
+      setDefaultContentData,
+      setCoo,
+      setShrinkagePercentage,
+      setSizeTable,
+      setDefaultSizeTable,
+      setBrand,
+      setCurrentStep,
+      setSizeMatrixType,
+      setItemInfoFields
+    } = require(`@redux/actions/views/Order/${module}`)
+    if (module === "POOrder") {
+      dispatch(setCurrentStep(1))
+    } else {
+      dispatch(setCurrentStep(0))
     }
-    if (contData.content) {
-      dispatch(setFibreInstructionData(contData.content))
+    if (data.brand_key) {
+      dispatch(setBrand({ value: data.brand_key, label: "" }))
     }
-    if (contData.icon) {
-      const tempObj = {}
-      contData.icon.map((icon) => {
-        tempObj[`${icon.icon_type_id}`] = {
-          icon_type_id: icon.icon_type_id,
-          icon_group: icon.icon_group,
-          sys_icon_key: icon.icon_key
+    if (data.contents[0]) {
+      const contData = data.contents[0]
+      if (contData.care) {
+        dispatch(setCareData(contData.care))
+      }
+      if (contData.content) {
+        dispatch(setFibreInstructionData(contData.content))
+      }
+      if (contData.icon) {
+        const tempObj = {}
+        contData.icon.map((icon) => {
+          tempObj[`${icon.icon_type_id}`] = {
+            icon_type_id: icon.icon_type_id,
+            icon_group: icon.icon_group,
+            sys_icon_key: icon.icon_key
+          }
+        })
+        dispatch(setWashCareData({ ...tempObj }))
+      }
+      if (contData.default_content) {
+        dispatch(
+          setDefaultContentData(
+            contData.default_content.map((cont) => ({
+              cont_key: cont.cont_key
+            }))
+          )
+        )
+      }
+      if (contData.care_custom_number) {
+        dispatch(setCareCustomNumber(contData.care_custom_number))
+      }
+      if (contData.content_custom_number) {
+        dispatch(setContentCustomNumber(contData.content_custom_number))
+      }
+      if (contData.content_number && contData.content_number_key) {
+        dispatch(
+          setContentNumberData({
+            value: contData.content_number_key,
+            label: contData.content_number
+          })
+        )
+      }
+      if (contData.care_number && contData.care_number_key) {
+        dispatch(
+          setCareNumberData({
+            value: contData.care_number_key,
+            label: contData.care_number
+          })
+        )
+      }
+      if (contData.content_group) {
+        dispatch(setContentGroup(contData.content_group))
+      }
+    }
+    if (data.item_ref) {
+      const tempData = data.item_ref.map((item) => {
+        const tempData = item
+        tempData["guid_key"] = tempData.item_key
+        delete tempData["item_key"]
+        return tempData
+      })
+
+      // update for non_size items
+      tempData.map((item, index) => {
+        const body = {
+          guid_key: item.guid_key
+        }
+
+        axios
+          .post("/Item/GetItemRefDetail", body)
+          .then((res) => {
+            if (res.status === 200) {
+              tempData[index] = {
+                ...tempData[index],
+                ...res.data[0]
+              }
+              dispatch(setSelectedItems(tempData))
+            }
+            // stop loader
+            if (index === tempData.length) {
+              dispatch(setLoader(false))
+            }
+          })
+          .catch((err) => console.log(err))
+      })
+    }
+    if (
+      data.order_expdate_delivery_date &&
+      data.order_expdate_delivery_date.length
+    ) {
+      dispatch(
+        setExpectedDeliveryDate(new Date(data.order_expdate_delivery_date))
+      )
+    }
+    if (data.location_code) {
+      dispatch(setProductionLocation(data.location_code))
+    }
+    if (data.po_number) {
+      dispatch(setOrderReference(data.po_number))
+    }
+    if (data.coo) {
+      dispatch(setCoo(data.coo))
+    }
+    if (data.shrinkage_percentage) {
+      dispatch(setShrinkagePercentage(data.shrinkage_percentage))
+    }
+    if (data.size_content) {
+      dispatch(setSizeTable(data.size_content))
+    }
+    if (data.default_size_content) {
+      dispatch(setDefaultSizeTable(data.default_size_content))
+    }
+    if (data.size_matrix_type?.length) {
+      dispatch(setSizeMatrixType(data.size_matrix_type))
+    }
+    // populate dynamic field data
+    const body = {
+      order_user: getUserData().admin,
+      brand_key,
+      show_status: "Y",
+      order_no,
+      is_po_order_temp
+    }
+    axios
+      .post("Brand/GetDynamicFieldList", body)
+      .then((res) => {
+        if (res.status === 200) {
+          let tempState = {}
+          dispatch(setItemInfoFields(res.data))
+          if (res.data.length) {
+            res.data.map((field) => {
+              tempState[field.title] = {
+                field_id: field.field || "",
+                field_value: field.value || "",
+                field_label: field.label || ""
+              }
+            })
+          }
+          dispatch(setDynamicFieldData(tempState))
         }
       })
-      dispatch(setWashCareData({ ...tempObj }))
-    }
-    if (contData.default_content) {
-      dispatch(
-        setDefaultContentData(
-          contData.default_content.map((cont) => ({
-            cont_key: cont.cont_key
-          }))
-        )
-      )
-    }
-    if (contData.care_custom_number) {
-      dispatch(setCareCustomNumber(contData.care_custom_number))
-    }
-    if (contData.content_custom_number) {
-      dispatch(setContentCustomNumber(contData.content_custom_number))
-    }
-    if (contData.content_number && contData.content_number_key) {
-      dispatch(
-        setContentNumberData({
-          value: contData.content_number_key,
-          label: contData.content_number
-        })
-      )
-    }
-    if (contData.care_number && contData.care_number_key) {
-      dispatch(
-        setCareNumberData({
-          value: contData.care_number_key,
-          label: contData.care_number
-        })
-      )
-    }
-    if (contData.content_group) {
-      dispatch(setContentGroup(contData.content_group))
-    }
+      .catch((err) => console.log(err))
   }
-  if (data.item_ref) {
-    const tempData = data.item_ref.map((item) => {
-      const tempData = item
-      tempData["guid_key"] = tempData.item_key
-      delete tempData["item_key"]
-      return tempData
-    })
-
-    // update for non_size items
-    tempData.map((item, index) => {
-      const body = {
-        guid_key: item.guid_key
-      }
-
-      axios
-        .post("/Item/GetItemRefDetail", body)
-        .then((res) => {
-          if (res.status === 200) {
-            tempData[index] = {
-              ...tempData[index],
-              ...res.data[0]
-            }
-            dispatch(setSelectedItems(tempData))
-          }
-          // stop loader
-          if (index === tempData.length) {
-            dispatch(setLoader(false))
-          }
-        })
-        .catch((err) => console.log(err))
-    })
-  }
-  if (
-    data.order_expdate_delivery_date &&
-    data.order_expdate_delivery_date.length
-  ) {
-    dispatch(
-      setExpectedDeliveryDate(new Date(data.order_expdate_delivery_date))
-    )
-  }
-  if (data.location_code) {
-    dispatch(setProductionLocation(data.location_code))
-  }
-  if (data.po_number) {
-    dispatch(setOrderReference(data.po_number))
-  }
-  if (data.coo) {
-    dispatch(setCoo(data.coo))
-  }
-  if (data.shrinkage_percentage) {
-    dispatch(setShrinkagePercentage(data.shrinkage_percentage))
-  }
-  if (data.size_content) {
-    dispatch(setSizeTable(data.size_content))
-  }
-  if (data.default_size_content) {
-    dispatch(setDefaultSizeTable(data.default_size_content))
-  }
-  if (data.size_matrix_type?.length) {
-    dispatch(setSizeMatrixType(data.size_matrix_type))
-  }
-}
 
 export const saveOrder = (order_status) => (dispatch) => {
   dispatch(setLoader(true))

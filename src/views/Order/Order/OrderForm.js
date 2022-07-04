@@ -530,10 +530,12 @@ const OrderForm = (props) => {
       fields.map((field) => {
         // assigns initial state to dynamic fields data.
         // to establish a data structure
-        tempItemInfoState[field.title] = {
-          field_id: field.field,
-          field_value: "",
-          field_label: ""
+        if (props.isOrderNew) {
+          tempItemInfoState[field.title] = {
+            field_id: field.field,
+            field_value: "",
+            field_label: ""
+          }
         }
         // fetches options for select inputs for dynamic fields.
         if (field?.effect?.fetch?.action) {
@@ -571,6 +573,10 @@ const OrderForm = (props) => {
     fetchContentNumberSettings()
     if (props.isOrderNew) {
       fetchItemInfoFields()
+    } else {
+      if (props.itemInfoFields.length) {
+        assignStateToItemInfo(props.itemInfoFields)
+      }
     }
     fetchContentTranslationList()
     fetchProductLocationList()

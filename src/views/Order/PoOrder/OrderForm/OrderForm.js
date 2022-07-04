@@ -38,7 +38,8 @@ import {
   setCareNumberData,
   setContentGroup,
   setCoo,
-  setBrandDetails
+  setBrandDetails,
+  setItemInfoFields
 } from "@redux/actions/views/Order/POOrder"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -52,7 +53,6 @@ const OrderForm = (props) => {
   const [careContentCollapse, setCareContentCollapse] = useState(true)
   const [washCareCollapse, setWashCareCollapse] = useState(true)
   // Data
-  const [itemInfoFields, setItemInfoFields] = useState([])
   const [itemInfoOptions, setItemInfoOptions] = useState([])
   const [contentGroupOptions, setContentGroupOptions] = useState({})
   const [iconSequence, setIconSequence] = useState([])
@@ -164,10 +164,12 @@ const OrderForm = (props) => {
     if (fields.length > 0) {
       fields.map((field) => {
         // assigns initial state to dynamic fields data.
-        tempItemInfoState[field.title] = {
-          field_id: field.field,
-          field_value: "",
-          field_label: ""
+        if (props.isOrderNew) {
+          tempItemInfoState[field.title] = {
+            field_id: field.field,
+            field_value: "",
+            field_label: ""
+          }
         }
         if (field?.effect?.fetch?.action) {
           fetch(field?.effect?.fetch?.action, {
@@ -260,7 +262,7 @@ const OrderForm = (props) => {
       .post("/brand/GetDynamicFieldList", body)
       .then((res) => {
         if (res.status === 200) {
-          setItemInfoFields(res.data)
+          dispatch(setItemInfoFields(res.data))
           assignStateToItemInfo(res.data)
         }
       })
@@ -535,7 +537,13 @@ const OrderForm = (props) => {
 
   useEffect(() => {
     fetchBrandDetails()
-    fetchItemInfoFields()
+    if (props.isOrderNew) {
+      fetchItemInfoFields()
+    } else {
+      if (props.itemInfoFields.length) {
+        assignStateToItemInfo(props.itemInfoFields)
+      }
+    }
     fetchContentNumberSettings()
     fetchContentTranslationList()
     fetchProductLocationList()
@@ -600,7 +608,7 @@ const OrderForm = (props) => {
       <CardBody>
         <Row style={{ margin: "0" }}>
           <Col>
-            {itemInfoFields.length > 0 ? (
+            {props.itemInfoFields.length > 0 ? (
               props.brandDetails?.display_dynamic_field === "Y" ? (
                 <Card>
                   <CardHeader
@@ -613,8 +621,8 @@ const OrderForm = (props) => {
                   </CardHeader>
                   <Collapse isOpen={itemInfoCollapse}>
                     <CardBody>
-                      {itemInfoFields.length > 0 ? (
-                        itemInfoFields.map((field) => {
+                      {props.itemInfoFields.length > 0 ? (
+                        props.itemInfoFields.map((field) => {
                           return renderSwitch(field)
                         })
                       ) : (
@@ -1176,7 +1184,9 @@ const mapStateToProps = (state) => ({
   defaultContentData: state.poOrderReducer.defaultContentData,
   careNumberData: state.poOrderReducer.careNumberData,
   brandDetails: state.poOrderReducer.brandDetails,
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  itemInfoFields: state.poOrderReducer.itemInfoFields,
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  isOrderNew: state.listReducer.isOrderNew
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

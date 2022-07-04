@@ -200,7 +200,15 @@ const Listing = (props) => {
               module = "POOrder"
             }
             // populate state ap per data received
-            dispatch(populateData(module, res.data[0]))
+            dispatch(
+              populateData(
+                module,
+                res.data[0],
+                brand_key,
+                order_no,
+                is_po_order_temp
+              )
+            )
             // push to page
             history.push(`/${module}`)
           } else {
