@@ -324,6 +324,13 @@ const PreviewAndSummary = (props) => {
     }
   }, [props.sizeData])
 
+  useEffect(() => {
+    // for when user visits from Order > List > Listing
+    if (props.sizeTable.length) {
+      dispatch(setSizeData(formatColToRow(props.sizeTable)))
+    }
+  }, [])
+
   return (
     <Card>
       <CardBody>
@@ -444,14 +451,14 @@ const PreviewAndSummary = (props) => {
                     className="React"
                     classNamePrefix="select"
                     value={sizeMatrixOptions.filter(
-                      (opt) => opt.value === props.sizeMatrixSelect.value
+                      (opt) => opt.label === props.sizeMatrixType
                     )}
                     options={sizeMatrixOptions}
                     onChange={(e) => {
                       setLoading(true)
                       setCols([])
                       fetchSizeTableDetails(e.value)
-                      props.setSizeMatrixSelect(e)
+                      dispatch(setSizeMatrixType(e.label))
                       // reset total for selected items
                       dispatch(
                         setSelectedItems(resetTotal([...props.selectedItems]))
@@ -576,6 +583,7 @@ const mapStateToProps = (state) => ({
   cols: state.orderReducer.cols,
   wastageApplied: state.orderReducer.wastageApplied,
   brandDetails: state.orderReducer.brandDetails,
+  sizeTable: state.orderReducer.sizeTable,
   isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 

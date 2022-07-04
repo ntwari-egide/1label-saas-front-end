@@ -77,7 +77,8 @@ export const populateData = (module, data) => (dispatch) => {
     setSizeTable,
     setDefaultSizeTable,
     setBrand,
-    setCurrentStep
+    setCurrentStep,
+    setSizeMatrixType
   } = require(`@redux/actions/views/Order/${module}`)
   if (module === "POOrder") {
     dispatch(setCurrentStep(1))
@@ -199,8 +200,11 @@ export const populateData = (module, data) => (dispatch) => {
   if (data.size_content) {
     dispatch(setSizeTable(data.size_content))
   }
-  if (data.default_size_content && module === "Order") {
+  if (data.default_size_content) {
     dispatch(setDefaultSizeTable(data.default_size_content))
+  }
+  if (data.size_matrix_type?.length) {
+    dispatch(setSizeMatrixType(data.size_matrix_type))
   }
 }
 
