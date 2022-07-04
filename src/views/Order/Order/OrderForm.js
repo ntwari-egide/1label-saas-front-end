@@ -1083,7 +1083,7 @@ const OrderForm = (props) => {
                                 classNamePrefix="select"
                                 options={additionalCareOptions}
                                 value={additionalCareOptions?.filter(
-                                  (opt) => opt.value === rec.cont_key
+                                  (opt) => opt.value === rec.care_key
                                 )}
                                 onChange={(e) => {
                                   const tempData = props.careData
