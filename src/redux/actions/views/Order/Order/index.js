@@ -117,3 +117,7 @@ export const setWastageApplied = (value) => (dispatch) => {
 export const setBrandDetails = (data) => (dispatch) => {
   dispatch({ type: "SET_BRAND_DETAILS", payload: data })
 }
+
+export const setItemInfoFields = (data) => (dispatch) => {
+  dispatch({ type: "SET_ITEM_INFO_FIELDS", payload: data })
+}

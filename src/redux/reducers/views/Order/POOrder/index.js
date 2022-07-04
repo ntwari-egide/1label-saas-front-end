@@ -19,6 +19,7 @@ const initialState = {
   contentGroup: "",
   coo: "",
   brandDetails: {},
+  itemInfoFields: [],
   // size table states
   sizeData: [],
   wastage: 0,
@@ -102,6 +103,8 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, clientDetails: action.payload }
     case "SET_PO_BRAND_DETAILS":
       return { ...state, brandDetails: action.payload }
+    case "SET_PO_ITEM_INFO_FIELDS":
+      return { ...state, itemInfoFields: action.payload }
     default:
       return { ...state }
   }
