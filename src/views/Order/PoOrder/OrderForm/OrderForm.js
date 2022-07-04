@@ -533,22 +533,12 @@ const OrderForm = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchItemInfoData = () => {
-    const body = {
-      guid_key: props.brand ? props.brand.value : ""
-    }
-    axios.post("/Item/GetItemRefDetail", body).then((res) => {
-      // console.log(res)
-    })
-  }
-
   useEffect(() => {
-    fetchItemInfoData()
+    fetchBrandDetails()
     fetchItemInfoFields()
     fetchContentNumberSettings()
     fetchContentTranslationList()
     fetchProductLocationList()
-    fetchBrandDetails()
   }, [])
 
   return (
