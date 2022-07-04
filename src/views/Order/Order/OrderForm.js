@@ -38,7 +38,8 @@ import {
   setCareCustomNumber,
   setDynamicFieldData,
   setContentGroup,
-  setBrandDetails
+  setBrandDetails,
+  setItemInfoFields
 } from "@redux/actions/views/Order/Order"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -52,9 +53,9 @@ const OrderForm = (props) => {
   const [careContentCollapse, setCareContentCollapse] = useState(true)
   const [washCareCollapse, setWashCareCollapse] = useState(true)
   // Data
-  const [itemInfoFields, setItemInfoFields] = useState([])
   const [itemInfoOptions, setItemInfoOptions] = useState({})
   const [iconSequence, setIconSequence] = useState([])
+  const [mainLoader, setMainLoader] = useState(true)
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
@@ -111,6 +112,7 @@ const OrderForm = (props) => {
         if (res.status === 200) {
           dispatch(setBrandDetails(res.data))
         }
+        setMainLoader(false)
       })
       .catch((err) => console.log(err))
   }
@@ -241,7 +243,7 @@ const OrderForm = (props) => {
         if (res.status === 200) {
           // sets dynamic item info fields which will trigger assignStateToItemInfo()
           // also is used to render fields
-          setItemInfoFields(res.data)
+          dispatch(setItemInfoFields(res.data))
           assignStateToItemInfo(res.data)
         }
       })
@@ -565,13 +567,14 @@ const OrderForm = (props) => {
   }
 
   useEffect(() => {
+    fetchBrandDetails()
     fetchContentNumberSettings()
-    fetchItemInfoData()
-    fetchItemInfoFields()
+    if (props.isOrderNew) {
+      fetchItemInfoFields()
+    }
     fetchContentTranslationList()
     fetchProductLocationList()
     fetchMinExpectedDeliveryDate()
-    fetchBrandDetails()
   }, [])
 
   return (
@@ -634,581 +637,613 @@ const OrderForm = (props) => {
           )}
         </Col>
       </CardHeader>
-      <CardBody>
-        <Row style={{ margin: "0" }}>
-          <Col>
-            {props.brandDetails.display_dynamic_field === "Y" ? (
-              <div>
-                {props.itemInfoFields.length ? (
-                  <Card>
-                    <CardHeader
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setItemInfoCollapse(!itemInfoCollapse)}
+      {mainLoader ? (
+        <div
+          style={{
+            display: "flex",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <div>
+            <Spinner color="primary" />
+          </div>
+        </div>
+      ) : (
+        <CardBody>
+          <Row style={{ margin: "0" }}>
+            <Col>
+              {props.brandDetails.display_dynamic_field === "Y" ? (
+                <div>
+                  {props.itemInfoFields.length ? (
+                    <Card>
+                      <CardHeader
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setItemInfoCollapse(!itemInfoCollapse)}
+                      >
+                        <div>
+                          <h4 className="text-primary">{t("Item Info")}</h4>
+                        </div>
+                      </CardHeader>
+                      <Collapse isOpen={itemInfoCollapse}>
+                        <CardBody>
+                          {props.itemInfoFields?.map((field) => {
+                            return renderSwitch(field)
+                          })}
+                        </CardBody>
+                      </Collapse>
+                    </Card>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        height: "400px",
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
                     >
                       <div>
-                        <h4 className="text-primary">{t("Item Info")}</h4>
+                        <Spinner color="primary" />
                       </div>
-                    </CardHeader>
-                    <Collapse isOpen={itemInfoCollapse}>
-                      <CardBody>
-                        {props.itemInfoFields?.map((field) => {
-                          return renderSwitch(field)
-                        })}
-                      </CardBody>
-                    </Collapse>
-                  </Card>
-                ) : (
-                  <div></div>
-                )}
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  height: "400px",
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <div>
-                  <Spinner color="primary" />
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-          </Col>
-        </Row>
-        <Row style={{ margin: "0" }}>
-          <Col>
-            {props.brandDetails?.display_Content === "Y" ? (
-              <Card>
-                <CardHeader
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setCareContentCollapse(!careContentCollapse)}
-                >
-                  <div>
-                    <h4 className="text-primary">{t("Care And Content")}</h4>
-                  </div>
-                </CardHeader>
-                <Collapse isOpen={careContentCollapse}>
-                  <CardBody>
-                    <Row style={{ marginBottom: "10px" }}>
-                      <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                        <Label style={{ marginTop: "12px" }}>
-                          {contentName}
-                        </Label>
-                      </Col>
-                      <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                        <Select
-                          className="React"
-                          classNamePrefix="select"
-                          value={
-                            props.contentGroup === "ABC"
-                              ? contentGroupOptions["ABC"]?.filter(
-                                  (opt) =>
-                                    opt.label === props.contentNumberData?.label
-                                )
-                              : props.contentGroup === "A/BC"
-                              ? contentGroupOptions["A"]?.filter(
-                                  (opt) =>
-                                    opt.label === props.contentNumberData?.label
-                                )
-                              : contentGroupOptions["AB"]?.filter(
-                                  (opt) =>
-                                    opt.label === props.contentNumberData?.label
-                                )
-                          }
-                          options={
-                            props.contentGroup === "ABC"
-                              ? contentGroupOptions["ABC"]
-                              : props.contentGroup === "A/BC"
-                              ? contentGroupOptions["A"]
-                              : contentGroupOptions["AB"]
-                          }
-                          onChange={(e) => {
-                            dispatch(setContentNumberData(e ? e : {}))
-                            if (e) {
-                              fetchContentNumberDetail(e.value, e.label)
-                            } else {
-                              // to handle isClearable event
-                              if (props.contentGroup === "A/BC") {
-                                dispatch(setFibreInstructionData([{}]))
-                              } else if (props.contentGroup === "AB/C") {
-                                dispatch(setFibreInstructionData([{}]))
-                                dispatch(setCareData([{}]))
-                              } else {
-                                dispatch(setFibreInstructionData([{}]))
-                                dispatch(setWashCareData([{}]))
-                                dispatch(setCareData([{}]))
-                              }
+              ) : (
+                <></>
+              )}
+            </Col>
+          </Row>
+          <Row style={{ margin: "0" }}>
+            <Col>
+              {props.brandDetails?.display_Content === "Y" ? (
+                <Card>
+                  <CardHeader
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setCareContentCollapse(!careContentCollapse)}
+                  >
+                    <div>
+                      <h4 className="text-primary">{t("Care And Content")}</h4>
+                    </div>
+                  </CardHeader>
+                  <Collapse isOpen={careContentCollapse}>
+                    <CardBody>
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                          <Label style={{ marginTop: "12px" }}>
+                            {contentName}
+                          </Label>
+                        </Col>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Select
+                            className="React"
+                            classNamePrefix="select"
+                            value={
+                              props.contentGroup === "ABC"
+                                ? contentGroupOptions["ABC"]?.filter(
+                                    (opt) =>
+                                      opt.label ===
+                                      props.contentNumberData?.label
+                                  )
+                                : props.contentGroup === "A/BC"
+                                ? contentGroupOptions["A"]?.filter(
+                                    (opt) =>
+                                      opt.label ===
+                                      props.contentNumberData?.label
+                                  )
+                                : contentGroupOptions["AB"]?.filter(
+                                    (opt) =>
+                                      opt.label ===
+                                      props.contentNumberData?.label
+                                  )
                             }
-                          }}
-                          isClearable={true}
-                          isDisabled={props.isOrderConfirmed}
-                        />
-                      </Col>
-                    </Row>
-                    <Row style={{ marginBottom: "10px" }}>
-                      <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                        <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
-                      </Col>
-                      <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                        <Input
-                          value={props.contentCustomNumber}
-                          onChange={(e) =>
-                            dispatch(setContentCustomNumber(e.target.value))
-                          }
-                          disabled={props.isOrderConfirmed}
-                        />
-                      </Col>
-                    </Row>
-                    <Card>
-                      <CardHeader>
-                        <h5>{t("Fibre Instructions")}</h5>
-                      </CardHeader>
-                      <CardBody>
-                        {props.fibreInstructionData
-                          ? props.fibreInstructionData.map((rec, index) => (
-                              <Row style={{ marginBottom: "5px" }}>
-                                <Col xs="12" sm="12" md="4" lg="4" xl="4">
-                                  <Label>Component</Label>
-                                  <Select
-                                    id={`component-select-${index}`}
-                                    className="React"
-                                    classNamePrefix="select"
-                                    options={componentOptions}
-                                    value={componentOptions?.filter(
-                                      (opt) => opt.value === rec?.part_key
-                                    )}
-                                    onChange={(e) => {
-                                      const tempData =
-                                        props.fibreInstructionData
-                                      // ternary to handle isClearable event
-                                      tempData[index] = {
-                                        ...props.fibreInstructionData[index],
-                                        part_key: e ? e.value : "",
-                                        part_translation: e ? e.label : ""
-                                      }
-                                      dispatch(
-                                        setFibreInstructionData([...tempData])
-                                      )
-                                      dispatch(matchContentNumber("Order"))
-                                    }}
-                                    onFocus={() => {
-                                      setComponentTip({
-                                        [`component-select-${index}`]: true
-                                      })
-                                    }}
-                                    onBlur={() => {
-                                      setComponentTip({})
-                                    }}
-                                    isClearable={true}
-                                    isDisabled={props.isOrderConfirmed}
-                                  />
-                                  <div>
-                                    <Popover
-                                      target={`component-select-${index}`}
-                                      isOpen={
-                                        componentTip[
-                                          `component-select-${index}`
-                                        ]
-                                          ? componentTip[
-                                              `component-select-${index}`
-                                            ]
-                                          : false
-                                      }
-                                    >
-                                      <PopoverHeader>Tip </PopoverHeader>
-                                      <PopoverBody>
-                                        <ol type="i">
-                                          <li>
-                                            Style containing two or more garment
-                                            components of different textile
-                                            fibre, each component must be
-                                            stated. e.g. lining, padding etc..
-                                          </li>
-                                          <li>
-                                            However if a component is less than
-                                            30% of the total garment it must not
-                                            be mentioned. e.g. rib
-                                          </li>
-                                        </ol>
-                                      </PopoverBody>
-                                    </Popover>
-                                  </div>
-                                </Col>
-                                <Col xs="12" sm="12" md="3" lg="3" xl="3">
-                                  <Label>Fabric</Label>
-                                  <Select
-                                    id={`fabric-select-${index}`}
-                                    className="React"
-                                    classNamePrefix="select"
-                                    options={fabricOptions}
-                                    value={fabricOptions?.filter(
-                                      (opt) => opt.value === rec?.cont_key
-                                    )}
-                                    onChange={(e) => {
-                                      handleFibreChange(e, index)
-                                    }}
-                                    isClearable={true}
-                                    onFocus={() => {
-                                      setFabricTip({
-                                        [`fabric-select-${index}`]: true
-                                      })
-                                    }}
-                                    onBlur={() => {
-                                      setFabricTip({})
-                                    }}
-                                    isDisabled={props.isOrderConfirmed}
-                                  />
-                                  <div>
-                                    <Popover
-                                      target={`fabric-select-${index}`}
-                                      isOpen={
-                                        fabricTip[`fabric-select-${index}`]
-                                          ? fabricTip[`fabric-select-${index}`]
-                                          : false
-                                      }
-                                    >
-                                      <PopoverHeader>Tip</PopoverHeader>
-                                      <PopoverBody>
-                                        <p>
-                                          Fabrics that are made up of multiple
-                                          layer must call out each other
-                                          seperately. Contact CS for help on
-                                          correct setup
-                                        </p>
-                                      </PopoverBody>
-                                    </Popover>
-                                  </div>
-                                </Col>
-                                <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                                  <Label>%</Label>
-                                  <Input
-                                    value={
-                                      props.fibreInstructionData[index]
-                                        ?.en_percent
-                                        ? props.fibreInstructionData[index]
-                                            ?.en_percent
-                                        : ""
-                                    }
-                                    onChange={(e) => {
-                                      const tempData =
-                                        props.fibreInstructionData
-                                      tempData[index] = {
-                                        ...props.fibreInstructionData[index],
-                                        en_percent: e.target.value
-                                      }
-                                      dispatch(
-                                        setFibreInstructionData([...tempData])
-                                      )
-                                      debounceFun()
-                                    }}
-                                    disabled={props.isOrderConfirmed}
-                                  />
-                                </Col>
-                                <Col
-                                  xs="12"
-                                  sm="12"
-                                  md="1"
-                                  lg="1"
-                                  xl="1"
-                                  style={{ marginTop: "23px" }}
-                                >
-                                  <Button
-                                    style={{ padding: "7px" }}
-                                    outline
-                                    className="btn btn-outline-danger"
-                                    onClick={() => {
-                                      let tempData = props.fibreInstructionData
-                                      tempData.splice(index, 1)
-                                      dispatch(
-                                        setFibreInstructionData([...tempData])
-                                      )
-                                      tempData = props.defaultContentData
-                                      tempData.splice(index, 1)
-                                      dispatch(
-                                        setDefaultContentData([...tempData])
-                                      )
-                                    }}
-                                  >
-                                    <div style={{ display: "flex" }}>
-                                      <X />
-                                      <div style={{ marginTop: "5px" }}>
-                                        Delete
-                                      </div>
+                            options={
+                              props.contentGroup === "ABC"
+                                ? contentGroupOptions["ABC"]
+                                : props.contentGroup === "A/BC"
+                                ? contentGroupOptions["A"]
+                                : contentGroupOptions["AB"]
+                            }
+                            onChange={(e) => {
+                              dispatch(setContentNumberData(e ? e : {}))
+                              if (e) {
+                                fetchContentNumberDetail(e.value, e.label)
+                              } else {
+                                // to handle isClearable event
+                                if (props.contentGroup === "A/BC") {
+                                  dispatch(setFibreInstructionData([{}]))
+                                } else if (props.contentGroup === "AB/C") {
+                                  dispatch(setFibreInstructionData([{}]))
+                                  dispatch(setCareData([{}]))
+                                } else {
+                                  dispatch(setFibreInstructionData([{}]))
+                                  dispatch(setWashCareData([{}]))
+                                  dispatch(setCareData([{}]))
+                                }
+                              }
+                            }}
+                            isClearable={true}
+                            isDisabled={props.isOrderConfirmed}
+                          />
+                        </Col>
+                      </Row>
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                          <Label style={{ marginTop: "12px" }}>
+                            Save/Edit:
+                          </Label>
+                        </Col>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Input
+                            value={props.contentCustomNumber}
+                            onChange={(e) =>
+                              dispatch(setContentCustomNumber(e.target.value))
+                            }
+                            disabled={props.isOrderConfirmed}
+                          />
+                        </Col>
+                      </Row>
+                      <Card>
+                        <CardHeader>
+                          <h5>{t("Fibre Instructions")}</h5>
+                        </CardHeader>
+                        <CardBody>
+                          {props.fibreInstructionData
+                            ? props.fibreInstructionData.map((rec, index) => (
+                                <Row style={{ marginBottom: "5px" }}>
+                                  <Col xs="12" sm="12" md="4" lg="4" xl="4">
+                                    <Label>Component</Label>
+                                    <Select
+                                      id={`component-select-${index}`}
+                                      className="React"
+                                      classNamePrefix="select"
+                                      options={componentOptions}
+                                      value={componentOptions?.filter(
+                                        (opt) => opt.value === rec?.part_key
+                                      )}
+                                      onChange={(e) => {
+                                        const tempData =
+                                          props.fibreInstructionData
+                                        // ternary to handle isClearable event
+                                        tempData[index] = {
+                                          ...props.fibreInstructionData[index],
+                                          part_key: e ? e.value : "",
+                                          part_translation: e ? e.label : ""
+                                        }
+                                        dispatch(
+                                          setFibreInstructionData([...tempData])
+                                        )
+                                        dispatch(matchContentNumber("Order"))
+                                      }}
+                                      onFocus={() => {
+                                        setComponentTip({
+                                          [`component-select-${index}`]: true
+                                        })
+                                      }}
+                                      onBlur={() => {
+                                        setComponentTip({})
+                                      }}
+                                      isClearable={true}
+                                      isDisabled={props.isOrderConfirmed}
+                                    />
+                                    <div>
+                                      <Popover
+                                        target={`component-select-${index}`}
+                                        isOpen={
+                                          componentTip[
+                                            `component-select-${index}`
+                                          ]
+                                            ? componentTip[
+                                                `component-select-${index}`
+                                              ]
+                                            : false
+                                        }
+                                      >
+                                        <PopoverHeader>Tip </PopoverHeader>
+                                        <PopoverBody>
+                                          <ol type="i">
+                                            <li>
+                                              Style containing two or more
+                                              garment components of different
+                                              textile fibre, each component must
+                                              be stated. e.g. lining, padding
+                                              etc..
+                                            </li>
+                                            <li>
+                                              However if a component is less
+                                              than 30% of the total garment it
+                                              must not be mentioned. e.g. rib
+                                            </li>
+                                          </ol>
+                                        </PopoverBody>
+                                      </Popover>
                                     </div>
-                                  </Button>
-                                </Col>
-                              </Row>
-                            ))
-                          : null}
-                      </CardBody>
-                      <CardFooter>
-                        <Button
-                          onClick={() => {
-                            const tempFibreInstructions =
-                              props.fibreInstructionData
-                            tempFibreInstructions.push({})
-                            dispatch(
-                              setFibreInstructionData([
-                                ...tempFibreInstructions
-                              ])
-                            )
-                            const tempDefaultContent = props.defaultContentData
-                            tempDefaultContent.push("")
-                            dispatch(
-                              setDefaultContentData([...tempDefaultContent])
-                            )
-                          }}
-                          color="primary"
-                          style={{ padding: "10px" }}
-                        >
-                          <Plus />
-                          Add New
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                    <Row>
-                      <Col>
-                        <Label style={{ marginTop: "12px" }}>
-                          Default Content:
-                        </Label>
-                      </Col>
-                    </Row>
-                    {processDefaultContent(props.defaultContentData).map(
-                      (item) => (
-                        <Row style={{ marginBottom: "10px" }}>
-                          <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                            <Input value={item ? item : ""} disabled={true} />
-                          </Col>
-                        </Row>
-                      )
-                    )}
-                    <Row style={{ marginBottom: "10px" }}>
-                      <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                        <Label style={{ marginTop: "12px" }}>{careName}</Label>
-                      </Col>
-                      <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                        <Select
-                          className="React"
-                          classNamePrefix="select"
-                          value={
-                            props.contentGroup === "ABC"
-                              ? contentGroupOptions["ABC"]?.filter(
-                                  (opt) =>
-                                    opt.value === props.careNumberData?.value
-                                )
-                              : props.contentGroup === "A/BC"
-                              ? contentGroupOptions["BC"]?.filter(
-                                  (opt) =>
-                                    opt.value === props.careNumberData?.value
-                                )
-                              : contentGroupOptions["C"]?.filter(
-                                  (opt) =>
-                                    opt.value === props.careNumberData?.value
-                                )
-                          }
-                          options={
-                            props.contentGroup === "ABC"
-                              ? contentGroupOptions["ABC"]
-                              : props.contentGroup === "A/BC"
-                              ? contentGroupOptions["BC"]
-                              : contentGroupOptions["C"]
-                          }
-                          onChange={(e) => {
-                            dispatch(setCareNumberData(e ? e : {}))
-                            if (e) {
-                              fetchContentNumberDetail(e.value, e.label)
-                            } else {
-                              if (props.contentGroup === "A/BC") {
-                                dispatch(setWashCareData([{}]))
-                                dispatch(setCareData([{}]))
-                              } else if (props.contentGroup === "AB/C") {
-                                dispatch(setWashCareData([{}]))
-                              } else {
-                                dispatch(setFibreInstructionData([{}]))
-                                dispatch(setWashCareData([{}]))
-                                dispatch(setCareData([{}]))
-                              }
+                                  </Col>
+                                  <Col xs="12" sm="12" md="3" lg="3" xl="3">
+                                    <Label>Fabric</Label>
+                                    <Select
+                                      id={`fabric-select-${index}`}
+                                      className="React"
+                                      classNamePrefix="select"
+                                      options={fabricOptions}
+                                      value={fabricOptions?.filter(
+                                        (opt) => opt.value === rec?.cont_key
+                                      )}
+                                      onChange={(e) => {
+                                        handleFibreChange(e, index)
+                                      }}
+                                      isClearable={true}
+                                      onFocus={() => {
+                                        setFabricTip({
+                                          [`fabric-select-${index}`]: true
+                                        })
+                                      }}
+                                      onBlur={() => {
+                                        setFabricTip({})
+                                      }}
+                                      isDisabled={props.isOrderConfirmed}
+                                    />
+                                    <div>
+                                      <Popover
+                                        target={`fabric-select-${index}`}
+                                        isOpen={
+                                          fabricTip[`fabric-select-${index}`]
+                                            ? fabricTip[
+                                                `fabric-select-${index}`
+                                              ]
+                                            : false
+                                        }
+                                      >
+                                        <PopoverHeader>Tip</PopoverHeader>
+                                        <PopoverBody>
+                                          <p>
+                                            Fabrics that are made up of multiple
+                                            layer must call out each other
+                                            seperately. Contact CS for help on
+                                            correct setup
+                                          </p>
+                                        </PopoverBody>
+                                      </Popover>
+                                    </div>
+                                  </Col>
+                                  <Col xs="12" sm="12" md="2" lg="2" xl="2">
+                                    <Label>%</Label>
+                                    <Input
+                                      value={
+                                        props.fibreInstructionData[index]
+                                          ?.en_percent
+                                          ? props.fibreInstructionData[index]
+                                              ?.en_percent
+                                          : ""
+                                      }
+                                      onChange={(e) => {
+                                        const tempData =
+                                          props.fibreInstructionData
+                                        tempData[index] = {
+                                          ...props.fibreInstructionData[index],
+                                          en_percent: e.target.value
+                                        }
+                                        dispatch(
+                                          setFibreInstructionData([...tempData])
+                                        )
+                                        debounceFun()
+                                      }}
+                                      disabled={props.isOrderConfirmed}
+                                    />
+                                  </Col>
+                                  <Col
+                                    xs="12"
+                                    sm="12"
+                                    md="1"
+                                    lg="1"
+                                    xl="1"
+                                    style={{ marginTop: "23px" }}
+                                  >
+                                    <Button
+                                      style={{ padding: "7px" }}
+                                      outline
+                                      className="btn btn-outline-danger"
+                                      onClick={() => {
+                                        let tempData =
+                                          props.fibreInstructionData
+                                        tempData.splice(index, 1)
+                                        dispatch(
+                                          setFibreInstructionData([...tempData])
+                                        )
+                                        tempData = props.defaultContentData
+                                        tempData.splice(index, 1)
+                                        dispatch(
+                                          setDefaultContentData([...tempData])
+                                        )
+                                      }}
+                                    >
+                                      <div style={{ display: "flex" }}>
+                                        <X />
+                                        <div style={{ marginTop: "5px" }}>
+                                          Delete
+                                        </div>
+                                      </div>
+                                    </Button>
+                                  </Col>
+                                </Row>
+                              ))
+                            : null}
+                        </CardBody>
+                        <CardFooter>
+                          <Button
+                            onClick={() => {
+                              const tempFibreInstructions =
+                                props.fibreInstructionData
+                              tempFibreInstructions.push({})
+                              dispatch(
+                                setFibreInstructionData([
+                                  ...tempFibreInstructions
+                                ])
+                              )
+                              const tempDefaultContent =
+                                props.defaultContentData
+                              tempDefaultContent.push("")
+                              dispatch(
+                                setDefaultContentData([...tempDefaultContent])
+                              )
+                            }}
+                            color="primary"
+                            style={{ padding: "10px" }}
+                          >
+                            <Plus />
+                            Add New
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                      <Row>
+                        <Col>
+                          <Label style={{ marginTop: "12px" }}>
+                            Default Content:
+                          </Label>
+                        </Col>
+                      </Row>
+                      {processDefaultContent(props.defaultContentData).map(
+                        (item) => (
+                          <Row style={{ marginBottom: "10px" }}>
+                            <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                              <Input value={item ? item : ""} disabled={true} />
+                            </Col>
+                          </Row>
+                        )
+                      )}
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                          <Label style={{ marginTop: "12px" }}>
+                            {careName}
+                          </Label>
+                        </Col>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Select
+                            className="React"
+                            classNamePrefix="select"
+                            value={
+                              props.contentGroup === "ABC"
+                                ? contentGroupOptions["ABC"]?.filter(
+                                    (opt) =>
+                                      opt.value === props.careNumberData?.value
+                                  )
+                                : props.contentGroup === "A/BC"
+                                ? contentGroupOptions["BC"]?.filter(
+                                    (opt) =>
+                                      opt.value === props.careNumberData?.value
+                                  )
+                                : contentGroupOptions["C"]?.filter(
+                                    (opt) =>
+                                      opt.value === props.careNumberData?.value
+                                  )
                             }
-                          }}
-                          isClearable={true}
-                          isDisabled={props.isOrderConfirmed}
-                        />
-                      </Col>
-                    </Row>
-                    <Row style={{ marginBottom: "10px" }}>
-                      <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                        <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
-                      </Col>
-                      <Col xs="12" sm="12" md="9" lg="9" xl="9">
-                        <Input
-                          value={props.careCustomNumber}
-                          onChange={(e) =>
-                            dispatch(setCareCustomNumber(e.target.value))
-                          }
-                          disabled={props.isOrderConfirmed}
-                        />
-                      </Col>
-                    </Row>
-                    <Card>
-                      <CardHeader>
-                        <h5>{t("Care")}</h5>
-                      </CardHeader>
-                      <CardBody>
-                        <Row>
-                          <Col>
-                            <Label>
-                              Additional Care & Mandatory Statements{" "}
-                            </Label>
-                          </Col>
-                        </Row>
-                        {props.careData.map((rec, index) => (
-                          <Row style={{ marginBottom: "7px" }}>
-                            <Col xs="12" sm="12" md="8" lg="8" xl="8">
+                            options={
+                              props.contentGroup === "ABC"
+                                ? contentGroupOptions["ABC"]
+                                : props.contentGroup === "A/BC"
+                                ? contentGroupOptions["BC"]
+                                : contentGroupOptions["C"]
+                            }
+                            onChange={(e) => {
+                              dispatch(setCareNumberData(e ? e : {}))
+                              if (e) {
+                                fetchContentNumberDetail(e.value, e.label)
+                              } else {
+                                if (props.contentGroup === "A/BC") {
+                                  dispatch(setWashCareData([{}]))
+                                  dispatch(setCareData([{}]))
+                                } else if (props.contentGroup === "AB/C") {
+                                  dispatch(setWashCareData([{}]))
+                                } else {
+                                  dispatch(setFibreInstructionData([{}]))
+                                  dispatch(setWashCareData([{}]))
+                                  dispatch(setCareData([{}]))
+                                }
+                              }
+                            }}
+                            isClearable={true}
+                            isDisabled={props.isOrderConfirmed}
+                          />
+                        </Col>
+                      </Row>
+                      <Row style={{ marginBottom: "10px" }}>
+                        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                          <Label style={{ marginTop: "12px" }}>
+                            Save/Edit:
+                          </Label>
+                        </Col>
+                        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+                          <Input
+                            value={props.careCustomNumber}
+                            onChange={(e) =>
+                              dispatch(setCareCustomNumber(e.target.value))
+                            }
+                            disabled={props.isOrderConfirmed}
+                          />
+                        </Col>
+                      </Row>
+                      <Card>
+                        <CardHeader>
+                          <h5>{t("Care")}</h5>
+                        </CardHeader>
+                        <CardBody>
+                          <Row>
+                            <Col>
+                              <Label>
+                                Additional Care & Mandatory Statements{" "}
+                              </Label>
+                            </Col>
+                          </Row>
+                          {props.careData.map((rec, index) => (
+                            <Row style={{ marginBottom: "7px" }}>
+                              <Col xs="12" sm="12" md="8" lg="8" xl="8">
+                                <Select
+                                  className="React"
+                                  classNamePrefix="select"
+                                  options={additionalCareOptions}
+                                  value={additionalCareOptions?.filter(
+                                    (opt) => opt.value === rec.care_key
+                                  )}
+                                  onChange={(e) => {
+                                    const tempData = props.careData
+                                    props.careData[index] = {
+                                      ...props.careData[index],
+                                      care_key: e ? e.value : ""
+                                    }
+                                    dispatch(setCareData([...tempData]))
+                                    dispatch(matchContentNumber("Order"))
+                                  }}
+                                  isClearable={true}
+                                  isDisabled={props.isOrderConfirmed}
+                                />
+                              </Col>
+                              <Col xs="12" sm="12" md="1" lg="1" xl="1">
+                                <Button
+                                  style={{ padding: "7px" }}
+                                  outline
+                                  className="btn btn-outline-danger"
+                                  onClick={() => {
+                                    const tempCare = props.careData
+                                    tempCare.splice(index, 1)
+                                    dispatch(setCareData([...tempCare]))
+                                  }}
+                                >
+                                  <div style={{ display: "flex" }}>
+                                    <X />
+                                    <div style={{ marginTop: "5px" }}>
+                                      Delete
+                                    </div>
+                                  </div>
+                                </Button>
+                              </Col>
+                            </Row>
+                          ))}
+                        </CardBody>
+                        <CardFooter>
+                          <Button
+                            onClick={() => {
+                              const tempCare = props.careData
+                              tempCare.push({})
+                              dispatch(setCareData([...tempCare]))
+                            }}
+                            color="primary"
+                            style={{ padding: "10px" }}
+                          >
+                            <Plus />
+                            Add New Row
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </CardBody>
+                  </Collapse>
+                </Card>
+              ) : (
+                <></>
+              )}
+            </Col>
+          </Row>
+          <Row style={{ margin: "0" }}>
+            <Col>
+              {props.brandDetails.display_Content === "Y" ? (
+                <Card>
+                  <CardHeader
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setWashCareCollapse(!washCareCollapse)}
+                  >
+                    <div>
+                      <h4 className="text-primary">{t("Wash Care Symbol")} </h4>
+                    </div>
+                  </CardHeader>
+                  <Collapse isOpen={washCareCollapse}>
+                    <CardBody>
+                      {iconSequence.map((iconObj) => {
+                        return (
+                          <Row style={{ marginBottom: "10px" }}>
+                            <Col xs="12" s="12" md="2" lg="2" xl="2">
+                              <Label style={{ marginTop: "12px" }}>
+                                {iconObj.sys_icon_name}
+                              </Label>
+                            </Col>
+                            <Col xs="12" s="12" md="8" lg="8" xl="8">
                               <Select
                                 className="React"
                                 classNamePrefix="select"
-                                options={additionalCareOptions}
-                                value={additionalCareOptions?.filter(
-                                  (opt) => opt.value === rec.care_key
-                                )}
+                                options={washCareOptions[iconObj?.icon_type_id]}
+                                value={
+                                  washCareOptions[iconObj?.icon_type_id]
+                                    ? washCareOptions[
+                                        iconObj?.icon_type_id
+                                      ]?.filter(
+                                        (opt) =>
+                                          opt.value ===
+                                          props.washCareData[
+                                            iconObj?.icon_type_id
+                                          ]?.sys_icon_key
+                                      )
+                                    : ""
+                                }
                                 onChange={(e) => {
-                                  const tempData = props.careData
-                                  props.careData[index] = {
-                                    ...props.careData[index],
-                                    care_key: e ? e.value : ""
+                                  const tempData = {}
+                                  tempData[iconObj.icon_type_id] = {
+                                    sys_icon_key: e ? e.value : "",
+                                    icon_type_id: e ? e.iconTypeId : "",
+                                    icon_group: e ? e.iconGroup : ""
                                   }
-                                  dispatch(setCareData([...tempData]))
+                                  dispatch(
+                                    setWashCareData({
+                                      ...props.washCareData,
+                                      ...tempData
+                                    })
+                                  )
                                   dispatch(matchContentNumber("Order"))
                                 }}
+                                getOptionLabel={(e) => (
+                                  <div>
+                                    {e.icon}
+                                    {e.label}
+                                  </div>
+                                )}
+                                filterOption={(options, query) =>
+                                  options.data.label.includes(query)
+                                }
                                 isClearable={true}
                                 isDisabled={props.isOrderConfirmed}
                               />
                             </Col>
-                            <Col xs="12" sm="12" md="1" lg="1" xl="1">
-                              <Button
-                                style={{ padding: "7px" }}
-                                outline
-                                className="btn btn-outline-danger"
-                                onClick={() => {
-                                  const tempCare = props.careData
-                                  tempCare.splice(index, 1)
-                                  dispatch(setCareData([...tempCare]))
-                                }}
-                              >
-                                <div style={{ display: "flex" }}>
-                                  <X />
-                                  <div style={{ marginTop: "5px" }}>Delete</div>
-                                </div>
-                              </Button>
-                            </Col>
                           </Row>
-                        ))}
-                      </CardBody>
-                      <CardFooter>
-                        <Button
-                          onClick={() => {
-                            const tempCare = props.careData
-                            tempCare.push({})
-                            dispatch(setCareData([...tempCare]))
-                          }}
-                          color="primary"
-                          style={{ padding: "10px" }}
-                        >
-                          <Plus />
-                          Add New Row
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  </CardBody>
-                </Collapse>
-              </Card>
-            ) : (
-              <></>
-            )}
-          </Col>
-        </Row>
-        <Row style={{ margin: "0" }}>
-          <Col>
-            {props.brandDetails.display_Content === "Y" ? (
-              <Card>
-                <CardHeader
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setWashCareCollapse(!washCareCollapse)}
-                >
-                  <div>
-                    <h4 className="text-primary">{t("Wash Care Symbol")} </h4>
-                  </div>
-                </CardHeader>
-                <Collapse isOpen={washCareCollapse}>
-                  <CardBody>
-                    {iconSequence.map((iconObj) => {
-                      return (
-                        <Row style={{ marginBottom: "10px" }}>
-                          <Col xs="12" s="12" md="2" lg="2" xl="2">
-                            <Label style={{ marginTop: "12px" }}>
-                              {iconObj.sys_icon_name}
-                            </Label>
-                          </Col>
-                          <Col xs="12" s="12" md="8" lg="8" xl="8">
-                            <Select
-                              className="React"
-                              classNamePrefix="select"
-                              options={washCareOptions[iconObj?.icon_type_id]}
-                              value={
-                                washCareOptions[iconObj?.icon_type_id]
-                                  ? washCareOptions[
-                                      iconObj?.icon_type_id
-                                    ]?.filter(
-                                      (opt) =>
-                                        opt.value ===
-                                        props.washCareData[
-                                          iconObj?.icon_type_id
-                                        ]?.sys_icon_key
-                                    )
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                const tempData = {}
-                                tempData[iconObj.icon_type_id] = {
-                                  sys_icon_key: e ? e.value : "",
-                                  icon_type_id: e ? e.iconTypeId : "",
-                                  icon_group: e ? e.iconGroup : ""
-                                }
-                                dispatch(
-                                  setWashCareData({
-                                    ...props.washCareData,
-                                    ...tempData
-                                  })
-                                )
-                                dispatch(matchContentNumber("Order"))
-                              }}
-                              getOptionLabel={(e) => (
-                                <div>
-                                  {e.icon}
-                                  {e.label}
-                                </div>
-                              )}
-                              filterOption={(options, query) =>
-                                options.data.label.includes(query)
-                              }
-                              isClearable={true}
-                              isDisabled={props.isOrderConfirmed}
-                            />
-                          </Col>
-                        </Row>
-                      )
-                    })}
-                  </CardBody>
-                </Collapse>
-              </Card>
-            ) : (
-              <></>
-            )}
-          </Col>
-        </Row>
-      </CardBody>
+                        )
+                      })}
+                    </CardBody>
+                  </Collapse>
+                </Card>
+              ) : (
+                <></>
+              )}
+            </Col>
+          </Row>
+        </CardBody>
+      )}
+
       <CardFooter>
         <Footer
           currentStep={props.currentStep}
@@ -1247,6 +1282,7 @@ const mapStateToProps = (state) => ({
   contentGroup: state.orderReducer.contentGroup,
   brandDetails: state.orderReducer.brandDetails,
   isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  itemInfoFields: state.orderReducer.itemInfoFields,
   isOrderNew: state.listReducer.isOrderNew
 })
 
