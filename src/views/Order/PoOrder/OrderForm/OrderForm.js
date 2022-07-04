@@ -677,20 +677,27 @@ const OrderForm = (props) => {
                           className="React"
                           classNamePrefix="select"
                           value={
-                            isContentSettingCommon
+                            props.contentGroup === "ABC"
                               ? contentGroupOptions["ABC"]?.filter(
                                   (opt) =>
                                     opt.label === props.contentNumberData?.label
                                 )
-                              : contentGroupOptions["A"]?.filter(
+                              : props.contentGroup === "A/BC"
+                              ? contentGroupOptions["A"]?.filter(
+                                  (opt) =>
+                                    opt.label === props.contentNumberData?.label
+                                )
+                              : contentGroupOptions["AB"]?.filter(
                                   (opt) =>
                                     opt.label === props.contentNumberData?.label
                                 )
                           }
                           options={
-                            isContentSettingCommon
+                            props.contentGroup === "ABC"
                               ? contentGroupOptions["ABC"]
-                              : contentGroupOptions["A"]
+                              : props.contentGroup === "A/BC"
+                              ? contentGroupOptions["A"]
+                              : contentGroupOptions["AB"]
                           }
                           onChange={(e) => {
                             dispatch(setContentNumberData(e ? e : {}))

@@ -726,7 +726,8 @@ const OrderForm = (props) => {
                                     opt.label === props.contentNumberData?.label
                                 )
                               : contentGroupOptions["AB"]?.filter(
-                                  opt.label === props.contentNumberData?.label
+                                  (opt) =>
+                                    opt.label === props.contentNumberData?.label
                                 )
                           }
                           options={
