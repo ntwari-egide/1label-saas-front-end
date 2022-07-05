@@ -450,10 +450,135 @@ const CareSection = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   return (
-    <div>
+    <div style={{ paddingTop: "20px" }}>
       <Row>
         <Col>
           <h4 className="text-primary">{t("Care")}</h4>
+        </Col>
+      </Row>
+      <Row style={{ marginBottom: "10px" }}>
+        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+          <Label style={{ marginTop: "12px" }}>{props.careName}</Label>
+        </Col>
+        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+          <Select
+            className="React"
+            classNamePrefix="select"
+            value={
+              props.contentGroup === "ABC"
+                ? props.contentGroupOptions["ABC"]?.filter(
+                    (opt) => opt.value === props.careNumberData?.value
+                  )
+                : props.contentGroup === "A/BC"
+                ? props.contentGroupOptions["BC"]?.filter(
+                    (opt) => opt.value === props.careNumberData?.value
+                  )
+                : props.contentGroupOptions["C"]?.filter(
+                    (opt) => opt.value === props.careNumberData?.value
+                  )
+            }
+            options={
+              props.contentGroup === "ABC"
+                ? props.contentGroupOptions["ABC"]
+                : props.contentGroup === "A/BC"
+                ? props.contentGroupOptions["BC"]
+                : props.contentGroupOptions["C"]
+            }
+            onChange={(e) => {
+              dispatch(setCareNumberData(e ? e : {}))
+              if (e) {
+                props.fetchContentNumberDetail(e.value, e.label)
+              } else {
+                if (props.contentGroup === "A/BC") {
+                  dispatch(setWashCareData([{}]))
+                  dispatch(setCareData([{}]))
+                } else if (props.contentGroup === "AB/C") {
+                  dispatch(setWashCareData([{}]))
+                } else {
+                  dispatch(setFibreInstructionData([{}]))
+                  dispatch(setWashCareData([{}]))
+                  dispatch(setCareData([{}]))
+                }
+              }
+            }}
+            isClearable={true}
+            isDisabled={props.isOrderConfirmed}
+          />
+        </Col>
+      </Row>
+      <Row style={{ marginBottom: "10px" }}>
+        <Col xs="12" sm="12" md="1" lg="1" xl="1">
+          <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
+        </Col>
+        <Col xs="12" sm="12" md="9" lg="9" xl="9">
+          <Input
+            value={props.careCustomNumber}
+            onChange={(e) => dispatch(setCareCustomNumber(e.target.value))}
+            disabled={props.isOrderConfirmed}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Label>Additional Care & Mandatory Statements </Label>
+        </Col>
+      </Row>
+      {props.careData.map((rec, index) => (
+        <Row style={{ marginBottom: "7px" }}>
+          <Col xs="12" sm="12" md="8" lg="8" xl="8">
+            <Select
+              className="React"
+              classNamePrefix="select"
+              options={props.additionalCareOptions}
+              value={props.additionalCareOptions?.filter(
+                (opt) => opt.value === rec.care_key
+              )}
+              onChange={(e) => {
+                const tempData = props.careData
+                props.careData[index] = {
+                  ...props.careData[index],
+                  care_key: e ? e.value : ""
+                }
+                dispatch(setCareData([...tempData]))
+                dispatch(matchContentNumber("Order"))
+              }}
+              isClearable={true}
+              isDisabled={props.isOrderConfirmed}
+            />
+          </Col>
+          <Col xs="12" sm="12" md="1" lg="1" xl="1">
+            <Button
+              style={{ padding: "7px" }}
+              outline
+              className="btn btn-outline-danger"
+              onClick={() => {
+                const tempCare = props.careData
+                tempCare.splice(index, 1)
+                dispatch(setCareData([...tempCare]))
+              }}
+            >
+              <div style={{ display: "flex" }}>
+                <X />
+                <div style={{ marginTop: "5px" }}>Delete</div>
+              </div>
+            </Button>
+          </Col>
+        </Row>
+      ))}
+      <Row style={{ paddingTop: "5px" }}>
+        <Col>
+          <Button
+            onClick={() => {
+              const tempCare = props.careData
+              tempCare.push({})
+              dispatch(setCareData([...tempCare]))
+            }}
+            color="primary"
+            style={{ padding: "10px" }}
+          >
+            <Plus />
+            Add New Row
+          </Button>
         </Col>
       </Row>
     </div>
@@ -464,7 +589,7 @@ const WashCareSection = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   return (
-    <div>
+    <div style={{ paddingTop: "20px" }}>
       <Row>
         <Col>
           <h4 className="text-primary">{t("Wash Care")}</h4>
@@ -1770,7 +1895,17 @@ const OrderForm = (props) => {
                     contentCustomNumber={props.contentCustomNumber}
                     defaultContentData={props.defaultContentData}
                   />
-                  <CareSection />
+                  <CareSection
+                    careName={careName}
+                    contentGroupOptions={contentGroupOptions}
+                    additionalCareOptions={additionalCareOptions}
+                    fetchContentNumberDetail={fetchContentNumberDetail}
+                    contentGroup={props.contentGroup}
+                    brand={props.brand}
+                    careData={props.careData}
+                    careCustomNumber={props.careCustomNumber}
+                    careNumberData={props.careNumberData}
+                  />
                 </div>
               ) : props.contentGroup === "ABC" ? (
                 <div>
@@ -1786,7 +1921,17 @@ const OrderForm = (props) => {
                     contentCustomNumber={props.contentCustomNumber}
                     defaultContentData={props.defaultContentData}
                   />
-                  <CareSection />
+                  <CareSection
+                    careName={careName}
+                    contentGroupOptions={contentGroupOptions}
+                    additionalCareOptions={additionalCareOptions}
+                    fetchContentNumberDetail={fetchContentNumberDetail}
+                    contentGroup={props.contentGroup}
+                    brand={props.brand}
+                    careData={props.careData}
+                    careCustomNumber={props.careCustomNumber}
+                    careNumberData={props.careNumberData}
+                  />
                   <WashCareSection />
                 </div>
               ) : null}
@@ -1795,16 +1940,51 @@ const OrderForm = (props) => {
           {props.contentGroup != "ABC" ? (
             props.contentGroup === "A/BC" ? (
               <div>
-                <CareSection />
+                <CareSection
+                  careName={careName}
+                  contentGroupOptions={contentGroupOptions}
+                  additionalCareOptions={additionalCareOptions}
+                  fetchContentNumberDetail={fetchContentNumberDetail}
+                  contentGroup={props.contentGroup}
+                  brand={props.brand}
+                  careData={props.careData}
+                  careCustomNumber={props.careCustomNumber}
+                  careNumberData={props.careNumberData}
+                />
                 <WashCareSection />
               </div>
             ) : props.contentGroup === "AB/C" ? (
               <div>
-                <CareSection />
+                <CareSection
+                  careName={careName}
+                  contentGroupOptions={contentGroupOptions}
+                  additionalCareOptions={additionalCareOptions}
+                  fetchContentNumberDetail={fetchContentNumberDetail}
+                  contentGroup={props.contentGroup}
+                  brand={props.brand}
+                  careData={props.careData}
+                  careCustomNumber={props.careCustomNumber}
+                  careNumberData={props.careNumberData}
+                />
               </div>
             ) : null
           ) : null}
         </CardBody>
+        <CardFooter>
+          <Footer
+            currentStep={props.currentStep}
+            setCurrentStep={props.setCurrentStep}
+            lastStep={props.lastStep}
+            validationFields={{
+              orderFormManFields: {
+                orderReference: props.orderReference,
+                expectedDeliveryDate: props.expectedDeliveryDate,
+                productionLocation: props.productionLocation
+              }
+            }}
+            brandDetails={props.brandDetails}
+          />
+        </CardFooter>
       </Card>
     </div>
   )
