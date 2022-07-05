@@ -114,73 +114,6 @@ const ContentSection = (props) => {
   }
 
   // API Services
-  const fetchContentNumberDetail = (content_number_key, style_number) => {
-    // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
-    const body = {
-      order_user: "innoa",
-      content_number_key,
-      brand_key: props.brand.value || "",
-      style_number
-    }
-    axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
-      if (res.status === 200) {
-        if (res.data.content) {
-          dispatch(
-            setFibreInstructionData(
-              res.data.content.map((data, index) => ({ ...data, id: index }))
-            )
-          )
-          const tempDefaultContentData = []
-          res?.data?.content?.map((cont, index) => {
-            // fetches default content data for fabric
-            fetchDefaultContentData(
-              cont.cont_key,
-              index,
-              tempDefaultContentData
-            )
-          })
-        }
-        if (res.data.care) {
-          dispatch(setCareData(res.data.care))
-        }
-        if (res.data.icon) {
-          const tempData = {}
-          res?.data?.icon.map((icon) => {
-            tempData[icon.icon_type_id] = {
-              icon_group: icon.icon_group,
-              icon_type_id: icon.icon_type_id,
-              sys_icon_key: icon.sys_icon_key
-            }
-          })
-          // props.setWashCareData({ ...tempData })
-          dispatch(setWashCareData({ ...tempData }))
-        }
-      }
-    })
-  }
-
-  const fetchDefaultContentData = (contKey, index, tempData) => {
-    // fetches default Content Data as per option selected in fabric select field.
-    const body = {
-      brand_key: props.brand.value || "",
-      cont_key: contKey,
-      page_type: "content"
-    }
-
-    axios
-      .post("/Translation/GetDefaultContentByContentKey", body)
-      .then((res) => {
-        if (res.status === 200) {
-          tempData[index] = {
-            cont_key: res.data[0]?.guid_key,
-            cont_translation: res.data[0]?.gb_translation
-          }
-          dispatch(setDefaultContentData([...tempData]))
-        }
-      })
-      .catch((err) => console.log(err))
-  }
-
   return (
     <div>
       <Row>
@@ -219,7 +152,7 @@ const ContentSection = (props) => {
             onChange={(e) => {
               dispatch(setContentNumberData(e ? e : {}))
               if (e) {
-                fetchContentNumberDetail(e.value, e.label)
+                props.fetchContentNumberDetail(e.value, e.label)
               } else {
                 // to handle isClearable event
                 if (props.contentGroup === "A/BC") {
@@ -1929,6 +1862,7 @@ const OrderForm = (props) => {
                   contentGroupOptions={contentGroupOptions}
                   componentOptions={componentOptions}
                   fabricOptions={fabricOptions}
+                  fetchContentNumberDetail={fetchContentNumberDetail}
                   contentGroup={props.contentGroup}
                   fibreInstructionData={props.fibreInstructionData}
                   contentNumberData={props.contentNumberData}
@@ -1943,6 +1877,7 @@ const OrderForm = (props) => {
                     contentGroupOptions={contentGroupOptions}
                     componentOptions={componentOptions}
                     fabricOptions={fabricOptions}
+                    fetchContentNumberDetail={fetchContentNumberDetail}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
@@ -1953,6 +1888,7 @@ const OrderForm = (props) => {
                     careName={careName}
                     contentGroupOptions={contentGroupOptions}
                     additionalCareOptions={additionalCareOptions}
+                    fetchContentNumberDetail={fetchContentNumberDetail}
                     fetchContentNumberDetail={fetchContentNumberDetail}
                     contentGroup={props.contentGroup}
                     brand={props.brand}
@@ -1969,6 +1905,7 @@ const OrderForm = (props) => {
                     contentGroupOptions={contentGroupOptions}
                     componentOptions={componentOptions}
                     fabricOptions={fabricOptions}
+                    fetchContentNumberDetail={fetchContentNumberDetail}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
