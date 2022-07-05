@@ -107,7 +107,7 @@ const ContentSection = (props) => {
             cont_translation: res.data[0]?.gb_translation
           }
           dispatch(setDefaultContentData([...tempDefData]))
-          dispatch(matchContentNumber("POOrder"))
+          props.handleMatchContentNumber(0)
         }
       })
       .catch((err) => console.log(err))
@@ -210,7 +210,7 @@ const ContentSection = (props) => {
                       part_translation: e ? e.label : ""
                     }
                     dispatch(setFibreInstructionData([...tempData]))
-                    dispatch(matchContentNumber("POOrder"))
+                    props.handleMatchContentNumber(0)
                   }}
                   onFocus={() => {
                     setComponentTip({
@@ -472,7 +472,7 @@ const CareSection = (props) => {
                   care_key: e ? e.value : ""
                 }
                 dispatch(setCareData([...tempData]))
-                dispatch(matchContentNumber("POOrder"))
+                props.handleMatchContentNumber(1)
               }}
               isClearable={true}
               isDisabled={props.isOrderConfirmed}
@@ -545,8 +545,7 @@ const WashCareSection = (props) => {
                     ? props.washCareOptions[iconObj?.icon_type_id]?.filter(
                         (opt) =>
                           opt.value ===
-                          props.washCareData[iconObj?.icon_type_id]
-                            ?.icon_key
+                          props.washCareData[iconObj?.icon_type_id]?.icon_key
                       )
                     : ""
                 }
@@ -563,7 +562,7 @@ const WashCareSection = (props) => {
                       ...tempData
                     })
                   )
-                  dispatch(matchContentNumber("POOrder"))
+                  props.handleMatchContentNumber(1)
                 }}
                 getOptionLabel={(e) => (
                   <div>
@@ -610,6 +609,20 @@ const OrderForm = (props) => {
   // states for custom tooltip
   const [componentTip, setComponentTip] = useState({})
   const [fabricTip, setFabricTip] = useState({})
+
+  const handleMatchContentNumber = (index) => {
+    let content_group
+    if (props.contentGroup === "ABC") {
+      content_group = "ABC"
+    } else {
+      if (props.contentGroup.length) {
+        content_group = props.contentGroup.split("/")[index]
+      }
+    }
+    if (content_group) {
+      dispatch(matchContentNumber("Order", content_group))
+    }
+  }
 
   const renderSwitch = (field) => {
     // renders dynamic fields under Item Info
@@ -1209,6 +1222,7 @@ const OrderForm = (props) => {
                   contentNumberData={props.contentNumberData}
                   contentCustomNumber={props.contentCustomNumber}
                   defaultContentData={props.defaultContentData}
+                  handleMatchContentNumber={handleMatchContentNumber}
                 />
               ) : props.contentGroup === "AB/C" ? (
                 <div>
@@ -1224,6 +1238,7 @@ const OrderForm = (props) => {
                     contentNumberData={props.contentNumberData}
                     contentCustomNumber={props.contentCustomNumber}
                     defaultContentData={props.defaultContentData}
+                    handleMatchContentNumber={handleMatchContentNumber}
                   />
                   <CareSection
                     careName={careName}
@@ -1236,6 +1251,7 @@ const OrderForm = (props) => {
                     careData={props.careData}
                     careCustomNumber={props.careCustomNumber}
                     careNumberData={props.careNumberData}
+                    handleMatchContentNumber={handleMatchContentNumber}
                   />
                 </div>
               ) : props.contentGroup === "ABC" ? (
@@ -1252,6 +1268,7 @@ const OrderForm = (props) => {
                     contentNumberData={props.contentNumberData}
                     contentCustomNumber={props.contentCustomNumber}
                     defaultContentData={props.defaultContentData}
+                    handleMatchContentNumber={handleMatchContentNumber}
                   />
                   <CareSection
                     careName={careName}
@@ -1263,11 +1280,13 @@ const OrderForm = (props) => {
                     careData={props.careData}
                     careCustomNumber={props.careCustomNumber}
                     careNumberData={props.careNumberData}
+                    handleMatchContentNumber={handleMatchContentNumber}
                   />
                   <WashCareSection
                     iconSequence={iconSequence}
                     washCareOptions={washCareOptions}
                     washCareData={props.washCareData}
+                    handleMatchContentNumber={handleMatchContentNumber}
                   />
                 </div>
               ) : null}
@@ -1288,11 +1307,13 @@ const OrderForm = (props) => {
                       careData={props.careData}
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
+                      handleMatchContentNumber={handleMatchContentNumber}
                     />
                     <WashCareSection
                       iconSequence={iconSequence}
                       washCareOptions={washCareOptions}
                       washCareData={props.washCareData}
+                      handleMatchContentNumber={handleMatchContentNumber}
                     />
                   </CardBody>
                 </Card>
@@ -1311,6 +1332,7 @@ const OrderForm = (props) => {
                       careData={props.careData}
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
+                      handleMatchContentNumber={handleMatchContentNumber}
                     />
                   </CardBody>
                 </Card>

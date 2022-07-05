@@ -6,7 +6,7 @@ import { sweetAlert } from "@utils"
 import { setLoader } from "@redux/actions/layout"
 import history from "@src/history"
 
-export const matchContentNumber = (module) => (dispatch) => {
+export const matchContentNumber = (module, content_group) => (dispatch) => {
   let state
   if (module === "Order") {
     state = store.getState().orderReducer
@@ -18,7 +18,7 @@ export const matchContentNumber = (module) => (dispatch) => {
     brand_key: state.brand ? state.brand.value : "",
     order_user: getUserData().admin,
     custom_number: state.custom_number || "",
-    content_group: state.contentGroup,
+    content_group,
     content: state.fibreInstructionData.map((data, index) => ({
       cont_key: data.cont_key || "",
       part_key: data.part_key || "",
