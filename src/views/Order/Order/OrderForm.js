@@ -595,6 +595,60 @@ const WashCareSection = (props) => {
           <h4 className="text-primary">{t("Wash Care")}</h4>
         </Col>
       </Row>
+      {props.iconSequence?.map((iconObj) => {
+        return (
+          <Row style={{ marginBottom: "10px" }}>
+            <Col xs="12" s="12" md="2" lg="2" xl="2">
+              <Label style={{ marginTop: "12px" }}>
+                {iconObj.sys_icon_name}
+              </Label>
+            </Col>
+            <Col xs="12" s="12" md="8" lg="8" xl="8">
+              <Select
+                className="React"
+                classNamePrefix="select"
+                options={props.washCareOptions[iconObj?.icon_type_id]}
+                value={
+                  props.washCareOptions[iconObj?.icon_type_id]
+                    ? props.washCareOptions[iconObj?.icon_type_id]?.filter(
+                        (opt) =>
+                          opt.value ===
+                          props.washCareData[iconObj?.icon_type_id]
+                            ?.sys_icon_key
+                      )
+                    : ""
+                }
+                onChange={(e) => {
+                  const tempData = {}
+                  tempData[iconObj.icon_type_id] = {
+                    sys_icon_key: e ? e.value : "",
+                    icon_type_id: e ? e.iconTypeId : "",
+                    icon_group: e ? e.iconGroup : ""
+                  }
+                  dispatch(
+                    setWashCareData({
+                      ...props.washCareData,
+                      ...tempData
+                    })
+                  )
+                  dispatch(matchContentNumber("Order"))
+                }}
+                getOptionLabel={(e) => (
+                  <div>
+                    {e.icon}
+                    {e.label}
+                  </div>
+                )}
+                filterOption={(options, query) =>
+                  options.data.label.includes(query)
+                }
+                isClearable={true}
+                isDisabled={props.isOrderConfirmed}
+              />
+            </Col>
+          </Row>
+        )
+      })}
     </div>
   )
 }
@@ -1932,43 +1986,55 @@ const OrderForm = (props) => {
                     careCustomNumber={props.careCustomNumber}
                     careNumberData={props.careNumberData}
                   />
-                  <WashCareSection />
+                  <WashCareSection
+                    iconSequence={iconSequence}
+                    washCareOptions={washCareOptions}
+                    washCareData={props.washCareData}
+                  />
                 </div>
               ) : null}
             </CardBody>
           </Card>
-          {props.contentGroup != "ABC" ? (
-            props.contentGroup === "A/BC" ? (
-              <div>
-                <CareSection
-                  careName={careName}
-                  contentGroupOptions={contentGroupOptions}
-                  additionalCareOptions={additionalCareOptions}
-                  fetchContentNumberDetail={fetchContentNumberDetail}
-                  contentGroup={props.contentGroup}
-                  brand={props.brand}
-                  careData={props.careData}
-                  careCustomNumber={props.careCustomNumber}
-                  careNumberData={props.careNumberData}
-                />
-                <WashCareSection />
-              </div>
-            ) : props.contentGroup === "AB/C" ? (
-              <div>
-                <CareSection
-                  careName={careName}
-                  contentGroupOptions={contentGroupOptions}
-                  additionalCareOptions={additionalCareOptions}
-                  fetchContentNumberDetail={fetchContentNumberDetail}
-                  contentGroup={props.contentGroup}
-                  brand={props.brand}
-                  careData={props.careData}
-                  careCustomNumber={props.careCustomNumber}
-                  careNumberData={props.careNumberData}
-                />
-              </div>
-            ) : null
-          ) : null}
+          <Card>
+            <CardBody>
+              {props.contentGroup != "ABC" ? (
+                props.contentGroup === "A/BC" ? (
+                  <div>
+                    <CareSection
+                      careName={careName}
+                      contentGroupOptions={contentGroupOptions}
+                      additionalCareOptions={additionalCareOptions}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
+                      contentGroup={props.contentGroup}
+                      brand={props.brand}
+                      careData={props.careData}
+                      careCustomNumber={props.careCustomNumber}
+                      careNumberData={props.careNumberData}
+                    />
+                    <WashCareSection
+                      iconSequence={iconSequence}
+                      washCareOptions={washCareOptions}
+                      washCareData={props.washCareData}
+                    />
+                  </div>
+                ) : props.contentGroup === "AB/C" ? (
+                  <div>
+                    <CareSection
+                      careName={careName}
+                      contentGroupOptions={contentGroupOptions}
+                      additionalCareOptions={additionalCareOptions}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
+                      contentGroup={props.contentGroup}
+                      brand={props.brand}
+                      careData={props.careData}
+                      careCustomNumber={props.careCustomNumber}
+                      careNumberData={props.careNumberData}
+                    />
+                  </div>
+                ) : null
+              ) : null}
+            </CardBody>
+          </Card>
         </CardBody>
         <CardFooter>
           <Footer
