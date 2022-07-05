@@ -547,14 +547,14 @@ const WashCareSection = (props) => {
                         (opt) =>
                           opt.value ===
                           props.washCareData[iconObj?.icon_type_id]
-                            ?.sys_icon_key
+                            ?.icon_key
                       )
                     : ""
                 }
                 onChange={(e) => {
                   const tempData = {}
                   tempData[iconObj.icon_type_id] = {
-                    sys_icon_key: e ? e.value : "",
+                    icon_key: e ? e.value : "",
                     icon_type_id: e ? e.iconTypeId : "",
                     icon_group: e ? e.iconGroup : ""
                   }
@@ -683,7 +683,7 @@ const OrderForm = (props) => {
             tempData[icon.icon_type_id] = {
               icon_group: icon.icon_group,
               icon_type_id: icon.icon_type_id,
-              sys_icon_key: icon.sys_icon_key
+              icon_key: icon.icon_key
             }
           })
           // props.setWashCareData({ ...tempData })
