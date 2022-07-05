@@ -477,6 +477,7 @@ const WashCareSection = (props) => {
 let timerId = null
 const OrderForm = (props) => {
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   // states for Collapse component
   const [itemInfoCollapse, setItemInfoCollapse] = useState(true)
   const [careContentCollapse, setCareContentCollapse] = useState(true)
@@ -1681,68 +1682,130 @@ const OrderForm = (props) => {
   return (
     <div>
       <Card>
-        <CardBody>
-          {props.contentGroup === "A/BC" ? (
-            <ContentSection
-              brand={props.brand}
-              contentName={contentName}
-              contentGroupOptions={contentGroupOptions}
-              componentOptions={componentOptions}
-              fabricOptions={fabricOptions}
-              contentGroup={props.contentGroup}
-              fibreInstructionData={props.fibreInstructionData}
-              contentNumberData={props.contentNumberData}
-              contentCustomNumber={props.contentCustomNumber}
-              defaultContentData={props.defaultContentData}
+        <CardHeader>
+          <Col xs="12" sm="12" md="6" lg="4" xl="4">
+            <Label>{t("Customer Order Reference")}</Label>
+            <span className="text-danger">*</span>
+            <Input
+              value={props.orderReference}
+              onChange={(e) => {
+                dispatch(setOrderReference(e.target.value))
+              }}
+              style={{ margin: "5px" }}
+              disabled={props.isOrderConfirmed}
             />
-          ) : props.contentGroup === "AB/C" ? (
+          </Col>
+          <Col xs="12" sm="12" md="6" lg="4" xl="4">
             <div>
-              <ContentSection
-                brand={props.brand}
-                contentName={contentName}
-                contentGroupOptions={contentGroupOptions}
-                componentOptions={componentOptions}
-                fabricOptions={fabricOptions}
-                contentGroup={props.contentGroup}
-                fibreInstructionData={props.fibreInstructionData}
-                contentNumberData={props.contentNumberData}
-                contentCustomNumber={props.contentCustomNumber}
-                defaultContentData={props.defaultContentData}
+              <Label>{t("Expected Delivery Date")}</Label>
+              <span className="text-danger">*</span>
+              <Flatpickr
+                className="form-control"
+                value={
+                  props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
+                }
+                style={{ margin: "5px" }}
+                options={{
+                  minDate: props.minExpectedDeliveryDate
+                }}
+                onChange={(e) => {
+                  dispatch(setExpectedDeliveryDate(e))
+                }}
+                disabled={props.isOrderConfirmed}
               />
-              <CareSection />
             </div>
-          ) : props.contentGroup === "ABC" ? (
-            <div>
-              <ContentSection
-                brand={props.brand}
-                contentName={contentName}
-                contentGroupOptions={contentGroupOptions}
-                componentOptions={componentOptions}
-                fabricOptions={fabricOptions}
-                contentGroup={props.contentGroup}
-                fibreInstructionData={props.fibreInstructionData}
-                contentNumberData={props.contentNumberData}
-                contentCustomNumber={props.contentCustomNumber}
-                defaultContentData={props.defaultContentData}
-              />
-              <CareSection />
-              <WashCareSection />
-            </div>
+          </Col>
+          <Col xs="12" sm="12" md="6" lg="4" xl="4">
+            {props.brandDetails?.display_location_code === "Y" ? (
+              <div>
+                <Label>{t("Production Location")}</Label>
+                <span className="text-danger">*</span>
+                <div style={{ margin: "5px" }}>
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    options={productionLocationOptions}
+                    value={productionLocationOptions?.filter(
+                      (opt) => opt.label === props.productionLocation
+                    )}
+                    onChange={(e) => {
+                      dispatch(setProductionLocation(e.label))
+                    }}
+                    isDisabled={props.isOrderConfirmed}
+                  />
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </Col>
+        </CardHeader>
+        <CardBody>
+          <Card>
+            <CardBody>
+              {props.contentGroup === "A/BC" ? (
+                <ContentSection
+                  brand={props.brand}
+                  contentName={contentName}
+                  contentGroupOptions={contentGroupOptions}
+                  componentOptions={componentOptions}
+                  fabricOptions={fabricOptions}
+                  contentGroup={props.contentGroup}
+                  fibreInstructionData={props.fibreInstructionData}
+                  contentNumberData={props.contentNumberData}
+                  contentCustomNumber={props.contentCustomNumber}
+                  defaultContentData={props.defaultContentData}
+                />
+              ) : props.contentGroup === "AB/C" ? (
+                <div>
+                  <ContentSection
+                    brand={props.brand}
+                    contentName={contentName}
+                    contentGroupOptions={contentGroupOptions}
+                    componentOptions={componentOptions}
+                    fabricOptions={fabricOptions}
+                    contentGroup={props.contentGroup}
+                    fibreInstructionData={props.fibreInstructionData}
+                    contentNumberData={props.contentNumberData}
+                    contentCustomNumber={props.contentCustomNumber}
+                    defaultContentData={props.defaultContentData}
+                  />
+                  <CareSection />
+                </div>
+              ) : props.contentGroup === "ABC" ? (
+                <div>
+                  <ContentSection
+                    brand={props.brand}
+                    contentName={contentName}
+                    contentGroupOptions={contentGroupOptions}
+                    componentOptions={componentOptions}
+                    fabricOptions={fabricOptions}
+                    contentGroup={props.contentGroup}
+                    fibreInstructionData={props.fibreInstructionData}
+                    contentNumberData={props.contentNumberData}
+                    contentCustomNumber={props.contentCustomNumber}
+                    defaultContentData={props.defaultContentData}
+                  />
+                  <CareSection />
+                  <WashCareSection />
+                </div>
+              ) : null}
+            </CardBody>
+          </Card>
+          {props.contentGroup != "ABC" ? (
+            props.contentGroup === "A/BC" ? (
+              <div>
+                <CareSection />
+                <WashCareSection />
+              </div>
+            ) : props.contentGroup === "AB/C" ? (
+              <div>
+                <CareSection />
+              </div>
+            ) : null
           ) : null}
         </CardBody>
       </Card>
-      {props.contentGroup != "ABC" ? (
-        props.contentGroup === "A/BC" ? (
-          <div>
-            <CareSection />
-            <WashCareSection />
-          </div>
-        ) : props.contentGroup === "AB/C" ? (
-          <div>
-            <CareSection />
-          </div>
-        ) : null
-      ) : null}
     </div>
   )
 }
