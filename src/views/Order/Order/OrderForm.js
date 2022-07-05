@@ -610,20 +610,6 @@ const OrderForm = (props) => {
   const [careName, setCareName] = useState("")
   const [iconName, setIconName] = useState("")
 
-  // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
-  const debounceFun = () => {
-    if (timerId !== null) {
-      clearTimeout(timerId)
-    }
-
-    timerId = setTimeout(() => {
-      // matchContentNumber()
-      timerId = null
-    }, 400)
-  }
-
-  // other functions
-
   // API services
   const fetchBrandDetails = () => {
     const body = {
@@ -705,37 +691,6 @@ const OrderForm = (props) => {
         }
       }
     })
-  }
-
-  const handleFibreChange = (e, index) => {
-    // updating the fibreInstructionData state.
-    const tempData = [...props.fibreInstructionData]
-    tempData[index] = {
-      ...props.fibreInstructionData[index],
-      cont_key: e ? e.value : "",
-      cont_translation: e ? e.label : ""
-    }
-    dispatch(setFibreInstructionData([...tempData]))
-    // fetching default content for fabric and updating default content state
-    const body = {
-      brand_key: props.brand?.value || "",
-      cont_key: e ? e.value : "",
-      page_type: "content"
-    }
-    axios
-      .post("/Translation/GetDefaultContentByContentKey", body)
-      .then((res) => {
-        let tempDefData = [...props.defaultContentData]
-        if (res.status === 200) {
-          tempDefData[index] = {
-            cont_key: res.data[0]?.guid_key,
-            cont_translation: res.data[0]?.gb_translation
-          }
-          dispatch(setDefaultContentData([...tempDefData]))
-          dispatch(matchContentNumber("Order"))
-        }
-      })
-      .catch((err) => console.log(err))
   }
 
   const fetchMinExpectedDeliveryDate = () => {
@@ -1107,690 +1062,6 @@ const OrderForm = (props) => {
     fetchMinExpectedDeliveryDate()
   }, [])
 
-  // return (
-  //   <Card>
-  //     <CardHeader>
-  //       <Col xs="12" sm="12" md="6" lg="4" xl="4">
-  //         <Label>{t("Customer Order Reference")}</Label>
-  //         <span className="text-danger">*</span>
-  //         <Input
-  //           value={props.orderReference}
-  //           onChange={(e) => {
-  //             dispatch(setOrderReference(e.target.value))
-  //           }}
-  //           style={{ margin: "5px" }}
-  //           disabled={props.isOrderConfirmed}
-  //         />
-  //       </Col>
-  //       <Col xs="12" sm="12" md="6" lg="4" xl="4">
-  //         <div>
-  //           <Label>{t("Expected Delivery Date")}</Label>
-  //           <span className="text-danger">*</span>
-  //           <Flatpickr
-  //             className="form-control"
-  //             value={
-  //               props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
-  //             }
-  //             style={{ margin: "5px" }}
-  //             options={{
-  //               minDate: props.minExpectedDeliveryDate
-  //             }}
-  //             onChange={(e) => {
-  //               dispatch(setExpectedDeliveryDate(e))
-  //             }}
-  //             disabled={props.isOrderConfirmed}
-  //           />
-  //         </div>
-  //       </Col>
-  //       <Col xs="12" sm="12" md="6" lg="4" xl="4">
-  //         {props.brandDetails?.display_location_code === "Y" ? (
-  //           <div>
-  //             <Label>{t("Production Location")}</Label>
-  //             <span className="text-danger">*</span>
-  //             <div style={{ margin: "5px" }}>
-  //               <Select
-  //                 className="React"
-  //                 classNamePrefix="select"
-  //                 options={productionLocationOptions}
-  //                 value={productionLocationOptions?.filter(
-  //                   (opt) => opt.label === props.productionLocation
-  //                 )}
-  //                 onChange={(e) => {
-  //                   dispatch(setProductionLocation(e.label))
-  //                 }}
-  //                 isDisabled={props.isOrderConfirmed}
-  //               />
-  //             </div>
-  //           </div>
-  //         ) : (
-  //           <></>
-  //         )}
-  //       </Col>
-  //     </CardHeader>
-  //     {mainLoader ? (
-  //       <div
-  //         style={{
-  //           display: "flex",
-  //           height: "70vh",
-  //           justifyContent: "center",
-  //           alignItems: "center"
-  //         }}
-  //       >
-  //         <div>
-  //           <Spinner color="primary" />
-  //         </div>
-  //       </div>
-  //     ) : (
-  //       <CardBody>
-  //         <Row style={{ margin: "0" }}>
-  //           <Col>
-  //             {props.brandDetails.display_dynamic_field === "Y" ? (
-  //               <div>
-  //                 {props.itemInfoFields.length ? (
-  //                   <Card>
-  //                     <CardHeader
-  //                       style={{ cursor: "pointer" }}
-  //                       onClick={() => setItemInfoCollapse(!itemInfoCollapse)}
-  //                     >
-  //                       <div>
-  //                         <h4 className="text-primary">{t("Item Info")}</h4>
-  //                       </div>
-  //                     </CardHeader>
-  //                     <Collapse isOpen={itemInfoCollapse}>
-  //                       <CardBody>
-  //                         {props.itemInfoFields?.map((field) => {
-  //                           return renderSwitch(field)
-  //                         })}
-  //                       </CardBody>
-  //                     </Collapse>
-  //                   </Card>
-  //                 ) : (
-  //                   <div
-  //                     style={{
-  //                       display: "flex",
-  //                       height: "400px",
-  //                       justifyContent: "center",
-  //                       alignItems: "center"
-  //                     }}
-  //                   >
-  //                     <div>
-  //                       <Spinner color="primary" />
-  //                     </div>
-  //                   </div>
-  //                 )}
-  //               </div>
-  //             ) : (
-  //               <></>
-  //             )}
-  //           </Col>
-  //         </Row>
-  //         <Row style={{ margin: "0" }}>
-  //           <Col>
-  //             {props.brandDetails?.display_Content === "Y" ? (
-  //               <Card>
-  //                 <CardHeader
-  //                   style={{ cursor: "pointer" }}
-  //                   onClick={() => setCareContentCollapse(!careContentCollapse)}
-  //                 >
-  //                   <div>
-  //                     <h4 className="text-primary">{t("Care And Content")}</h4>
-  //                   </div>
-  //                 </CardHeader>
-  //                 <Collapse isOpen={careContentCollapse}>
-  //                   <CardBody>
-  //                     <Row style={{ marginBottom: "10px" }}>
-  //                       <Col xs="12" sm="12" md="1" lg="1" xl="1">
-  //                         <Label style={{ marginTop: "12px" }}>
-  //                           {contentName}
-  //                         </Label>
-  //                       </Col>
-  //                       <Col xs="12" sm="12" md="9" lg="9" xl="9">
-  //                         <Select
-  //                           className="React"
-  //                           classNamePrefix="select"
-  //                           value={
-  //                             props.contentGroup === "ABC"
-  //                               ? contentGroupOptions["ABC"]?.filter(
-  //                                   (opt) =>
-  //                                     opt.label ===
-  //                                     props.contentNumberData?.label
-  //                                 )
-  //                               : props.contentGroup === "A/BC"
-  //                               ? contentGroupOptions["A"]?.filter(
-  //                                   (opt) =>
-  //                                     opt.label ===
-  //                                     props.contentNumberData?.label
-  //                                 )
-  //                               : contentGroupOptions["AB"]?.filter(
-  //                                   (opt) =>
-  //                                     opt.label ===
-  //                                     props.contentNumberData?.label
-  //                                 )
-  //                           }
-  //                           options={
-  //                             props.contentGroup === "ABC"
-  //                               ? contentGroupOptions["ABC"]
-  //                               : props.contentGroup === "A/BC"
-  //                               ? contentGroupOptions["A"]
-  //                               : contentGroupOptions["AB"]
-  //                           }
-  //                           onChange={(e) => {
-  //                             dispatch(setContentNumberData(e ? e : {}))
-  //                             if (e) {
-  //                               fetchContentNumberDetail(e.value, e.label)
-  //                             } else {
-  //                               // to handle isClearable event
-  //                               if (props.contentGroup === "A/BC") {
-  //                                 dispatch(setFibreInstructionData([{}]))
-  //                               } else if (props.contentGroup === "AB/C") {
-  //                                 dispatch(setFibreInstructionData([{}]))
-  //                                 dispatch(setCareData([{}]))
-  //                               } else {
-  //                                 dispatch(setFibreInstructionData([{}]))
-  //                                 dispatch(setWashCareData([{}]))
-  //                                 dispatch(setCareData([{}]))
-  //                               }
-  //                             }
-  //                           }}
-  //                           isClearable={true}
-  //                           isDisabled={props.isOrderConfirmed}
-  //                         />
-  //                       </Col>
-  //                     </Row>
-  //                     <Row style={{ marginBottom: "10px" }}>
-  //                       <Col xs="12" sm="12" md="1" lg="1" xl="1">
-  //                         <Label style={{ marginTop: "12px" }}>
-  //                           Save/Edit:
-  //                         </Label>
-  //                       </Col>
-  //                       <Col xs="12" sm="12" md="9" lg="9" xl="9">
-  //                         <Input
-  //                           value={props.contentCustomNumber}
-  //                           onChange={(e) =>
-  //                             dispatch(setContentCustomNumber(e.target.value))
-  //                           }
-  //                           disabled={props.isOrderConfirmed}
-  //                         />
-  //                       </Col>
-  //                     </Row>
-  //                     <Card>
-  //                       <CardHeader>
-  //                         <h5>{t("Fibre Instructions")}</h5>
-  //                       </CardHeader>
-  //                       <CardBody>
-  //                         {props.fibreInstructionData
-  //                           ? props.fibreInstructionData.map((rec, index) => (
-  //                               <Row style={{ marginBottom: "5px" }}>
-  //                                 <Col xs="12" sm="12" md="4" lg="4" xl="4">
-  //                                   <Label>Component</Label>
-  //                                   <Select
-  //                                     id={`component-select-${index}`}
-  //                                     className="React"
-  //                                     classNamePrefix="select"
-  //                                     options={componentOptions}
-  //                                     value={componentOptions?.filter(
-  //                                       (opt) => opt.value === rec?.part_key
-  //                                     )}
-  //                                     onChange={(e) => {
-  //                                       const tempData =
-  //                                         props.fibreInstructionData
-  //                                       // ternary to handle isClearable event
-  //                                       tempData[index] = {
-  //                                         ...props.fibreInstructionData[index],
-  //                                         part_key: e ? e.value : "",
-  //                                         part_translation: e ? e.label : ""
-  //                                       }
-  //                                       dispatch(
-  //                                         setFibreInstructionData([...tempData])
-  //                                       )
-  //                                       dispatch(matchContentNumber("Order"))
-  //                                     }}
-  //                                     onFocus={() => {
-  //                                       setComponentTip({
-  //                                         [`component-select-${index}`]: true
-  //                                       })
-  //                                     }}
-  //                                     onBlur={() => {
-  //                                       setComponentTip({})
-  //                                     }}
-  //                                     isClearable={true}
-  //                                     isDisabled={props.isOrderConfirmed}
-  //                                   />
-  //                                   <div>
-  //                                     <Popover
-  //                                       target={`component-select-${index}`}
-  //                                       isOpen={
-  //                                         componentTip[
-  //                                           `component-select-${index}`
-  //                                         ]
-  //                                           ? componentTip[
-  //                                               `component-select-${index}`
-  //                                             ]
-  //                                           : false
-  //                                       }
-  //                                     >
-  //                                       <PopoverHeader>Tip </PopoverHeader>
-  //                                       <PopoverBody>
-  //                                         <ol type="i">
-  //                                           <li>
-  //                                             Style containing two or more
-  //                                             garment components of different
-  //                                             textile fibre, each component must
-  //                                             be stated. e.g. lining, padding
-  //                                             etc..
-  //                                           </li>
-  //                                           <li>
-  //                                             However if a component is less
-  //                                             than 30% of the total garment it
-  //                                             must not be mentioned. e.g. rib
-  //                                           </li>
-  //                                         </ol>
-  //                                       </PopoverBody>
-  //                                     </Popover>
-  //                                   </div>
-  //                                 </Col>
-  //                                 <Col xs="12" sm="12" md="3" lg="3" xl="3">
-  //                                   <Label>Fabric</Label>
-  //                                   <Select
-  //                                     id={`fabric-select-${index}`}
-  //                                     className="React"
-  //                                     classNamePrefix="select"
-  //                                     options={fabricOptions}
-  //                                     value={fabricOptions?.filter(
-  //                                       (opt) => opt.value === rec?.cont_key
-  //                                     )}
-  //                                     onchange={(e) => {
-  //                                       handlefibrechange(e, index)
-  //                                     }}
-  //                                     isclearable={true}
-  //                                     onfocus={() => {
-  //                                       setfabrictip({
-  //                                         [`fabric-select-${index}`]: true
-  //                                       })
-  //                                     }}
-  //                                     onblur={() => {
-  //                                       setfabrictip({})
-  //                                     }}
-  //                                     isdisabled={props.isorderconfirmed}
-  //                                   />
-  //                                   <div>
-  //                                     <popover
-  //                                       target={`fabric-select-${index}`}
-  //                                       isopen={
-  //                                         fabrictip[`fabric-select-${index}`]
-  //                                           ? fabrictip[
-  //                                               `fabric-select-${index}`
-  //                                             ]
-  //                                           : false
-  //                                       }
-  //                                     >
-  //                                       <popoverheader>tip</popoverheader>
-  //                                       <popoverbody>
-  //                                         <p>
-  //                                           fabrics that are made up of multiple
-  //                                           layer must call out each other
-  //                                           seperately. contact cs for help on
-  //                                           correct setup
-  //                                         </p>
-  //                                       </popoverbody>
-  //                                     </popover>
-  //                                   </div>
-  //                                 </col>
-  //                                 <col xs="12" sm="12" md="2" lg="2" xl="2">
-  //                                   <label>%</label>
-  //                                   <input
-  //                                     value={
-  //                                       props.fibreinstructiondata[index]
-  //                                         ?.en_percent
-  //                                         ? props.fibreinstructiondata[index]
-  //                                             ?.en_percent
-  //                                         : ""
-  //                                     }
-  //                                     onchange={(e) => {
-  //                                       const tempdata =
-  //                                         props.fibreinstructiondata
-  //                                       tempdata[index] = {
-  //                                         ...props.fibreinstructiondata[index],
-  //                                         en_percent: e.target.value
-  //                                       }
-  //                                       dispatch(
-  //                                         setfibreinstructiondata([...tempdata])
-  //                                       )
-  //                                       debouncefun()
-  //                                     }}
-  //                                     disabled={props.isorderconfirmed}
-  //                                   />
-  //                                 </col>
-  //                                 <col
-  //                                   xs="12"
-  //                                   sm="12"
-  //                                   md="1"
-  //                                   lg="1"
-  //                                   xl="1"
-  //                                   style={{ margintop: "23px" }}
-  //                                 >
-  //                                   <button
-  //                                     style={{ padding: "7px" }}
-  //                                     outline
-  //                                     classname="btn btn-outline-danger"
-  //                                     onclick={() => {
-  //                                       let tempdata =
-  //                                         props.fibreinstructiondata
-  //                                       tempdata.splice(index, 1)
-  //                                       dispatch(
-  //                                         setfibreinstructiondata([...tempdata])
-  //                                       )
-  //                                       tempdata = props.defaultcontentdata
-  //                                       tempdata.splice(index, 1)
-  //                                       dispatch(
-  //                                         setdefaultcontentdata([...tempdata])
-  //                                       )
-  //                                     }}
-  //                                   >
-  //                                     <div style={{ display: "flex" }}>
-  //                                       <x />
-  //                                       <div style={{ margintop: "5px" }}>
-  //                                         delete
-  //                                       </div>
-  //                                     </div>
-  //                                   </button>
-  //                                 </col>
-  //                               </row>
-  //                             ))
-  //                           : null}
-  //                       </cardbody>
-  //                       <cardfooter>
-  //                         <button
-  //                           onclick={() => {
-  //                             const tempfibreinstructions =
-  //                               props.fibreinstructiondata
-  //                             tempfibreinstructions.push({})
-  //                             dispatch(
-  //                               setfibreinstructiondata([
-  //                                 ...tempfibreinstructions
-  //                               ])
-  //                             )
-  //                             const tempdefaultcontent =
-  //                               props.defaultcontentdata
-  //                             tempdefaultcontent.push("")
-  //                             dispatch(
-  //                               setdefaultcontentdata([...tempdefaultcontent])
-  //                             )
-  //                           }}
-  //                           color="primary"
-  //                           style={{ padding: "10px" }}
-  //                         >
-  //                           <plus />
-  //                           add new
-  //                         </button>
-  //                       </cardfooter>
-  //                     </card>
-  //                     <Row>
-  //                       <Col>
-  //                         <Label style={{ marginTop: "12px" }}>
-  //                           Default Content:
-  //                         </Label>
-  //                       </Col>
-  //                     </Row>
-  //                     {processDefaultContent(props.defaultContentData).map(
-  //                       (item) => (
-  //                         <Row style={{ marginBottom: "10px" }}>
-  //                           <Col xs="12" sm="12" md="9" lg="9" xl="9">
-  //                             <Input value={item ? item : ""} disabled={true} />
-  //                           </Col>
-  //                         </Row>
-  //                       )
-  //                     )}
-  //                     <Row style={{ marginBottom: "10px" }}>
-  //                       <Col xs="12" sm="12" md="1" lg="1" xl="1">
-  //                         <Label style={{ marginTop: "12px" }}>
-  //                           {careName}
-  //                         </Label>
-  //                       </Col>
-  //                       <Col xs="12" sm="12" md="9" lg="9" xl="9">
-  //                         <Select
-  //                           className="React"
-  //                           classNamePrefix="select"
-  //                           value={
-  //                             props.contentGroup === "ABC"
-  //                               ? contentGroupOptions["ABC"]?.filter(
-  //                                   (opt) =>
-  //                                     opt.value === props.careNumberData?.value
-  //                                 )
-  //                               : props.contentGroup === "A/BC"
-  //                               ? contentGroupOptions["BC"]?.filter(
-  //                                   (opt) =>
-  //                                     opt.value === props.careNumberData?.value
-  //                                 )
-  //                               : contentGroupOptions["C"]?.filter(
-  //                                   (opt) =>
-  //                                     opt.value === props.careNumberData?.value
-  //                                 )
-  //                           }
-  //                           options={
-  //                             props.contentGroup === "ABC"
-  //                               ? contentGroupOptions["ABC"]
-  //                               : props.contentGroup === "A/BC"
-  //                               ? contentGroupOptions["BC"]
-  //                               : contentGroupOptions["C"]
-  //                           }
-  //                           onChange={(e) => {
-  //                             dispatch(setCareNumberData(e ? e : {}))
-  //                             if (e) {
-  //                               fetchContentNumberDetail(e.value, e.label)
-  //                             } else {
-  //                               if (props.contentGroup === "A/BC") {
-  //                                 dispatch(setWashCareData([{}]))
-  //                                 dispatch(setCareData([{}]))
-  //                               } else if (props.contentGroup === "AB/C") {
-  //                                 dispatch(setWashCareData([{}]))
-  //                               } else {
-  //                                 dispatch(setFibreInstructionData([{}]))
-  //                                 dispatch(setWashCareData([{}]))
-  //                                 dispatch(setCareData([{}]))
-  //                               }
-  //                             }
-  //                           }}
-  //                           isClearable={true}
-  //                           isDisabled={props.isOrderConfirmed}
-  //                         />
-  //                       </Col>
-  //                     </Row>
-  //                     <Row style={{ marginBottom: "10px" }}>
-  //                       <Col xs="12" sm="12" md="1" lg="1" xl="1">
-  //                         <Label style={{ marginTop: "12px" }}>
-  //                           Save/Edit:
-  //                         </Label>
-  //                       </Col>
-  //                       <Col xs="12" sm="12" md="9" lg="9" xl="9">
-  //                         <Input
-  //                           value={props.careCustomNumber}
-  //                           onChange={(e) =>
-  //                             dispatch(setCareCustomNumber(e.target.value))
-  //                           }
-  //                           disabled={props.isOrderConfirmed}
-  //                         />
-  //                       </Col>
-  //                     </Row>
-  //                     <Card>
-  //                       <CardHeader>
-  //                         <h5>{t("Care")}</h5>
-  //                       </CardHeader>
-  //                       <CardBody>
-  //                         <Row>
-  //                           <Col>
-  //                             <Label>
-  //                               Additional Care & Mandatory Statements{" "}
-  //                             </Label>
-  //                           </Col>
-  //                         </Row>
-  //                         {props.careData.map((rec, index) => (
-  //                           <Row style={{ marginBottom: "7px" }}>
-  //                             <Col xs="12" sm="12" md="8" lg="8" xl="8">
-  //                               <Select
-  //                                 className="React"
-  //                                 classNamePrefix="select"
-  //                                 options={additionalCareOptions}
-  //                                 value={additionalCareOptions?.filter(
-  //                                   (opt) => opt.value === rec.care_key
-  //                                 )}
-  //                                 onChange={(e) => {
-  //                                   const tempData = props.careData
-  //                                   props.careData[index] = {
-  //                                     ...props.careData[index],
-  //                                     care_key: e ? e.value : ""
-  //                                   }
-  //                                   dispatch(setCareData([...tempData]))
-  //                                   dispatch(matchContentNumber("Order"))
-  //                                 }}
-  //                                 isClearable={true}
-  //                                 isDisabled={props.isOrderConfirmed}
-  //                               />
-  //                             </Col>
-  //                             <Col xs="12" sm="12" md="1" lg="1" xl="1">
-  //                               <Button
-  //                                 style={{ padding: "7px" }}
-  //                                 outline
-  //                                 className="btn btn-outline-danger"
-  //                                 onClick={() => {
-  //                                   const tempCare = props.careData
-  //                                   tempCare.splice(index, 1)
-  //                                   dispatch(setCareData([...tempCare]))
-  //                                 }}
-  //                               >
-  //                                 <div style={{ display: "flex" }}>
-  //                                   <X />
-  //                                   <div style={{ marginTop: "5px" }}>
-  //                                     Delete
-  //                                   </div>
-  //                                 </div>
-  //                               </Button>
-  //                             </Col>
-  //                           </Row>
-  //                         ))}
-  //                       </CardBody>
-  //                       <CardFooter>
-  //                         <Button
-  //                           onClick={() => {
-  //                             const tempCare = props.careData
-  //                             tempCare.push({})
-  //                             dispatch(setCareData([...tempCare]))
-  //                           }}
-  //                           color="primary"
-  //                           style={{ padding: "10px" }}
-  //                         >
-  //                           <Plus />
-  //                           Add New Row
-  //                         </Button>
-  //                       </CardFooter>
-  //                     </Card>
-  //                   </CardBody>
-  //                 </Collapse>
-  //               </Card>
-  //             ) : (
-  //               <></>
-  //             )}
-  //           </Col>
-  //         </Row>
-  //         <Row style={{ margin: "0" }}>
-  //           <Col>
-  //             {props.brandDetails.display_Content === "Y" ? (
-  //               <Card>
-  //                 <CardHeader
-  //                   style={{ cursor: "pointer" }}
-  //                   onClick={() => setWashCareCollapse(!washCareCollapse)}
-  //                 >
-  //                   <div>
-  //                     <h4 className="text-primary">{t("Wash Care Symbol")} </h4>
-  //                   </div>
-  //                 </CardHeader>
-  //                 <Collapse isOpen={washCareCollapse}>
-  //                   <CardBody>
-  //                     {iconSequence.map((iconObj) => {
-  //                       return (
-  //                         <Row style={{ marginBottom: "10px" }}>
-  //                           <Col xs="12" s="12" md="2" lg="2" xl="2">
-  //                             <Label style={{ marginTop: "12px" }}>
-  //                               {iconObj.sys_icon_name}
-  //                             </Label>
-  //                           </Col>
-  //                           <Col xs="12" s="12" md="8" lg="8" xl="8">
-  //                             <Select
-  //                               className="React"
-  //                               classNamePrefix="select"
-  //                               options={washCareOptions[iconObj?.icon_type_id]}
-  //                               value={
-  //                                 washCareOptions[iconObj?.icon_type_id]
-  //                                   ? washCareOptions[
-  //                                       iconObj?.icon_type_id
-  //                                     ]?.filter(
-  //                                       (opt) =>
-  //                                         opt.value ===
-  //                                         props.washCareData[
-  //                                           iconObj?.icon_type_id
-  //                                         ]?.sys_icon_key
-  //                                     )
-  //                                   : ""
-  //                               }
-  //                               onChange={(e) => {
-  //                                 const tempData = {}
-  //                                 tempData[iconObj.icon_type_id] = {
-  //                                   sys_icon_key: e ? e.value : "",
-  //                                   icon_type_id: e ? e.iconTypeId : "",
-  //                                   icon_group: e ? e.iconGroup : ""
-  //                                 }
-  //                                 dispatch(
-  //                                   setWashCareData({
-  //                                     ...props.washCareData,
-  //                                     ...tempData
-  //                                   })
-  //                                 )
-  //                                 dispatch(matchContentNumber("Order"))
-  //                               }}
-  //                               getOptionLabel={(e) => (
-  //                                 <div>
-  //                                   {e.icon}
-  //                                   {e.label}
-  //                                 </div>
-  //                               )}
-  //                               filterOption={(options, query) =>
-  //                                 options.data.label.includes(query)
-  //                               }
-  //                               isClearable={true}
-  //                               isDisabled={props.isOrderConfirmed}
-  //                             />
-  //                           </Col>
-  //                         </Row>
-  //                       )
-  //                     })}
-  //                   </CardBody>
-  //                 </Collapse>
-  //               </Card>
-  //             ) : (
-  //               <></>
-  //             )}
-  //           </Col>
-  //         </Row>
-  //       </CardBody>
-  //     )}
-  //
-  //     <CardFooter>
-  //       <Footer
-  //         currentStep={props.currentStep}
-  //         setCurrentStep={props.setCurrentStep}
-  //         lastStep={props.lastStep}
-  //         validationFields={{
-  //           orderFormManFields: {
-  //             orderReference: props.orderReference,
-  //             expectedDeliveryDate: props.expectedDeliveryDate,
-  //             productionLocation: props.productionLocation
-  //           }
-  //         }}
-  //         brandDetails={props.brandDetails}
-  //       />
-  //     </CardFooter>
-  //   </Card>
-  // )
   return (
     <div>
       <Card>
@@ -1853,6 +1124,48 @@ const OrderForm = (props) => {
           </Col>
         </CardHeader>
         <CardBody>
+          <Row>
+            <Col>
+              {props.brandDetails.display_dynamic_field === "Y" ? (
+                <div>
+                  {props.itemInfoFields.length ? (
+                    <Card>
+                      <CardHeader
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setItemInfoCollapse(!itemInfoCollapse)}
+                      >
+                        <div>
+                          <h4 className="text-primary">{t("Item Info")}</h4>
+                        </div>
+                      </CardHeader>
+                      <Collapse isOpen={itemInfoCollapse}>
+                        <CardBody>
+                          {props.itemInfoFields?.map((field) => {
+                            return renderSwitch(field)
+                          })}
+                        </CardBody>
+                      </Collapse>
+                    </Card>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        height: "400px",
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      <div>
+                        <Spinner color="primary" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+            </Col>
+          </Row>
           <Card>
             <CardBody>
               {props.contentGroup === "A/BC" ? (
@@ -1932,11 +1245,11 @@ const OrderForm = (props) => {
               ) : null}
             </CardBody>
           </Card>
-          <Card>
-            <CardBody>
-              {props.contentGroup != "ABC" ? (
-                props.contentGroup === "A/BC" ? (
-                  <div>
+          {props.contentGroup != "ABC" ? (
+            props.contentGroup === "A/BC" ? (
+              <div>
+                <Card>
+                  <CardBody>
                     <CareSection
                       careName={careName}
                       contentGroupOptions={contentGroupOptions}
@@ -1953,9 +1266,13 @@ const OrderForm = (props) => {
                       washCareOptions={washCareOptions}
                       washCareData={props.washCareData}
                     />
-                  </div>
-                ) : props.contentGroup === "AB/C" ? (
-                  <div>
+                  </CardBody>
+                </Card>
+              </div>
+            ) : props.contentGroup === "AB/C" ? (
+              <div>
+                <Card>
+                  <CardBody>
                     <CareSection
                       careName={careName}
                       contentGroupOptions={contentGroupOptions}
@@ -1967,11 +1284,11 @@ const OrderForm = (props) => {
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
                     />
-                  </div>
-                ) : null
-              ) : null}
-            </CardBody>
-          </Card>
+                  </CardBody>
+                </Card>
+              </div>
+            ) : null
+          ) : null}
         </CardBody>
         <CardFooter>
           <Footer
