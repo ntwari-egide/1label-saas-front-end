@@ -1223,6 +1223,7 @@ const OrderForm = (props) => {
                   contentCustomNumber={props.contentCustomNumber}
                   defaultContentData={props.defaultContentData}
                   handleMatchContentNumber={handleMatchContentNumber}
+                  isOrderConfirmed={props.isOrderConfirmed}
                 />
               ) : props.contentGroup === "AB/C" ? (
                 <div>
@@ -1239,6 +1240,7 @@ const OrderForm = (props) => {
                     contentCustomNumber={props.contentCustomNumber}
                     defaultContentData={props.defaultContentData}
                     handleMatchContentNumber={handleMatchContentNumber}
+                    isOrderConfirmed={props.isOrderConfirmed}
                   />
                   <CareSection
                     careName={careName}
@@ -1252,6 +1254,7 @@ const OrderForm = (props) => {
                     careCustomNumber={props.careCustomNumber}
                     careNumberData={props.careNumberData}
                     handleMatchContentNumber={handleMatchContentNumber}
+                    isOrderConfirmed={props.isOrderConfirmed}
                   />
                 </div>
               ) : props.contentGroup === "ABC" ? (
@@ -1269,6 +1272,7 @@ const OrderForm = (props) => {
                     contentCustomNumber={props.contentCustomNumber}
                     defaultContentData={props.defaultContentData}
                     handleMatchContentNumber={handleMatchContentNumber}
+                    isOrderConfirmed={props.isOrderConfirmed}
                   />
                   <CareSection
                     careName={careName}
@@ -1281,12 +1285,14 @@ const OrderForm = (props) => {
                     careCustomNumber={props.careCustomNumber}
                     careNumberData={props.careNumberData}
                     handleMatchContentNumber={handleMatchContentNumber}
+                    isOrderConfirmed={props.isOrderConfirmed}
                   />
                   <WashCareSection
                     iconSequence={iconSequence}
                     washCareOptions={washCareOptions}
                     washCareData={props.washCareData}
                     handleMatchContentNumber={handleMatchContentNumber}
+                    isOrderConfirmed={props.isOrderConfirmed}
                   />
                 </div>
               ) : null}
@@ -1308,12 +1314,14 @@ const OrderForm = (props) => {
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
                       handleMatchContentNumber={handleMatchContentNumber}
+                      isOrderConfirmed={props.isOrderConfirmed}
                     />
                     <WashCareSection
                       iconSequence={iconSequence}
                       washCareOptions={washCareOptions}
                       washCareData={props.washCareData}
                       handleMatchContentNumber={handleMatchContentNumber}
+                      isOrderConfirmed={props.isOrderConfirmed}
                     />
                   </CardBody>
                 </Card>
@@ -1333,6 +1341,7 @@ const OrderForm = (props) => {
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
                       handleMatchContentNumber={handleMatchContentNumber}
+                      isOrderConfirmed={props.isOrderConfirmed}
                     />
                   </CardBody>
                 </Card>
@@ -1353,6 +1362,7 @@ const OrderForm = (props) => {
               }
             }}
             brandDetails={props.brandDetails}
+            isOrderConfirmed={props.isOrderConfirmed}
           />
         </CardFooter>
       </Card>
