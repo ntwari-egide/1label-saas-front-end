@@ -80,7 +80,9 @@ export const populateData =
       setBrand,
       setCurrentStep,
       setSizeMatrixType,
-      setItemInfoFields
+      setItemInfoFields,
+      setInvoiceAddressDetails,
+      setDeliveryAddressDetails
     } = require(`@redux/actions/views/Order/${module}`)
     if (module === "POOrder") {
       dispatch(setCurrentStep(1))
@@ -204,6 +206,41 @@ export const populateData =
     }
     if (data.size_matrix_type?.length) {
       dispatch(setSizeMatrixType(data.size_matrix_type))
+    }
+    if (data.invoice_address?.length) {
+      dispatch(
+        setInvoiceAddressDetails({
+          address_id: data.invoice_address[0].invoice_address_id || "",
+          customer_id: data.invoice_address[0].invoice_contact_id || "",
+          name: data.invoice_address[0].invoice_cpyname || "",
+          contact_person: data.delivery_address[0].invoice_contact || "",
+          phone: data.invoice_address[0].invoice_phone || "",
+          fax: data.invoice_address[0].invoice_fax || "",
+          email: data.invoice_address[0].invoice_email || "",
+          address: data.invoice_address[0].invoice_addr || "",
+          address2: data.invoice_address[0].invoice_addr2 || "",
+          address3: data.invoice_address[0].invoice_addr3 || ""
+        })
+      )
+    }
+    if (data.delivery_address?.length) {
+      dispatch(
+        setDeliveryAddressDetails({
+          address_id: data.delivery_address[0].delivery_address_id || "",
+          contact_id: data.delivery_address[0].delivery_contact_id || "",
+          name: data.data.delivery_address[0].delivery_cpyname || "",
+          contact_person: data.delivery_address[0].delivery_contact || "",
+          phone: data.delivery_address[0].delivery_phone || "",
+          fax: data.delivery_address[0].delivery_fax || "",
+          email: data.delivery_address[0].delivery_email || "",
+          city: data.delivery_address[0].delivery_city || "",
+          country: data.delivery_address[0].delivery_country || "",
+          post_code: data.delivery_address[0].delivery_post_code || "",
+          address: data.delivery_address[0].delivery_addr || "",
+          address2: data.delivery_address[0].delivery_addr2 || "",
+          address3: data.delivery_address[0].delivery_addr3 || ""
+        })
+      )
     }
     // populate dynamic field data
     const body = {

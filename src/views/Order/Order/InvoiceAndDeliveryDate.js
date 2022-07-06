@@ -139,8 +139,10 @@ const InvoiceAndDelivery = (props) => {
       .then((res) => {
         if (res.status === 200) {
           // set initial data in form
-          if (index === 0) {
-            dispatch(dispatchFun(res?.data[0]))
+          if (props.isOrderNew) {
+            if (index === 0) {
+              dispatch(dispatchFun(res?.data[0]))
+            }
           }
           // to open card of initial address
           if (addType === "invoice" && index === 0) {
@@ -619,7 +621,8 @@ const mapStateToProps = (state) => ({
   contactDetails: state.orderReducer.contactDetails,
   orderReference: state.orderReducer.orderReference,
   expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  isOrderNew: state.listReducer.isOrderNew
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)
