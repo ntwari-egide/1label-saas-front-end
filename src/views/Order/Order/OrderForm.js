@@ -1079,62 +1079,72 @@ const OrderForm = (props) => {
     <div>
       <Card>
         <CardHeader>
-          <Col xs="12" sm="12" md="6" lg="4" xl="4">
-            <Label>{t("Customer Order Reference")}</Label>
-            <span className="text-danger">*</span>
-            <Input
-              value={props.orderReference}
-              onChange={(e) => {
-                dispatch(setOrderReference(e.target.value))
-              }}
-              style={{ margin: "5px" }}
-              disabled={props.isOrderConfirmed}
-            />
-          </Col>
-          <Col xs="12" sm="12" md="6" lg="4" xl="4">
-            <div>
-              <Label>{t("Expected Delivery Date")}</Label>
+          {!props.isOrderNew ? (
+            <Row style={{ width: "100%", paddingBottom: "5px" }}>
+              <Col xs="12" sm="12" md="6" lg="4" xl="4">
+                <Label>{t("Order No.")}</Label>
+                <h5>{props.selectedOrder?.order_no}</h5>
+              </Col>
+            </Row>
+          ) : null}
+          <Row style={{ width: "100%" }}>
+            <Col xs="12" sm="12" md="6" lg="4" xl="4">
+              <Label>{t("Customer Order Reference")}</Label>
               <span className="text-danger">*</span>
-              <Flatpickr
-                className="form-control"
-                value={
-                  props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
-                }
-                style={{ margin: "5px" }}
-                options={{
-                  minDate: props.minExpectedDeliveryDate
-                }}
+              <Input
+                value={props.orderReference}
                 onChange={(e) => {
-                  dispatch(setExpectedDeliveryDate(e))
+                  dispatch(setOrderReference(e.target.value))
                 }}
+                style={{ margin: "5px" }}
                 disabled={props.isOrderConfirmed}
               />
-            </div>
-          </Col>
-          <Col xs="12" sm="12" md="6" lg="4" xl="4">
-            {props.brandDetails?.display_location_code === "Y" ? (
+            </Col>
+            <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <div>
-                <Label>{t("Production Location")}</Label>
+                <Label>{t("Expected Delivery Date")}</Label>
                 <span className="text-danger">*</span>
-                <div style={{ margin: "5px" }}>
-                  <Select
-                    className="React"
-                    classNamePrefix="select"
-                    options={productionLocationOptions}
-                    value={productionLocationOptions?.filter(
-                      (opt) => opt.label === props.productionLocation
-                    )}
-                    onChange={(e) => {
-                      dispatch(setProductionLocation(e.label))
-                    }}
-                    isDisabled={props.isOrderConfirmed}
-                  />
-                </div>
+                <Flatpickr
+                  className="form-control"
+                  value={
+                    props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
+                  }
+                  style={{ margin: "5px" }}
+                  options={{
+                    minDate: props.minExpectedDeliveryDate
+                  }}
+                  onChange={(e) => {
+                    dispatch(setExpectedDeliveryDate(e))
+                  }}
+                  disabled={props.isOrderConfirmed}
+                />
               </div>
-            ) : (
-              <></>
-            )}
-          </Col>
+            </Col>
+            <Col xs="12" sm="12" md="6" lg="4" xl="4">
+              {props.brandDetails?.display_location_code === "Y" ? (
+                <div>
+                  <Label>{t("Production Location")}</Label>
+                  <span className="text-danger">*</span>
+                  <div style={{ margin: "5px" }}>
+                    <Select
+                      className="React"
+                      classNamePrefix="select"
+                      options={productionLocationOptions}
+                      value={productionLocationOptions?.filter(
+                        (opt) => opt.label === props.productionLocation
+                      )}
+                      onChange={(e) => {
+                        dispatch(setProductionLocation(e.label))
+                      }}
+                      isDisabled={props.isOrderConfirmed}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </Col>
+          </Row>
         </CardHeader>
         <CardBody>
           <Row>
@@ -1362,7 +1372,8 @@ const mapStateToProps = (state) => ({
   brandDetails: state.orderReducer.brandDetails,
   isOrderConfirmed: state.listReducer.isOrderConfirmed,
   itemInfoFields: state.orderReducer.itemInfoFields,
-  isOrderNew: state.listReducer.isOrderNew
+  isOrderNew: state.listReducer.isOrderNew,
+  selectedOrder: state.listReducer.selectedOrder
 })
 
 export default connect(mapStateToProps, null)(OrderForm)

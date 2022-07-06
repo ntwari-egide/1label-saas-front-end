@@ -282,6 +282,7 @@ const Listing = (props) => {
   }
 
   const handleRowDoubleClick = (e) => {
+    dispatch(setSelectedOrder(e))
     if (e.order_status === "COMPLETE") {
       dispatch(setIsOrderConfirmed(true))
     }
