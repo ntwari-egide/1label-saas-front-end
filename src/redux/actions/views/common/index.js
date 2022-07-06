@@ -104,7 +104,7 @@ export const populateData =
           tempObj[`${icon.icon_type_id}`] = {
             icon_type_id: icon.icon_type_id,
             icon_group: icon.icon_group,
-            sys_icon_key: icon.icon_key
+            icon_key: icon.icon_key
           }
         })
         dispatch(setWashCareData({ ...tempObj }))
