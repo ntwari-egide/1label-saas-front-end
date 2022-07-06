@@ -228,7 +228,7 @@ export const populateData =
         setDeliveryAddressDetails({
           address_id: data.delivery_address[0].delivery_address_id || "",
           contact_id: data.delivery_address[0].delivery_contact_id || "",
-          name: data.data.delivery_address[0].delivery_cpyname || "",
+          name: data.delivery_address[0].delivery_cpyname || "",
           contact_person: data.delivery_address[0].delivery_contact || "",
           phone: data.delivery_address[0].delivery_phone || "",
           fax: data.delivery_address[0].delivery_fax || "",
