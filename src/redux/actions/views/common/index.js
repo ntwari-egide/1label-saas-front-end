@@ -371,7 +371,7 @@ export const saveOrder = (order_status) => (dispatch) => {
         icon: Object.values(data.washCareData)?.map((obj, index) => ({
           icon_group: obj.icon_group,
           icon_type_id: obj.icon_type_id,
-          icon_key: obj.sys_icon_key,
+          icon_key: obj.icon_key,
           seqno: (index + 1) * 10
         }))
       }
@@ -595,7 +595,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
         icon: Object.values(data.washCareData)?.map((obj, index) => ({
           icon_group: obj.icon_group,
           icon_type_id: obj.icon_type_id,
-          icon_key: obj.sys_icon_key,
+          icon_key: obj.icon_key,
           seqno: (index + 1) * 10
         }))
       }
