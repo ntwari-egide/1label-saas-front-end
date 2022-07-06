@@ -297,15 +297,15 @@ const ContentSection = (props) => {
                 <Label>%</Label>
                 <Input
                   value={
-                    props.fibreInstructionData[index]?.en_percent
-                      ? props.fibreInstructionData[index]?.en_percent
+                    props.fibreInstructionData[index]?.percentage
+                      ? props.fibreInstructionData[index]?.percentage
                       : ""
                   }
                   onChange={(e) => {
                     const tempData = props.fibreInstructionData
                     tempData[index] = {
                       ...props.fibreInstructionData[index],
-                      en_percent: e.target.value
+                      percentage: e.target.value
                     }
                     dispatch(setFibreInstructionData([...tempData]))
                     debounceFun()
