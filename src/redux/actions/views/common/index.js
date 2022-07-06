@@ -286,7 +286,7 @@ export const saveOrder = (order_status) => (dispatch) => {
     ],
     dynamic_field: Object.values(data.dynamicFieldData),
     size_matrix_type: data.sizeMatrixType,
-    size_content: data.sizeTable,
+    size_content: buildXML(processSizeTable(data.sizeData)),
     default_size_content: data.defaultSizeTable,
     size_pointer: "",
     coo: data.coo,
@@ -369,8 +369,14 @@ export const saveOrder = (order_status) => (dispatch) => {
 }
 
 const buildXML = (jsObj) => {
-  const builder = new XMLBuilder()
-  return builder.build(jsObj)
+  try {
+    const builder = new XMLBuilder()
+    return builder.build(jsObj)
+  } catch (err) {
+    alert(
+      "Something went wrong while processing size table please try again later"
+    )
+  }
 }
 
 const formatRowToCol = (table) => {
@@ -397,14 +403,18 @@ const formatRowToCol = (table) => {
   }
 }
 
-const processPoSizeTable = (table) => {
+const processSizeTable = (table) => {
   return {
     "?xml": "",
     SizeMatrix: {
       Table: table.map((row) => {
         const tempRow = { ...row }
-        tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-        delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+        Object.keys(tempRow).map((key) => {
+          if (key.includes("QTY ITEM REF") && !key.includes("WITH WASTAGE")) {
+            tempRow[key] = tempRow[`${key} WITH WASTAGE`]
+            delete tempRow[`${key} WITH WASTAGE`]
+          }
+        })
         return tempRow
       })
     }
@@ -577,7 +587,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
           currency: item.currency || ""
         })),
       size_matrix_type: data.sizeMatrixType,
-      size_content: buildXML(processPoSizeTable(sizeData.size_content)),
+      size_content: buildXML(processSizeTable(sizeData.size_content)),
       send_date: "",
       create_date: ""
     }))
