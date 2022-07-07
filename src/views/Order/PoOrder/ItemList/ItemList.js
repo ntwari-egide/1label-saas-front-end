@@ -238,9 +238,7 @@ const ItemList = (props) => {
               color="primary"
               style={{ padding: "5px" }}
               onClick={() => {
-                if (visibleCardIndex > 0) {
-                  setVisibleCardIndex(visibleCardIndex - 1)
-                }
+                setVisibleCardIndex(visibleCardIndex - 6)
               }}
               disabled={visibleCardIndex === 0}
             >
@@ -253,11 +251,11 @@ const ItemList = (props) => {
                 color="primary"
                 style={{ padding: "5px" }}
                 onClick={() => {
-                  if (visibleCardIndex < itemList.length - 1) {
-                    setVisibleCardIndex(visibleCardIndex + 1)
+                  if (visibleCardIndex + 6 < itemList.length) {
+                    setVisibleCardIndex(visibleCardIndex + 6)
                   }
                 }}
-                disabled={visibleCardIndex === itemList.length - 1}
+                disabled={visibleCardIndex + 6 > itemList.length}
               >
                 <ArrowRight size={20} />
               </Button>
