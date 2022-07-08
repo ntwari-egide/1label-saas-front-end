@@ -207,18 +207,18 @@ const SizeTable = (props) => {
     }
     axios
       .post("/order/GetPOSizeTableTempList", body)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200) {
-          dispatch(
-            setSizeData(
-              res.data.map((data) => {
-                return {
-                  ...data,
-                  size_content: formatColToRow(data.size_content)
-                }
-              })
-            )
+          const tempState = await Promise.all(
+            res.data.map(async (data) => {
+              const size_content = await formatColToRow(data.size_content)
+              return {
+                ...data,
+                size_content
+              }
+            })
           )
+          dispatch(setSizeData(tempState))
         }
         // process and assign dynamic cols
         const tempCols = []

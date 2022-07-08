@@ -289,7 +289,7 @@ const PreviewAndSummary = (props) => {
     }
     axios
       .post("/SizeTable/GetSizeTableDetail", body)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200) {
           //  set size content if available
           const size_content = res.data[0]?.size_content
@@ -297,13 +297,13 @@ const PreviewAndSummary = (props) => {
           const size_matrix = res.data[0]?.size_matrix_type
           if (size_content) {
             dispatch(setSizeTable(size_content)) // to send it to invoice and delivery for save order
-            dispatch(setSizeData(formatColToRow(size_content)))
+            dispatch(setSizeData(await formatColToRow(size_content)))
             dispatch(setSizeMatrixType(size_matrix)) // to send it to invoice and delivery for save order
           }
           // set default size content if available
           if (default_content) {
             dispatch(setDefaultSizeTable(default_content)) // to send it to invoice and delivery for save order
-            dispatch(setDefaultSizeData(formatColToRow(default_content)))
+            dispatch(setDefaultSizeData(await formatColToRow(default_content)))
           }
         }
         setLoading(false)

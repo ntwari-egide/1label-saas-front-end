@@ -2,7 +2,7 @@
 import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 const MySwal = withReactContent(Swal)
-import { XMLParser } from "fast-xml-parser"
+import xml2js from "xml2js"
 
 export const isObjEmpty = (obj) => Object.keys(obj).length === 0
 
@@ -157,14 +157,14 @@ export const sweetAlert = async (title, text, icon, btnType) => {
   })
 }
 
-export const formatColToRow = (xmlStr) => {
+export const formatColToRow = async (xmlStr) => {
   if (!xmlStr.length) {
     return
   }
   let jsObj
   try {
-    const parser = new XMLParser()
-    jsObj = parser.parse(xmlStr)
+    const parser = new xml2js.Parser({ explicitArray: false })
+    jsObj = await parser.parseStringPromise(xmlStr)
   } catch (err) {
     console.log("something went wrong while parsing xml", err)
   }

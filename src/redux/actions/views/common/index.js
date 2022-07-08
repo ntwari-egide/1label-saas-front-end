@@ -59,7 +59,7 @@ export const matchContentNumber = (module, content_group) => (dispatch) => {
 }
 
 export const populateData =
-  (module, data, brand_key, order_no, is_po_order_temp) => (dispatch) => {
+  (module, data, brand_key, order_no, is_po_order_temp) => async (dispatch) => {
     const {
       setDynamicFieldData,
       setCareData,
@@ -203,7 +203,7 @@ export const populateData =
     if (data.size_content) {
       dispatch(setSizeTable(data.size_content))
       if (module === "Order") {
-        dispatch(setSizeData(formatColToRow(data.size_content)))
+        dispatch(setSizeData(await formatColToRow(data.size_content)))
       }
     }
     if (data.default_size_content) {
