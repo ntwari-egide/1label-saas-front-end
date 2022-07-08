@@ -27,7 +27,6 @@
     "chroma-js": "2.1.0",
     "classnames": "2.2.6",
     "cleave.js": "1.6.0",
-    "fast-xml-parser": "^4.0.7",
     "flatpickr": "4.6.3",
     "history": "4.10.1",
     "i18": "0.0.6",
@@ -90,6 +89,7 @@
     "uuid": "^8.3.2",
     "webpack": "4.43.0",
     "wnumb": "1.2.0",
+    "xml2js": "^0.4.23",
     "yarn": "1.21.1",
     "yup": "0.28.1"
   },
