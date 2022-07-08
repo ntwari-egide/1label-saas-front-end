@@ -1,11 +1,11 @@
 import { store } from "@redux/storeConfig/store"
 import { getUserData, formatDateYMD } from "@utils"
 import axios from "@axios"
-import { XMLBuilder } from "fast-xml-parser"
 import { sweetAlert } from "@utils"
 import { setLoader } from "@redux/actions/layout"
 import history from "@src/history"
 import { formatColToRow } from "@utils"
+import xml2js from "xml2js"
 
 export const matchContentNumber = (module, content_group) => (dispatch) => {
   let state
@@ -328,7 +328,8 @@ export const saveOrder = (order_status) => (dispatch) => {
     ],
     dynamic_field: Object.values(data.dynamicFieldData),
     size_matrix_type: data.sizeMatrixType,
-    size_content: buildXML(processSizeTable(data.sizeData)),
+    // size_content: buildXML(processSizeTable(data.sizeData)),
+    size_content: data.sizeTable,
     default_size_content: data.defaultSizeTable,
     size_pointer: "",
     coo: data.coo,
@@ -382,6 +383,11 @@ export const saveOrder = (order_status) => (dispatch) => {
       }
     ]
   }
+
+  const obj = formatRowToCol(processSizeTable(data.sizeData).SizeMatrix.Table)
+
+  console.log("conv", obj)
+
   axios
     .post("Order/SaveOrder", body)
     .then(async (res) => {
@@ -415,12 +421,13 @@ export const saveOrder = (order_status) => (dispatch) => {
 
 const buildXML = (jsObj) => {
   try {
-    const builder = new XMLBuilder()
-    return builder.build(jsObj)
+    const builder = new xml2js.Builder({ explicitArray: false })
+    return builder.buildObject(jsObj)
   } catch (err) {
-    alert(
-      "Something went wrong while processing size table please try again later"
-    )
+    console.log("err", err)
+    // alert(
+    //   "Something went wrong while processing size table please try again later"
+    // )
   }
 }
 
@@ -440,8 +447,8 @@ const formatRowToCol = (table) => {
       }
     })
   })
+  console.log("newTab", newTable)
   return {
-    "?xml": "",
     SizeMatrix: {
       Table: newTable
     }
@@ -449,18 +456,20 @@ const formatRowToCol = (table) => {
 }
 
 const processSizeTable = (table) => {
+  console.log("table", table)
   return {
-    "?xml": "",
     SizeMatrix: {
       Table: table.map((row) => {
-        const tempRow = { ...row }
-        Object.keys(tempRow).map((key) => {
+        Object.keys(row).map((key) => {
           if (key.includes("QTY ITEM REF") && !key.includes("WITH WASTAGE")) {
-            tempRow[key] = tempRow[`${key} WITH WASTAGE`]
-            delete tempRow[`${key} WITH WASTAGE`]
+            if (row[`${key} WITH WASTAGE`]) {
+              row[key] = row[`${key} WITH WASTAGE`]
+              delete row[`${key} WITH WASTAGE`]
+            }
           }
         })
-        return tempRow
+        console.log(row)
+        return row
       })
     }
   }
