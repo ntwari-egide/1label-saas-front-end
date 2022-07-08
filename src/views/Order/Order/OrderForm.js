@@ -572,7 +572,7 @@ const WashCareSection = (props) => {
                   </div>
                 )}
                 filterOption={(options, query) =>
-                  options.data.label.includes(query)
+                  options.data.label.toLowerCase().includes(query.toLowerCase())
                 }
                 isClearable={true}
                 isDisabled={props.isOrderConfirmed}
