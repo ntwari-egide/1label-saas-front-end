@@ -247,7 +247,7 @@ export const populateData =
       order_user: getUserData().admin,
       brand_key,
       show_status: "Y",
-      order_no,
+      order_no: [order_no?.split("-")[0], order_no?.split("-")[1]].join("-"),
       is_po_order_temp
     }
     axios

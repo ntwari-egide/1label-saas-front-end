@@ -1066,7 +1066,7 @@ const OrderForm = (props) => {
             </Col>
             <Col xs="12" sm="12" md="6" lg="5" xl="5">
               <Input
-                value={props.dynamicFieldData[field.title]?.field_value}
+                value={props.dynamicFieldData[field.title]?.field_label}
                 onChange={(e) => {
                   const tempState = props.dynamicFieldData
                   tempState[field.title] = {
