@@ -25,7 +25,6 @@ import {
   setWastage,
   setDefaultSizeData,
   setWastageApplied,
-  setCols,
   setSelectedItems
 } from "@redux/actions/views/Order/Order"
 import { formatColToRow } from "@utils"
@@ -323,13 +322,6 @@ const PreviewAndSummary = (props) => {
       populateCols(props.sizeTable)
     }
   }, [props.sizeData])
-
-  useEffect(() => {
-    // for when user visits from Order > List > Listing
-    if (props.sizeTable.length) {
-      dispatch(setSizeData(formatColToRow(props.sizeTable)))
-    }
-  }, [])
 
   return (
     <Card>

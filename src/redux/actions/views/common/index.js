@@ -5,6 +5,7 @@ import { XMLBuilder } from "fast-xml-parser"
 import { sweetAlert } from "@utils"
 import { setLoader } from "@redux/actions/layout"
 import history from "@src/history"
+import { formatColToRow } from "@utils"
 
 export const matchContentNumber = (module, content_group) => (dispatch) => {
   let state
@@ -82,7 +83,8 @@ export const populateData =
       setSizeMatrixType,
       setItemInfoFields,
       setInvoiceAddressDetails,
-      setDeliveryAddressDetails
+      setDeliveryAddressDetails,
+      setSizeData
     } = require(`@redux/actions/views/Order/${module}`)
     if (module === "POOrder") {
       dispatch(setCurrentStep(1))
@@ -200,6 +202,9 @@ export const populateData =
     }
     if (data.size_content) {
       dispatch(setSizeTable(data.size_content))
+      if (module === "Order") {
+        dispatch(setSizeData(formatColToRow(data.size_content)))
+      }
     }
     if (data.default_size_content) {
       dispatch(setDefaultSizeTable(data.default_size_content))
