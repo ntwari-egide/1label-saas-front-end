@@ -353,9 +353,7 @@ const PreviewAndSummary = (props) => {
                         maxHeight: "422px",
                         overflow: "hidden"
                       }}
-                      src={
-                        "https://demo.i-wanna.com/1Label_New_Order_System/html/html/Order/ArtWork/Item/Lanius%20GmbH.jpg"
-                      }
+                      src={itm.layout_file || ""}
                     />
                   </div>
                 </CardBody>
