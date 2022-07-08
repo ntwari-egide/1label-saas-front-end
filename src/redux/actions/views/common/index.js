@@ -401,7 +401,10 @@ export const saveOrder = (order_status) => (dispatch) => {
             "success",
             "success"
           )
-          if (store.listReducer.isOrderNew && confirmation.isConfirmed) {
+          if (
+            store.getState().listReducer?.isOrderNew &&
+            confirmation.isConfirmed
+          ) {
             history.push("/List")
           }
         }
