@@ -224,31 +224,29 @@ const ContentSection = (props) => {
                   isClearable={true}
                   isDisabled={props.isOrderConfirmed}
                 />
-                <div>
-                  <Popover
-                    target={`component-select-${index}`}
-                    isOpen={
-                      componentTip[`component-select-${index}`]
-                        ? componentTip[`component-select-${index}`]
-                        : false
-                    }
-                  >
-                    <PopoverHeader>Tip </PopoverHeader>
-                    <PopoverBody>
-                      <ol type="i">
-                        <li>
-                          Style containing two or more garment components of
-                          different textile fibre, each component must be
-                          stated. e.g. lining, padding etc..
-                        </li>
-                        <li>
-                          However if a component is less than 30% of the total
-                          garment it must not be mentioned. e.g. rib
-                        </li>
-                      </ol>
-                    </PopoverBody>
-                  </Popover>
-                </div>
+                {props.partTooltipStatus ? (
+                  <div>
+                    <Popover
+                      target={`component-select-${index}`}
+                      isOpen={
+                        componentTip[`component-select-${index}`]
+                          ? componentTip[`component-select-${index}`]
+                          : false
+                      }
+                    >
+                      <PopoverHeader>Tip </PopoverHeader>
+                      <PopoverBody>
+                        <ol type="i">
+                          {props.partMsg.map((msg) => {
+                            if (msg.length) {
+                              return <li>{msg}</li>
+                            }
+                          })}
+                        </ol>
+                      </PopoverBody>
+                    </Popover>
+                  </div>
+                ) : null}
               </Col>
               <Col xs="12" sm="12" md="3" lg="3" xl="3">
                 <Label>Fabric</Label>
@@ -274,25 +272,29 @@ const ContentSection = (props) => {
                   }}
                   isDisabled={props.isOrderConfirmed}
                 />
-                <div>
-                  <Popover
-                    target={`fabric-select-${index}`}
-                    isOpen={
-                      fabricTip[`fabric-select-${index}`]
-                        ? fabricTip[`fabric-select-${index}`]
-                        : false
-                    }
-                  >
-                    <PopoverHeader>Tip</PopoverHeader>
-                    <PopoverBody>
-                      <p>
-                        Fabrics that are made up of multiple layer must call out
-                        each other seperately. Contact CS for help on correct
-                        setup
-                      </p>
-                    </PopoverBody>
-                  </Popover>
-                </div>
+                {props.contentTooltipStatus ? (
+                  <div>
+                    <Popover
+                      target={`fabric-select-${index}`}
+                      isOpen={
+                        fabricTip[`fabric-select-${index}`]
+                          ? fabricTip[`fabric-select-${index}`]
+                          : false
+                      }
+                    >
+                      <PopoverHeader>Tip</PopoverHeader>
+                      <PopoverBody>
+                        <ol type="i">
+                          {props.contentMsg.map((msg) => {
+                            if (msg.length) {
+                              return <li>{msg}</li>
+                            }
+                          })}
+                        </ol>
+                      </PopoverBody>
+                    </Popover>
+                  </div>
+                ) : null}
               </Col>
               <Col xs="12" sm="12" md="2" lg="2" xl="2">
                 <Label>%</Label>
@@ -382,6 +384,7 @@ const ContentSection = (props) => {
 const CareSection = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const [careTip, setCareTip] = useState("")
   return (
     <div style={{ paddingTop: "20px" }}>
       <Row>
@@ -461,6 +464,7 @@ const CareSection = (props) => {
           <Col xs="12" sm="12" md="8" lg="8" xl="8">
             <Select
               className="React"
+              id={`care-select-${index}`}
               classNamePrefix="select"
               options={props.additionalCareOptions}
               value={props.additionalCareOptions?.filter(
@@ -477,7 +481,28 @@ const CareSection = (props) => {
               }}
               isClearable={true}
               isDisabled={props.isOrderConfirmed}
+              onFocus={() => setCareTip(`care-select-${index}`)}
+              onBlur={() => setCareTip("")}
             />
+            {props.careTooltipStatus ? (
+              <div>
+                <Popover
+                  target={`care-select-${index}`}
+                  isOpen={careTip === `care-select-${index}`}
+                >
+                  <PopoverHeader>Tip </PopoverHeader>
+                  <PopoverBody>
+                    <ol type="i">
+                      {props.careMsg.map((msg) => {
+                        if (msg.length) {
+                          return <li>{msg}</li>
+                        }
+                      })}
+                    </ol>
+                  </PopoverBody>
+                </Popover>
+              </div>
+            ) : null}
           </Col>
           <Col xs="12" sm="12" md="1" lg="1" xl="1">
             <Button
@@ -521,6 +546,7 @@ const CareSection = (props) => {
 const WashCareSection = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const [iconTip, setIconTip] = useState("")
   return (
     <div style={{ paddingTop: "20px" }}>
       <Row>
@@ -528,7 +554,7 @@ const WashCareSection = (props) => {
           <h4 className="text-primary">{t("Wash Care")}</h4>
         </Col>
       </Row>
-      {props.iconSequence?.map((iconObj) => {
+      {props.iconSequence?.map((iconObj, index) => {
         return (
           <Row style={{ marginBottom: "10px" }}>
             <Col xs="12" s="12" md="2" lg="2" xl="2">
@@ -538,6 +564,7 @@ const WashCareSection = (props) => {
             </Col>
             <Col xs="12" s="12" md="8" lg="8" xl="8">
               <Select
+                id={`icon-select-${index}`}
                 className="React"
                 classNamePrefix="select"
                 options={props.washCareOptions[iconObj?.icon_type_id]}
@@ -574,9 +601,30 @@ const WashCareSection = (props) => {
                 filterOption={(options, query) =>
                   options.data.label.toLowerCase().includes(query.toLowerCase())
                 }
+                onFocus={() => setIconTip(`icon-select-${index}`)}
+                onBlur={() => setIconTip("")}
                 isClearable={true}
                 isDisabled={props.isOrderConfirmed}
               />
+              {props.iconTooltipStatus ? (
+                <div>
+                  <Popover
+                    target={`icon-select-${index}`}
+                    isOpen={iconTip === `icon-select-${index}`}
+                  >
+                    <PopoverHeader>Tip </PopoverHeader>
+                    <PopoverBody>
+                      <ol type="i">
+                        {props.iconMsg.map((msg) => {
+                          if (msg.length) {
+                            return <li>{msg}</li>
+                          }
+                        })}
+                      </ol>
+                    </PopoverBody>
+                  </Popover>
+                </div>
+              ) : null}
             </Col>
           </Row>
         )
@@ -608,6 +656,15 @@ const OrderForm = (props) => {
   const [contentName, setContentName] = useState("")
   const [careName, setCareName] = useState("")
   const [iconName, setIconName] = useState("")
+  // tooltip states and messages
+  const [careTooltipStatus, setCareTooltipStatus] = useState(false)
+  const [contentTooltipStatus, setContentTooltipStatus] = useState(false)
+  const [partTooltipStatus, setPartTooltipStatus] = useState(false)
+  const [iconTooltipStatus, setIconTooltipStatus] = useState(false)
+  const [careMsg, setCareMsg] = useState([])
+  const [contentMsg, setContentMsg] = useState([])
+  const [partMsg, setPartMsg] = useState([])
+  const [iconMsg, setIconMsg] = useState([])
 
   const handleMatchContentNumber = (index) => {
     let content_group
@@ -754,28 +811,44 @@ const OrderForm = (props) => {
           dispatch(setContentGroup(res.data[0]?.content_model)) // to send to invoice and delivery for save order api
           // sets state to determine options for care and content for different content settings namely A/BC and ABC
           fetchContentNumberList(res.data[0]?.content_model.split("/")) // passes content_group as an array
-        }
-        // fetch select fields and respective data for wash care symbol section
-        if (res.data[0]?.display_footwear_icon?.length) {
-          fetchIconSequenceList(res.data[0]?.display_footwear_icon)
-        } else {
-          console.log("Err Msg:", "Footwear display status not received")
-        }
-        // assign section titles
-        if (res.data[0]?.acontent_title) {
-          setContentName(res.data[0]?.acontent_title)
-        } else {
-          console.log("Err Msg:", "acontent_title not received")
-        }
-        if (res.data[0]?.bcontent_title) {
-          setCareName(res.data[0]?.bcontent_title)
-        } else {
-          console.log("Err Msg:", "bcontent_title not received")
-        }
-        if (res.data[0]?.ccontent_title) {
-          setIconName(res.data[0]?.ccontent_title)
-        } else {
-          console.log("Err Msg:", "ccontent_title not received")
+          // fetch select fields and respective data for wash care symbol section
+          if (res.data[0]?.display_footwear_icon?.length) {
+            fetchIconSequenceList(res.data[0]?.display_footwear_icon)
+          } else {
+            console.log("Err Msg:", "Footwear display status not received")
+          }
+          // assign section titles
+          if (res.data[0]?.acontent_title) {
+            setContentName(res.data[0]?.acontent_title)
+          } else {
+            console.log("Err Msg:", "acontent_title not received")
+          }
+          if (res.data[0]?.bcontent_title) {
+            setCareName(res.data[0]?.bcontent_title)
+          } else {
+            console.log("Err Msg:", "bcontent_title not received")
+          }
+          if (res.data[0]?.ccontent_title) {
+            setIconName(res.data[0]?.ccontent_title)
+          } else {
+            console.log("Err Msg:", "ccontent_title not received")
+          }
+          if (res.data[0]?.part_msg?.length) {
+            setPartTooltipStatus(true)
+            setPartMsg(res.data[0]?.part_msg?.split("\r\n"))
+          }
+          if (res.data[0]?.content_msg?.length) {
+            setContentTooltipStatus(true)
+            setContentMsg(res.data[0]?.content_msg?.split("\r\n"))
+          }
+          if (res.data[0]?.care_msg?.length) {
+            setCareTooltipStatus(true)
+            setCareMsg(res.data[0]?.care_msg?.split("\r\n"))
+          }
+          if (res.data[0]?.icon_msg?.length) {
+            setIconTooltipStatus(true)
+            setIconMsg(res.data[0]?.icon_msg?.split("\r\n"))
+          }
         }
       })
       .catch((err) => console.log(err))
@@ -784,7 +857,7 @@ const OrderForm = (props) => {
   const fetchContentNumberList = (contentGroup) => {
     // fetches options for content and care select fields.
     const tempData = {}
-    contentGroup.map((content_group) => {
+    contentGroup?.map((content_group) => {
       const body = {
         order_user: getUserData().admin,
         brand_key: props.brand?.value,
@@ -798,7 +871,6 @@ const OrderForm = (props) => {
               value: opt.guid_key,
               label: opt.custom_number
             }))
-            console.log("temp opts", tempData)
             setContentGroupOptions({ ...tempData })
           }
         })
@@ -1199,6 +1271,10 @@ const OrderForm = (props) => {
                   componentOptions={componentOptions}
                   fabricOptions={fabricOptions}
                   fetchContentNumberDetail={fetchContentNumberDetail}
+                  contentTooltipStatus={contentTooltipStatus}
+                  partTooltipStatus={partTooltipStatus}
+                  contentMsg={contentMsg}
+                  partMsg={partMsg}
                   contentGroup={props.contentGroup}
                   fibreInstructionData={props.fibreInstructionData}
                   contentNumberData={props.contentNumberData}
@@ -1216,6 +1292,10 @@ const OrderForm = (props) => {
                     componentOptions={componentOptions}
                     fabricOptions={fabricOptions}
                     fetchContentNumberDetail={fetchContentNumberDetail}
+                    contentTooltipStatus={contentTooltipStatus}
+                    partTooltipStatus={partTooltipStatus}
+                    contentMsg={contentMsg}
+                    partMsg={partMsg}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
@@ -1230,6 +1310,8 @@ const OrderForm = (props) => {
                     additionalCareOptions={additionalCareOptions}
                     fetchContentNumberDetail={fetchContentNumberDetail}
                     fetchContentNumberDetail={fetchContentNumberDetail}
+                    careTooltipStatus={careTooltipStatus}
+                    careMsg={careMsg}
                     contentGroup={props.contentGroup}
                     brand={props.brand}
                     careData={props.careData}
@@ -1248,6 +1330,10 @@ const OrderForm = (props) => {
                     componentOptions={componentOptions}
                     fabricOptions={fabricOptions}
                     fetchContentNumberDetail={fetchContentNumberDetail}
+                    contentTooltipStatus={contentTooltipStatus}
+                    partTooltipStatus={partTooltipStatus}
+                    contentMsg={contentMsg}
+                    partMsg={partMsg}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
@@ -1261,6 +1347,8 @@ const OrderForm = (props) => {
                     contentGroupOptions={contentGroupOptions}
                     additionalCareOptions={additionalCareOptions}
                     fetchContentNumberDetail={fetchContentNumberDetail}
+                    careTooltipStatus={careTooltipStatus}
+                    careMsg={careMsg}
                     contentGroup={props.contentGroup}
                     brand={props.brand}
                     careData={props.careData}
@@ -1272,6 +1360,8 @@ const OrderForm = (props) => {
                   <WashCareSection
                     iconSequence={iconSequence}
                     washCareOptions={washCareOptions}
+                    iconTooltipStatus={iconTooltipStatus}
+                    iconMsg={iconMsg}
                     washCareData={props.washCareData}
                     handleMatchContentNumber={handleMatchContentNumber}
                     isOrderConfirmed={props.isOrderConfirmed}
@@ -1290,6 +1380,8 @@ const OrderForm = (props) => {
                       contentGroupOptions={contentGroupOptions}
                       additionalCareOptions={additionalCareOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
+                      careTooltipStatus={careTooltipStatus}
+                      careMsg={careMsg}
                       contentGroup={props.contentGroup}
                       brand={props.brand}
                       careData={props.careData}
@@ -1301,6 +1393,8 @@ const OrderForm = (props) => {
                     <WashCareSection
                       iconSequence={iconSequence}
                       washCareOptions={washCareOptions}
+                      iconTooltipStatus={iconTooltipStatus}
+                      iconMsg={iconMsg}
                       washCareData={props.washCareData}
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
@@ -1312,16 +1406,12 @@ const OrderForm = (props) => {
               <div>
                 <Card>
                   <CardBody>
-                    <CareSection
-                      careName={careName}
-                      contentGroupOptions={contentGroupOptions}
-                      additionalCareOptions={additionalCareOptions}
-                      fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentGroup={props.contentGroup}
-                      brand={props.brand}
-                      careData={props.careData}
-                      careCustomNumber={props.careCustomNumber}
-                      careNumberData={props.careNumberData}
+                    <WashCareSection
+                      iconSequence={iconSequence}
+                      washCareOptions={washCareOptions}
+                      iconTooltipStatus={iconTooltipStatus}
+                      iconMsg={iconMsg}
+                      washCareData={props.washCareData}
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
                     />
