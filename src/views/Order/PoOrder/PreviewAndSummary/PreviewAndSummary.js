@@ -28,7 +28,10 @@ const PreviewAndSummary = (props) => {
       if (sizeCols.length) {
         sizeCols.forEach((col) => {
           const tempCol = { ...col }
-          if (col.selector.includes("QTY ITEM REF")) {
+          if (
+            col.selector.includes("QTY ITEM REF") ||
+            col.selector.includes("UPC/EAN CODE")
+          ) {
             // get rid of custom input cell
             delete tempCol.cell
             cols.push(tempCol)
@@ -302,7 +305,7 @@ const PreviewAndSummary = (props) => {
                     // fetchSizeTableDetails(e.value)
                     dispatch(setSizeMatrixType(e.target.value))
                   }}
-                  isDisabled={props.isOrderConfirmed}
+                  disabled={true}
                 />
               </Col>
             </Row>
