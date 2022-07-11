@@ -39,7 +39,6 @@ const PoOrder = (props) => {
   const [searchParams, setSearchParams] = useState({})
 
   // dynamic columns data
-  const [cols, setCols] = useState([])
 
   const setCurrentStepHelper = (value) => {
     dispatch(setCurrentStep(value))
@@ -136,15 +135,14 @@ const PoOrder = (props) => {
           setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
           combinedPOOrderKey={combinedPOOrderKey}
-          cols={cols}
-          setCols={setCols}
+          cols={props.cols}
         />
       ) : props.currentStep === 4 ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
-          cols={cols}
+          cols={props.cols}
         />
       ) : props.currentStep === 5 ? (
         <InvoiceAndDelivery
@@ -165,7 +163,8 @@ const mapStateToProps = (state) => ({
   orderReference: state.poOrderReducer.orderReference,
   productionLocation: state.poOrderReducer.productionLocation,
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
-  brandDetails: state.poOrderReducer.brandDetails
+  brandDetails: state.poOrderReducer.brandDetails,
+  cols: state.poOrderReducer.cols
 })
 
 export default connect(mapStateToProps, null)(PoOrder)
