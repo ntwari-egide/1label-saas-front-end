@@ -89,11 +89,17 @@ const PreviewAndSummary = (props) => {
     })
     // pushing size col
     if (jsObj?.SizeMatrix?.Table[0]) {
-      jsObj?.SizeMatrix?.Table?.map((col) => {
-        cols.push({
-          name: String(col.Column1),
-          selector: String(col.Column1)
-        })
+      jsObj?.SizeMatrix?.Table?.forEach((col) => {
+        // to avoid over populationg on revising from listing.
+        if (
+          !String(col.Column1).includes("QTY ITEM REF") &&
+          !String(col.Column1).includes("UPC/EAN CODE")
+        ) {
+          cols.push({
+            name: String(col.Column1),
+            selector: String(col.Column1)
+          })
+        }
       })
     } else {
       cols.push({
