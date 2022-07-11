@@ -11,6 +11,7 @@ import ItemList from "./ItemList/ItemList"
 import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
 import { setCurrentStep, resetData } from "@redux/actions/views/Order/POOrder"
+import { resetData as resetListData } from "@redux/actions/views/Order/List"
 import { savePOOrder } from "@redux/actions/views/common"
 import { toggleSaveBtnStatus } from "@redux/actions/layout"
 
@@ -50,6 +51,7 @@ const PoOrder = (props) => {
     return () => {
       dispatch(toggleSaveBtnStatus(false))
       dispatch(resetData())
+      dispatch(resetListData())
     }
   }, [])
 

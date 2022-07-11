@@ -12,6 +12,8 @@ const listReducer = (state = initialState, action) => {
       return { ...state, selectedOrder: action.payload }
     case "SET_IS_ORDER_NEW":
       return { ...state, isOrderNew: action.payload }
+    case "RESET_LIST_DATA":
+      return { ...initialState }
     default:
       return { ...state }
   }

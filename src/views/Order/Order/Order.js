@@ -11,6 +11,7 @@ import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
 import { setCurrentStep, resetData } from "@redux/actions/views/Order/Order"
+import { resetData as resetListData } from "@redux/actions/views/Order/List"
 import { toggleSaveBtnStatus } from "@redux/actions/layout"
 import { saveOrder } from "@redux/actions/views/common"
 
@@ -49,6 +50,7 @@ const Order = (props) => {
     return () => {
       dispatch(toggleSaveBtnStatus(false))
       dispatch(resetData())
+      dispatch(resetListData())
     }
   }, [])
 

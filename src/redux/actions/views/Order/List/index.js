@@ -9,3 +9,7 @@ export const setSelectedOrder = (value) => (dispatch) => {
 export const setIsOrderNew = (value) => (dispatch) => {
   dispatch({ type: "SET_IS_ORDER_NEW", payload: value })
 }
+
+export const resetData = () => (dispatch) => {
+  dispatch({ type: "RESET_LIST_DATA" })
+}
