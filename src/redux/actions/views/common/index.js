@@ -328,8 +328,9 @@ export const saveOrder = (order_status) => (dispatch) => {
     ],
     dynamic_field: Object.values(data.dynamicFieldData),
     size_matrix_type: data.sizeMatrixType,
-    // size_content: buildXML(processSizeTable(data.sizeData)),
-    size_content: data.sizeTable,
+    size_content: buildXML(
+      formatRowToCol(processSizeTable(data.sizeTable, "Order"))
+    ),
     default_size_content: data.defaultSizeTable,
     size_pointer: "",
     coo: data.coo,
@@ -383,10 +384,6 @@ export const saveOrder = (order_status) => (dispatch) => {
       }
     ]
   }
-
-  const obj = formatRowToCol(processSizeTable(data.sizeData))
-
-  console.log("conv", obj)
 
   axios
     .post("Order/SaveOrder", body)
@@ -461,9 +458,14 @@ const formatRowToCol = (table) => {
   }
 }
 
-const processSizeTable = (table) => {
+const processSizeTable = (table, module, index) => {
   console.log("table", table)
-  const cols = store.getState().orderReducer.cols
+  let cols
+  if (module === "Order") {
+    cols = store.getState().orderReducer.cols
+  } else {
+    cols = store.getState().poOrderReducer?.cols[index]
+  }
   let processedTable
   try {
     processedTable = table.map((row) => {
@@ -647,7 +649,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
     production_description: "",
     po_last_update_time: "",
     option_id: "",
-    po_size_tables: data.sizeData?.map((sizeData) => ({
+    po_size_tables: data.sizeData?.map((sizeData, index) => ({
       guid_key: "",
       order_key: "",
       brand_key: "",
@@ -664,11 +666,16 @@ export const savePOOrder = (order_status) => (dispatch) => {
           currency: item.currency || ""
         })),
       size_matrix_type: data.sizeMatrixType,
-      size_content: buildXML(processSizeTable(sizeData.size_content)),
+      size_content: buildXML(
+        formatRowToCol(
+          processSizeTable(sizeData.size_content, "POOrder", index)
+        )
+      ),
       send_date: "",
       create_date: ""
     }))
   }
+
   axios
     .post("Order/SaveOrder", body)
     .then(async (res) => {
