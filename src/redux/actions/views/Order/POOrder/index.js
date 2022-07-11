@@ -168,3 +168,7 @@ export const setItemInfoFields = (data) => (dispatch) => {
 export const setCols = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_COLS", payload: data })
 }
+
+export const resetData = () => (dispatch) => {
+  dispatch({ type: "RESET_PO_DATA" })
+}

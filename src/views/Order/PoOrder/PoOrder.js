@@ -10,7 +10,7 @@ import SizeTable from "./SizeTable/SizeTable"
 import ItemList from "./ItemList/ItemList"
 import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
-import { setCurrentStep } from "@redux/actions/views/Order/POOrder"
+import { setCurrentStep, resetData } from "@redux/actions/views/Order/POOrder"
 import { savePOOrder } from "@redux/actions/views/common"
 import { toggleSaveBtnStatus } from "@redux/actions/layout"
 
@@ -49,6 +49,7 @@ const PoOrder = (props) => {
 
     return () => {
       dispatch(toggleSaveBtnStatus(false))
+      dispatch(resetData())
     }
   }, [])
 
