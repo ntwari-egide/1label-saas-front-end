@@ -28,6 +28,7 @@ const initialState = {
   defaultSizeData: [],
   wastage: 0,
   wastageApplied: "N",
+  cols: [],
   // invoice and delivery data
   clientDetails: {},
   invoiceAddressDetails: {},
@@ -106,6 +107,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, brandDetails: action.payload }
     case "SET_ITEM_INFO_FIELDS":
       return { ...state, itemInfoFields: action.payload }
+    case "SET_COLS":
+      return { ...state, cols: action.payload }
     default:
       return state
   }

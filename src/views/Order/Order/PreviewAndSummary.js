@@ -25,6 +25,7 @@ import {
   setWastage,
   setDefaultSizeData,
   setWastageApplied,
+  setCols,
   setSelectedItems
 } from "@redux/actions/views/Order/Order"
 import { formatColToRow } from "@utils"
@@ -40,7 +41,6 @@ const PreviewAndSummary = (props) => {
   const [showWastage, setShowWastage] = useState(false)
   const [wastageOptions, setWastageOptions] = useState([])
   const [showSizeData, setShowSizeData] = useState(true)
-  const [cols, setCols] = useState([])
 
   // other functions
   const handleQtyChange = (value, row, col, index) => {
@@ -146,7 +146,7 @@ const PreviewAndSummary = (props) => {
       )
     })
     // finally assign it to state
-    setCols(cols)
+    dispatch(setCols(cols))
   }
 
   const handleAddResetWastage = (operation) => {
@@ -317,8 +317,12 @@ const PreviewAndSummary = (props) => {
   }, [])
 
   useEffect(() => {
-    // to calculate when change in sizeData
-    if (!cols.length && props.sizeData?.length && props.sizeTable?.length) {
+    // to calculate when change in size matrix type
+    if (
+      !props.cols.length &&
+      props.sizeData?.length &&
+      props.sizeTable?.length
+    ) {
       populateCols(props.sizeTable)
     }
   }, [props.sizeData])
@@ -446,7 +450,7 @@ const PreviewAndSummary = (props) => {
                     options={sizeMatrixOptions}
                     onChange={(e) => {
                       setLoading(true)
-                      setCols([])
+                      dispatch(setCols([]))
                       fetchSizeTableDetails(e.value)
                       dispatch(setSizeMatrixType(e.label))
                       // reset total for selected items
@@ -479,7 +483,7 @@ const PreviewAndSummary = (props) => {
                     <div style={{ minHeight: "175px" }}>
                       <DataTable
                         data={props.sizeData}
-                        columns={cols}
+                        columns={props.cols}
                         noHeader={true}
                         persistTableHead={true}
                         noDataComponent={
