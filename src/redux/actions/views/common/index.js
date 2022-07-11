@@ -457,18 +457,29 @@ const formatRowToCol = (table) => {
 
 const processSizeTable = (table) => {
   console.log("table", table)
+  const cols = store.getState().orderReducer.cols
   return {
     SizeMatrix: {
       Table: table.map((row) => {
-        Object.keys(row).map((key) => {
-          if (key.includes("QTY ITEM REF") && !key.includes("WITH WASTAGE")) {
-            if (row[`${key} WITH WASTAGE`]) {
-              row[key] = row[`${key} WITH WASTAGE`]
-              delete row[`${key} WITH WASTAGE`]
+        cols
+          .map((col) => col.selector)
+          ?.forEach((key) => {
+            // for QTY ITEM REF
+            if (key.includes("QTY ITEM REF") && !key.includes("WITH WASTAGE")) {
+              if (!row[key]) {
+                row[key] = ""
+              } else {
+                if (row[`${key} WITH WASTAGE`]) {
+                  row[key] = row[`${key} WITH WASTAGE`]
+                  delete row[`${key} WITH WASTAGE`]
+                }
+              }
             }
-          }
-        })
-        console.log(row)
+            // for other cols like upc/ean code
+            if (!row[key]) {
+              row[key] = ""
+            }
+          })
         return row
       })
     }
