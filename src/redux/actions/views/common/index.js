@@ -432,21 +432,27 @@ const buildXML = (jsObj) => {
 }
 
 const formatRowToCol = (table) => {
+  if (!table) return null
   const newTable = []
-  table.map((row, rIndex) => {
-    Object.keys(row).map((key, index) => {
-      const tempData = {}
-      if (rIndex === 0) {
-        tempData["Column0"] = key.includes("QTY") ? "QTY" : "TITLE"
-        tempData["Column1"] = key
-        tempData["Column2"] = row[key]
-        newTable[index] = { ...tempData }
-      } else {
-        tempData[`Column${rIndex + 2}`] = row[key]
-        newTable[index] = { ...newTable[index], ...tempData }
-      }
+  try {
+    table.forEach((row, rIndex) => {
+      Object.keys(row).forEach((key, index) => {
+        const tempData = {}
+        if (rIndex === 0) {
+          tempData["Column0"] = key.includes("QTY") ? "QTY" : "TITLE"
+          tempData["Column1"] = key
+          tempData["Column2"] = row[key]
+          newTable[index] = { ...tempData }
+        } else {
+          tempData[`Column${rIndex + 2}`] = row[key]
+          newTable[index] = { ...newTable[index], ...tempData }
+        }
+      })
     })
-  })
+  } catch (err) {
+    console.log("Something went while transposing size data", err)
+    return null
+  }
   console.log("newTab", newTable)
   return {
     SizeMatrix: {
