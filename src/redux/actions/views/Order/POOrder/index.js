@@ -164,3 +164,7 @@ export const setBrandDetails = (data) => (dispatch) => {
 export const setItemInfoFields = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_ITEM_INFO_FIELDS", payload: data })
 }
+
+export const setCols = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_COLS", payload: data })
+}

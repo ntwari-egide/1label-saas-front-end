@@ -21,7 +21,8 @@ import {
   setSizeData,
   setWastage,
   setSizeTableTrigger,
-  setWastageApplied
+  setWastageApplied,
+  setCols
 } from "@redux/actions/views/Order/POOrder"
 import { formatColToRow } from "@utils"
 
@@ -177,7 +178,7 @@ const SizeTable = (props) => {
         props.sizeData.map((data, index) => {
           tempCols[index] = populateCols(data.size_content, index, "Y")
         })
-        props.setCols(tempCols)
+        dispatch(setCols(tempCols))
         toast(`${props.wastage * 100}% Wastage Applied.`)
       } catch (err) {
         alert(
@@ -191,7 +192,7 @@ const SizeTable = (props) => {
       props.sizeData.map((data, index) => {
         tempCols[index] = populateCols(data.size_content, index, "N")
       })
-      props.setCols(tempCols)
+      dispatch(setCols(tempCols))
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
       toast("Wastage Reset.")
@@ -227,7 +228,7 @@ const SizeTable = (props) => {
             tempCols[index] = populateCols(data.size_content, index)
           }
         })
-        props.setCols(tempCols)
+        dispatch(setCols(tempCols))
         dispatch(setSizeTableTrigger(false))
         setLoader(false)
       })
@@ -270,7 +271,7 @@ const SizeTable = (props) => {
           tempCols[index] = populateCols(data.size_content, index)
         }
       })
-      props.setCols(tempCols)
+      dispatch(setCols(tempCols))
     }
   }, [props.sizeData])
 
