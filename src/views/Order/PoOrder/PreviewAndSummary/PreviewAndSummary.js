@@ -54,9 +54,11 @@ const PreviewAndSummary = (props) => {
         Object.keys(summaryTable).forEach((key) => {
           summaryTable[key].forEach((row) => {
             if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
-              total += row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]
-            } else {
-              total += row[`QTY ITEM REF ${itmIndex + 1}`]
+              total += parseInt(
+                row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]
+              )
+            } else if (row[`QTY ITEM REF ${itmIndex + 1}`]) {
+              total += parseInt(row[`QTY ITEM REF ${itmIndex + 1}`])
             }
           })
         })
