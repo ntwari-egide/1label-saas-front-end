@@ -329,7 +329,7 @@ export const saveOrder = (order_status) => (dispatch) => {
     dynamic_field: Object.values(data.dynamicFieldData),
     size_matrix_type: data.sizeMatrixType,
     size_content: buildXML(
-      formatRowToCol(processSizeTable(data.sizeTable, "Order"))
+      formatRowToCol(processSizeTable(data.sizeData, "Order"))
     ),
     default_size_content: data.defaultSizeTable,
     size_pointer: "",
@@ -459,7 +459,6 @@ const formatRowToCol = (table) => {
 }
 
 const processSizeTable = (table, module, index) => {
-  console.log("table", table)
   let cols
   if (module === "Order") {
     cols = store.getState().orderReducer.cols
