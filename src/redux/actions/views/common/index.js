@@ -384,7 +384,7 @@ export const saveOrder = (order_status) => (dispatch) => {
     ]
   }
 
-  const obj = formatRowToCol(processSizeTable(data.sizeData).SizeMatrix.Table)
+  const obj = formatRowToCol(processSizeTable(data.sizeData))
 
   console.log("conv", obj)
 
@@ -464,32 +464,38 @@ const formatRowToCol = (table) => {
 const processSizeTable = (table) => {
   console.log("table", table)
   const cols = store.getState().orderReducer.cols
-  return {
-    SizeMatrix: {
-      Table: table.map((row) => {
-        cols
-          .map((col) => col.selector)
-          ?.forEach((key) => {
+  let processedTable
+  try {
+    processedTable = table.map((row) => {
+      cols
+        .map((col) => col.selector)
+        ?.forEach((key) => {
+          if (key.includes("QTY ITEM REF")) {
             // for QTY ITEM REF
-            if (key.includes("QTY ITEM REF") && !key.includes("WITH WASTAGE")) {
+            // initialize if empty
+            if (!key.includes("WITH WASTAGE")) {
               if (!row[key]) {
                 row[key] = ""
-              } else {
-                if (row[`${key} WITH WASTAGE`]) {
-                  row[key] = row[`${key} WITH WASTAGE`]
-                  delete row[`${key} WITH WASTAGE`]
-                }
               }
+            } else {
+              // for QTY ITEM REF WITH WASTAGE
+              const itemNo = key.split(" ")[3]
+              row[`QTY ITEM REF ${itemNo}`] = row[key] ? row[key] : ""
+              delete row[key]
             }
-            // for other cols like upc/ean code
-            if (!row[key]) {
-              row[key] = ""
-            }
-          })
-        return row
-      })
-    }
+          }
+          // for upc/ean code
+          console.log(key)
+          if (key === "UPC/EAN CODE" && !row[key]) {
+            row[key] = ""
+          }
+        })
+      return row
+    })
+  } catch (err) {
+    console.log("Something went wrong while preprocessing sizetable", err)
   }
+  return processedTable
 }
 
 const processSummarySizeTable = (data) => {
