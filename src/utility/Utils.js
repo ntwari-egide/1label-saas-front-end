@@ -206,3 +206,10 @@ export const resetTotal = (itemList) => {
     return itemList.map((item) => ({ ...item, total: 0 }))
   }
 }
+
+export const processOrderNo = (order_no) => {
+  if (!order_no || !order_no.length) {
+    return ""
+  }
+  return [order_no.split("-")[0], order_no.split("-")[1]].join("-")
+}
