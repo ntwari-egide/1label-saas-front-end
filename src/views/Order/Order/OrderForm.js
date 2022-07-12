@@ -214,9 +214,11 @@ const ContentSection = (props) => {
                     props.handleMatchContentNumber(0)
                   }}
                   onFocus={() => {
-                    setComponentTip({
-                      [`component-select-${index}`]: true
-                    })
+                    if (props.showMsg && props.msgMode === "Focus") {
+                      setComponentTip({
+                        [`component-select-${index}`]: true
+                      })
+                    }
                   }}
                   onBlur={() => {
                     setComponentTip({})
@@ -263,9 +265,11 @@ const ContentSection = (props) => {
                   }}
                   isClearable={true}
                   onFocus={() => {
-                    setFabricTip({
-                      [`fabric-select-${index}`]: true
-                    })
+                    if (props.showMsg && props.msgMode === "Focus") {
+                      setFabricTip({
+                        [`fabric-select-${index}`]: true
+                      })
+                    }
                   }}
                   onBlur={() => {
                     setFabricTip({})
@@ -481,7 +485,11 @@ const CareSection = (props) => {
               }}
               isClearable={true}
               isDisabled={props.isOrderConfirmed}
-              onFocus={() => setCareTip(`care-select-${index}`)}
+              onFocus={() => {
+                if (props.showMsg && props.msgMode === "Focus") {
+                  setCareTip(`care-select-${index}`)
+                }
+              }}
               onBlur={() => setCareTip("")}
             />
             {props.careTooltipStatus ? (
@@ -601,7 +609,11 @@ const WashCareSection = (props) => {
                 filterOption={(options, query) =>
                   options.data.label.toLowerCase().includes(query.toLowerCase())
                 }
-                onFocus={() => setIconTip(`icon-select-${index}`)}
+                onFocus={() => {
+                  if (props.showMsg && props.msgMode === "Focus") {
+                    setIconTip(`icon-select-${index}`)
+                  }
+                }}
                 onBlur={() => setIconTip("")}
                 isClearable={true}
                 isDisabled={props.isOrderConfirmed}
@@ -656,6 +668,8 @@ const OrderForm = (props) => {
   const [contentName, setContentName] = useState("")
   const [careName, setCareName] = useState("")
   const [iconName, setIconName] = useState("")
+  const [msgMode, setMsgMode] = useState("")
+  const [showMsg, setShowMsg] = useState(true)
   // tooltip states and messages
   const [careTooltipStatus, setCareTooltipStatus] = useState(false)
   const [contentTooltipStatus, setContentTooltipStatus] = useState(false)
@@ -848,6 +862,14 @@ const OrderForm = (props) => {
           if (res.data[0]?.icon_msg?.length) {
             setIconTooltipStatus(true)
             setIconMsg(res.data[0]?.icon_msg?.split("\r\n"))
+          }
+          if (res.data[0]?.content_msg_show_model?.length) {
+            if (res.data[0]?.content_msg_show_model === "Do not show") {
+              setShowMsg(false)
+              setMsgMode("Do not show")
+            } else {
+              setMsgMode(res.data[0]?.content_msg_show_model)
+            }
           }
         }
       })
@@ -1275,6 +1297,8 @@ const OrderForm = (props) => {
                   partTooltipStatus={partTooltipStatus}
                   contentMsg={contentMsg}
                   partMsg={partMsg}
+                  showMsg={showMsg}
+                  msgMode={msgMode}
                   contentGroup={props.contentGroup}
                   fibreInstructionData={props.fibreInstructionData}
                   contentNumberData={props.contentNumberData}
@@ -1296,6 +1320,8 @@ const OrderForm = (props) => {
                     partTooltipStatus={partTooltipStatus}
                     contentMsg={contentMsg}
                     partMsg={partMsg}
+                    showMsg={showMsg}
+                    msgMode={msgMode}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
@@ -1312,6 +1338,8 @@ const OrderForm = (props) => {
                     fetchContentNumberDetail={fetchContentNumberDetail}
                     careTooltipStatus={careTooltipStatus}
                     careMsg={careMsg}
+                    showMsg={showMsg}
+                    msgMode={msgMode}
                     contentGroup={props.contentGroup}
                     brand={props.brand}
                     careData={props.careData}
@@ -1334,6 +1362,8 @@ const OrderForm = (props) => {
                     partTooltipStatus={partTooltipStatus}
                     contentMsg={contentMsg}
                     partMsg={partMsg}
+                    showMsg={showMsg}
+                    msgMode={msgMode}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
@@ -1349,6 +1379,8 @@ const OrderForm = (props) => {
                     fetchContentNumberDetail={fetchContentNumberDetail}
                     careTooltipStatus={careTooltipStatus}
                     careMsg={careMsg}
+                    showMsg={showMsg}
+                    msgMode={msgMode}
                     contentGroup={props.contentGroup}
                     brand={props.brand}
                     careData={props.careData}
@@ -1362,6 +1394,8 @@ const OrderForm = (props) => {
                     washCareOptions={washCareOptions}
                     iconTooltipStatus={iconTooltipStatus}
                     iconMsg={iconMsg}
+                    showMsg={showMsg}
+                    msgMode={msgMode}
                     washCareData={props.washCareData}
                     handleMatchContentNumber={handleMatchContentNumber}
                     isOrderConfirmed={props.isOrderConfirmed}
@@ -1382,6 +1416,8 @@ const OrderForm = (props) => {
                       fetchContentNumberDetail={fetchContentNumberDetail}
                       careTooltipStatus={careTooltipStatus}
                       careMsg={careMsg}
+                      showMsg={showMsg}
+                      msgMode={msgMode}
                       contentGroup={props.contentGroup}
                       brand={props.brand}
                       careData={props.careData}
@@ -1395,6 +1431,8 @@ const OrderForm = (props) => {
                       washCareOptions={washCareOptions}
                       iconTooltipStatus={iconTooltipStatus}
                       iconMsg={iconMsg}
+                      showMsg={showMsg}
+                      msgMode={msgMode}
                       washCareData={props.washCareData}
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
@@ -1411,6 +1449,8 @@ const OrderForm = (props) => {
                       washCareOptions={washCareOptions}
                       iconTooltipStatus={iconTooltipStatus}
                       iconMsg={iconMsg}
+                      showMsg={showMsg}
+                      msgMode={msgMode}
                       washCareData={props.washCareData}
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
