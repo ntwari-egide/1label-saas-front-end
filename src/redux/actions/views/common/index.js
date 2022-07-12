@@ -286,7 +286,7 @@ export const saveOrder = (order_status) => (dispatch) => {
   const body = {
     brand_key: data.brand ? data.brand.value : "",
     order_user: getUserData().admin,
-    order_no: "",
+    order_no: data.orderNo.length ? data.orderNo : "",
     num: "",
     order_status,
     is_copy_order: "N",
@@ -550,7 +550,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
   const body = {
     brand_key: data.brand ? data.brand.value : "",
     order_user: getUserData().admin,
-    order_no: "",
+    order_no: data.orderNo.length ? data.orderNo : "",
     guid_key: data.combinedPOOrderKey,
     num: "",
     order_status,
