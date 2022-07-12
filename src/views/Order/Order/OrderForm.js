@@ -49,8 +49,8 @@ const ContentSection = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   // states for custom tooltip
-  const [componentTip, setComponentTip] = useState({})
-  const [fabricTip, setFabricTip] = useState({})
+  const [componentTip, setComponentTip] = useState("")
+  const [fabricTip, setFabricTip] = useState("")
   const [percentTip, setPercentTip] = useState("")
 
   //other funcitons
@@ -216,13 +216,11 @@ const ContentSection = (props) => {
                   }}
                   onFocus={() => {
                     if (props.showMsg && props.msgMode === "Focus") {
-                      setComponentTip({
-                        [`component-select-${index}`]: true
-                      })
+                      setComponentTip(`component-select-${index}`)
                     }
                   }}
                   onBlur={() => {
-                    setComponentTip({})
+                    setComponentTip("")
                   }}
                   isClearable={true}
                   isDisabled={props.isOrderConfirmed}
@@ -231,11 +229,7 @@ const ContentSection = (props) => {
                   <div>
                     <Popover
                       target={`component-select-${index}`}
-                      isOpen={
-                        componentTip[`component-select-${index}`]
-                          ? componentTip[`component-select-${index}`]
-                          : false
-                      }
+                      isOpen={componentTip === `component-select-${index}`}
                     >
                       <PopoverHeader>Tip </PopoverHeader>
                       <PopoverBody>
@@ -267,13 +261,11 @@ const ContentSection = (props) => {
                   isClearable={true}
                   onFocus={() => {
                     if (props.showMsg && props.msgMode === "Focus") {
-                      setFabricTip({
-                        [`fabric-select-${index}`]: true
-                      })
+                      setFabricTip(`fabric-select-${index}`)
                     }
                   }}
                   onBlur={() => {
-                    setFabricTip({})
+                    setFabricTip("")
                   }}
                   isDisabled={props.isOrderConfirmed}
                 />
@@ -281,11 +273,7 @@ const ContentSection = (props) => {
                   <div>
                     <Popover
                       target={`fabric-select-${index}`}
-                      isOpen={
-                        fabricTip[`fabric-select-${index}`]
-                          ? fabricTip[`fabric-select-${index}`]
-                          : false
-                      }
+                      isOpen={fabricTip === `fabric-select-${index}`}
                     >
                       <PopoverHeader>Tip</PopoverHeader>
                       <PopoverBody>
