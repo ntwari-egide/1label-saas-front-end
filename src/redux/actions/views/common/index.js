@@ -84,13 +84,16 @@ export const populateData =
       setItemInfoFields,
       setInvoiceAddressDetails,
       setDeliveryAddressDetails,
-      setSizeData
+      setSizeData,
+      setOrderNo
     } = require(`@redux/actions/views/Order/${module}`)
     if (module === "POOrder") {
       dispatch(setCurrentStep(1))
     } else {
       dispatch(setCurrentStep(0))
     }
+    // set order_no for draft||confirm order
+    dispatch(setOrderNo(order_no))
     if (data.brand_key) {
       dispatch(setBrand({ value: data.brand_key, label: "" }))
     }
