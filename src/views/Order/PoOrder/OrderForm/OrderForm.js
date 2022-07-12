@@ -51,6 +51,7 @@ const ContentSection = (props) => {
   // states for custom tooltip
   const [componentTip, setComponentTip] = useState({})
   const [fabricTip, setFabricTip] = useState({})
+  const [percentTip, setPercentTip] = useState("")
 
   //other funcitons
   //
@@ -302,6 +303,7 @@ const ContentSection = (props) => {
               <Col xs="12" sm="12" md="2" lg="2" xl="2">
                 <Label>%</Label>
                 <Input
+                  id={`percent-select-${index}`}
                   value={
                     props.fibreInstructionData[index]?.percentage
                       ? props.fibreInstructionData[index]?.percentage
@@ -316,8 +318,35 @@ const ContentSection = (props) => {
                     dispatch(setFibreInstructionData([...tempData]))
                     debounceFun()
                   }}
+                  onFocus={() => {
+                    if (props.showMsg && props.msgMode === "Focus") {
+                      setPercentTip(`percent-select-${index}`)
+                    }
+                  }}
+                  onBlur={() => {
+                    setPercentTip("")
+                  }}
                   disabled={props.isOrderConfirmed}
                 />
+                {props.percentTooltipStatus ? (
+                  <div>
+                    <Popover
+                      target={`percent-select-${index}`}
+                      isOpen={percentTip === `percent-select-${index}`}
+                    >
+                      <PopoverHeader>Tip</PopoverHeader>
+                      <PopoverBody>
+                        <ol type="i">
+                          {props.percentMsg.map((msg) => {
+                            if (msg.length) {
+                              return <li>{msg}</li>
+                            }
+                          })}
+                        </ol>
+                      </PopoverBody>
+                    </Popover>
+                  </div>
+                ) : null}
               </Col>
               <Col
                 xs="12"
@@ -677,10 +706,12 @@ const OrderForm = (props) => {
   const [contentTooltipStatus, setContentTooltipStatus] = useState(false)
   const [partTooltipStatus, setPartTooltipStatus] = useState(false)
   const [iconTooltipStatus, setIconTooltipStatus] = useState(false)
+  const [percentTooltipStatus, setPercentTooltipStatus] = useState(false)
   const [careMsg, setCareMsg] = useState([])
   const [contentMsg, setContentMsg] = useState([])
   const [partMsg, setPartMsg] = useState([])
   const [iconMsg, setIconMsg] = useState([])
+  const [percentMsg, setPercentMsg] = useState([])
 
   const handleMatchContentNumber = (index) => {
     let content_group
@@ -950,6 +981,10 @@ const OrderForm = (props) => {
           if (res.data[0]?.icon_msg?.length) {
             setIconTooltipStatus(true)
             setIconMsg(res.data[0]?.icon_msg?.split("\r\n"))
+          }
+          if (res.data[0]?.percentage_msg?.length) {
+            setPercentTooltipStatus(true)
+            setPercentMsg(res.data[0]?.percentage_msg?.split("\r\n"))
           }
           if (res.data[0]?.content_msg_show_model?.length) {
             if (res.data[0]?.content_msg_show_model === "Do not show") {
@@ -1329,6 +1364,8 @@ const OrderForm = (props) => {
                   partMsg={partMsg}
                   showMsg={showMsg}
                   msgMode={msgMode}
+                  percentMsg={percentMsg}
+                  percentTooltipStatus={percentTooltipStatus}
                   contentGroup={props.contentGroup}
                   fibreInstructionData={props.fibreInstructionData}
                   contentNumberData={props.contentNumberData}
@@ -1352,6 +1389,8 @@ const OrderForm = (props) => {
                     partMsg={partMsg}
                     showMsg={showMsg}
                     msgMode={msgMode}
+                    percentMsg={percentMsg}
+                    percentTooltipStatus={percentTooltipStatus}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
@@ -1394,6 +1433,8 @@ const OrderForm = (props) => {
                     partMsg={partMsg}
                     showMsg={showMsg}
                     msgMode={msgMode}
+                    percentMsg={percentMsg}
+                    percentTooltipStatus={percentTooltipStatus}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
