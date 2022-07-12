@@ -194,36 +194,47 @@ const ContentSection = (props) => {
             <Row style={{ marginBottom: "5px" }}>
               <Col xs="12" sm="12" md="4" lg="4" xl="4">
                 <Label>Component</Label>
-                <Select
-                  id={`component-select-${index}`}
-                  className="React"
-                  classNamePrefix="select"
-                  options={props.componentOptions}
-                  value={props.componentOptions?.filter(
-                    (opt) => opt.value === rec?.part_key
-                  )}
-                  onChange={(e) => {
-                    const tempData = props.fibreInstructionData
-                    // ternary to handle isClearable event
-                    tempData[index] = {
-                      ...props.fibreInstructionData[index],
-                      part_key: e ? e.value : "",
-                      part_translation: e ? e.label : ""
-                    }
-                    dispatch(setFibreInstructionData([...tempData]))
-                    props.handleMatchContentNumber(0)
-                  }}
-                  onFocus={() => {
-                    if (props.showMsg && props.msgMode === "Focus") {
+                <div
+                  onMouseEnter={() => {
+                    if (props.showMsg && props.msgMode === "Hover") {
                       setComponentTip(`component-select-${index}`)
                     }
                   }}
-                  onBlur={() => {
+                  onMouseLeave={() => {
                     setComponentTip("")
                   }}
-                  isClearable={true}
-                  isDisabled={props.isOrderConfirmed}
-                />
+                >
+                  <Select
+                    id={`component-select-${index}`}
+                    className="React"
+                    classNamePrefix="select"
+                    options={props.componentOptions}
+                    value={props.componentOptions?.filter(
+                      (opt) => opt.value === rec?.part_key
+                    )}
+                    onChange={(e) => {
+                      const tempData = props.fibreInstructionData
+                      // ternary to handle isClearable event
+                      tempData[index] = {
+                        ...props.fibreInstructionData[index],
+                        part_key: e ? e.value : "",
+                        part_translation: e ? e.label : ""
+                      }
+                      dispatch(setFibreInstructionData([...tempData]))
+                      props.handleMatchContentNumber(0)
+                    }}
+                    onFocus={() => {
+                      if (props.showMsg && props.msgMode === "Focus") {
+                        setComponentTip(`component-select-${index}`)
+                      }
+                    }}
+                    onBlur={() => {
+                      setComponentTip("")
+                    }}
+                    isClearable={true}
+                    isDisabled={props.isOrderConfirmed}
+                  />
+                </div>
                 {props.partTooltipStatus ? (
                   <div>
                     <Popover
@@ -246,28 +257,39 @@ const ContentSection = (props) => {
               </Col>
               <Col xs="12" sm="12" md="3" lg="3" xl="3">
                 <Label>Fabric</Label>
-                <Select
-                  id={`fabric-select-${index}`}
-                  className="React"
-                  classNamePrefix="select"
-                  options={props.fabricOptions}
-                  value={props.fabricOptions?.filter(
-                    (opt) => opt.value === rec?.cont_key
-                  )}
-                  onChange={(e) => {
-                    handleFibreChange(e, index)
-                  }}
-                  isClearable={true}
-                  onFocus={() => {
-                    if (props.showMsg && props.msgMode === "Focus") {
+                <div
+                  onMouseEnter={() => {
+                    if (props.showMsg && props.msgMode === "Hover") {
                       setFabricTip(`fabric-select-${index}`)
                     }
                   }}
-                  onBlur={() => {
+                  onMouseLeave={() => {
                     setFabricTip("")
                   }}
-                  isDisabled={props.isOrderConfirmed}
-                />
+                >
+                  <Select
+                    id={`fabric-select-${index}`}
+                    className="React"
+                    classNamePrefix="select"
+                    options={props.fabricOptions}
+                    value={props.fabricOptions?.filter(
+                      (opt) => opt.value === rec?.cont_key
+                    )}
+                    onChange={(e) => {
+                      handleFibreChange(e, index)
+                    }}
+                    isClearable={true}
+                    onFocus={() => {
+                      if (props.showMsg && props.msgMode === "Focus") {
+                        setFabricTip(`fabric-select-${index}`)
+                      }
+                    }}
+                    onBlur={() => {
+                      setFabricTip("")
+                    }}
+                    isDisabled={props.isOrderConfirmed}
+                  />
+                </div>
                 {props.contentTooltipStatus ? (
                   <div>
                     <Popover
@@ -312,6 +334,14 @@ const ContentSection = (props) => {
                     }
                   }}
                   onBlur={() => {
+                    setPercentTip("")
+                  }}
+                  onMouseEnter={() => {
+                    if (props.showMsg && props.msgMode === "Hover") {
+                      setPercentTip(`percent-select-${index}`)
+                    }
+                  }}
+                  onMouseLeave={() => {
                     setPercentTip("")
                   }}
                   disabled={props.isOrderConfirmed}
@@ -482,32 +512,43 @@ const CareSection = (props) => {
       {props.careData.map((rec, index) => (
         <Row style={{ marginBottom: "7px" }}>
           <Col xs="12" sm="12" md="8" lg="8" xl="8">
-            <Select
-              className="React"
-              id={`care-select-${index}`}
-              classNamePrefix="select"
-              options={props.additionalCareOptions}
-              value={props.additionalCareOptions?.filter(
-                (opt) => opt.value === rec.care_key
-              )}
-              onChange={(e) => {
-                const tempData = props.careData
-                props.careData[index] = {
-                  ...props.careData[index],
-                  care_key: e ? e.value : ""
-                }
-                dispatch(setCareData([...tempData]))
-                props.handleMatchContentNumber(1)
-              }}
-              isClearable={true}
-              isDisabled={props.isOrderConfirmed}
-              onFocus={() => {
-                if (props.showMsg && props.msgMode === "Focus") {
+            <div
+              onMouseEnter={() => {
+                if (props.showMsg && props.msgMode === "Hover") {
                   setCareTip(`care-select-${index}`)
                 }
               }}
-              onBlur={() => setCareTip("")}
-            />
+              onMouseLeave={() => {
+                setCareTip("")
+              }}
+            >
+              <Select
+                className="React"
+                id={`care-select-${index}`}
+                classNamePrefix="select"
+                options={props.additionalCareOptions}
+                value={props.additionalCareOptions?.filter(
+                  (opt) => opt.value === rec.care_key
+                )}
+                onChange={(e) => {
+                  const tempData = props.careData
+                  props.careData[index] = {
+                    ...props.careData[index],
+                    care_key: e ? e.value : ""
+                  }
+                  dispatch(setCareData([...tempData]))
+                  props.handleMatchContentNumber(1)
+                }}
+                isClearable={true}
+                isDisabled={props.isOrderConfirmed}
+                onFocus={() => {
+                  if (props.showMsg && props.msgMode === "Focus") {
+                    setCareTip(`care-select-${index}`)
+                  }
+                }}
+                onBlur={() => setCareTip("")}
+              />
+            </div>
             {props.careTooltipStatus ? (
               <div>
                 <Popover
@@ -587,53 +628,66 @@ const WashCareSection = (props) => {
               </Label>
             </Col>
             <Col xs="12" s="12" md="8" lg="8" xl="8">
-              <Select
-                id={`icon-select-${index}`}
-                className="React"
-                classNamePrefix="select"
-                options={props.washCareOptions[iconObj?.icon_type_id]}
-                value={
-                  props.washCareOptions[iconObj?.icon_type_id]
-                    ? props.washCareOptions[iconObj?.icon_type_id]?.filter(
-                        (opt) =>
-                          opt.value ===
-                          props.washCareData[iconObj?.icon_type_id]?.icon_key
-                      )
-                    : ""
-                }
-                onChange={(e) => {
-                  const tempData = {}
-                  tempData[iconObj.icon_type_id] = {
-                    icon_key: e ? e.value : "",
-                    icon_type_id: e ? e.iconTypeId : "",
-                    icon_group: e ? e.iconGroup : ""
-                  }
-                  dispatch(
-                    setWashCareData({
-                      ...props.washCareData,
-                      ...tempData
-                    })
-                  )
-                  props.handleMatchContentNumber(1)
-                }}
-                getOptionLabel={(e) => (
-                  <div>
-                    {e.icon}
-                    {e.label}
-                  </div>
-                )}
-                filterOption={(options, query) =>
-                  options.data.label.toLowerCase().includes(query.toLowerCase())
-                }
-                onFocus={() => {
-                  if (props.showMsg && props.msgMode === "Focus") {
+              <div
+                onMouseEnter={() => {
+                  if (props.showMsg && props.msgMode === "Hover") {
                     setIconTip(`icon-select-${index}`)
                   }
                 }}
-                onBlur={() => setIconTip("")}
-                isClearable={true}
-                isDisabled={props.isOrderConfirmed}
-              />
+                onMouseLeave={() => {
+                  setIconTip("")
+                }}
+              >
+                <Select
+                  id={`icon-select-${index}`}
+                  className="React"
+                  classNamePrefix="select"
+                  options={props.washCareOptions[iconObj?.icon_type_id]}
+                  value={
+                    props.washCareOptions[iconObj?.icon_type_id]
+                      ? props.washCareOptions[iconObj?.icon_type_id]?.filter(
+                          (opt) =>
+                            opt.value ===
+                            props.washCareData[iconObj?.icon_type_id]?.icon_key
+                        )
+                      : ""
+                  }
+                  onChange={(e) => {
+                    const tempData = {}
+                    tempData[iconObj.icon_type_id] = {
+                      icon_key: e ? e.value : "",
+                      icon_type_id: e ? e.iconTypeId : "",
+                      icon_group: e ? e.iconGroup : ""
+                    }
+                    dispatch(
+                      setWashCareData({
+                        ...props.washCareData,
+                        ...tempData
+                      })
+                    )
+                    props.handleMatchContentNumber(1)
+                  }}
+                  getOptionLabel={(e) => (
+                    <div>
+                      {e.icon}
+                      {e.label}
+                    </div>
+                  )}
+                  filterOption={(options, query) =>
+                    options.data.label
+                      .toLowerCase()
+                      .includes(query.toLowerCase())
+                  }
+                  onFocus={() => {
+                    if (props.showMsg && props.msgMode === "Focus") {
+                      setIconTip(`icon-select-${index}`)
+                    }
+                  }}
+                  onBlur={() => setIconTip("")}
+                  isClearable={true}
+                  isDisabled={props.isOrderConfirmed}
+                />
+              </div>
               {props.iconTooltipStatus ? (
                 <div>
                   <Popover
