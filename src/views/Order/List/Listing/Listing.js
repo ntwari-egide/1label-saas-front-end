@@ -19,7 +19,7 @@ import CheckBox from "@components/CheckBox/CheckBox"
 import { Check, ArrowLeft, ArrowRight, Search } from "react-feather"
 import Select from "react-select"
 import Flatpickr from "react-flatpickr"
-import { formatDateYMD } from "@utils"
+import { formatDateYMD, processOrderNo } from "@utils"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { useDispatch } from "react-redux"
 import history from "@src/history"
@@ -205,7 +205,7 @@ const Listing = (props) => {
                 module,
                 res.data[0],
                 brand_key,
-                order_no,
+                processOrderNo(order_no),
                 is_po_order_temp
               )
             )
