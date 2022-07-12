@@ -20,6 +20,7 @@ const initialState = {
   contentGroup: "",
   brandDetails: {},
   itemInfoFields: [],
+  orderNo: "",
   // size table data
   sizeMatrixType: "",
   sizeTable: "",
@@ -111,6 +112,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, cols: action.payload }
     case "RESET_DATA":
       return { ...initialState }
+    case "SET_ORDER_NO":
+      return { ...state, orderNo: action.payload }
     default:
       return state
   }

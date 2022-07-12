@@ -20,6 +20,7 @@ const initialState = {
   coo: "",
   brandDetails: {},
   itemInfoFields: [],
+  orderNo: "",
   // size table states
   sizeData: [],
   wastage: 0,
@@ -110,6 +111,8 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, cols: action.payload }
     case "RESET_PO_DATA":
       return { ...initialState }
+    case "SET_PO_ORDER_NO":
+      return { ...state, orderNo: "" }
     default:
       return { ...state }
   }

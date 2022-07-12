@@ -172,3 +172,7 @@ export const setCols = (data) => (dispatch) => {
 export const resetData = () => (dispatch) => {
   dispatch({ type: "RESET_PO_DATA" })
 }
+
+export const setOrderNo = (value) => (dispatch) => {
+  dispatch({ type: "SET_PO_ORDER_NO", payload: value })
+}
