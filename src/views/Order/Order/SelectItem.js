@@ -20,7 +20,8 @@ import { useDispatch, connect } from "react-redux"
 import {
   setBrand,
   setSelectedItems,
-  setSizeData
+  setSizeData,
+  resetData
 } from "@redux/actions/views/Order/Order"
 import { getUserData } from "@utils"
 
@@ -204,9 +205,9 @@ const SelectItem = (props) => {
             }
             options={brandOptions}
             onChange={(e) => {
+              dispatch(resetData())
               dispatch(setBrand(e ? e : {}))
               fetchItemList(e ? e : {}, props.itemType)
-              dispatch(setSelectedItems([]))
             }}
             isClearable={true}
             isDisabled={loader || props.isOrderConfirmed}

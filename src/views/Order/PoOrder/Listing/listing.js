@@ -24,7 +24,8 @@ import Footer from "../../../CommonFooter"
 import { connect, useDispatch } from "react-redux"
 import {
   setSizeTableTrigger,
-  setBrand
+  setBrand,
+  resetData
 } from "@redux/actions/views/Order/POOrder"
 import { populateData } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -299,8 +300,9 @@ const Listing = (props) => {
                 (opt) => opt.value === props.searchParams.brand
               )}
               onChange={(e) => {
-                props.setSearchParams({ ...props.searchParams, brand: e.value })
+                dispatch(resetData())
                 dispatch(setBrand(e))
+                props.setSearchParams({ ...props.searchParams, brand: e.value })
               }}
               isDisabled={props.isOrderConfirmed}
             />
