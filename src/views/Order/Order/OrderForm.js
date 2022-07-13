@@ -114,7 +114,6 @@ const ContentSection = (props) => {
       .catch((err) => console.log(err))
   }
 
-  // API Services
   return (
     <div>
       <Row>
@@ -452,56 +451,60 @@ const CareSection = (props) => {
           <h4 className="text-primary">{t("Care")}</h4>
         </Col>
       </Row>
-      <Row style={{ marginBottom: "10px" }}>
-        <Col xs="12" sm="12" md="1" lg="1" xl="1">
-          <Label style={{ marginTop: "12px" }}>{props.careName}</Label>
-        </Col>
-        <Col xs="12" sm="12" md="9" lg="9" xl="9">
-          <Select
-            className="React"
-            classNamePrefix="select"
-            value={
-              props.contentGroup === "ABC"
-                ? props.contentGroupOptions["ABC"]?.filter(
-                    (opt) => opt.value === props.careNumberData?.value
-                  )
-                : props.contentGroup === "A/BC"
-                ? props.contentGroupOptions["BC"]?.filter(
-                    (opt) => opt.value === props.careNumberData?.value
-                  )
-                : props.contentGroupOptions["C"]?.filter(
-                    (opt) => opt.value === props.careNumberData?.value
-                  )
-            }
-            options={
-              props.contentGroup === "ABC"
-                ? props.contentGroupOptions["ABC"]
-                : props.contentGroup === "A/BC"
-                ? props.contentGroupOptions["BC"]
-                : props.contentGroupOptions["C"]
-            }
-            onChange={(e) => {
-              dispatch(setCareNumberData(e ? e : {}))
-              if (e) {
-                props.fetchContentNumberDetail(e.value, e.label)
-              } else {
-                if (props.contentGroup === "A/BC") {
-                  dispatch(setWashCareData([{}]))
-                  dispatch(setCareData([{}]))
-                } else if (props.contentGroup === "AB/C") {
-                  dispatch(setWashCareData([{}]))
-                } else {
-                  dispatch(setFibreInstructionData([{}]))
-                  dispatch(setWashCareData([{}]))
-                  dispatch(setCareData([{}]))
-                }
+      {props.contentGroup === "A/BC" ? (
+        <Row style={{ marginBottom: "10px" }}>
+          <Col xs="12" sm="12" md="1" lg="1" xl="1">
+            <Label style={{ marginTop: "12px" }}>{props.careName}</Label>
+          </Col>
+          <Col xs="12" sm="12" md="9" lg="9" xl="9">
+            <Select
+              className="React"
+              classNamePrefix="select"
+              value={
+                props.contentGroup === "ABC"
+                  ? props.contentGroupOptions["ABC"]?.filter(
+                      (opt) => opt.value === props.careNumberData?.value
+                    )
+                  : props.contentGroup === "A/BC"
+                  ? props.contentGroupOptions["BC"]?.filter(
+                      (opt) => opt.value === props.careNumberData?.value
+                    )
+                  : props.contentGroupOptions["C"]?.filter(
+                      (opt) => opt.value === props.careNumberData?.value
+                    )
               }
-            }}
-            isClearable={true}
-            isDisabled={props.isOrderConfirmed}
-          />
-        </Col>
-      </Row>
+              options={
+                props.contentGroup === "ABC"
+                  ? props.contentGroupOptions["ABC"]
+                  : props.contentGroup === "A/BC"
+                  ? props.contentGroupOptions["BC"]
+                  : props.contentGroupOptions["C"]
+              }
+              onChange={(e) => {
+                dispatch(setCareNumberData(e ? e : {}))
+                if (e) {
+                  props.fetchContentNumberDetail(e.value, e.label)
+                } else {
+                  if (props.contentGroup === "A/BC") {
+                    dispatch(setWashCareData([{}]))
+                    dispatch(setCareData([{}]))
+                  } else if (props.contentGroup === "AB/C") {
+                    dispatch(setWashCareData([{}]))
+                  } else {
+                    dispatch(setFibreInstructionData([{}]))
+                    dispatch(setWashCareData([{}]))
+                    dispatch(setCareData([{}]))
+                  }
+                }
+              }}
+              isClearable={true}
+              isDisabled={props.isOrderConfirmed}
+            />
+          </Col>
+        </Row>
+      ) : (
+        <></>
+      )}
       <Row style={{ marginBottom: "10px" }}>
         <Col xs="12" sm="12" md="1" lg="1" xl="1">
           <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
@@ -620,6 +623,7 @@ const WashCareSection = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const [iconTip, setIconTip] = useState("")
+
   return (
     <div style={{ paddingTop: "20px" }}>
       <Row>
@@ -627,6 +631,59 @@ const WashCareSection = (props) => {
           <h4 className="text-primary">{t("Wash Care")}</h4>
         </Col>
       </Row>
+      {props.contentGroup === "AB/C" ? (
+        <Row style={{ marginBottom: "10px" }}>
+          <Col xs="12" sm="12" md="1" lg="1" xl="1">
+            <Label style={{ marginTop: "12px" }}>{props.iconName}</Label>
+          </Col>
+          <Col xs="12" sm="12" md="9" lg="9" xl="9">
+            <Select
+              className="React"
+              classNamePrefix="select"
+              value={
+                props.contentGroup === "ABC"
+                  ? props.contentGroupOptions["ABC"]?.filter(
+                      (opt) => opt.value === props.careNumberData?.value
+                    )
+                  : props.contentGroup === "A/BC"
+                  ? props.contentGroupOptions["BC"]?.filter(
+                      (opt) => opt.value === props.careNumberData?.value
+                    )
+                  : props.contentGroupOptions["C"]?.filter(
+                      (opt) => opt.value === props.careNumberData?.value
+                    )
+              }
+              options={
+                props.contentGroup === "ABC"
+                  ? props.contentGroupOptions["ABC"]
+                  : props.contentGroup === "A/BC"
+                  ? props.contentGroupOptions["BC"]
+                  : props.contentGroupOptions["C"]
+              }
+              onChange={(e) => {
+                dispatch(setCareNumberData(e ? e : {}))
+                if (e) {
+                  props.fetchContentNumberDetail(e.value, e.label)
+                } else {
+                  if (props.contentGroup === "A/BC") {
+                    dispatch(setWashCareData([{}]))
+                    dispatch(setCareData([{}]))
+                  } else if (props.contentGroup === "AB/C") {
+                    dispatch(setWashCareData([{}]))
+                  } else {
+                    dispatch(setFibreInstructionData([{}]))
+                    dispatch(setWashCareData([{}]))
+                    dispatch(setCareData([{}]))
+                  }
+                }
+              }}
+              isClearable={true}
+              isDisabled={props.isOrderConfirmed}
+            />
+          </Col>
+        </Row>
+      ) : null}
+
       {props.iconSequence?.map((iconObj, index) => {
         return (
           <Row style={{ marginBottom: "10px" }}>
@@ -1484,8 +1541,13 @@ const OrderForm = (props) => {
                     iconMsg={iconMsg}
                     showMsg={showMsg}
                     msgMode={msgMode}
-                    washCareData={props.washCareData}
+                    iconName={iconName}
+                    contentGroupOptions={contentGroupOptions}
+                    fetchContentNumberDetail={fetchContentNumberDetail}
                     handleMatchContentNumber={handleMatchContentNumber}
+                    careNumberData={props.careNumberData}
+                    contentGroup={props.contentGroup}
+                    washCareData={props.washCareData}
                     isOrderConfirmed={props.isOrderConfirmed}
                   />
                 </div>
@@ -1506,12 +1568,12 @@ const OrderForm = (props) => {
                       careMsg={careMsg}
                       showMsg={showMsg}
                       msgMode={msgMode}
+                      handleMatchContentNumber={handleMatchContentNumber}
                       contentGroup={props.contentGroup}
                       brand={props.brand}
                       careData={props.careData}
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
-                      handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
                     />
                     <WashCareSection
@@ -1521,8 +1583,13 @@ const OrderForm = (props) => {
                       iconMsg={iconMsg}
                       showMsg={showMsg}
                       msgMode={msgMode}
-                      washCareData={props.washCareData}
+                      iconName={iconName}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
                       handleMatchContentNumber={handleMatchContentNumber}
+                      contentGroupOptions={contentGroupOptions}
+                      careNumberData={props.careNumberData}
+                      contentGroup={props.contentGroup}
+                      washCareData={props.washCareData}
                       isOrderConfirmed={props.isOrderConfirmed}
                     />
                   </CardBody>
@@ -1539,8 +1606,13 @@ const OrderForm = (props) => {
                       iconMsg={iconMsg}
                       showMsg={showMsg}
                       msgMode={msgMode}
-                      washCareData={props.washCareData}
+                      iconName={iconName}
                       handleMatchContentNumber={handleMatchContentNumber}
+                      contentGroupOptions={contentGroupOptions}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
+                      careNumberData={props.careNumberData}
+                      contentGroup={props.contentGroup}
+                      washCareData={props.washCareData}
                       isOrderConfirmed={props.isOrderConfirmed}
                     />
                   </CardBody>
