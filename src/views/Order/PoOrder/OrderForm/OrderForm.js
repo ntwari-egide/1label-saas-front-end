@@ -108,7 +108,7 @@ const ContentSection = (props) => {
             cont_translation: res.data[0]?.gb_translation
           }
           dispatch(setDefaultContentData([...tempDefData]))
-          props.handleMatchContentNumber(0)
+          props.handleMatchContentNumber("content")
         }
       })
       .catch((err) => console.log(err))
@@ -221,7 +221,7 @@ const ContentSection = (props) => {
                         part_translation: e ? e.label : ""
                       }
                       dispatch(setFibreInstructionData([...tempData]))
-                      props.handleMatchContentNumber(0)
+                      props.handleMatchContentNumber("content")
                     }}
                     onFocus={() => {
                       if (props.showMsg && props.msgMode === "Focus") {
@@ -539,7 +539,7 @@ const CareSection = (props) => {
                     care_key: e ? e.value : ""
                   }
                   dispatch(setCareData([...tempData]))
-                  props.handleMatchContentNumber(1)
+                  props.handleMatchContentNumber("care")
                 }}
                 isClearable={true}
                 isDisabled={props.isOrderConfirmed}
@@ -720,7 +720,7 @@ const WashCareSection = (props) => {
                         ...tempData
                       })
                     )
-                    props.handleMatchContentNumber(1)
+                    props.handleMatchContentNumber("washCare")
                   }}
                   getOptionLabel={(e) => (
                     <div>
@@ -810,17 +810,29 @@ const OrderForm = (props) => {
   const [iconMsg, setIconMsg] = useState([])
   const [percentMsg, setPercentMsg] = useState([])
 
-  const handleMatchContentNumber = (index) => {
+  const handleMatchContentNumber = (section) => {
     let content_group
     if (props.contentGroup === "ABC") {
       content_group = "ABC"
     } else {
       if (props.contentGroup.length) {
-        content_group = props.contentGroup.split("/")[index]
+        if (props.contentGroup === "AB/C") {
+          if (section === "washCare") {
+            content_group = "C"
+          } else {
+            content_group = "AB"
+          }
+        } else if (props.contentGroup === "A/BC") {
+          if (section === "content") {
+            content_group = "A"
+          } else {
+            content_group = "BC"
+          }
+        }
       }
     }
     if (content_group) {
-      dispatch(matchContentNumber("Order", content_group))
+      dispatch(matchContentNumber("Order", content_group, section))
     }
   }
 

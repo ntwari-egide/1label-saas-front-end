@@ -7,56 +7,95 @@ import history from "@src/history"
 import { formatColToRow } from "@utils"
 import xml2js from "xml2js"
 
-export const matchContentNumber = (module, content_group) => (dispatch) => {
-  let state
-  if (module === "Order") {
-    state = store.getState().orderReducer
-  } else {
-    state = store.getState().poOrderReducer
-  }
-  // fetches content and care option value as per change in props.fibreInstructionData and props.careData
-  const body = {
-    brand_key: state.brand ? state.brand.value : "",
-    order_user: getUserData().admin,
-    custom_number: state.custom_number || "",
-    content_group,
-    content: state.fibreInstructionData.map((data, index) => ({
-      cont_key: data.cont_key || "",
-      part_key: data.part_key || "",
-      percentage: data.en_percent || "",
-      seqno: (index + 1) * 10
-    })),
-    default_content: state.defaultContentData.map((cont, index) => ({
-      cont_key: cont || "",
-      seqno: (index + 1) * 10
-    })),
-    care: state.careData.map((data, index) => ({
-      care_key: data.cont_key || "",
-      seqno: (index + 1) * 10
-    })),
-    icon: Object.values(state.washCareData).map((obj, index) => ({
-      ...obj,
-      seqno: (index + 1) * 10
-    }))
-  }
-  axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
-    if (res.status === 200) {
-      const {
-        setContentNumberData,
-        setCareNumberData
-      } = require(`@redux/actions/views/Order/${module}`)
-      dispatch(
-        setContentNumberData({
-          value: res.data.content_number || "",
-          label: ""
-        })
-      )
-      dispatch(
-        setCareNumberData({ value: res.data.care_number || "", label: "" })
-      )
+export const matchContentNumber =
+  (module, content_group, section) => (dispatch) => {
+    let state
+    if (module === "Order") {
+      state = store.getState().orderReducer
+    } else {
+      state = store.getState().poOrderReducer
     }
-  })
-}
+    // fetches content and care option value as per change in props.fibreInstructionData and props.careData
+    const body = {
+      brand_key: state.brand ? state.brand.value : "",
+      order_user: getUserData().admin,
+      custom_number: state.custom_number || "",
+      content_group,
+      content: state.fibreInstructionData.map((data, index) => ({
+        cont_key: data.cont_key || "",
+        part_key: data.part_key || "",
+        percentage: data.en_percent || "",
+        seqno: (index + 1) * 10
+      })),
+      default_content: state.defaultContentData.map((cont, index) => ({
+        cont_key: cont || "",
+        seqno: (index + 1) * 10
+      })),
+      care: state.careData.map((data, index) => ({
+        care_key: data.cont_key || "",
+        seqno: (index + 1) * 10
+      })),
+      icon: Object.values(state.washCareData).map((obj, index) => ({
+        ...obj,
+        seqno: (index + 1) * 10
+      }))
+    }
+    axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
+      if (res.status === 200) {
+        const {
+          setContentNumberData,
+          setCareNumberData
+        } = require(`@redux/actions/views/Order/${module}`)
+        console.log(content_group, section)
+        if (content_group === "ABC") {
+          console.log(1)
+          dispatch(
+            setContentNumberData({
+              value: res.data.content_number || "",
+              label: ""
+            })
+          )
+          dispatch(
+            setCareNumberData({ value: res.data.care_number || "", label: "" })
+          )
+        }
+        if (
+          content_group === "AB" &&
+          (section === "content" || section === "care")
+        ) {
+          console.log(2)
+          dispatch(
+            setContentNumberData({
+              value: res.data.content_number || "",
+              label: ""
+            })
+          )
+        } else if (content_group === "C" && section === "washCare") {
+          console.log(3)
+          dispatch(
+            setCareNumberData({ value: res.data.care_number || "", label: "" })
+          )
+        }
+        if (content_group === "A" && section === "content") {
+          console.log(4)
+          dispatch(
+            setContentNumberData({
+              value: res.data.content_number || "",
+              label: ""
+            })
+          )
+        } else if (
+          content_group === "BC" &&
+          (section === "care" || section === "washCare")
+        ) {
+          console.log(5)
+          dispatch(
+            setCareNumberData({ value: res.data.care_number || "", label: "" })
+          )
+        }
+      }
+    })
+  }
 
 export const populateData =
   (module, data, brand_key, order_no, is_po_order_temp) => async (dispatch) => {
