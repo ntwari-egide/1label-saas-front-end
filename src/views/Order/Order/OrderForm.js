@@ -108,7 +108,7 @@ const ContentSection = (props) => {
             cont_translation: res.data[0]?.gb_translation
           }
           dispatch(setDefaultContentData([...tempDefData]))
-          props.handleMatchContentNumber(0)
+          props.handleMatchContentNumber(0, "content")
         }
       })
       .catch((err) => console.log(err))
@@ -815,7 +815,7 @@ const OrderForm = (props) => {
   const [iconMsg, setIconMsg] = useState([])
   const [percentMsg, setPercentMsg] = useState([])
 
-  const handleMatchContentNumber = (index) => {
+  const handleMatchContentNumber = (index, field) => {
     let content_group
     if (props.contentGroup === "ABC") {
       content_group = "ABC"
@@ -1187,8 +1187,8 @@ const OrderForm = (props) => {
                 classNamePrefix="select"
                 value={itemInfoOptions[field.title]?.filter(
                   (opt) =>
-                    opt.value ===
-                    props.dynamicFieldData[field?.title]?.field_value
+                    opt.label ===
+                    props.dynamicFieldData[field?.title]?.field_label
                 )}
                 onChange={(e) => {
                   // set coo to use later in invoice and delivery component
