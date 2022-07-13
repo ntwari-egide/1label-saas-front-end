@@ -14,6 +14,7 @@ import { setCurrentStep, resetData } from "@redux/actions/views/Order/POOrder"
 import { resetData as resetListData } from "@redux/actions/views/Order/List"
 import { savePOOrder } from "@redux/actions/views/common"
 import { toggleSaveBtnStatus } from "@redux/actions/layout"
+import { formatDateYMD } from "@utils"
 
 const stepperMenu = [
   "Listing",
@@ -37,7 +38,12 @@ const PoOrder = (props) => {
   const [poSelectedItems, setpoSelectedItems] = useState([])
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
-  const [searchParams, setSearchParams] = useState({})
+  const [searchParams, setSearchParams] = useState({
+    fromDate: formatDateYMD(
+      new Date(new Date().setMonth(new Date().getMonth() - 1))
+    ),
+    toDate: formatDateYMD(new Date())
+  })
 
   // dynamic columns data
 
