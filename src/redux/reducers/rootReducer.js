@@ -9,6 +9,7 @@ import verticalMenuReducer from "../../redux/navigation/vertical/reducers"
 import orderReducer from "./views/Order/Order"
 import poOrderReducer from "./views/Order/POOrder"
 import listReducer from "./views/Order/List"
+import footerReducer from "./footer"
 
 const rootReducer = combineReducers({
   auth,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   verticalMenuReducer,
   orderReducer,
   poOrderReducer,
-  listReducer
+  listReducer,
+  footerReducer
 })
 
 export default rootReducer
