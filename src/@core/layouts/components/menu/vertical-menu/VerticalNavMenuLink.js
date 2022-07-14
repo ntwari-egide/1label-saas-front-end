@@ -2,7 +2,7 @@
 import { useEffect } from "react"
 import { NavLink, useLocation, matchPath, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { connect } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 
 // ** Third Party Components
 import { Badge } from "reactstrap"
@@ -31,6 +31,8 @@ const VerticalNavMenuLink = ({
   // ** URL Vars
   const location = useLocation()
   const currentURL = location.pathname
+  // ** redux
+  const dispatch = useDispatch()
 
   // ** To match path
   const match = matchPath(currentURL, {
@@ -101,6 +103,19 @@ const VerticalNavMenuLink = ({
             })}
         /*eslint-enable */
         onClick={(e) => {
+          // ** reset data on click to emulate revisit
+          if (item && item.navLink) {
+            const module = item.navLink.split("/")[1]
+            if (
+              module &&
+              (module === "Order" || module === "POOrder" || module === "List")
+            ) {
+              const {
+                resetData
+              } = require(`@redux/actions/views/Order/${module}`)
+              dispatch(resetData())
+            }
+          }
           if (!item.navLink.length) {
             e.preventDefault()
           }
