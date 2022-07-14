@@ -1,5 +1,16 @@
+import { formatDateYMD } from "@utils"
+
 const initialState = {
+  // ** gobal states
   currentStep: 0,
+  // ** listing data
+  poSelectedOrders: [],
+  searchParams: {
+    fromDate: formatDateYMD(
+      new Date(new Date().setMonth(new Date().getMonth() - 1))
+    ),
+    toDate: formatDateYMD(new Date())
+  },
   // po item list states
   selectedItems: [],
   // po order form
@@ -113,6 +124,10 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...initialState }
     case "SET_PO_ORDER_NO":
       return { ...state, orderNo: "" }
+    case "SET_PO_SEARCH_PARAMS":
+      return { ...state, searchParams: action.payload }
+    case "SET_PO_SELECTED_ORDERS":
+      return { ...state, poSelectedOrders: action.payload }
     default:
       return { ...state }
   }

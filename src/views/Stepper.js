@@ -19,7 +19,7 @@ const Stepper = (props) => {
     return true
   }
 
-  const poSelectedItemsValidation = (menuItem) => {
+  const poSelectedOrdersValidation = (menuItem) => {
     if (
       [
         "Item List",
@@ -31,8 +31,8 @@ const Stepper = (props) => {
         "Direct Print"
       ].includes(menuItem) &&
       props.component === "POOrder" &&
-      props.validationFields?.poSelectedItems &&
-      props.validationFields?.poSelectedItems?.length <= 0
+      props.validationFields?.poSelectedOrders &&
+      props.validationFields?.poSelectedOrders?.length <= 0
     ) {
       alert("Please select an order to continue")
       return false
@@ -142,7 +142,7 @@ const Stepper = (props) => {
               onClick={() => {
                 if (
                   normalSelectedItemValidation(menuItem) &&
-                  poSelectedItemsValidation(menuItem) &&
+                  poSelectedOrdersValidation(menuItem) &&
                   normalOrderFormManFieldsValidation(menuItem) &&
                   poItemListValidation(menuItem) &&
                   poOrderFormManFieldsValidation(menuItem)

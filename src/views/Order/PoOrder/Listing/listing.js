@@ -25,7 +25,9 @@ import { connect, useDispatch } from "react-redux"
 import {
   setSizeTableTrigger,
   setBrand,
-  resetData
+  resetData,
+  setPoSelectedOrders,
+  setSearchParams
 } from "@redux/actions/views/Order/POOrder"
 import { populateData } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -127,7 +129,7 @@ const Listing = (props) => {
   )
 
   const handleOrder = () => {
-    if (props.poSelectedItems.length <= 0) {
+    if (props.poSelectedOrders.length <= 0) {
       alert("Please Item/s to proceed with your order")
       return
     }
@@ -241,7 +243,7 @@ const Listing = (props) => {
     const body = {
       brand_key: props.searchParams.brand ? props.searchParams.brand : "",
       order_user: getUserData().admin,
-      order_keys: props.poSelectedItems.map((item) => item.guid_key)
+      order_keys: props.poSelectedOrders.map((item) => item.guid_key)
     }
 
     axios
@@ -272,7 +274,7 @@ const Listing = (props) => {
     if (!props.setSizeTableTrigger) {
       dispatch(setSizeTableTrigger(true))
     }
-  }, [props.poSelectedItems])
+  }, [props.poSelectedOrders])
 
   // useEffect(() => {
   //   console.log("se", props.searchParams)
@@ -296,13 +298,17 @@ const Listing = (props) => {
               className="React"
               classNamePrefix="select"
               options={brandOptions}
-              value={brandOptions.filter(
-                (opt) => opt.value === props.searchParams.brand
-              )}
+              value={
+                brandOptions.filter(
+                  (opt) => opt.value === props.searchParams.brand
+                ) || ""
+              }
               onChange={(e) => {
                 dispatch(resetData())
                 dispatch(setBrand(e))
-                props.setSearchParams({ ...props.searchParams, brand: e.value })
+                dispatch(
+                  setSearchParams({ ...props.searchParams, brand: e.value })
+                )
               }}
               isDisabled={props.isOrderConfirmed}
             />
@@ -318,10 +324,12 @@ const Listing = (props) => {
                 <Input
                   value={props.searchParams.cid ? props.searchParams.cid : ""}
                   onChange={(e) =>
-                    props.setSearchParams({
-                      ...props.searchParams,
-                      cid: e.target.value
-                    })
+                    dispatch(
+                      setSearchParams({
+                        ...props.searchParams,
+                        cid: e.target.value
+                      })
+                    )
                   }
                   disabled={props.isOrderConfirmed}
                 />
@@ -341,10 +349,12 @@ const Listing = (props) => {
                       : ""
                   }
                   onChange={(e) =>
-                    props.setSearchParams({
-                      ...props.searchParams,
-                      factoryNo: e.target.value
-                    })
+                    dispatch(
+                      setSearchParams({
+                        ...props.searchParams,
+                        factoryNo: e.target.value
+                      })
+                    )
                   }
                   disabled={props.isOrderConfirmed}
                 />
@@ -362,10 +372,12 @@ const Listing = (props) => {
                 <Input
                   value={props.searchParams.poNo ? props.searchParams.poNo : ""}
                   onChange={(e) =>
-                    props.setSearchParams({
-                      ...props.searchParams,
-                      poNo: e.target.value
-                    })
+                    dispatch(
+                      setSearchParams({
+                        ...props.searchParams,
+                        poNo: e.target.value
+                      })
+                    )
                   }
                   disabled={props.isOrderConfirmed}
                 />
@@ -387,10 +399,12 @@ const Listing = (props) => {
                       opt.value.toString() === props.searchParams.orderStatus
                   )}
                   onChange={(e) =>
-                    props.setSearchParams({
-                      ...props.searchParams,
-                      orderStatus: e.value.toString()
-                    })
+                    dispatch(
+                      setSearchParams({
+                        ...props.searchParams,
+                        orderStatus: e.value.toString()
+                      })
+                    )
                   }
                   isDisabled={props.isOrderConfirmed}
                 />
@@ -418,10 +432,12 @@ const Listing = (props) => {
                       : ""
                   }
                   onChange={(e) => {
-                    props.setSearchParams({
-                      ...props.searchParams,
-                      fromDate: formatDateYMD(new Date(e))
-                    })
+                    dispatch(
+                      setSearchParams({
+                        ...props.searchParams,
+                        fromDate: formatDateYMD(new Date(e))
+                      })
+                    )
                   }}
                   options={{ dateFormat: "d-m-Y" }}
                   disabled={props.isOrderConfirmed}
@@ -443,10 +459,12 @@ const Listing = (props) => {
                       : ""
                   }
                   onChange={(e) => {
-                    props.setSearchParams({
-                      ...props.searchParams,
-                      toDate: formatDateYMD(new Date(e))
-                    })
+                    dispatch(
+                      setSearchParams({
+                        ...props.searchParams,
+                        toDate: formatDateYMD(new Date(e))
+                      })
+                    )
                   }}
                   options={{ dateFormat: "d-m-Y" }}
                   disabled={props.isOrderConfirmed}
@@ -463,7 +481,7 @@ const Listing = (props) => {
               onClick={() => {
                 fetchPoOrderList(props.searchParams)
                 fetchOrderDetails()
-                props.setpoSelectedItems([])
+                dispatch(setPoSelectedOrders([]))
               }}
             >
               Search
@@ -472,9 +490,9 @@ const Listing = (props) => {
               style={{ margin: "3px" }}
               color="primary"
               onClick={() => {
-                props.setSearchParams({})
+                dispatch(setSearchParams({}))
                 fetchPoOrderList()
-                props.setpoSelectedItems([])
+                dispatch(setPoSelectedOrders([]))
               }}
             >
               Cancel
@@ -530,12 +548,12 @@ const Listing = (props) => {
                 fixedHeader={true}
                 fixedHeaderScrollHeight={"350px"}
                 selectableRowSelected={(e) =>
-                  props.poSelectedItems
+                  props.poSelectedOrders
                     .map((item) => item.guid_key)
                     .includes(e.guid_key)
                 }
                 onSelectedRowsChange={(e) => {
-                  props.setpoSelectedItems(e.selectedRows)
+                  dispatch(setPoSelectedOrders(e.selectedRows))
                 }}
                 style={{ minHeight: "300px" }}
                 persistTableHead={true}
@@ -564,7 +582,7 @@ const Listing = (props) => {
       </CardBody>
       <CardFooter>
         <Footer
-          poSelectedItems={props.poSelectedItems}
+          poSelectedOrders={props.poSelectedOrders}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
           lastStep={props.lastStep}
@@ -575,7 +593,9 @@ const Listing = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  searchParams: state.poOrderReducer.searchParams,
+  poSelectedOrders: state.poOrderReducer.poSelectedOrders
 })
 
 export default connect(mapStateToProps, null)(Listing)

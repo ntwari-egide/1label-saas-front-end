@@ -176,3 +176,11 @@ export const resetData = () => (dispatch) => {
 export const setOrderNo = (value) => (dispatch) => {
   dispatch({ type: "SET_PO_ORDER_NO", payload: value })
 }
+
+export const setSearchParams = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_SEARCH_PARAMS", payload: data })
+}
+
+export const setPoSelectedOrders = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_SELECTED_ORDERS", payload: data })
+}

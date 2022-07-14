@@ -35,15 +35,8 @@ const PoOrder = (props) => {
   const [lastStep, setLastStep] = useState(stepperMenu.length - 1)
 
   // listing data
-  const [poSelectedItems, setpoSelectedItems] = useState([])
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
   const [isPoOrderTemp, setIsPoOrderTemp] = useState("")
-  const [searchParams, setSearchParams] = useState({
-    fromDate: formatDateYMD(
-      new Date(new Date().setMonth(new Date().getMonth() - 1))
-    ),
-    toDate: formatDateYMD(new Date())
-  })
 
   // dynamic columns data
 
@@ -97,7 +90,7 @@ const PoOrder = (props) => {
       <Stepper
         component={"POOrder"}
         validationFields={{
-          poSelectedItems,
+          poSelectedOrders: props.poSelectedOrders,
           selectedItems: props.selectedItems,
           orderFormManFields: {
             orderReference: props.orderReference,
@@ -112,13 +105,9 @@ const PoOrder = (props) => {
       />
       {props.currentStep === 0 ? (
         <Listing
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
-          setpoSelectedItems={setpoSelectedItems}
-          poSelectedItems={poSelectedItems}
           setCombinedPOOrderkey={setCombinedPOOrderkey}
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
@@ -173,7 +162,8 @@ const mapStateToProps = (state) => ({
   productionLocation: state.poOrderReducer.productionLocation,
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
   brandDetails: state.poOrderReducer.brandDetails,
-  cols: state.poOrderReducer.cols
+  cols: state.poOrderReducer.cols,
+  poSelectedOrders: state.poOrderReducer.poSelectedOrders
 })
 
 export default connect(mapStateToProps, null)(PoOrder)
