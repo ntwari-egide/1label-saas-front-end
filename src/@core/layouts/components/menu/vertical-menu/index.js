@@ -9,13 +9,9 @@ import { fetchVerticalMenuItems } from "../../../../../redux/navigation/vertical
 import classnames from "classnames"
 import PerfectScrollbar from "react-perfect-scrollbar"
 
-import { Label } from "reactstrap"
-
 // ** Vertical Menu Components
 import VerticalMenuHeader from "./VerticalMenuHeader"
 import VerticalNavMenuItems from "./VerticalNavMenuItems"
-
-import { home, one_print, admin } from "@src/redux/navigation/vertical/index"
 
 const Sidebar = (props) => {
   const dispatch = useDispatch()
