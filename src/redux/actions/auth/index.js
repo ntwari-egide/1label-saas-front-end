@@ -6,6 +6,16 @@ import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 const MySwal = withReactContent(Swal)
 
+const fetchSystemFooterInfo = (dispatch) => {
+  axios
+    .post("/menu/GetSystemFooterInfo")
+    .then((res) => {
+      if (res.status === 200) {
+      }
+    })
+    .catch((err) => console.log(err))
+}
+
 export const handleLogin = (data) => {
   return (dispatch) => {
     dispatch({ type: "SERVER_ERROR", data: "" })
@@ -16,7 +26,6 @@ export const handleLogin = (data) => {
     }
     axios.get("/Login/Login", { params }).then((res) => {
       if (res.status === 200) {
-        console.log("login", res)
         if (res?.data?.status === "fail") {
           dispatch({ type: "SET_LEFTLOADER", payload: false })
           MySwal.fire({
@@ -28,7 +37,8 @@ export const handleLogin = (data) => {
             buttonStyling: false
           })
         } else {
-          // dummy cookie for now is checked in router.js through isUserLoggedIn()
+          // ** fetch footer info
+          fetchSystemFooterInfo(dispatch)
           dispatch({ type: "SET_LEFTLOADER", payload: false })
           localStorage.setItem("userData", JSON.stringify(res?.data[0]))
           history.push("/home")
