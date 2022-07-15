@@ -451,7 +451,13 @@ const Listing = (props) => {
         </Row>
       </CardBody>
       <CardFooter>
-        <Row style={{ display: "flex", justifyContent: "space-between" }}>
+        <Row
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: 0
+          }}
+        >
           <Col xs="6" sm="6" md="4" lg="2">
             <Row>
               <div style={{ display: "flex" }}>
