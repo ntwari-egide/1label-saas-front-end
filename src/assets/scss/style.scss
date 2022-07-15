@@ -354,3 +354,8 @@ body {
 .address-card {
   cursor: pointer;
 }
+
+// ** override vertical menu styles to never wrap text
+.navigation .text-truncate {
+  white-space: normal !important;
+}
