@@ -66,27 +66,17 @@ const Order = (props) => {
         id="save-Confirm"
         onClick={(e) => dispatch(saveOrder("Confirm"))}
       />
-      <div style={{ display: "flex" }}>
-        <h2>{t("Order")}</h2>
-        <div
-          style={{
-            borderRight: "thin solid",
-            marginLeft: "10px",
-            marginBottom: "10px"
-          }}
-        ></div>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/home">{t("Home")}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to="/Order">{t("Order")}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to="/Order">{t("Order")}</Link>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </div>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <Link to="/home">{t("Home")}</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link to="/Order">{t("Order")}</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link to="/Order">{t("Order")}</Link>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Stepper
         component={"Order"}
         stepperMenu={stepperMenu}

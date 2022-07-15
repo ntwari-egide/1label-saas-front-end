@@ -66,27 +66,17 @@ const PoOrder = (props) => {
         id="save-Confirm"
         onClick={(e) => dispatch(savePOOrder("Confirm"))}
       />
-      <div style={{ display: "flex" }}>
-        <h2>{t("PO Order")}</h2>
-        <div
-          style={{
-            borderRight: "thin solid",
-            marginLeft: "10px",
-            marginBottom: "10px"
-          }}
-        ></div>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/home">{t("Home")}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link>{t("Order")}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to="/POOrder">{t("PO Order")}</Link>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </div>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <Link to="/home">{t("Home")}</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link>{t("Order")}</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link to="/POOrder">{t("PO Order")}</Link>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Stepper
         component={"POOrder"}
         validationFields={{

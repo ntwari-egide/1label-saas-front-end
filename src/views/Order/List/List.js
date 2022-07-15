@@ -23,27 +23,17 @@ const List = () => {
 
   return (
     <div>
-      <div style={{ display: "flex" }}>
-        <h2>{t("List")}</h2>
-        <div
-          style={{
-            borderRight: "thin solid",
-            marginLeft: "10px",
-            marginBottom: "10px"
-          }}
-        ></div>
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/home">{t("Home")}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link>{t("Order")}</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to="/List">{t("List")}</Link>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </div>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <Link to="/home">{t("Home")}</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link>{t("Order")}</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <Link to="/List">{t("List")}</Link>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Stepper
         stepperMenu={stepper}
         currentStep={currentStep}
