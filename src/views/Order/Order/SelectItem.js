@@ -159,6 +159,9 @@ const SelectItem = (props) => {
   }
 
   const fetchItemList = (brand, item_type, item_ref, refSearch) => {
+    if (!brand || !brand.value) {
+      return
+    }
     if (refSearch) {
       setRefSearch(true)
     }
@@ -244,48 +247,56 @@ const SelectItem = (props) => {
       </CardHeader>
       <CardBody style={{ minHeight: "520px" }}>
         <Row style={{ margin: "0rem", minHeight: "520px" }}>
-          {!loader ? (
-            itemList
-              .slice(visibleCardIndex, visibleCardIndex + 6)
-              .map((item, index) => (
-                <Col xs="12" sm="6" md="2" lg="2" key={`${item}-${index}`}>
-                  <Card style={{ minHeight: "493px" }}>
-                    <CardHeader>
-                      <div>{item.brand_name}</div>
-                      <div>{visibleCardIndex + index}</div>
-                    </CardHeader>
-                    <CardBody>
-                      <Row style={{ marginBottom: "10px" }}>
-                        <Col style={{ fontWeight: "700" }}>
-                          <h7>{item.item_ref}</h7>
-                        </Col>
-                      </Row>
-                      <Row style={{ marginBottom: "10px" }}>
-                        <Col>{item.item_ref_desc}</Col>
-                      </Row>
-                    </CardBody>
-                    <CardFooter>
-                      <CheckBox
-                        color="primary"
-                        icon={<Check className="vx-icon" size={16} />}
-                        checked={props.selectedItems
-                          .map((item) => item.guid_key)
-                          .includes(item.guid_key)}
-                        onChange={() => {
-                          handleSelectedItemsChange(item)
-                        }}
-                        disabled={props.isOrderConfirmed}
-                      />
-                    </CardFooter>
-                  </Card>
-                </Col>
-              ))
+          {props.brand.value ? (
+            !loader ? (
+              itemList
+                .slice(visibleCardIndex, visibleCardIndex + 6)
+                .map((item, index) => (
+                  <Col xs="12" sm="6" md="2" lg="2" key={`${item}-${index}`}>
+                    <Card style={{ minHeight: "493px" }}>
+                      <CardHeader>
+                        <div>{item.brand_name}</div>
+                        <div>{visibleCardIndex + index}</div>
+                      </CardHeader>
+                      <CardBody>
+                        <Row style={{ marginBottom: "10px" }}>
+                          <Col style={{ fontWeight: "700" }}>
+                            <h7>{item.item_ref}</h7>
+                          </Col>
+                        </Row>
+                        <Row style={{ marginBottom: "10px" }}>
+                          <Col>{item.item_ref_desc}</Col>
+                        </Row>
+                      </CardBody>
+                      <CardFooter>
+                        <CheckBox
+                          color="primary"
+                          icon={<Check className="vx-icon" size={16} />}
+                          checked={props.selectedItems
+                            .map((item) => item.guid_key)
+                            .includes(item.guid_key)}
+                          onChange={() => {
+                            handleSelectedItemsChange(item)
+                          }}
+                          disabled={props.isOrderConfirmed}
+                        />
+                      </CardFooter>
+                    </Card>
+                  </Col>
+                ))
+            ) : (
+              <CardBody style={{ minHeight: "520px" }}>
+                <div style={{ textAlign: "center", padding: "14% 0" }}>
+                  <Spinner color="primary" />
+                </div>
+              </CardBody>
+            )
           ) : (
-            <CardBody style={{ minHeight: "520px" }}>
-              <div style={{ textAlign: "center", padding: "14% 0" }}>
-                <Spinner color="primary" />
+            <div style={{ textAlign: "center", width: "100%" }}>
+              <div style={{ marginTop: "20px" }}>
+                <h5>Please select a brand to display items.</h5>
               </div>
-            </CardBody>
+            </div>
           )}
         </Row>
         <Row>
