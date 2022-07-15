@@ -28,10 +28,7 @@ const Footer = () => {
     <p className="clearfix mb-0">
       <span className="float-md-left d-block d-md-inline-block mt-25">
         <div style={{ display: "-webkit-inline-box" }}>
-          <div
-            style={{ cursor: "pointer" }}
-            onClick={() => window.open("https://zplanet.app/en/index.html")}
-          >
+          <div style={{ cursor: "pointer" }}>
             <img
               src={themeConfig.app.appLogoImage}
               alt="logo"
@@ -40,13 +37,11 @@ const Footer = () => {
           </div>
           <div>
             {footerData?.system_company}{" "}
-            <Link to="/PrivacyPolicy" target={"_blank"}>
-              {footerData?.system_privacy_policy_title}
-            </Link>
+            <Link>{footerData?.system_privacy_policy_title}</Link>
           </div>
         </div>
       </span>
-      <span href="/PrivacyPolicy" className="float-md-right d-none d-md-block">
+      <span className="float-md-right d-none d-md-block">
         {footerData?.system_version}
       </span>
     </p>
