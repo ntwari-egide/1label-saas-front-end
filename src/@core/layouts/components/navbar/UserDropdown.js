@@ -30,6 +30,7 @@ const UserDropdown = () => {
   // ** State
   const [userData, setUserData] = useState(null)
   const [userProfile, setUserProfile] = useState("")
+  const user = JSON.parse(localStorage.getItem("userData"))
 
   const getUserProfile = (data) => {
     // /home/getHomeMsg?username=a
@@ -60,6 +61,9 @@ const UserDropdown = () => {
         className="nav-link dropdown-user-link"
         onClick={(e) => e.preventDefault()}
       >
+        <div className="user-nav d-sm-flex d-none">
+          <span className="user-name text-bold-600">{user.admin}</span>
+        </div>
         {userProfile ? (
           <Avatar className="mr-1" img={userProfile} color="primary" />
         ) : (

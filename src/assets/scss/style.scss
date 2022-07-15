@@ -251,7 +251,7 @@ body {
   li
   a.dropdown-user-link
   .user-name {
-  color: #fff !important;
+  color: white !important;
 }
 
 .selected-language {
@@ -358,4 +358,8 @@ body {
 // ** override vertical menu styles to never wrap text
 .navigation .text-truncate {
   white-space: normal !important;
+}
+
+.user-name {
+  color: white;
 }
