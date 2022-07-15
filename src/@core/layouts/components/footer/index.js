@@ -1,7 +1,29 @@
-// ** Icons Import
+// ** react imports
+import { useEffect, useState } from "react"
+// ** other imports
 import themeConfig from "@configs/themeConfig"
+import { Link } from "react-router-dom"
+import axios from "@axios"
 
 const Footer = () => {
+  const [footerData, setFooterData] = useState({})
+
+  // API Service
+  const fetchSystemFooterInfo = () => {
+    axios
+      .post("/menu/GetSystemFooterInfo")
+      .then((res) => {
+        if (res.status === 200) {
+          setFooterData(res.data)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    fetchSystemFooterInfo()
+  }, [])
+
   return (
     <p className="clearfix mb-0">
       <span className="float-md-left d-block d-md-inline-block mt-25">
@@ -17,14 +39,15 @@ const Footer = () => {
             />
           </div>
           <div>
-            © {new Date().getFullYear()} Account System - Powered by a4appz
-            Limited. Member of SiiA Group. All rights reserved.
+            {footerData?.system_company}{" "}
+            <Link to="/PrivacyPolicy" target={"_blank"}>
+              {footerData?.system_privacy_policy_title}
+            </Link>
           </div>
         </div>
       </span>
-      <span className="float-md-right d-none d-md-block">
-        Demo Site - Version # 1.00
-        {/* <Heart size={14} /> */}
+      <span href="/PrivacyPolicy" className="float-md-right d-none d-md-block">
+        {footerData?.system_version}
       </span>
     </p>
   )
