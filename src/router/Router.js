@@ -10,6 +10,7 @@ import { useRouterTransition } from "@hooks/useRouterTransition"
 const NotAuthorized = lazy(() => import("@src/views/NotAuthorized"))
 const Error = lazy(() => import("@src/views/Error"))
 const Login = lazy(() => import("@src/views/Login"))
+const PrivacyPolicy = lazy(() => import("@src/views/PrivacyPolicy"))
 import history from "../history"
 // const LinkDownload = lazy(() => import('@src/views/LinkDownload'))
 // Router function to redner all routes listed in ./routes
@@ -120,6 +121,15 @@ const Router = () => {
               </BlankLayout>
             )
           }}
+        />
+        <Route
+          exact
+          path="/PrivacyPolicy"
+          render={() => (
+            <BlankLayout>
+              <PrivacyPolicy />
+            </BlankLayout>
+          )}
         />
         {/* From Routes Files */}
         {authenticatedRoutes()}

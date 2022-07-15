@@ -33,6 +33,11 @@ const Routes = [
   {
     path: "/List",
     component: lazy(() => import("../../views/Order/List/List.js"))
+  },
+  {
+    path: "/PrivacyPolicy",
+    component: lazy(() => import("../../views/PrivacyPolicy")),
+    layout: "BlankLayout"
   }
 ]
 
