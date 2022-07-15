@@ -6,16 +6,6 @@ import Swal from "sweetalert2"
 import withReactContent from "sweetalert2-react-content"
 const MySwal = withReactContent(Swal)
 
-const fetchSystemFooterInfo = (dispatch) => {
-  axios
-    .post("/menu/GetSystemFooterInfo")
-    .then((res) => {
-      if (res.status === 200) {
-      }
-    })
-    .catch((err) => console.log(err))
-}
-
 export const handleLogin = (data) => {
   return (dispatch) => {
     dispatch({ type: "SERVER_ERROR", data: "" })
@@ -38,7 +28,6 @@ export const handleLogin = (data) => {
           })
         } else {
           // ** fetch footer info
-          fetchSystemFooterInfo(dispatch)
           dispatch({ type: "SET_LEFTLOADER", payload: false })
           localStorage.setItem("userData", JSON.stringify(res?.data[0]))
           history.push("/home")
