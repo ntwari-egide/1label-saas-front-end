@@ -232,7 +232,7 @@ const ContentSection = (props) => {
                       setComponentTip("")
                     }}
                     isClearable={true}
-                    isDisabled={props.isOrderConfirmed}
+                    isDisabled={props.isOrderConfirmed || props.onlyAdmin}
                   />
                 </div>
                 {props.partTooltipStatus ? (
@@ -295,7 +295,7 @@ const ContentSection = (props) => {
                     onMouseLeave={() => {
                       setFabricTip("")
                     }}
-                    isDisabled={props.isOrderConfirmed}
+                    isDisabled={props.isOrderConfirmed || props.onlyAdmin}
                   />
                 </div>
                 {props.contentTooltipStatus ? (
@@ -352,7 +352,7 @@ const ContentSection = (props) => {
                   onMouseLeave={() => {
                     setPercentTip("")
                   }}
-                  disabled={props.isOrderConfirmed}
+                  disabled={props.isOrderConfirmed || props.onlyAdmin}
                 />
                 {props.percentTooltipStatus ? (
                   <div>
@@ -550,7 +550,7 @@ const CareSection = (props) => {
                   props.handleMatchContentNumber("care")
                 }}
                 isClearable={true}
-                isDisabled={props.isOrderConfirmed}
+                isDisabled={props.isOrderConfirmed || props.onlyAdmin}
                 onFocus={() => {
                   if (props.showMsg && props.msgMode === "Focus") {
                     setCareTip(`care-select-${index}`)
@@ -747,7 +747,7 @@ const WashCareSection = (props) => {
                   }}
                   onBlur={() => setIconTip("")}
                   isClearable={true}
-                  isDisabled={props.isOrderConfirmed}
+                  isDisabled={props.isOrderConfirmed || props.onlyAdmin}
                 />
               </div>
               {props.iconTooltipStatus ? (
@@ -788,7 +788,7 @@ const OrderForm = (props) => {
   // Data
   const [itemInfoOptions, setItemInfoOptions] = useState({})
   const [iconSequence, setIconSequence] = useState([])
-  const [mainLoader, setMainLoader] = useState(true)
+  const [onlyAdmin, setOnlyAdmin] = useState(false)
   // select options
   const [fabricOptions, setFabricOptions] = useState([])
   const [componentOptions, setComponentOptions] = useState([])
@@ -851,7 +851,6 @@ const OrderForm = (props) => {
         if (res.status === 200) {
           dispatch(setBrandDetails(res.data))
         }
-        setMainLoader(false)
       })
       .catch((err) => console.log(err))
   }
@@ -1019,6 +1018,11 @@ const OrderForm = (props) => {
               setMsgMode("Do not show")
             } else {
               setMsgMode(res.data[0]?.content_msg_show_model)
+            }
+          }
+          if (res.data[0]?.create_content_model) {
+            if (res.data[0]?.create_content_model === "Admin") {
+              setOnlyAdmin(true)
             }
           }
         }
@@ -1458,6 +1462,7 @@ const OrderForm = (props) => {
                   defaultContentData={props.defaultContentData}
                   handleMatchContentNumber={handleMatchContentNumber}
                   isOrderConfirmed={props.isOrderConfirmed}
+                  onlyAdmin={onlyAdmin}
                 />
               ) : props.contentGroup === "AB/C" ? (
                 <div>
@@ -1483,6 +1488,7 @@ const OrderForm = (props) => {
                     defaultContentData={props.defaultContentData}
                     handleMatchContentNumber={handleMatchContentNumber}
                     isOrderConfirmed={props.isOrderConfirmed}
+                    onlyAdmin={onlyAdmin}
                   />
                   <CareSection
                     careName={careName}
@@ -1501,6 +1507,7 @@ const OrderForm = (props) => {
                     careNumberData={props.careNumberData}
                     handleMatchContentNumber={handleMatchContentNumber}
                     isOrderConfirmed={props.isOrderConfirmed}
+                    onlyAdmin={onlyAdmin}
                   />
                 </div>
               ) : props.contentGroup === "ABC" ? (
@@ -1527,6 +1534,7 @@ const OrderForm = (props) => {
                     defaultContentData={props.defaultContentData}
                     handleMatchContentNumber={handleMatchContentNumber}
                     isOrderConfirmed={props.isOrderConfirmed}
+                    onlyAdmin={onlyAdmin}
                   />
                   <CareSection
                     careName={careName}
@@ -1544,6 +1552,7 @@ const OrderForm = (props) => {
                     careNumberData={props.careNumberData}
                     handleMatchContentNumber={handleMatchContentNumber}
                     isOrderConfirmed={props.isOrderConfirmed}
+                    onlyAdmin={onlyAdmin}
                   />
                   <WashCareSection
                     iconSequence={iconSequence}
@@ -1560,6 +1569,7 @@ const OrderForm = (props) => {
                     contentGroup={props.contentGroup}
                     washCareData={props.washCareData}
                     isOrderConfirmed={props.isOrderConfirmed}
+                    onlyAdmin={onlyAdmin}
                   />
                 </div>
               ) : null}
@@ -1586,6 +1596,7 @@ const OrderForm = (props) => {
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
                       isOrderConfirmed={props.isOrderConfirmed}
+                      onlyAdmin={onlyAdmin}
                     />
                     <WashCareSection
                       iconSequence={iconSequence}
@@ -1602,6 +1613,7 @@ const OrderForm = (props) => {
                       contentGroup={props.contentGroup}
                       washCareData={props.washCareData}
                       isOrderConfirmed={props.isOrderConfirmed}
+                      onlyAdmin={onlyAdmin}
                     />
                   </CardBody>
                 </Card>
@@ -1625,6 +1637,7 @@ const OrderForm = (props) => {
                       contentGroup={props.contentGroup}
                       washCareData={props.washCareData}
                       isOrderConfirmed={props.isOrderConfirmed}
+                      onlyAdmin={onlyAdmin}
                     />
                   </CardBody>
                 </Card>
