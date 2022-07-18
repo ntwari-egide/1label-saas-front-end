@@ -122,66 +122,80 @@ const ContentSection = (props) => {
         </Col>
       </Row>
       <Row style={{ marginBottom: "10px" }}>
-        <Col xs="12" sm="12" md="1" lg="1" xl="1">
-          <Label style={{ marginTop: "12px" }}>{props.contentName}</Label>
-        </Col>
-        <Col xs="12" sm="12" md="9" lg="9" xl="9">
-          <Select
-            className="React"
-            classNamePrefix="select"
-            value={
-              props.contentGroup === "ABC"
-                ? props.contentGroupOptions["ABC"]?.filter(
-                    (opt) => opt.label === props.contentNumberData?.label
-                  )
-                : props.contentGroup === "A/BC"
-                ? props.contentGroupOptions["A"]?.filter(
-                    (opt) => opt.label === props.contentNumberData?.label
-                  )
-                : props.contentGroupOptions["AB"]?.filter(
-                    (opt) => opt.label === props.contentNumberData?.label
-                  )
-            }
-            options={
-              props.contentGroup === "ABC"
-                ? props.contentGroupOptions["ABC"]
-                : props.contentGroup === "A/BC"
-                ? props.contentGroupOptions["A"]
-                : props.contentGroupOptions["AB"]
-            }
-            onChange={(e) => {
-              dispatch(setContentNumberData(e ? e : {}))
-              if (e) {
-                props.fetchContentNumberDetail(e.value, e.label)
-              } else {
-                // to handle isClearable event
-                if (props.contentGroup === "A/BC") {
-                  dispatch(setFibreInstructionData([{}]))
-                } else if (props.contentGroup === "AB/C") {
-                  dispatch(setFibreInstructionData([{}]))
-                  dispatch(setCareData([{}]))
-                } else {
-                  dispatch(setFibreInstructionData([{}]))
-                  dispatch(setWashCareData([{}]))
-                  dispatch(setCareData([{}]))
+        <Col xs="6" sm="6" md="6" lg="6" xl="6">
+          <Row>
+            <Col xs="12" sm="12" md="12" lg="12" xl="12">
+              <Label style={{ marginTop: "12px" }}>{props.contentName}</Label>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs="12" sm="12" md="12" lg="12" xl="12">
+              <Select
+                className="React"
+                classNamePrefix="select"
+                value={
+                  props.contentGroup === "ABC"
+                    ? props.contentGroupOptions["ABC"]?.filter(
+                        (opt) => opt.label === props.contentNumberData?.label
+                      )
+                    : props.contentGroup === "A/BC"
+                    ? props.contentGroupOptions["A"]?.filter(
+                        (opt) => opt.label === props.contentNumberData?.label
+                      )
+                    : props.contentGroupOptions["AB"]?.filter(
+                        (opt) => opt.label === props.contentNumberData?.label
+                      )
                 }
-              }
-            }}
-            isClearable={true}
-            isDisabled={props.isOrderConfirmed}
-          />
+                options={
+                  props.contentGroup === "ABC"
+                    ? props.contentGroupOptions["ABC"]
+                    : props.contentGroup === "A/BC"
+                    ? props.contentGroupOptions["A"]
+                    : props.contentGroupOptions["AB"]
+                }
+                onChange={(e) => {
+                  dispatch(setContentNumberData(e ? e : {}))
+                  if (e) {
+                    props.fetchContentNumberDetail(e.value, e.label)
+                  } else {
+                    // to handle isClearable event
+                    if (props.contentGroup === "A/BC") {
+                      dispatch(setFibreInstructionData([{}]))
+                    } else if (props.contentGroup === "AB/C") {
+                      dispatch(setFibreInstructionData([{}]))
+                      dispatch(setCareData([{}]))
+                    } else {
+                      dispatch(setFibreInstructionData([{}]))
+                      dispatch(setWashCareData([{}]))
+                      dispatch(setCareData([{}]))
+                    }
+                  }
+                }}
+                isClearable={true}
+                isDisabled={props.isOrderConfirmed}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row style={{ marginBottom: "10px" }}>
-        <Col xs="12" sm="12" md="1" lg="1" xl="1">
-          <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
-        </Col>
-        <Col xs="12" sm="12" md="9" lg="9" xl="9">
-          <Input
-            value={props.contentCustomNumber}
-            onChange={(e) => dispatch(setContentCustomNumber(e.target.value))}
-            disabled={props.isOrderConfirmed}
-          />
+        <Col xs="6" sm="6" md="6" lg="6" xl="6">
+          <Row>
+            <Col xs="12" sm="12" md="12" lg="12" xl="12">
+              <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs="12" sm="12" md="12" lg="12" xl="12">
+              <Input
+                value={props.contentCustomNumber}
+                onChange={(e) =>
+                  dispatch(setContentCustomNumber(e.target.value))
+                }
+                disabled={props.isOrderConfirmed}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row style={{ paddingTop: "20px" }}>
@@ -453,65 +467,79 @@ const CareSection = (props) => {
       {props.contentGroup === "A/BC" ? (
         <>
           <Row style={{ marginBottom: "10px" }}>
-            <Col xs="12" sm="12" md="1" lg="1" xl="1">
-              <Label style={{ marginTop: "12px" }}>{props.careName}</Label>
-            </Col>
-            <Col xs="12" sm="12" md="9" lg="9" xl="9">
-              <Select
-                className="React"
-                classNamePrefix="select"
-                value={
-                  props.contentGroup === "ABC"
-                    ? props.contentGroupOptions["ABC"]?.filter(
-                        (opt) => opt.value === props.careNumberData?.value
-                      )
-                    : props.contentGroup === "A/BC"
-                    ? props.contentGroupOptions["BC"]?.filter(
-                        (opt) => opt.value === props.careNumberData?.value
-                      )
-                    : props.contentGroupOptions["C"]?.filter(
-                        (opt) => opt.value === props.careNumberData?.value
-                      )
-                }
-                options={
-                  props.contentGroup === "ABC"
-                    ? props.contentGroupOptions["ABC"]
-                    : props.contentGroup === "A/BC"
-                    ? props.contentGroupOptions["BC"]
-                    : props.contentGroupOptions["C"]
-                }
-                onChange={(e) => {
-                  dispatch(setCareNumberData(e ? e : {}))
-                  if (e) {
-                    props.fetchContentNumberDetail(e.value, e.label)
-                  } else {
-                    if (props.contentGroup === "A/BC") {
-                      dispatch(setWashCareData([{}]))
-                      dispatch(setCareData([{}]))
-                    } else if (props.contentGroup === "AB/C") {
-                      dispatch(setWashCareData([{}]))
-                    } else {
-                      dispatch(setFibreInstructionData([{}]))
-                      dispatch(setWashCareData([{}]))
-                      dispatch(setCareData([{}]))
+            <Col xs="6" sm="6" md="6" lg="6" xl="6">
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Label style={{ marginTop: "12px" }}>{props.careName}</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    value={
+                      props.contentGroup === "ABC"
+                        ? props.contentGroupOptions["ABC"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
+                        : props.contentGroup === "A/BC"
+                        ? props.contentGroupOptions["BC"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
+                        : props.contentGroupOptions["C"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
                     }
-                  }
-                }}
-                isClearable={true}
-                isDisabled={props.isOrderConfirmed}
-              />
+                    options={
+                      props.contentGroup === "ABC"
+                        ? props.contentGroupOptions["ABC"]
+                        : props.contentGroup === "A/BC"
+                        ? props.contentGroupOptions["BC"]
+                        : props.contentGroupOptions["C"]
+                    }
+                    onChange={(e) => {
+                      dispatch(setCareNumberData(e ? e : {}))
+                      if (e) {
+                        props.fetchContentNumberDetail(e.value, e.label)
+                      } else {
+                        if (props.contentGroup === "A/BC") {
+                          dispatch(setWashCareData([{}]))
+                          dispatch(setCareData([{}]))
+                        } else if (props.contentGroup === "AB/C") {
+                          dispatch(setWashCareData([{}]))
+                        } else {
+                          dispatch(setFibreInstructionData([{}]))
+                          dispatch(setWashCareData([{}]))
+                          dispatch(setCareData([{}]))
+                        }
+                      }
+                    }}
+                    isClearable={true}
+                    isDisabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Row style={{ marginBottom: "10px" }}>
-            <Col xs="12" sm="12" md="1" lg="1" xl="1">
-              <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
-            </Col>
-            <Col xs="12" sm="12" md="9" lg="9" xl="9">
-              <Input
-                value={props.careCustomNumber}
-                onChange={(e) => dispatch(setCareCustomNumber(e.target.value))}
-                disabled={props.isOrderConfirmed}
-              />
+            <Col xs="6" sm="6" md="6" lg="6" xl="6">
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Input
+                    value={props.careCustomNumber}
+                    onChange={(e) =>
+                      dispatch(setCareCustomNumber(e.target.value))
+                    }
+                    disabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </>
@@ -635,65 +663,79 @@ const WashCareSection = (props) => {
       {props.contentGroup === "AB/C" ? (
         <>
           <Row style={{ marginBottom: "10px" }}>
-            <Col xs="12" sm="12" md="1" lg="1" xl="1">
-              <Label style={{ marginTop: "12px" }}>{props.iconName}</Label>
-            </Col>
-            <Col xs="12" sm="12" md="9" lg="9" xl="9">
-              <Select
-                className="React"
-                classNamePrefix="select"
-                value={
-                  props.contentGroup === "ABC"
-                    ? props.contentGroupOptions["ABC"]?.filter(
-                        (opt) => opt.value === props.careNumberData?.value
-                      )
-                    : props.contentGroup === "A/BC"
-                    ? props.contentGroupOptions["BC"]?.filter(
-                        (opt) => opt.value === props.careNumberData?.value
-                      )
-                    : props.contentGroupOptions["C"]?.filter(
-                        (opt) => opt.value === props.careNumberData?.value
-                      )
-                }
-                options={
-                  props.contentGroup === "ABC"
-                    ? props.contentGroupOptions["ABC"]
-                    : props.contentGroup === "A/BC"
-                    ? props.contentGroupOptions["BC"]
-                    : props.contentGroupOptions["C"]
-                }
-                onChange={(e) => {
-                  dispatch(setCareNumberData(e ? e : {}))
-                  if (e) {
-                    props.fetchContentNumberDetail(e.value, e.label)
-                  } else {
-                    if (props.contentGroup === "A/BC") {
-                      dispatch(setWashCareData([{}]))
-                      dispatch(setCareData([{}]))
-                    } else if (props.contentGroup === "AB/C") {
-                      dispatch(setWashCareData([{}]))
-                    } else {
-                      dispatch(setFibreInstructionData([{}]))
-                      dispatch(setWashCareData([{}]))
-                      dispatch(setCareData([{}]))
+            <Col xs="6" sm="6" md="6" lg="6" xl="6">
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Label style={{ marginTop: "12px" }}>{props.iconName}</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    value={
+                      props.contentGroup === "ABC"
+                        ? props.contentGroupOptions["ABC"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
+                        : props.contentGroup === "A/BC"
+                        ? props.contentGroupOptions["BC"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
+                        : props.contentGroupOptions["C"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
                     }
-                  }
-                }}
-                isClearable={true}
-                isDisabled={props.isOrderConfirmed}
-              />
+                    options={
+                      props.contentGroup === "ABC"
+                        ? props.contentGroupOptions["ABC"]
+                        : props.contentGroup === "A/BC"
+                        ? props.contentGroupOptions["BC"]
+                        : props.contentGroupOptions["C"]
+                    }
+                    onChange={(e) => {
+                      dispatch(setCareNumberData(e ? e : {}))
+                      if (e) {
+                        props.fetchContentNumberDetail(e.value, e.label)
+                      } else {
+                        if (props.contentGroup === "A/BC") {
+                          dispatch(setWashCareData([{}]))
+                          dispatch(setCareData([{}]))
+                        } else if (props.contentGroup === "AB/C") {
+                          dispatch(setWashCareData([{}]))
+                        } else {
+                          dispatch(setFibreInstructionData([{}]))
+                          dispatch(setWashCareData([{}]))
+                          dispatch(setCareData([{}]))
+                        }
+                      }
+                    }}
+                    isClearable={true}
+                    isDisabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Row style={{ marginBottom: "10px" }}>
-            <Col xs="12" sm="12" md="1" lg="1" xl="1">
-              <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
-            </Col>
-            <Col xs="12" sm="12" md="9" lg="9" xl="9">
-              <Input
-                value={props.careCustomNumber}
-                onChange={(e) => dispatch(setCareCustomNumber(e.target.value))}
-                disabled={props.isOrderConfirmed}
-              />
+            <Col xs="6" sm="6" md="6" lg="6" xl="6">
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Input
+                    value={props.careCustomNumber}
+                    onChange={(e) =>
+                      dispatch(setCareCustomNumber(e.target.value))
+                    }
+                    disabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </>
@@ -702,89 +744,98 @@ const WashCareSection = (props) => {
       {props.iconSequence?.map((iconObj, index) => {
         return (
           <Row style={{ marginBottom: "10px" }}>
-            <Col xs="12" s="12" md="2" lg="2" xl="2">
-              <Label style={{ marginTop: "12px" }}>
-                {iconObj.sys_icon_name}
-              </Label>
-            </Col>
-            <Col xs="12" s="12" md="8" lg="8" xl="8">
-              <div
-                onMouseEnter={() => {
-                  if (props.showMsg && props.msgMode === "Hover") {
-                    setIconTip(`icon-select-${index}`)
-                  }
-                }}
-                onMouseLeave={() => setIconTip("")}
-              >
-                <Select
-                  id={`icon-select-${index}`}
-                  className="React"
-                  classNamePrefix="select"
-                  options={props.washCareOptions[iconObj?.icon_type_id]}
-                  value={
-                    props.washCareOptions[iconObj?.icon_type_id]
-                      ? props.washCareOptions[iconObj?.icon_type_id]?.filter(
-                          (opt) =>
-                            opt.value ===
-                            props.washCareData[iconObj?.icon_type_id]?.icon_key
-                        )
-                      : ""
-                  }
-                  onChange={(e) => {
-                    const tempData = {}
-                    tempData[iconObj.icon_type_id] = {
-                      icon_key: e ? e.value : "",
-                      icon_type_id: e ? e.iconTypeId : "",
-                      icon_group: e ? e.iconGroup : ""
-                    }
-                    dispatch(
-                      setWashCareData({
-                        ...props.washCareData,
-                        ...tempData
-                      })
-                    )
-                    props.handleMatchContentNumber("washCare")
-                  }}
-                  getOptionLabel={(e) => (
-                    <div>
-                      {e.icon}
-                      {e.label}
-                    </div>
-                  )}
-                  filterOption={(options, query) =>
-                    options.data.label
-                      .toLowerCase()
-                      .includes(query.toLowerCase())
-                  }
-                  onFocus={() => {
-                    if (props.showMsg && props.msgMode === "Focus") {
-                      setIconTip(`icon-select-${index}`)
-                    }
-                  }}
-                  onBlur={() => setIconTip("")}
-                  isClearable={true}
-                  isDisabled={props.isOrderConfirmed || props.onlyAdmin}
-                />
-              </div>
-              {props.iconTooltipStatus ? (
-                <div>
-                  <Popover
-                    target={`icon-select-${index}`}
-                    isOpen={iconTip === `icon-select-${index}`}
+            <Col xs="6" s="6" md="6" lg="6" xl="6">
+              <Row>
+                <Col xs="12" s="12" md="12" lg="12" xl="12">
+                  <Label style={{ marginTop: "12px" }}>
+                    {iconObj.sys_icon_name}
+                  </Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" s="12" md="12" lg="12" xl="12">
+                  <div
+                    onMouseEnter={() => {
+                      if (props.showMsg && props.msgMode === "Hover") {
+                        setIconTip(`icon-select-${index}`)
+                      }
+                    }}
+                    onMouseLeave={() => setIconTip("")}
                   >
-                    <PopoverHeader>Tip </PopoverHeader>
-                    <PopoverBody>
-                      <ol type="i">
-                        {props.iconMsg.map((msg) => {
-                          if (msg.length) {
-                            return <li>{msg}</li>
-                          }
-                        })}
-                      </ol>
-                    </PopoverBody>
-                  </Popover>
-                </div>
-              ) : null}
+                    <Select
+                      id={`icon-select-${index}`}
+                      className="React"
+                      classNamePrefix="select"
+                      options={props.washCareOptions[iconObj?.icon_type_id]}
+                      value={
+                        props.washCareOptions[iconObj?.icon_type_id]
+                          ? props.washCareOptions[
+                              iconObj?.icon_type_id
+                            ]?.filter(
+                              (opt) =>
+                                opt.value ===
+                                props.washCareData[iconObj?.icon_type_id]
+                                  ?.icon_key
+                            )
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const tempData = {}
+                        tempData[iconObj.icon_type_id] = {
+                          icon_key: e ? e.value : "",
+                          icon_type_id: e ? e.iconTypeId : "",
+                          icon_group: e ? e.iconGroup : ""
+                        }
+                        dispatch(
+                          setWashCareData({
+                            ...props.washCareData,
+                            ...tempData
+                          })
+                        )
+                        props.handleMatchContentNumber("washCare")
+                      }}
+                      getOptionLabel={(e) => (
+                        <div>
+                          {e.icon}
+                          {e.label}
+                        </div>
+                      )}
+                      filterOption={(options, query) =>
+                        options.data.label
+                          .toLowerCase()
+                          .includes(query.toLowerCase())
+                      }
+                      onFocus={() => {
+                        if (props.showMsg && props.msgMode === "Focus") {
+                          setIconTip(`icon-select-${index}`)
+                        }
+                      }}
+                      onBlur={() => setIconTip("")}
+                      isClearable={true}
+                      isDisabled={props.isOrderConfirmed || props.onlyAdmin}
+                    />
+                  </div>
+                  {props.iconTooltipStatus ? (
+                    <div>
+                      <Popover
+                        target={`icon-select-${index}`}
+                        isOpen={iconTip === `icon-select-${index}`}
+                      >
+                        <PopoverHeader>Tip </PopoverHeader>
+                        <PopoverBody>
+                          <ol type="i">
+                            {props.iconMsg.map((msg) => {
+                              if (msg.length) {
+                                return <li>{msg}</li>
+                              }
+                            })}
+                          </ol>
+                        </PopoverBody>
+                      </Popover>
+                    </div>
+                  ) : null}
+                </Col>
+              </Row>
             </Col>
           </Row>
         )
@@ -1196,80 +1247,92 @@ const OrderForm = (props) => {
     switch (field.type) {
       case "select":
         return (
-          <Row style={{ margin: "5px" }}>
-            <Col
-              xs="12"
-              sm="12"
-              md="3"
-              lg="2"
-              xl="2"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center"
-              }}
-            >
-              <Label>{field?.title}</Label>
-            </Col>
-            <Col xs="12" sm="12" md="6" lg="5" xl="5">
-              <Select
-                options={itemInfoOptions[field.title]}
-                className="React"
-                classNamePrefix="select"
-                value={itemInfoOptions[field.title]?.filter(
-                  (opt) =>
-                    opt.label ===
-                    props.dynamicFieldData[field?.title]?.field_label
-                )}
-                onChange={(e) => {
-                  // set coo to use later in invoice and delivery component
-                  if (field.field === "F3") {
-                    dispatch(setCoo(e.label))
-                  }
-                  const tempState = props.dynamicFieldData
-                  tempState[field.title] = {
-                    ...tempState[field.title],
-                    field_value: e.value,
-                    field_label: e.label
-                  }
-                  dispatch(setDynamicFieldData({ ...tempState }))
-                }}
-                isDisabled={props.isOrderConfirmed}
-              />
+          <Row style={{ margin: "5px", marginBottom: "10px" }}>
+            <Col xs="6" sm="6" md="6" lg="6" xl="6">
+              <Row>
+                <Col
+                  xs="12"
+                  sm="12"
+                  md="12"
+                  lg="12"
+                  xl="12"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Label>{field?.title}</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Select
+                    options={itemInfoOptions[field.title]}
+                    className="React"
+                    classNamePrefix="select"
+                    value={itemInfoOptions[field.title]?.filter(
+                      (opt) =>
+                        opt.label ===
+                        props.dynamicFieldData[field?.title]?.field_label
+                    )}
+                    onChange={(e) => {
+                      // set coo to use later in invoice and delivery component
+                      if (field.field === "F3") {
+                        dispatch(setCoo(e.label))
+                      }
+                      const tempState = props.dynamicFieldData
+                      tempState[field.title] = {
+                        ...tempState[field.title],
+                        field_value: e.value,
+                        field_label: e.label
+                      }
+                      dispatch(setDynamicFieldData({ ...tempState }))
+                    }}
+                    isDisabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         )
       case "input":
         return (
-          <Row style={{ margin: "5px" }}>
-            <Col
-              xs="12"
-              sm="12"
-              md="3"
-              lg="2"
-              xl="2"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center"
-              }}
-            >
-              <Label>{field?.title}</Label>
-            </Col>
-            <Col xs="12" sm="12" md="6" lg="5" xl="5">
-              <Input
-                value={props.dynamicFieldData[field.title]?.field_label}
-                onChange={(e) => {
-                  const tempState = props.dynamicFieldData
-                  tempState[field.title] = {
-                    ...tempState[field.title],
-                    field_value: e.target.value,
-                    field_label: e.target.value
-                  }
-                  dispatch(setDynamicFieldData({ ...tempState }))
-                }}
-                disabled={props.isOrderConfirmed}
-              />
+          <Row style={{ margin: "5px", marginBottom: "10px" }}>
+            <Col xs="6" sm="6" md="6" lg="6" xl="6">
+              <Row>
+                <Col
+                  xs="12"
+                  sm="12"
+                  md="12"
+                  lg="12"
+                  xl="12"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                  }}
+                >
+                  <Label>{field?.title}</Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Input
+                    value={props.dynamicFieldData[field.title]?.field_label}
+                    onChange={(e) => {
+                      const tempState = props.dynamicFieldData
+                      tempState[field.title] = {
+                        ...tempState[field.title],
+                        field_value: e.target.value,
+                        field_label: e.target.value
+                      }
+                      dispatch(setDynamicFieldData({ ...tempState }))
+                    }}
+                    disabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         )
