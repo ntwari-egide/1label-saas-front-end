@@ -117,11 +117,6 @@ const ContentSection = (props) => {
   return (
     <div>
       <Row>
-        <Col>
-          <h4 className="text-primary">{t("Content")}</h4>
-        </Col>
-      </Row>
-      <Row style={{ marginBottom: "10px" }}>
         <Col xs="6" sm="6" md="6" lg="6" xl="6">
           <Row>
             <Col xs="12" sm="12" md="12" lg="12" xl="12">
@@ -459,12 +454,14 @@ const CareSection = (props) => {
   const dispatch = useDispatch()
   const [careTip, setCareTip] = useState("")
   return (
-    <div style={{ paddingTop: "20px" }}>
-      <Row>
-        <Col>
-          <h4 className="text-primary">{t("Care")}</h4>
-        </Col>
-      </Row>
+    <div style={{ paddingTop: props.contentGroup === "AB/C" ? "20px" : 0 }}>
+      {props.contentGroup === "AB/C" ? (
+        <Row>
+          <Col>
+            <h4 className="text-primary">{t("Care")}</h4>
+          </Col>
+        </Row>
+      ) : null}
       {props.contentGroup === "A/BC" ? (
         <>
           <Row style={{ marginBottom: "10px" }}>
@@ -656,12 +653,14 @@ const WashCareSection = (props) => {
   const [iconTip, setIconTip] = useState("")
 
   return (
-    <div style={{ paddingTop: "20px" }}>
-      <Row>
-        <Col>
-          <h4 className="text-primary">{t("Wash Care")}</h4>
-        </Col>
-      </Row>
+    <div style={{ paddingTop: props.contentGroup === "A/BC" ? "20px" : 0 }}>
+      {props.contentGroup === "A/BC" ? (
+        <Row>
+          <Col>
+            <h4 className="text-primary">{t("Wash Care")}</h4>
+          </Col>
+        </Row>
+      ) : null}
       {props.contentGroup === "AB/C" ? (
         <>
           <Row style={{ marginBottom: "10px" }}>
@@ -1491,7 +1490,7 @@ const OrderForm = (props) => {
                         </div>
                       </CardHeader>
                       <Collapse isOpen={itemInfoCollapse}>
-                        <CardBody>
+                        <CardBody style={{ paddingTop: 0 }}>
                           {props.itemInfoFields?.map((field) => {
                             return renderSwitch(field)
                           })}
@@ -1519,34 +1518,15 @@ const OrderForm = (props) => {
             </Col>
           </Row>
           <Card>
-            <CardBody>
-              {props.contentGroup === "A/BC" ? (
-                <ContentSection
-                  brand={props.brand}
-                  contentName={contentName}
-                  contentGroupOptions={contentGroupOptions}
-                  componentOptions={componentOptions}
-                  fabricOptions={fabricOptions}
-                  fetchContentNumberDetail={fetchContentNumberDetail}
-                  contentTooltipStatus={contentTooltipStatus}
-                  partTooltipStatus={partTooltipStatus}
-                  contentMsg={contentMsg}
-                  partMsg={partMsg}
-                  showMsg={showMsg}
-                  msgMode={msgMode}
-                  percentMsg={percentMsg}
-                  percentTooltipStatus={percentTooltipStatus}
-                  contentGroup={props.contentGroup}
-                  fibreInstructionData={props.fibreInstructionData}
-                  contentNumberData={props.contentNumberData}
-                  contentCustomNumber={props.contentCustomNumber}
-                  defaultContentData={props.defaultContentData}
-                  handleMatchContentNumber={handleMatchContentNumber}
-                  isOrderConfirmed={props.isOrderConfirmed}
-                  onlyAdmin={onlyAdmin}
-                />
-              ) : props.contentGroup === "AB/C" ? (
-                <div>
+            <CardHeader
+              style={{ cursor: "pointer" }}
+              onClick={() => setCareContentCollapse(!careContentCollapse)}
+            >
+              <h4 className="text-primary">{t("Content")}</h4>
+            </CardHeader>
+            <Collapse isOpen={careContentCollapse}>
+              <CardBody style={{ paddingTop: 0 }}>
+                {props.contentGroup === "A/BC" ? (
                   <ContentSection
                     brand={props.brand}
                     contentName={contentName}
@@ -1571,96 +1551,78 @@ const OrderForm = (props) => {
                     isOrderConfirmed={props.isOrderConfirmed}
                     onlyAdmin={onlyAdmin}
                   />
-                  <CareSection
-                    careName={careName}
-                    contentGroupOptions={contentGroupOptions}
-                    additionalCareOptions={additionalCareOptions}
-                    fetchContentNumberDetail={fetchContentNumberDetail}
-                    fetchContentNumberDetail={fetchContentNumberDetail}
-                    careTooltipStatus={careTooltipStatus}
-                    careMsg={careMsg}
-                    showMsg={showMsg}
-                    msgMode={msgMode}
-                    contentGroup={props.contentGroup}
-                    brand={props.brand}
-                    careData={props.careData}
-                    careCustomNumber={props.careCustomNumber}
-                    careNumberData={props.careNumberData}
-                    handleMatchContentNumber={handleMatchContentNumber}
-                    isOrderConfirmed={props.isOrderConfirmed}
-                    onlyAdmin={onlyAdmin}
-                  />
-                </div>
-              ) : props.contentGroup === "ABC" ? (
-                <div>
-                  <ContentSection
-                    brand={props.brand}
-                    contentName={contentName}
-                    contentGroupOptions={contentGroupOptions}
-                    componentOptions={componentOptions}
-                    fabricOptions={fabricOptions}
-                    fetchContentNumberDetail={fetchContentNumberDetail}
-                    contentTooltipStatus={contentTooltipStatus}
-                    partTooltipStatus={partTooltipStatus}
-                    contentMsg={contentMsg}
-                    partMsg={partMsg}
-                    showMsg={showMsg}
-                    msgMode={msgMode}
-                    percentMsg={percentMsg}
-                    percentTooltipStatus={percentTooltipStatus}
-                    contentGroup={props.contentGroup}
-                    fibreInstructionData={props.fibreInstructionData}
-                    contentNumberData={props.contentNumberData}
-                    contentCustomNumber={props.contentCustomNumber}
-                    defaultContentData={props.defaultContentData}
-                    handleMatchContentNumber={handleMatchContentNumber}
-                    isOrderConfirmed={props.isOrderConfirmed}
-                    onlyAdmin={onlyAdmin}
-                  />
-                  <CareSection
-                    careName={careName}
-                    contentGroupOptions={contentGroupOptions}
-                    additionalCareOptions={additionalCareOptions}
-                    fetchContentNumberDetail={fetchContentNumberDetail}
-                    careTooltipStatus={careTooltipStatus}
-                    careMsg={careMsg}
-                    showMsg={showMsg}
-                    msgMode={msgMode}
-                    contentGroup={props.contentGroup}
-                    brand={props.brand}
-                    careData={props.careData}
-                    careCustomNumber={props.careCustomNumber}
-                    careNumberData={props.careNumberData}
-                    handleMatchContentNumber={handleMatchContentNumber}
-                    isOrderConfirmed={props.isOrderConfirmed}
-                    onlyAdmin={onlyAdmin}
-                  />
-                  <WashCareSection
-                    iconSequence={iconSequence}
-                    washCareOptions={washCareOptions}
-                    iconTooltipStatus={iconTooltipStatus}
-                    iconMsg={iconMsg}
-                    showMsg={showMsg}
-                    msgMode={msgMode}
-                    iconName={iconName}
-                    contentGroupOptions={contentGroupOptions}
-                    fetchContentNumberDetail={fetchContentNumberDetail}
-                    handleMatchContentNumber={handleMatchContentNumber}
-                    careNumberData={props.careNumberData}
-                    contentGroup={props.contentGroup}
-                    washCareData={props.washCareData}
-                    isOrderConfirmed={props.isOrderConfirmed}
-                    onlyAdmin={onlyAdmin}
-                  />
-                </div>
-              ) : null}
-            </CardBody>
-          </Card>
-          {props.contentGroup != "ABC" ? (
-            props.contentGroup === "A/BC" ? (
-              <div>
-                <Card>
-                  <CardBody>
+                ) : props.contentGroup === "AB/C" ? (
+                  <div>
+                    <ContentSection
+                      brand={props.brand}
+                      contentName={contentName}
+                      contentGroupOptions={contentGroupOptions}
+                      componentOptions={componentOptions}
+                      fabricOptions={fabricOptions}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
+                      contentTooltipStatus={contentTooltipStatus}
+                      partTooltipStatus={partTooltipStatus}
+                      contentMsg={contentMsg}
+                      partMsg={partMsg}
+                      showMsg={showMsg}
+                      msgMode={msgMode}
+                      percentMsg={percentMsg}
+                      percentTooltipStatus={percentTooltipStatus}
+                      contentGroup={props.contentGroup}
+                      fibreInstructionData={props.fibreInstructionData}
+                      contentNumberData={props.contentNumberData}
+                      contentCustomNumber={props.contentCustomNumber}
+                      defaultContentData={props.defaultContentData}
+                      handleMatchContentNumber={handleMatchContentNumber}
+                      isOrderConfirmed={props.isOrderConfirmed}
+                      onlyAdmin={onlyAdmin}
+                    />
+                    <CareSection
+                      careName={careName}
+                      contentGroupOptions={contentGroupOptions}
+                      additionalCareOptions={additionalCareOptions}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
+                      careTooltipStatus={careTooltipStatus}
+                      careMsg={careMsg}
+                      showMsg={showMsg}
+                      msgMode={msgMode}
+                      contentGroup={props.contentGroup}
+                      brand={props.brand}
+                      careData={props.careData}
+                      careCustomNumber={props.careCustomNumber}
+                      careNumberData={props.careNumberData}
+                      handleMatchContentNumber={handleMatchContentNumber}
+                      isOrderConfirmed={props.isOrderConfirmed}
+                      onlyAdmin={onlyAdmin}
+                    />
+                  </div>
+                ) : props.contentGroup === "ABC" ? (
+                  <div>
+                    <ContentSection
+                      brand={props.brand}
+                      contentName={contentName}
+                      contentGroupOptions={contentGroupOptions}
+                      componentOptions={componentOptions}
+                      fabricOptions={fabricOptions}
+                      fetchContentNumberDetail={fetchContentNumberDetail}
+                      contentTooltipStatus={contentTooltipStatus}
+                      partTooltipStatus={partTooltipStatus}
+                      contentMsg={contentMsg}
+                      partMsg={partMsg}
+                      showMsg={showMsg}
+                      msgMode={msgMode}
+                      percentMsg={percentMsg}
+                      percentTooltipStatus={percentTooltipStatus}
+                      contentGroup={props.contentGroup}
+                      fibreInstructionData={props.fibreInstructionData}
+                      contentNumberData={props.contentNumberData}
+                      contentCustomNumber={props.contentCustomNumber}
+                      defaultContentData={props.defaultContentData}
+                      handleMatchContentNumber={handleMatchContentNumber}
+                      isOrderConfirmed={props.isOrderConfirmed}
+                      onlyAdmin={onlyAdmin}
+                    />
                     <CareSection
                       careName={careName}
                       contentGroupOptions={contentGroupOptions}
@@ -1670,12 +1632,12 @@ const OrderForm = (props) => {
                       careMsg={careMsg}
                       showMsg={showMsg}
                       msgMode={msgMode}
-                      handleMatchContentNumber={handleMatchContentNumber}
                       contentGroup={props.contentGroup}
                       brand={props.brand}
                       careData={props.careData}
                       careCustomNumber={props.careCustomNumber}
                       careNumberData={props.careNumberData}
+                      handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
                       onlyAdmin={onlyAdmin}
                     />
@@ -1687,43 +1649,92 @@ const OrderForm = (props) => {
                       showMsg={showMsg}
                       msgMode={msgMode}
                       iconName={iconName}
+                      contentGroupOptions={contentGroupOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      contentGroupOptions={contentGroupOptions}
                       careNumberData={props.careNumberData}
                       contentGroup={props.contentGroup}
                       washCareData={props.washCareData}
                       isOrderConfirmed={props.isOrderConfirmed}
                       onlyAdmin={onlyAdmin}
                     />
-                  </CardBody>
-                </Card>
-              </div>
-            ) : props.contentGroup === "AB/C" ? (
-              <div>
-                <Card>
-                  <CardBody>
-                    <WashCareSection
-                      iconSequence={iconSequence}
-                      washCareOptions={washCareOptions}
-                      iconTooltipStatus={iconTooltipStatus}
-                      iconMsg={iconMsg}
-                      showMsg={showMsg}
-                      msgMode={msgMode}
-                      iconName={iconName}
-                      handleMatchContentNumber={handleMatchContentNumber}
-                      contentGroupOptions={contentGroupOptions}
-                      fetchContentNumberDetail={fetchContentNumberDetail}
-                      careNumberData={props.careNumberData}
-                      contentGroup={props.contentGroup}
-                      washCareData={props.washCareData}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      onlyAdmin={onlyAdmin}
-                    />
-                  </CardBody>
-                </Card>
-              </div>
-            ) : null
+                  </div>
+                ) : null}
+              </CardBody>
+            </Collapse>
+          </Card>
+          {props.contentGroup != "ABC" ? (
+            <Card>
+              <CardHeader
+                onClick={() => setWashCareCollapse(!washCareCollapse)}
+                style={{ cursor: "pointer" }}
+              >
+                <h4>{props.contentGroup === "A/BC" ? "Care" : "Wash Care"}</h4>
+              </CardHeader>
+              <Collapse isOpen={washCareCollapse}>
+                <CardBody style={{ paddingTop: 0 }}>
+                  {props.contentGroup === "A/BC" ? (
+                    <div>
+                      <CareSection
+                        careName={careName}
+                        contentGroupOptions={contentGroupOptions}
+                        additionalCareOptions={additionalCareOptions}
+                        fetchContentNumberDetail={fetchContentNumberDetail}
+                        careTooltipStatus={careTooltipStatus}
+                        careMsg={careMsg}
+                        showMsg={showMsg}
+                        msgMode={msgMode}
+                        handleMatchContentNumber={handleMatchContentNumber}
+                        contentGroup={props.contentGroup}
+                        brand={props.brand}
+                        careData={props.careData}
+                        careCustomNumber={props.careCustomNumber}
+                        careNumberData={props.careNumberData}
+                        isOrderConfirmed={props.isOrderConfirmed}
+                        onlyAdmin={onlyAdmin}
+                      />
+                      <WashCareSection
+                        iconSequence={iconSequence}
+                        washCareOptions={washCareOptions}
+                        iconTooltipStatus={iconTooltipStatus}
+                        iconMsg={iconMsg}
+                        showMsg={showMsg}
+                        msgMode={msgMode}
+                        iconName={iconName}
+                        fetchContentNumberDetail={fetchContentNumberDetail}
+                        handleMatchContentNumber={handleMatchContentNumber}
+                        contentGroupOptions={contentGroupOptions}
+                        careNumberData={props.careNumberData}
+                        contentGroup={props.contentGroup}
+                        washCareData={props.washCareData}
+                        isOrderConfirmed={props.isOrderConfirmed}
+                        onlyAdmin={onlyAdmin}
+                      />
+                    </div>
+                  ) : props.contentGroup === "AB/C" ? (
+                    <div>
+                      <WashCareSection
+                        iconSequence={iconSequence}
+                        washCareOptions={washCareOptions}
+                        iconTooltipStatus={iconTooltipStatus}
+                        iconMsg={iconMsg}
+                        showMsg={showMsg}
+                        msgMode={msgMode}
+                        iconName={iconName}
+                        handleMatchContentNumber={handleMatchContentNumber}
+                        contentGroupOptions={contentGroupOptions}
+                        fetchContentNumberDetail={fetchContentNumberDetail}
+                        careNumberData={props.careNumberData}
+                        contentGroup={props.contentGroup}
+                        washCareData={props.washCareData}
+                        isOrderConfirmed={props.isOrderConfirmed}
+                        onlyAdmin={onlyAdmin}
+                      />
+                    </div>
+                  ) : null}
+                </CardBody>
+              </Collapse>
+            </Card>
           ) : null}
         </CardBody>
         <CardFooter>
