@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { FileMinus } from "react-feather"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { useTranslation } from "react-i18next"
+import { sweetAlert } from "@utils"
 
 const Stepper = (props) => {
   const { t } = useTranslation()
@@ -13,7 +14,7 @@ const Stepper = (props) => {
       props.validationFields?.selectedItems &&
       props.validationFields?.selectedItems?.length <= 0
     ) {
-      alert("Please select an item to continue")
+      sweetAlert("", "Please select an item to continue", "warning", "warning")
       return false
     }
     return true
@@ -34,7 +35,7 @@ const Stepper = (props) => {
       props.validationFields?.poSelectedOrders &&
       props.validationFields?.poSelectedOrders?.length <= 0
     ) {
-      alert("Please select an order to continue")
+      sweetAlert("", "Please select an order to continue", "warning", "warning")
       return false
     }
     return true
@@ -54,7 +55,12 @@ const Stepper = (props) => {
       props.validationFields?.selectedItems &&
       props.validationFields?.selectedItems?.length <= 0
     ) {
-      alert("Please select an item in Item List page to continue")
+      sweetAlert(
+        "",
+        "Please select an item in Item List page to continue",
+        "warning",
+        "warning"
+      )
       return false
     }
     return true
@@ -86,7 +92,12 @@ const Stepper = (props) => {
             const tempState = props.orderFormManFields
             tempState[field] = true
             props.setOrderFormManFields({ ...tempState })
-            alert("Please enter mandatory fields of Order Form to proceed")
+            sweetAlert(
+              "",
+              "Please enter mandatory fields of Order Form to proceed",
+              "warning",
+              "warning"
+            )
             localFlag = false
           }
         })
@@ -123,7 +134,12 @@ const Stepper = (props) => {
               "Order Form"
             ].includes(menuItem)
           ) {
-            alert("Please enter mandatory fields of Order Form to proceed")
+            sweetAlert(
+              "",
+              "Please enter mandatory fields of Order Form to proceed",
+              "warning",
+              "warning"
+            )
             localFlag = false
           }
         })

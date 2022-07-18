@@ -130,7 +130,7 @@ const Listing = (props) => {
 
   const handleOrder = () => {
     if (props.poSelectedOrders.length <= 0) {
-      alert("Please Item/s to proceed with your order")
+      sweetAlert("", "Please select an order to continue", "warning", "warning")
       return
     }
     setOrderLoader(true)
