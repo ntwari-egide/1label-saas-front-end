@@ -48,7 +48,6 @@ export const matchContentNumber =
         } = require(`@redux/actions/views/Order/${module}`)
         console.log(content_group, section)
         if (content_group === "ABC") {
-          console.log(1)
           dispatch(
             setContentNumberData({
               value: res.data.content_number || "",
@@ -63,7 +62,6 @@ export const matchContentNumber =
           content_group === "AB" &&
           (section === "content" || section === "care")
         ) {
-          console.log(2)
           dispatch(
             setContentNumberData({
               value: res.data.content_number || "",
@@ -71,13 +69,11 @@ export const matchContentNumber =
             })
           )
         } else if (content_group === "C" && section === "washCare") {
-          console.log(3)
           dispatch(
             setCareNumberData({ value: res.data.care_number || "", label: "" })
           )
         }
         if (content_group === "A" && section === "content") {
-          console.log(4)
           dispatch(
             setContentNumberData({
               value: res.data.content_number || "",
@@ -88,7 +84,6 @@ export const matchContentNumber =
           content_group === "BC" &&
           (section === "care" || section === "washCare")
         ) {
-          console.log(5)
           dispatch(
             setCareNumberData({ value: res.data.care_number || "", label: "" })
           )
