@@ -296,7 +296,7 @@ const PreviewAndSummary = (props) => {
                     alignItems: "center"
                   }}
                 >
-                  <div>Size Matrix Type:</div>
+                  <div>Size Matrix Type</div>
                 </div>
               </Col>
               <Col xs="12" sm="12" md="5" lg="5" xl="5">

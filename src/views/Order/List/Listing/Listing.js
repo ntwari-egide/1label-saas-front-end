@@ -359,7 +359,7 @@ const Listing = (props) => {
         <Row style={{ marginBottom: "10px" }}>
           <Col xs="12" sm="12" md="5" lg="4" xl="3">
             <Row>
-              <Col>Order Date From:</Col>
+              <Col>Order Date From</Col>
             </Row>
             <Row>
               <Col>
@@ -375,7 +375,7 @@ const Listing = (props) => {
           </Col>
           <Col xs="12" sm="12" md="5" lg="4" xl="3">
             <Row>
-              <Col>Order Date To:</Col>
+              <Col>Order Date To</Col>
             </Row>
             <Row>
               <Col>

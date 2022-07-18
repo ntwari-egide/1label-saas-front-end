@@ -290,37 +290,45 @@ const Listing = (props) => {
     <Card>
       <CardHeader style={{ display: "block" }}>
         <Row style={{ marginBottom: "10px" }}>
-          <Col xs="12" sm="12" md="1" lg="1" xl="1">
-            <CustomLabel title={"Brand"} />
-          </Col>
-          <Col xs="12" sm="12" md="5" lg="5" xl="5">
-            <Select
-              className="React"
-              classNamePrefix="select"
-              options={brandOptions}
-              value={
-                brandOptions.filter(
-                  (opt) => opt.value === props.searchParams.brand
-                ) || ""
-              }
-              onChange={(e) => {
-                dispatch(resetData())
-                dispatch(setBrand(e))
-                dispatch(
-                  setSearchParams({ ...props.searchParams, brand: e.value })
-                )
-              }}
-              isDisabled={props.isOrderConfirmed}
-            />
+          <Col xs="12" sm="12" md="6" lg="6" xl="6">
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <CustomLabel title="Brand" />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  options={brandOptions}
+                  value={
+                    brandOptions.filter(
+                      (opt) => opt.value === props.searchParams.brand
+                    ) || ""
+                  }
+                  onChange={(e) => {
+                    dispatch(resetData())
+                    dispatch(setBrand(e))
+                    dispatch(
+                      setSearchParams({ ...props.searchParams, brand: e.value })
+                    )
+                  }}
+                  isDisabled={props.isOrderConfirmed}
+                />
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Row style={{ marginBottom: "10px" }}>
           <Col xs="12" sm="12" md="6" lg="6" xl="6">
             <Row>
-              <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                <CustomLabel title="CID:" />
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <CustomLabel title="CID" />
               </Col>
-              <Col xs="12" sm="12" md="10" lg="10" xl="10">
+            </Row>
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <Input
                   value={props.searchParams.cid ? props.searchParams.cid : ""}
                   onChange={(e) =>
@@ -338,10 +346,12 @@ const Listing = (props) => {
           </Col>
           <Col xs="12" sm="12" md="6" lg="6" xl="6">
             <Row>
-              <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                <CustomLabel title="Factory No:" />
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <CustomLabel title="Factory No" />
               </Col>
-              <Col xs="12" sm="12" md="10" lg="10" xl="10">
+            </Row>
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <Input
                   value={
                     props.searchParams.factoryNo
@@ -365,10 +375,12 @@ const Listing = (props) => {
         <Row style={{ marginBottom: "10px" }}>
           <Col xs="12" sm="12" md="6" lg="6" xl="6">
             <Row>
-              <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                <CustomLabel title="PO No:" />
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <CustomLabel title="PO No" />
               </Col>
-              <Col xs="12" sm="12" md="10" lg="10" xl="10">
+            </Row>
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <Input
                   value={props.searchParams.poNo ? props.searchParams.poNo : ""}
                   onChange={(e) =>
@@ -386,10 +398,12 @@ const Listing = (props) => {
           </Col>
           <Col xs="12" sm="12" md="6" lg="6" xl="6">
             <Row>
-              <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                <CustomLabel title="Order Status:" />
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <CustomLabel title="Order Status" />
               </Col>
-              <Col xs="12" sm="12" md="10" lg="10" xl="10">
+            </Row>
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <Select
                   className="React"
                   classNamePrefix="select"
@@ -412,63 +426,70 @@ const Listing = (props) => {
             </Row>
           </Col>
         </Row>
-        <Row style={{ marginBottom: "3px" }}>
-          <Col>
-            <CustomLabel title="Date Imported:" />
-          </Col>
-        </Row>
         <Row style={{ marginBottom: "10px" }}>
           <Col xs="12" sm="12" md="6" lg="6" xl="6">
             <Row>
-              <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                <CustomLabel title="From:" />
-              </Col>
-              <Col xs="12" sm="12" md="10" lg="10" xl="10">
-                <Flatpickr
-                  className="form-control"
-                  value={
-                    props.searchParams.fromDate
-                      ? new Date(props.searchParams.fromDate)
-                      : ""
-                  }
-                  onChange={(e) => {
-                    dispatch(
-                      setSearchParams({
-                        ...props.searchParams,
-                        fromDate: formatDateYMD(new Date(e))
-                      })
-                    )
-                  }}
-                  options={{ dateFormat: "d-m-Y" }}
-                  disabled={props.isOrderConfirmed}
-                />
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <CustomLabel title="Order Date From" />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Flatpickr
+                      className="form-control"
+                      value={
+                        props.searchParams.fromDate
+                          ? new Date(props.searchParams.fromDate)
+                          : ""
+                      }
+                      onChange={(e) => {
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            fromDate: formatDateYMD(new Date(e))
+                          })
+                        )
+                      }}
+                      options={{ dateFormat: "d-m-Y" }}
+                      disabled={props.isOrderConfirmed}
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Col>
           <Col xs="12" sm="12" md="6" lg="6" xl="6">
             <Row>
-              <Col xs="12" sm="12" md="2" lg="2" xl="2">
-                <CustomLabel title="To:" />
-              </Col>
-              <Col xs="12" sm="12" md="10" lg="10" xl="10">
-                <Flatpickr
-                  className="form-control"
-                  value={
-                    props.searchParams.toDate
-                      ? new Date(props.searchParams.toDate)
-                      : ""
-                  }
-                  onChange={(e) => {
-                    dispatch(
-                      setSearchParams({
-                        ...props.searchParams,
-                        toDate: formatDateYMD(new Date(e))
-                      })
-                    )
-                  }}
-                  options={{ dateFormat: "d-m-Y" }}
-                  disabled={props.isOrderConfirmed}
-                />
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <CustomLabel title="Order Date To" />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Flatpickr
+                      className="form-control"
+                      value={
+                        props.searchParams.toDate
+                          ? new Date(props.searchParams.toDate)
+                          : ""
+                      }
+                      onChange={(e) => {
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            toDate: formatDateYMD(new Date(e))
+                          })
+                        )
+                      }}
+                      options={{ dateFormat: "d-m-Y" }}
+                      disabled={props.isOrderConfirmed}
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Col>

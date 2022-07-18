@@ -174,7 +174,7 @@ const ContentSection = (props) => {
       </Row>
       <Row style={{ marginBottom: "10px" }}>
         <Col xs="12" sm="12" md="1" lg="1" xl="1">
-          <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
+          <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
         </Col>
         <Col xs="12" sm="12" md="9" lg="9" xl="9">
           <Input
@@ -425,7 +425,7 @@ const ContentSection = (props) => {
       </Row>
       <Row>
         <Col>
-          <Label style={{ marginTop: "12px" }}>Default Content:</Label>
+          <Label style={{ marginTop: "12px" }}>Default Content</Label>
         </Col>
       </Row>
       {processDefaultContent(props.defaultContentData).map((item) => (
