@@ -213,7 +213,7 @@ const SelectItem = (props) => {
               fetchItemList(e ? e : {}, props.itemType)
             }}
             isClearable={true}
-            isDisabled={loader || props.isOrderConfirmed}
+            isDisabled={loader || !props.isOrderNew}
           />
         </Col>
         <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
@@ -346,7 +346,8 @@ const mapStateToProps = (state) => ({
   brand: state.orderReducer.brand,
   selectedItems: state.orderReducer.selectedItems,
   isOrderConfirmed: state.listReducer.isOrderConfirmed,
-  sizeData: state.orderReducer.sizeData
+  sizeData: state.orderReducer.sizeData,
+  isOrderNew: state.listReducer.isOrderNew
 })
 
 export default connect(mapStateToProps, null)(SelectItem)
