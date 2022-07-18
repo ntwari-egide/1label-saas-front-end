@@ -877,7 +877,7 @@ const OrderForm = (props) => {
       }
     }
     if (content_group) {
-      dispatch(matchContentNumber("Order", content_group, section))
+      dispatch(matchContentNumber("POOrder", content_group, section))
     }
   }
 
