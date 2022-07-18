@@ -407,6 +407,7 @@ const ContentSection = (props) => {
                     tempData = props.defaultContentData
                     tempData.splice(index, 1)
                     dispatch(setDefaultContentData([...tempData]))
+                    props.handleMatchContentNumber("content")
                   }}
                 >
                   <div style={{ display: "flex" }}>
@@ -618,6 +619,7 @@ const CareSection = (props) => {
                 const tempCare = props.careData
                 tempCare.splice(index, 1)
                 dispatch(setCareData([...tempCare]))
+                props.handleMatchContentNumber("care")
               }}
             >
               <div style={{ display: "flex" }}>
