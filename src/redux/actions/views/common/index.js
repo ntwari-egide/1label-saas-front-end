@@ -406,7 +406,7 @@ export const saveOrder = (order_status) => (dispatch) => {
           cont_translation: data.cont_translation,
           part_key: data.part_key,
           part_translation: data.part_translation,
-          percentage: data.en_percent,
+          percentage: data.percentage,
           seqno: (index + 1) * 10
         })),
         default_content: data.defaultContentData?.map((cont, index) => ({
@@ -664,7 +664,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
           cont_translation: data.cont_translation,
           part_key: data.part_key,
           part_translation: data.part_translation,
-          percentage: data.en_percent,
+          percentage: data.percentage,
           seqno: (index + 1) * 10
         })),
         default_content: data.defaultContentData?.map((cont, index) => ({
