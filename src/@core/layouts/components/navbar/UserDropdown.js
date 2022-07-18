@@ -61,7 +61,7 @@ const UserDropdown = () => {
         className="nav-link dropdown-user-link"
         onClick={(e) => e.preventDefault()}
       >
-        <div className="user-nav d-sm-flex d-none">
+        <div className="user-nav d-sm-flex d-none" style={{ marginTop: "3px" }}>
           <span className="user-name text-bold-600">{user.admin}</span>
         </div>
         {userProfile ? (
