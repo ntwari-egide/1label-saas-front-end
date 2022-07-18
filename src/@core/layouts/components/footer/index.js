@@ -25,8 +25,8 @@ const Footer = () => {
   }, [])
 
   return (
-    <p className="clearfix mb-0">
-      <span className="float-md-left d-block d-md-inline-block mt-25">
+    <p className="clearfix mb-0 text-center">
+      <span className="d-block d-md-inline-block mt-25">
         <div style={{ display: "-webkit-inline-box" }}>
           <div style={{ cursor: "pointer" }}>
             <img
