@@ -25,7 +25,7 @@ const Footer = () => {
   }, [])
 
   return (
-    <p className="clearfix mb-0 text-center">
+    <p className="clearfix mb-0">
       <span className="d-block d-md-inline-block mt-25">
         <div style={{ display: "-webkit-inline-box" }}>
           <div style={{ cursor: "pointer" }}>
@@ -35,7 +35,7 @@ const Footer = () => {
               style={{ height: "15px", marginRight: "5px" }}
             />
           </div>
-          <div>
+          <div style={{ marginTop: "2px" }}>
             {footerData?.system_company}{" "}
             <Link>{footerData?.system_privacy_policy_title}</Link>
           </div>
