@@ -119,7 +119,8 @@ export const populateData =
       setInvoiceAddressDetails,
       setDeliveryAddressDetails,
       setSizeData,
-      setOrderNo
+      setOrderNo,
+      setContentGroup
     } = require(`@redux/actions/views/Order/${module}`)
     if (module === "POOrder") {
       dispatch(setCurrentStep(1))
