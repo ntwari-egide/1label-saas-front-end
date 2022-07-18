@@ -1,6 +1,7 @@
 import { Button, Row, Col } from "reactstrap"
 import { ArrowRight, ArrowLeft } from "react-feather"
 import { useTranslation } from "react-i18next"
+import { sweetAlert } from "@utils"
 
 const Footer = (props) => {
   const { t } = useTranslation()
@@ -8,7 +9,7 @@ const Footer = (props) => {
   const selectedItemsValidation = () => {
     // selectedItems validation for Select Item page.
     if (props.selectedItems && props.selectedItems.length <= 0) {
-      alert("Please Select Item/s to proceed")
+      sweetAlert("", "Please Select Item/s to proceed", "warning", "warning")
       return false
     }
     return true
@@ -16,8 +17,8 @@ const Footer = (props) => {
 
   const poSelectedOrderValidation = () => {
     // validation for order selection in PO Order Listing page
-    if (props.poSelectedItems && props.poSelectedItems.length <= 0) {
-      alert("Please select an order to proceed")
+    if (props.poSelectedOrders && props.poSelectedOrders.length <= 0) {
+      sweetAlert("", "Please select an order to proceed", "warning", "warning")
       return false
     }
     return true
@@ -44,7 +45,12 @@ const Footer = (props) => {
           props.validationFields?.orderFormManFields[key].length <= 0 &&
           localFlag
         ) {
-          alert("Please fill the mandatory fields to proceed")
+          sweetAlert(
+            "",
+            "Please fill the mandatory fields to proceed",
+            "warning",
+            "warning"
+          )
           localFlag = false
           return localFlag
         }
