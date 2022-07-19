@@ -39,7 +39,8 @@ import {
   setDynamicFieldData,
   setContentGroup,
   setBrandDetails,
-  setItemInfoFields
+  setItemInfoFields,
+  setBrandSettings
 } from "@redux/actions/views/Order/Order"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -173,26 +174,28 @@ const ContentSection = (props) => {
           </Row>
         </Col>
       </Row>
-      <Row style={{ marginBottom: "10px" }}>
-        <Col xs="6" sm="6" md="6" lg="6" xl="6">
-          <Row>
-            <Col xs="12" sm="12" md="12" lg="12" xl="12">
-              <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs="12" sm="12" md="12" lg="12" xl="12">
-              <Input
-                value={props.contentCustomNumber}
-                onChange={(e) =>
-                  dispatch(setContentCustomNumber(e.target.value))
-                }
-                disabled={props.isOrderConfirmed}
-              />
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+      {props.brandSettings?.display_custom_content_number === "Y" ? (
+        <Row style={{ marginBottom: "10px" }}>
+          <Col xs="6" sm="6" md="6" lg="6" xl="6">
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                <Input
+                  value={props.contentCustomNumber}
+                  onChange={(e) =>
+                    dispatch(setContentCustomNumber(e.target.value))
+                  }
+                  disabled={props.isOrderConfirmed}
+                />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      ) : null}
       <Row style={{ paddingTop: "20px" }}>
         <Col>
           <h5>{t("Fibre Instructions")}</h5>
@@ -1093,6 +1096,9 @@ const OrderForm = (props) => {
               setOnlyAdmin(true)
             }
           }
+          if (res.data[0]) {
+            dispatch(setBrandSettings(res.data[0]))
+          }
         }
       })
       .catch((err) => console.log(err))
@@ -1779,7 +1785,8 @@ const mapStateToProps = (state) => ({
   isOrderConfirmed: state.listReducer.isOrderConfirmed,
   itemInfoFields: state.orderReducer.itemInfoFields,
   isOrderNew: state.listReducer.isOrderNew,
-  selectedOrder: state.listReducer.selectedOrder
+  selectedOrder: state.listReducer.selectedOrder,
+  brandSettings: state.orderReducer.brandSettings
 })
 
 export default connect(mapStateToProps, null)(OrderForm)
