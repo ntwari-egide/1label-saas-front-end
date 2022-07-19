@@ -32,6 +32,7 @@ const initialState = {
   brandDetails: {},
   itemInfoFields: [],
   orderNo: "",
+  brandSettings: {},
   // size table states
   sizeData: [],
   wastage: 0,
@@ -128,6 +129,8 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, searchParams: action.payload }
     case "SET_PO_SELECTED_ORDERS":
       return { ...state, poSelectedOrders: action.payload }
+    case "SET_PO_BRAND_SETTINGS":
+      return { ...state, brandSettings: action.payload }
     default:
       return { ...state }
   }

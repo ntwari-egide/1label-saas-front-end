@@ -133,3 +133,7 @@ export const resetData = () => (dispatch) => {
 export const setOrderNo = (value) => (dispatch) => {
   dispatch({ type: "SET_ORDER_NO", payload: value })
 }
+
+export const setBrandSettings = (data) => (dispatch) => {
+  dispatch({ type: "SET_BRAND_SETTINGS", payload: data })
+}
