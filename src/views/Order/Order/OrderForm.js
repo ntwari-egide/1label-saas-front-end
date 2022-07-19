@@ -131,14 +131,14 @@ const ContentSection = (props) => {
                 value={
                   props.contentGroup === "ABC"
                     ? props.contentGroupOptions["ABC"]?.filter(
-                        (opt) => opt.label === props.contentNumberData?.label
+                        (opt) => opt.value === props.contentNumberData?.value
                       )
                     : props.contentGroup === "A/BC"
                     ? props.contentGroupOptions["A"]?.filter(
-                        (opt) => opt.label === props.contentNumberData?.label
+                        (opt) => opt.value === props.contentNumberData?.value
                       )
                     : props.contentGroupOptions["AB"]?.filter(
-                        (opt) => opt.label === props.contentNumberData?.label
+                        (opt) => opt.value === props.contentNumberData?.value
                       )
                 }
                 options={
