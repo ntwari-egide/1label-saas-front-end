@@ -119,7 +119,7 @@ const Home = () => {
   }, [])
 
   return (
-    <div>
+    <div style={{minHeight: "calc(100vh - 157px)"}}>
       <p className="lead">{t("Dashboard")}</p>
       <Row>
         <Col sm="12" md="6" lg="4" xl="4">
