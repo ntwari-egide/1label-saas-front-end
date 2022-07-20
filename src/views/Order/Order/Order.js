@@ -66,6 +66,14 @@ const Order = (props) => {
         id="save-Confirm"
         onClick={(e) => dispatch(saveOrder("Confirm"))}
       />
+      <input
+        hidden
+        id="page-specific-create"
+        onClick={() => {
+          dispatch(resetData())
+          dispatch(resetListData())
+        }}
+      />
       <Breadcrumb>
         <BreadcrumbItem>
           <Link to="/home">{t("Home")}</Link>

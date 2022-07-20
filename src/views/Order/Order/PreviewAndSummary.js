@@ -41,8 +41,13 @@ const PreviewAndSummary = (props) => {
   const [showWastage, setShowWastage] = useState(false)
   const [wastageOptions, setWastageOptions] = useState([])
   const [showSizeData, setShowSizeData] = useState(true)
+  const [isSizeItemPresent, setIsSizeItemPresent] = useState(0)
 
   // other functions
+  const checkForSizeItems = () => {
+    return props.selectedItems.filter(item => item.is_non_size === "N").length
+  }
+
   const handleQtyChange = (value, row, col, index) => {
     const tempState = [...store.getState().orderReducer.sizeData]
     // update the table
@@ -320,6 +325,7 @@ const PreviewAndSummary = (props) => {
   useEffect(() => {
     fetchSizeTableList()
     fetchWastageList()
+    setIsSizeItemPresent(checkForSizeItems())
   }, [])
 
   useEffect(() => {
@@ -418,7 +424,7 @@ const PreviewAndSummary = (props) => {
             </Col>
           ))}
         </Row>
-        {props.brandDetails.display_SizeTable === "Y" ? (
+        {props.brandDetails.display_SizeTable === "Y" && isSizeItemPresent ? (
           showSizeData ? (
             <div>
               <Row style={{ marginBottom: "10px" }}>

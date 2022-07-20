@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import { NavLink, useLocation, matchPath, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
+import { resetData as resetListData } from "@redux/actions/views/Order/List"
 
 // ** Third Party Components
 import { Badge } from "reactstrap"
@@ -114,6 +115,7 @@ const VerticalNavMenuLink = ({
                 resetData
               } = require(`@redux/actions/views/Order/${module}`)
               dispatch(resetData())
+              dispatch(resetListData())
             }
           }
           if (!item.navLink.length) {

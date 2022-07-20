@@ -184,3 +184,7 @@ export const setSearchParams = (data) => (dispatch) => {
 export const setPoSelectedOrders = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_SELECTED_ORDERS", payload: data })
 }
+
+export const setBrandSettings = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_BRAND_SETTINGS", payload: data})
+}

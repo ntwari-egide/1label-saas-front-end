@@ -14,7 +14,6 @@ import { setCurrentStep, resetData } from "@redux/actions/views/Order/POOrder"
 import { resetData as resetListData } from "@redux/actions/views/Order/List"
 import { savePOOrder } from "@redux/actions/views/common"
 import { toggleSaveBtnStatus } from "@redux/actions/layout"
-import { formatDateYMD } from "@utils"
 
 const stepperMenu = [
   "Listing",
@@ -65,6 +64,14 @@ const PoOrder = (props) => {
         hidden
         id="save-Confirm"
         onClick={(e) => dispatch(savePOOrder("Confirm"))}
+      />
+      <input
+        hidden
+        id="page-specific-create"
+        onClick={() => {
+          dispatch(resetData())
+          dispatch(resetListData())
+        }}
       />
       <Breadcrumb>
         <BreadcrumbItem>
