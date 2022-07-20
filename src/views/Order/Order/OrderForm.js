@@ -45,6 +45,10 @@ import {
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
 
+const errorStyles = {
+  border: "1px solid red",
+  boxShadow: 0
+}
 // page components
 const ContentSection = (props) => {
   const { t } = useTranslation()
@@ -55,13 +59,11 @@ const ContentSection = (props) => {
   const [percentTip, setPercentTip] = useState("")
 
   //other funcitons
-  //
   // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
   const debounceFun = () => {
     if (timerId !== null) {
       clearTimeout(timerId)
     }
-
     timerId = setTimeout(() => {
       // matchContentNumber()
       timerId = null
@@ -129,6 +131,32 @@ const ContentSection = (props) => {
               <Select
                 className="React"
                 classNamePrefix="select"
+                styles={{
+                  control: (base) => {
+                    // const value =
+                    //   props.contentGroup === "ABC"
+                    //     ? props.contentGroupOptions["ABC"]?.filter(
+                    //         (opt) =>
+                    //           opt.value === props.contentNumberData?.value
+                    //       )
+                    //     : props.contentGroup === "A/BC"
+                    //     ? props.contentGroupOptions["A"]?.filter(
+                    //         (opt) =>
+                    //           opt.value === props.contentNumberData?.value
+                    //       )
+                    //     : props.contentGroupOptions["AB"]?.filter(
+                    //         (opt) =>
+                    //           opt.value === props.contentNumberData?.value
+                    //       )
+                    // if (
+                    //   props.validations?.content_number_status &&
+                    //   value.value
+                    // ) {
+                    //   return { ...base, ...errorStyles }
+                    // }
+                    return { ...base }
+                  }
+                }}
                 value={
                   props.contentGroup === "ABC"
                     ? props.contentGroupOptions["ABC"]?.filter(
