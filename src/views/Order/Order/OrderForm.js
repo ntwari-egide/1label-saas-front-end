@@ -282,7 +282,7 @@ const ContentSection = (props) => {
                     }
                   />
                 </div>
-                {props.partTooltipStatus ? (
+                {props.tooltipStatus.part ? (
                   <div>
                     <Popover
                       target={`component-select-${index}`}
@@ -291,7 +291,7 @@ const ContentSection = (props) => {
                       <PopoverHeader>Tip </PopoverHeader>
                       <PopoverBody>
                         <ol type="i">
-                          {props.partMsg.map((msg) => {
+                          {props.tooltipMsg.part?.map((msg) => {
                             if (msg.length) {
                               return <li>{msg}</li>
                             }
@@ -354,7 +354,7 @@ const ContentSection = (props) => {
                     }
                   />
                 </div>
-                {props.contentTooltipStatus ? (
+                {props.tooltipStatus.content ? (
                   <div>
                     <Popover
                       target={`fabric-select-${index}`}
@@ -363,7 +363,7 @@ const ContentSection = (props) => {
                       <PopoverHeader>Tip</PopoverHeader>
                       <PopoverBody>
                         <ol type="i">
-                          {props.contentMsg.map((msg) => {
+                          {props.tooltipMsg.content?.map((msg) => {
                             if (msg.length) {
                               return <li>{msg}</li>
                             }
@@ -420,7 +420,7 @@ const ContentSection = (props) => {
                     }
                   />
                 </div>
-                {props.percentTooltipStatus ? (
+                {props.tooltipStatus.percentage ? (
                   <div>
                     <Popover
                       target={`percent-select-${index}`}
@@ -429,7 +429,7 @@ const ContentSection = (props) => {
                       <PopoverHeader>Tip</PopoverHeader>
                       <PopoverBody>
                         <ol type="i">
-                          {props.percentMsg.map((msg) => {
+                          {props.tooltipMsg.percentage?.map((msg) => {
                             if (msg.length) {
                               return <li>{msg}</li>
                             }
@@ -647,7 +647,7 @@ const CareSection = (props) => {
                 onBlur={() => setCareTip("")}
               />
             </div>
-            {props.careTooltipStatus ? (
+            {props.tooltipStatus.care ? (
               <div>
                 <Popover
                   target={`care-select-${index}`}
@@ -656,7 +656,7 @@ const CareSection = (props) => {
                   <PopoverHeader>Tip </PopoverHeader>
                   <PopoverBody>
                     <ol type="i">
-                      {props.careMsg.map((msg) => {
+                      {props.tooltipMsg.care?.map((msg) => {
                         if (msg.length) {
                           return <li>{msg}</li>
                         }
@@ -801,7 +801,6 @@ const WashCareSection = (props) => {
           </Row>
         </>
       ) : null}
-
       {props.iconSequence?.map((iconObj, index) => {
         return (
           <Row style={{ marginBottom: "10px" }}>
@@ -883,7 +882,7 @@ const WashCareSection = (props) => {
                       }
                     />
                   </div>
-                  {props.iconTooltipStatus ? (
+                  {props.tooltipStatus.icon ? (
                     <div>
                       <Popover
                         target={`icon-select-${index}`}
@@ -892,7 +891,7 @@ const WashCareSection = (props) => {
                         <PopoverHeader>Tip </PopoverHeader>
                         <PopoverBody>
                           <ol type="i">
-                            {props.iconMsg.map((msg) => {
+                            {props.tooltipMsg.icon?.map((msg) => {
                               if (msg.length) {
                                 return <li>{msg}</li>
                               }
@@ -935,16 +934,8 @@ const OrderForm = (props) => {
   const [careName, setCareName] = useState("")
   const [iconName, setIconName] = useState("")
   // tooltip states and messages
-  const [careTooltipStatus, setCareTooltipStatus] = useState(false)
-  const [contentTooltipStatus, setContentTooltipStatus] = useState(false)
-  const [partTooltipStatus, setPartTooltipStatus] = useState(false)
-  const [iconTooltipStatus, setIconTooltipStatus] = useState(false)
-  const [percentTooltipStatus, setPercentTooltipStatus] = useState(false)
-  const [careMsg, setCareMsg] = useState([])
-  const [contentMsg, setContentMsg] = useState([])
-  const [partMsg, setPartMsg] = useState([])
-  const [iconMsg, setIconMsg] = useState([])
-  const [percentMsg, setPercentMsg] = useState([])
+  const [tooltipMsg, setTooltipMsg] = useState({})
+  const [tooltipStatus, setTooltipStatus] = useState({})
 
   const handleMatchContentNumber = (section) => {
     let content_group
@@ -1124,26 +1115,32 @@ const OrderForm = (props) => {
           } else {
             console.log("Err Msg:", "ccontent_title not received")
           }
+          // tooltip
+          const tempTooltipStatus = {}
+          const tempTooltipMsg = {}
           if (res.data[0]?.part_msg?.length) {
-            setPartTooltipStatus(true)
-            setPartMsg(res.data[0]?.part_msg?.split("\r\n"))
+            tempTooltipStatus.part = true
+            tempTooltipMsg.part = res.data[0]?.part_msg?.split("\r\n")
           }
           if (res.data[0]?.content_msg?.length) {
-            setContentTooltipStatus(true)
-            setContentMsg(res.data[0]?.content_msg?.split("\r\n"))
+            tempTooltipStatus.content = true
+            tempTooltipMsg.content = res.data[0]?.content_msg?.split("\r\n")
           }
           if (res.data[0]?.care_msg?.length) {
-            setCareTooltipStatus(true)
-            setCareMsg(res.data[0]?.care_msg?.split("\r\n"))
+            tempTooltipStatus.care = true
+            tempTooltipMsg.care = res.data[0]?.care_msg?.split("\r\n")
           }
           if (res.data[0]?.icon_msg?.length) {
-            setIconTooltipStatus(true)
-            setIconMsg(res.data[0]?.icon_msg?.split("\r\n"))
+            tempTooltipStatus.icon = true
+            tempTooltipMsg.icon = res.data[0]?.icon_msg?.split("\r\n")
           }
           if (res.data[0]?.percentage_msg?.length) {
-            setPercentTooltipStatus(true)
-            setPercentMsg(res.data[0]?.percentage_msg?.split("\r\n"))
+            tempTooltipStatus.percentage = true
+            tempTooltipMsg.percentage =
+              res.data[0]?.percentage_msg?.split("\r\n")
           }
+          setTooltipStatus({ ...tempTooltipStatus })
+          setTooltipMsg({ ...tempTooltipMsg })
           if (res.data[0]) {
             dispatch(setBrandSettings(res.data[0]))
           }
@@ -1588,12 +1585,6 @@ const OrderForm = (props) => {
                     componentOptions={componentOptions}
                     fabricOptions={fabricOptions}
                     fetchContentNumberDetail={fetchContentNumberDetail}
-                    contentTooltipStatus={contentTooltipStatus}
-                    partTooltipStatus={partTooltipStatus}
-                    contentMsg={contentMsg}
-                    partMsg={partMsg}
-                    percentMsg={percentMsg}
-                    percentTooltipStatus={percentTooltipStatus}
                     contentGroup={props.contentGroup}
                     fibreInstructionData={props.fibreInstructionData}
                     contentNumberData={props.contentNumberData}
@@ -1602,6 +1593,8 @@ const OrderForm = (props) => {
                     handleMatchContentNumber={handleMatchContentNumber}
                     isOrderConfirmed={props.isOrderConfirmed}
                     brandSettings={props.brandSettings}
+                    tooltipStatus={tooltipStatus}
+                    tooltipMsg={tooltipMsg}
                   />
                 ) : props.contentGroup === "AB/C" ? (
                   <div>
@@ -1612,12 +1605,6 @@ const OrderForm = (props) => {
                       componentOptions={componentOptions}
                       fabricOptions={fabricOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentTooltipStatus={contentTooltipStatus}
-                      partTooltipStatus={partTooltipStatus}
-                      contentMsg={contentMsg}
-                      partMsg={partMsg}
-                      percentMsg={percentMsg}
-                      percentTooltipStatus={percentTooltipStatus}
                       contentGroup={props.contentGroup}
                       fibreInstructionData={props.fibreInstructionData}
                       contentNumberData={props.contentNumberData}
@@ -1626,6 +1613,8 @@ const OrderForm = (props) => {
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
                       brandSettings={props.brandSettings}
+                      tooltipStatus={tooltipStatus}
+                      tooltipMsg={tooltipMsg}
                     />
                     <CareSection
                       careName={careName}
@@ -1633,8 +1622,6 @@ const OrderForm = (props) => {
                       additionalCareOptions={additionalCareOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      careTooltipStatus={careTooltipStatus}
-                      careMsg={careMsg}
                       contentGroup={props.contentGroup}
                       brand={props.brand}
                       careData={props.careData}
@@ -1643,6 +1630,8 @@ const OrderForm = (props) => {
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
                       brandSettings={props.brandSettings}
+                      tooltipStatus={tooltipStatus}
+                      tooltipMsg={tooltipMsg}
                     />
                   </div>
                 ) : props.contentGroup === "ABC" ? (
@@ -1654,12 +1643,6 @@ const OrderForm = (props) => {
                       componentOptions={componentOptions}
                       fabricOptions={fabricOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentTooltipStatus={contentTooltipStatus}
-                      partTooltipStatus={partTooltipStatus}
-                      contentMsg={contentMsg}
-                      partMsg={partMsg}
-                      percentMsg={percentMsg}
-                      percentTooltipStatus={percentTooltipStatus}
                       contentGroup={props.contentGroup}
                       fibreInstructionData={props.fibreInstructionData}
                       contentNumberData={props.contentNumberData}
@@ -1668,14 +1651,14 @@ const OrderForm = (props) => {
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
                       brandSettings={props.brandSettings}
+                      tooltipStatus={tooltipStatus}
+                      tooltipMsg={tooltipMsg}
                     />
                     <CareSection
                       careName={careName}
                       contentGroupOptions={contentGroupOptions}
                       additionalCareOptions={additionalCareOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      careTooltipStatus={careTooltipStatus}
-                      careMsg={careMsg}
                       contentGroup={props.contentGroup}
                       brand={props.brand}
                       careData={props.careData}
@@ -1684,12 +1667,12 @@ const OrderForm = (props) => {
                       handleMatchContentNumber={handleMatchContentNumber}
                       isOrderConfirmed={props.isOrderConfirmed}
                       brandSettings={props.brandSettings}
+                      tooltipStatus={tooltipStatus}
+                      tooltipMsg={tooltipMsg}
                     />
                     <WashCareSection
                       iconSequence={iconSequence}
                       washCareOptions={washCareOptions}
-                      iconTooltipStatus={iconTooltipStatus}
-                      iconMsg={iconMsg}
                       iconName={iconName}
                       contentGroupOptions={contentGroupOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
@@ -1699,6 +1682,8 @@ const OrderForm = (props) => {
                       washCareData={props.washCareData}
                       isOrderConfirmed={props.isOrderConfirmed}
                       brandSettings={props.brandSettings}
+                      tooltipStatus={tooltipStatus}
+                      tooltipMsg={tooltipMsg}
                     />
                   </div>
                 ) : null}
@@ -1722,8 +1707,6 @@ const OrderForm = (props) => {
                         contentGroupOptions={contentGroupOptions}
                         additionalCareOptions={additionalCareOptions}
                         fetchContentNumberDetail={fetchContentNumberDetail}
-                        careTooltipStatus={careTooltipStatus}
-                        careMsg={careMsg}
                         handleMatchContentNumber={handleMatchContentNumber}
                         contentGroup={props.contentGroup}
                         brand={props.brand}
@@ -1732,12 +1715,12 @@ const OrderForm = (props) => {
                         careNumberData={props.careNumberData}
                         isOrderConfirmed={props.isOrderConfirmed}
                         brandSettings={props.brandSettings}
+                        tooltipStatus={tooltipStatus}
+                        tooltipMsg={tooltipMsg}
                       />
                       <WashCareSection
                         iconSequence={iconSequence}
                         washCareOptions={washCareOptions}
-                        iconTooltipStatus={iconTooltipStatus}
-                        iconMsg={iconMsg}
                         iconName={iconName}
                         fetchContentNumberDetail={fetchContentNumberDetail}
                         handleMatchContentNumber={handleMatchContentNumber}
@@ -1747,6 +1730,8 @@ const OrderForm = (props) => {
                         washCareData={props.washCareData}
                         isOrderConfirmed={props.isOrderConfirmed}
                         brandSettings={props.brandSettings}
+                        tooltipStatus={tooltipStatus}
+                        tooltipMsg={tooltipMsg}
                       />
                     </div>
                   ) : props.contentGroup === "AB/C" ? (
@@ -1754,8 +1739,6 @@ const OrderForm = (props) => {
                       <WashCareSection
                         iconSequence={iconSequence}
                         washCareOptions={washCareOptions}
-                        iconTooltipStatus={iconTooltipStatus}
-                        iconMsg={iconMsg}
                         iconName={iconName}
                         handleMatchContentNumber={handleMatchContentNumber}
                         contentGroupOptions={contentGroupOptions}
@@ -1765,6 +1748,8 @@ const OrderForm = (props) => {
                         washCareData={props.washCareData}
                         isOrderConfirmed={props.isOrderConfirmed}
                         brandSettings={props.brandSettings}
+                        tooltipStatus={tooltipStatus}
+                        tooltipMsg={tooltipMsg}
                       />
                     </div>
                   ) : null}
