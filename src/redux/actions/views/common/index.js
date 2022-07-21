@@ -24,7 +24,7 @@ export const matchContentNumber =
       content: state.fibreInstructionData.map((data, index) => ({
         cont_key: data.cont_key || "",
         part_key: data.part_key || "",
-        percentage: data.en_percent || "",
+        percentage: data.percentage || "",
         seqno: (index + 1) * 10
       })),
       default_content: state.defaultContentData.map((cont, index) => ({
