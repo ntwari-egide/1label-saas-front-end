@@ -335,6 +335,7 @@ const Listing = (props) => {
     axios
       .post("/Order/GetOrderList", body)
       .then((res) => {
+        props.setTotalPages(Math.ceil(res.data.length / page_size))
         props.setOrderList(res.data)
         setLoading(false)
       })
@@ -480,7 +481,6 @@ const Listing = (props) => {
                     menuPlacement={"auto"}
                     options={recordsPerPageOptions}
                     onChange={(e) => {
-                      console.log("changed")
                       props.setRecordsPerPage(e)
                       debounceFetch(props.currentPage, e)
                     }}
@@ -505,7 +505,13 @@ const Listing = (props) => {
                   <ArrowLeft size={15} />
                 </Button>
               </div>
-              <div style={{ minWidth: "50px", maxWidth: "50px" }}>
+              <div
+                style={{
+                  minWidth: "50px",
+                  maxWidth: "50px",
+                  marginLeft: "10px"
+                }}
+              >
                 <Input
                   value={props.currentPage}
                   style={{ textAlign: "center" }}
@@ -527,6 +533,9 @@ const Listing = (props) => {
                   }}
                 />
               </div>
+              <div style={{ marginLeft: "10px", marginTop: "10px" }}>
+                of {props.totalPages}
+              </div>
               <div>
                 <Button
                   onClick={() => {
@@ -534,7 +543,7 @@ const Listing = (props) => {
                     debounceFetch(props.currentPage + 1, props.recordsPerPage)
                   }}
                   color="primary"
-                  style={{ padding: "10px" }}
+                  style={{ padding: "10px", marginLeft: "10px" }}
                 >
                   <ArrowRight size={15} />
                 </Button>

@@ -16,6 +16,7 @@ const List = () => {
   const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
   const [orderDateFrom, setOrderDateFrom] = useState("")
   const [orderDateTo, setOrderDateTo] = useState("")
+  const [totalPages, setTotalPages] = useState(0)
 
   // useEffect(() => {
   //   console.log("selectedOrder", selectedOrder)
@@ -52,6 +53,8 @@ const List = () => {
           setOrderDateFrom={setOrderDateFrom}
           orderDateTo={orderDateTo}
           setOrderDateTo={setOrderDateTo}
+          totalPages={totalPages}
+          setTotalPages={setTotalPages}
         />
       ) : currentStep === 1 ? (
         <Details />
