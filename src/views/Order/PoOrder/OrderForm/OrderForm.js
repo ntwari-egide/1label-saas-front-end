@@ -248,7 +248,10 @@ const ContentSection = (props) => {
                       setComponentTip("")
                     }}
                     isClearable={true}
-                    isDisabled={props.isOrderConfirmed}
+                    isDisabled={
+                      props.isOrderConfirmed ||
+                      props.brandSettings.create_content_model === "Admin"
+                    }
                   />
                 </div>
                 {props.tooltipStatus.part ? (
@@ -307,7 +310,10 @@ const ContentSection = (props) => {
                     onBlur={() => {
                       setFabricTip("")
                     }}
-                    isDisabled={props.isOrderConfirmed}
+                    isDisabled={
+                      props.isOrderConfirmed ||
+                      props.brandSettings.create_content_model === "Admin"
+                    }
                   />
                 </div>
                 {props.tooltipStatus.content ? (
@@ -368,7 +374,10 @@ const ContentSection = (props) => {
                   onMouseLeave={() => {
                     setPercentTip("")
                   }}
-                  disabled={props.isOrderConfirmed}
+                  disabled={
+                    props.isOrderConfirmed ||
+                    props.brandSettings.create_content_model === "Admin"
+                  }
                 />
                 {props.tooltipStatus.percentage ? (
                   <div>
@@ -585,7 +594,10 @@ const CareSection = (props) => {
                   props.handleMatchContentNumber("care")
                 }}
                 isClearable={true}
-                isDisabled={props.isOrderConfirmed}
+                isDisabled={
+                  props.isOrderConfirmed ||
+                  props.brandSettings.create_content_model === "Admin"
+                }
                 onFocus={() => {
                   if (props.brandSettings.content_msg_show_model === "Focus") {
                     setCareTip(`care-select-${index}`)
@@ -718,7 +730,10 @@ const WashCareSection = (props) => {
                     }
                   }}
                   isClearable={true}
-                  isDisabled={props.isOrderConfirmed}
+                  isDisabled={
+                    props.isOrderConfirmed ||
+                    props.brandSettings.create_content_model === "Admin"
+                  }
                 />
               </Col>
             </Row>
