@@ -461,6 +461,10 @@ const ContentSection = (props) => {
                     dispatch(setDefaultContentData([...tempData]))
                     props.handleMatchContentNumber("content")
                   }}
+                  disabled={
+                    props.isOrderConfirmed ||
+                    props.brandSettings.create_content_model === "Admin"
+                  }
                 >
                   <div style={{ display: "flex" }}>
                     <X />
@@ -635,16 +639,16 @@ const CareSection = (props) => {
                   props.handleMatchContentNumber("care")
                 }}
                 isClearable={true}
-                isDisabled={
-                  props.isOrderConfirmed ||
-                  props.brandSettings.create_content_model === "Admin"
-                }
                 onFocus={() => {
                   if (props.brandSettings.content_msg_show_model === "Focus") {
                     setCareTip(`care-select-${index}`)
                   }
                 }}
                 onBlur={() => setCareTip("")}
+                isDisabled={
+                  props.isOrderConfirmed ||
+                  props.brandSettings.create_content_model === "Admin"
+                }
               />
             </div>
             {props.tooltipStatus.care ? (
@@ -678,6 +682,10 @@ const CareSection = (props) => {
                 dispatch(setCareData([...tempCare]))
                 props.handleMatchContentNumber("care")
               }}
+              disabled={
+                props.isOrderConfirmed ||
+                props.brandSettings.create_content_model === "Admin"
+              }
             >
               <div style={{ display: "flex" }}>
                 <X />

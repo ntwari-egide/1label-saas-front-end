@@ -420,6 +420,10 @@ const ContentSection = (props) => {
                     dispatch(setDefaultContentData([...tempData]))
                     props.handleMatchContentNumber("content")
                   }}
+                  disabled={
+                    props.isOrderConfirmed ||
+                    props.brandSettings.create_content_model === "Admin"
+                  }
                 >
                   <div style={{ display: "flex" }}>
                     <X />
@@ -637,6 +641,10 @@ const CareSection = (props) => {
                 dispatch(setCareData([...tempCare]))
                 props.handleMatchContentNumber("care")
               }}
+              disabled={
+                props.isOrderConfirmed ||
+                props.brandSettings.create_content_model === "Admin"
+              }
             >
               <div style={{ display: "flex" }}>
                 <X />
