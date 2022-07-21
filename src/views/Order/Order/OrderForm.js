@@ -9,6 +9,8 @@ import {
   Spinner,
   CardBody,
   CardFooter,
+  FormGroup,
+  FormFeedback,
   Row,
   Col,
   Input,
@@ -281,6 +283,14 @@ const ContentSection = (props) => {
                       props.brandSettings.create_content_model === "Admin"
                     }
                   />
+                  {props.orderFormValidations.content ? (
+                    props.orderFormValidations.content[index]
+                      ?.part_key_status ? (
+                      <div style={{ fontSize: 12, color: "#ea5455" }}>
+                        {props.orderFormValidations.content[index]?.part_msg}
+                      </div>
+                    ) : null
+                  ) : null}
                 </div>
                 {props.tooltipStatus.part ? (
                   <div>
@@ -320,6 +330,19 @@ const ContentSection = (props) => {
                     id={`fabric-select-${index}`}
                     className="React"
                     classNamePrefix="select"
+                    styles={{
+                      control: (base) => {
+                        if (props.orderFormValidations.content) {
+                          if (
+                            props.orderFormValidations.content[index]
+                              ?.content_key_status
+                          ) {
+                            return { ...base, border: "1px solid #ea5455" }
+                          }
+                        }
+                        return { ...base }
+                      }
+                    }}
                     options={props.fabricOptions}
                     value={props.fabricOptions?.filter(
                       (opt) => opt.value === rec?.cont_key
@@ -353,6 +376,14 @@ const ContentSection = (props) => {
                       props.brandSettings.create_content_model === "Admin"
                     }
                   />
+                  {props.orderFormValidations.content ? (
+                    props.orderFormValidations.content[index]
+                      ?.content_key_status ? (
+                      <div style={{ fontSize: 12, color: "#ea5455" }}>
+                        {props.orderFormValidations.content[index]?.content_msg}
+                      </div>
+                    ) : null
+                  ) : null}
                 </div>
                 {props.tooltipStatus.content ? (
                   <div>
@@ -626,6 +657,16 @@ const CareSection = (props) => {
                 className="React"
                 id={`care-select-${index}`}
                 classNamePrefix="select"
+                styles={{
+                  control: (base) => {
+                    if (props.orderFormValidations.care) {
+                      if (props.orderFormValidations.care[index]?.care_status) {
+                        return { ...base, border: "1px solid #ea5455" }
+                      }
+                    }
+                    return { ...base }
+                  }
+                }}
                 options={props.additionalCareOptions}
                 value={props.additionalCareOptions?.filter(
                   (opt) => opt.value === rec.care_key
@@ -651,6 +692,13 @@ const CareSection = (props) => {
                   props.brandSettings.create_content_model === "Admin"
                 }
               />
+              {props.orderFormValidations.care ? (
+                props.orderFormValidations.care[index]?.care_status ? (
+                  <div style={{ fontSize: 12, color: "#ea5455" }}>
+                    {props.orderFormValidations.care[index]?.care_msg}
+                  </div>
+                ) : null
+              ) : null}
             </div>
             {props.tooltipStatus.care ? (
               <div>
@@ -837,6 +885,19 @@ const WashCareSection = (props) => {
                       id={`icon-select-${index}`}
                       className="React"
                       classNamePrefix="select"
+                      styles={{
+                        control: (base) => {
+                          if (props.orderFormValidations.icon) {
+                            if (
+                              props.orderFormValidations.icon[index]
+                                ?.icon_status
+                            ) {
+                              return { ...base, border: "1px solid #ea5455" }
+                            }
+                          }
+                          return { ...base }
+                        }
+                      }}
                       options={props.washCareOptions[iconObj?.icon_type_id]}
                       value={
                         props.washCareOptions[iconObj?.icon_type_id]
@@ -890,6 +951,14 @@ const WashCareSection = (props) => {
                         props.brandSettings.create_content_model === "Admin"
                       }
                     />
+                    {props.orderFormValidations.icon ? (
+                      props.orderFormValidations.icon[index]
+                        ?.icon_status ? (
+                        <div style={{ fontSize: 12, color: "#ea5455" }}>
+                          {props.orderFormValidations.icon[index]?.icon_msg}
+                        </div>
+                      ) : null
+                    ) : null}
                   </div>
                   {props.tooltipStatus.icon ? (
                     <div>
@@ -1479,33 +1548,62 @@ const OrderForm = (props) => {
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <Label>{t("Customer Order Reference")}</Label>
               <span className="text-danger">*</span>
-              <Input
-                value={props.orderReference}
-                onChange={(e) => {
-                  dispatch(setOrderReference(e.target.value))
-                }}
-                style={{ margin: "5px" }}
-                disabled={props.isOrderConfirmed}
-              />
+              <FormGroup>
+                <Input
+                  value={props.orderReference}
+                  onChange={(e) => {
+                    dispatch(setOrderReference(e.target.value))
+                  }}
+                  style={{ margin: "5px" }}
+                  disabled={props.isOrderConfirmed}
+                  invalid={
+                    props.orderFormValidations.customer_order_reference?.status
+                  }
+                />
+                {props.orderFormValidations.customer_order_reference?.status ? (
+                  <FormFeedback>
+                    {props.orderFormValidations.customer_order_reference?.msg}
+                  </FormFeedback>
+                ) : null}
+              </FormGroup>
             </Col>
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <div>
                 <Label>{t("Expected Delivery Date")}</Label>
                 <span className="text-danger">*</span>
-                <Flatpickr
-                  className="form-control"
-                  value={
-                    props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
+                <FormGroup
+                  invalid={
+                    props.orderFormValidations.expected_delivery_date?.status
                   }
-                  style={{ margin: "5px" }}
-                  options={{
-                    minDate: props.minExpectedDeliveryDate
-                  }}
-                  onChange={(e) => {
-                    dispatch(setExpectedDeliveryDate(e))
-                  }}
-                  disabled={props.isOrderConfirmed}
-                />
+                >
+                  <Flatpickr
+                    className="form-control"
+                    value={
+                      props.expectedDeliveryDate
+                        ? props.expectedDeliveryDate
+                        : ""
+                    }
+                    style={{
+                      margin: "5px",
+                      border: props.orderFormValidations.expected_delivery_date
+                        ?.status
+                        ? "1px solid #ea5455"
+                        : "1px solid #d8d6de"
+                    }}
+                    options={{
+                      minDate: props.minExpectedDeliveryDate
+                    }}
+                    onChange={(e) => {
+                      dispatch(setExpectedDeliveryDate(e))
+                    }}
+                    disabled={props.isOrderConfirmed}
+                  />
+                  {props.orderFormValidations.expected_delivery_date?.status ? (
+                    <div style={{ fontSize: 12, color: "#ea5455" }}>
+                      {props.orderFormValidations.expected_delivery_date?.msg}
+                    </div>
+                  ) : null}
+                </FormGroup>
               </div>
             </Col>
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
@@ -1604,6 +1702,7 @@ const OrderForm = (props) => {
                     brandSettings={props.brandSettings}
                     tooltipStatus={tooltipStatus}
                     tooltipMsg={tooltipMsg}
+                    orderFormValidations={props.orderFormValidations}
                   />
                 ) : props.contentGroup === "AB/C" ? (
                   <div>
@@ -1624,6 +1723,7 @@ const OrderForm = (props) => {
                       brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
+                      orderFormValidations={props.orderFormValidations}
                     />
                     <CareSection
                       careName={careName}
@@ -1641,6 +1741,7 @@ const OrderForm = (props) => {
                       brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
+                      orderFormValidations={props.orderFormValidations}
                     />
                   </div>
                 ) : props.contentGroup === "ABC" ? (
@@ -1662,6 +1763,7 @@ const OrderForm = (props) => {
                       brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
+                      orderFormValidations={props.orderFormValidations}
                     />
                     <CareSection
                       careName={careName}
@@ -1678,6 +1780,7 @@ const OrderForm = (props) => {
                       brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
+                      orderFormValidations={props.orderFormValidations}
                     />
                     <WashCareSection
                       iconSequence={iconSequence}
@@ -1693,6 +1796,7 @@ const OrderForm = (props) => {
                       brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
+                      orderFormValidations={props.orderFormValidations}
                     />
                   </div>
                 ) : null}
@@ -1726,6 +1830,7 @@ const OrderForm = (props) => {
                         brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
+                        orderFormValidations={props.orderFormValidations}
                       />
                       <WashCareSection
                         iconSequence={iconSequence}
@@ -1741,6 +1846,7 @@ const OrderForm = (props) => {
                         brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
+                        orderFormValidations={props.orderFormValidations}
                       />
                     </div>
                   ) : props.contentGroup === "AB/C" ? (
@@ -1759,6 +1865,7 @@ const OrderForm = (props) => {
                         brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
+                        orderFormValidations={props.orderFormValidations}
                       />
                     </div>
                   ) : null}
@@ -1810,7 +1917,8 @@ const mapStateToProps = (state) => ({
   itemInfoFields: state.orderReducer.itemInfoFields,
   isOrderNew: state.listReducer.isOrderNew,
   selectedOrder: state.listReducer.selectedOrder,
-  brandSettings: state.orderReducer.brandSettings
+  brandSettings: state.orderReducer.brandSettings,
+  orderFormValidations: state.orderReducer.orderFormValidations
 })
 
 export default connect(mapStateToProps, null)(OrderForm)
