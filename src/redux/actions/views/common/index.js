@@ -429,12 +429,22 @@ export const saveOrder = (order_status) => (dispatch) => {
       dispatch(setLoader(false))
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
-          sweetAlert(
-            `${order_status} Order Save Failed!`,
-            res.data.status_description,
-            "error",
-            "danger"
-          )
+          if (res.data.status_description === "validation") {
+            // ** validate
+            const {
+              setOrderFormValidations,
+              setCurrentStep
+            } = require(`@redux/actions/views/Order/Order`)
+            dispatch(setCurrentStep(1))
+            dispatch(setOrderFormValidations(res.data.fields))
+          } else {
+            sweetAlert(
+              `${order_status} Order Save Failed!`,
+              res.data.status_description,
+              "error",
+              "danger"
+            )
+          }
         } else {
           const confirmation = await sweetAlert(
             `${order_status} Order Save Successful`,
