@@ -22,6 +22,7 @@ const initialState = {
   itemInfoFields: [],
   orderNo: "",
   brandSettings: {},
+  orderFormValidations: {},
   // size table data
   sizeMatrixType: "",
   sizeTable: "",
@@ -117,6 +118,8 @@ const orderReducer = (state = initialState, action) => {
       return { ...state, orderNo: action.payload }
     case "SET_BRAND_SETTINGS":
       return { ...state, brandSettings: action.payload }
+    case "SET_ORDER_FORM_VALIDATIONS":
+      return { ...state, orderFormValidations: action.payload }
     default:
       return state
   }

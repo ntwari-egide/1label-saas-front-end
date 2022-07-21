@@ -186,5 +186,9 @@ export const setPoSelectedOrders = (data) => (dispatch) => {
 }
 
 export const setBrandSettings = (data) => (dispatch) => {
-  dispatch({ type: "SET_PO_BRAND_SETTINGS", payload: data})
+  dispatch({ type: "SET_PO_BRAND_SETTINGS", payload: data })
+}
+
+export const setOrderFormValidations = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_ORDER_FORM_VALIDATIONS", payload: data })
 }

@@ -137,3 +137,7 @@ export const setOrderNo = (value) => (dispatch) => {
 export const setBrandSettings = (data) => (dispatch) => {
   dispatch({ type: "SET_BRAND_SETTINGS", payload: data })
 }
+
+export const setOrderFormValidations = (data) => (dispatch) => {
+  dispatch({ type: "SET_ORDER_FORM_VALIDATIONS", payload: data })
+}

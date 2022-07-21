@@ -33,6 +33,7 @@ const initialState = {
   itemInfoFields: [],
   orderNo: "",
   brandSettings: {},
+  orderFormValidations: {},
   // size table states
   sizeData: [],
   wastage: 0,
@@ -131,6 +132,8 @@ const poOrderReduced = (state = initialState, action) => {
       return { ...state, poSelectedOrders: action.payload }
     case "SET_PO_BRAND_SETTINGS":
       return { ...state, brandSettings: action.payload }
+    case "SET_PO_ORDER_FORM_VALIDATIONS":
+      return { ...state, orderFormValidations: action.payload }
     default:
       return { ...state }
   }
