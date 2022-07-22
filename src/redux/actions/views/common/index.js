@@ -40,6 +40,7 @@ export const matchContentNumber =
         seqno: (index + 1) * 10
       }))
     }
+
     axios.post("/ContentNumber/MatchContentNumber", body).then((res) => {
       if (res.status === 200) {
         const {
@@ -50,12 +51,15 @@ export const matchContentNumber =
         if (content_group === "ABC") {
           dispatch(
             setContentNumberData({
-              value: res.data.content_number || "",
-              label: ""
+              value: res.data.content_number_key || "",
+              label: res.data.content_number || ""
             })
           )
           dispatch(
-            setCareNumberData({ value: res.data.care_number || "", label: "" })
+            setCareNumberData({
+              value: res.data.care_number_key || "",
+              label: res.data.care_number || ""
+            })
           )
         }
         if (
@@ -64,20 +68,23 @@ export const matchContentNumber =
         ) {
           dispatch(
             setContentNumberData({
-              value: res.data.content_number || "",
-              label: ""
+              value: res.data.content_number_key || "",
+              label: res.data.content_number || ""
             })
           )
         } else if (content_group === "C" && section === "washCare") {
           dispatch(
-            setCareNumberData({ value: res.data.care_number || "", label: "" })
+            setCareNumberData({
+              value: res.data.care_number_key || "",
+              label: res.data.care_number || ""
+            })
           )
         }
         if (content_group === "A" && section === "content") {
           dispatch(
             setContentNumberData({
-              value: res.data.content_number || "",
-              label: ""
+              value: res.data.content_number_key || "",
+              label: res.data.content_number || ""
             })
           )
         } else if (
@@ -85,7 +92,10 @@ export const matchContentNumber =
           (section === "care" || section === "washCare")
         ) {
           dispatch(
-            setCareNumberData({ value: res.data.care_number || "", label: "" })
+            setCareNumberData({
+              value: res.data.care_number_key || "",
+              label: res.data.care_number || ""
+            })
           )
         }
       }
