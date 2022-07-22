@@ -32,7 +32,7 @@ export const matchContentNumber =
         seqno: (index + 1) * 10
       })),
       care: state.careData.map((data, index) => ({
-        care_key: data.cont_key || "",
+        care_key: data.care_key || "",
         seqno: (index + 1) * 10
       })),
       icon: Object.values(state.washCareData).map((obj, index) => ({
