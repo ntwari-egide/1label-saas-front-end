@@ -26,13 +26,17 @@ const List = () => {
     <div>
       <Breadcrumb>
         <BreadcrumbItem>
-          <Link to="/home">{t("Home")}</Link>
+          <Link to="/home" style={{ color: "#5e5873" }}>
+            {t("Home")}
+          </Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Link>{t("Order")}</Link>
+          <Link style={{ color: "#5e5873" }}>{t("Order")}</Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Link to="/List">{t("List")}</Link>
+          <Link to="/List" style={{ color: "#5e5873" }}>
+            {t("List")}
+          </Link>
         </BreadcrumbItem>
       </Breadcrumb>
       <Stepper

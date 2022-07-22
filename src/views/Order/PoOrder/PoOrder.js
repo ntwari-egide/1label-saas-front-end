@@ -75,13 +75,17 @@ const PoOrder = (props) => {
       />
       <Breadcrumb>
         <BreadcrumbItem>
-          <Link to="/home">{t("Home")}</Link>
+          <Link to="/home" style={{ color: "#5e5873" }}>
+            {t("Home")}
+          </Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Link>{t("Order")}</Link>
+          <Link style={{ color: "#5e5873" }}>{t("Order")}</Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <Link to="/POOrder">{t("PO Order")}</Link>
+          <Link to="/POOrder" style={{ color: "#5e5873" }}>
+            {t("PO Order")}
+          </Link>
         </BreadcrumbItem>
       </Breadcrumb>
       <Stepper
