@@ -10,13 +10,23 @@ import {
   Button,
   Input,
   Row,
-  Col
+  Col,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import axios from "@axios"
 import DataTable from "react-data-table-component"
 import CheckBox from "@components/CheckBox/CheckBox"
-import { Check, ArrowLeft, ArrowRight, Search } from "react-feather"
+import {
+  Check,
+  ArrowLeft,
+  ArrowRight,
+  Search,
+  MoreVertical
+} from "react-feather"
 import Select from "react-select"
 import Flatpickr from "react-flatpickr"
 import { formatDateYMD, processOrderNo } from "@utils"
@@ -31,6 +41,7 @@ import {
 } from "@redux/actions/views/Order/List"
 import { getUserData } from "@utils"
 import { setLoader } from "@redux/actions/layout"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 let timerId
 
@@ -168,16 +179,25 @@ const Listing = (props) => {
       cell: (row) => (
         <UncontrolledDropdown className="dropdown-user nav-item">
           <DropdownToggle
-            href="/"
             tag="a"
             className="nav-link dropdown-user-link"
-            onClick={(e) => e.preventDefault()}
+            onClick={(e) => {
+              e.preventDefault()
+            }}
           >
             <MoreVertical />
           </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem></DropdownItem>
-            <DropdownItem></DropdownItem>
+          <DropdownMenu style={{ left: 0 }}>
+            {row.action.map((act) => (
+              <DropdownItem
+                style={{ width: "100%" }}
+                onClick={() => {
+                  handleActionButtonClick(act.label, row)
+                }}
+              >
+                {act.label}
+              </DropdownItem>
+            ))}
           </DropdownMenu>
         </UncontrolledDropdown>
       )
