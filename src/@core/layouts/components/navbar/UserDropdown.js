@@ -58,11 +58,15 @@ const UserDropdown = () => {
       <DropdownToggle
         href="/"
         tag="a"
-        className="nav-link dropdown-user-link"
+        className="nav-link dropdown-user-link align-items-center"
         onClick={(e) => e.preventDefault()}
       >
-        <div className="user-nav d-sm-flex d-none" style={{ marginTop: "3px" }}>
-          <span className="user-name text-bold-600">{user.admin}</span>
+        <div className="user-nav d-sm-flex">
+          <span
+            style={{ color: "white", fontWeight: 500, marginBottom: "3px" }}
+          >
+            {user.admin}
+          </span>
         </div>
         {userProfile ? (
           <Avatar className="mr-1" img={userProfile} color="primary" />

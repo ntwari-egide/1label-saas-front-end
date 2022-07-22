@@ -36,14 +36,16 @@ const IntlDropdown = () => {
       <DropdownToggle
         href="/"
         tag="a"
-        className="nav-link"
+        className="nav-link dropdown-user-link align-items-center"
         onClick={(e) => e.preventDefault()}
       >
         <img
           src={i18n.language === "en" ? us : i18n.language === "cn" ? cn : de}
           style={{ height: "20px", width: "20px" }}
         />
-        <span className="selected-language pl-1">{langObj[i18n.language]}</span>
+        <span style={{ marginLeft: "5px", color: "white", fontWeight: 500 }}>
+          {langObj[i18n.language]}
+        </span>
       </DropdownToggle>
       <DropdownMenu className="mt-0" end>
         <DropdownItem
