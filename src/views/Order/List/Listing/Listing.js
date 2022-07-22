@@ -143,24 +143,43 @@ const Listing = (props) => {
       selector: "update_user",
       width: "160px"
     },
+    // {
+    //   name: t("ACTIONS"),
+    //   cell: (row) => (
+    //     <div
+    //       style={{ display: "flex", minWidth: "220px", marginRight: "375px" }}
+    //     >
+    //       {row.action.map((act) => (
+    //         <div>
+    //           <Button
+    //             color="primary"
+    //             style={{ margin: "1px", padding: "5px" }}
+    //             onClick={() => handleActionButtonClick(act.label, row)}
+    //           >
+    //             {act.label}
+    //           </Button>
+    //         </div>
+    //       ))}
+    //     </div>
+    //   )
+    // },
     {
       name: t("ACTIONS"),
       cell: (row) => (
-        <div
-          style={{ display: "flex", minWidth: "220px", marginRight: "375px" }}
-        >
-          {row.action.map((act) => (
-            <div>
-              <Button
-                color="primary"
-                style={{ margin: "1px", padding: "5px" }}
-                onClick={() => handleActionButtonClick(act.label, row)}
-              >
-                {act.label}
-              </Button>
-            </div>
-          ))}
-        </div>
+        <UncontrolledDropdown className="dropdown-user nav-item">
+          <DropdownToggle
+            href="/"
+            tag="a"
+            className="nav-link dropdown-user-link"
+            onClick={(e) => e.preventDefault()}
+          >
+            <MoreVertical />
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem></DropdownItem>
+            <DropdownItem></DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
       )
     }
   ]
