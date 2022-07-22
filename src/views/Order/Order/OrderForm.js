@@ -516,7 +516,7 @@ const ContentSection = (props) => {
               const tempDefaultContent = props.defaultContentData
               tempDefaultContent.push("")
               dispatch(setDefaultContentData([...tempDefaultContent]))
-              props.handleMatchContentNumber("content")
+              dispatch(setContentNumberData({}))
             }}
             color="primary"
             style={{ padding: "10px" }}
