@@ -144,7 +144,7 @@ export const sweetAlert = async (title, text, icon, btnType) => {
       <ul>
         {text.split("\r\n").map((str) => {
           if (str.length) {
-            return <li>{str}</li>
+            return <li style={{ textAlign: "left" }}>{str}</li>
           }
         })}
       </ul>
