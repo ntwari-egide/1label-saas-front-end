@@ -551,8 +551,7 @@ const Listing = (props) => {
               <div
                 style={{
                   minWidth: "50px",
-                  maxWidth: "50px",
-                  marginLeft: "10px"
+                  maxWidth: "50px"
                 }}
               >
                 <Input
@@ -576,9 +575,11 @@ const Listing = (props) => {
                   }}
                 />
               </div>
+              {/*
               <div style={{ marginLeft: "10px", marginTop: "10px" }}>
                 of {props.totalPages}
               </div>
+                */}
               <div>
                 <Button
                   onClick={() => {
@@ -586,7 +587,7 @@ const Listing = (props) => {
                     debounceFetch(props.currentPage + 1, props.recordsPerPage)
                   }}
                   color="primary"
-                  style={{ padding: "10px", marginLeft: "10px" }}
+                  style={{ padding: "10px" }}
                 >
                   <ArrowRight size={15} />
                 </Button>
