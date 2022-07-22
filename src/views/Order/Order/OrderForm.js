@@ -67,7 +67,7 @@ const ContentSection = (props) => {
       clearTimeout(timerId)
     }
     timerId = setTimeout(() => {
-      // matchContentNumber()
+      props.handleMatchContentNumber("content")
       timerId = null
     }, 400)
   }
@@ -952,8 +952,7 @@ const WashCareSection = (props) => {
                       }
                     />
                     {props.orderFormValidations.icon ? (
-                      props.orderFormValidations.icon[index]
-                        ?.icon_status ? (
+                      props.orderFormValidations.icon[index]?.icon_status ? (
                         <div style={{ fontSize: 12, color: "#ea5455" }}>
                           {props.orderFormValidations.icon[index]?.icon_msg}
                         </div>
