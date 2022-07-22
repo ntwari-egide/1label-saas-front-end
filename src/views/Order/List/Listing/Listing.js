@@ -250,6 +250,8 @@ const Listing = (props) => {
             )
             // push to page
             history.push(`/${module}`)
+            // disable main block ui loader
+            dispatch(setLoader(false))
           } else {
             console.log("Err Msg: No Data for order details")
           }
@@ -321,6 +323,8 @@ const Listing = (props) => {
   }
 
   const handleRowDoubleClick = (e) => {
+    // enable main block ui loader
+    dispatch(setLoader(true))
     dispatch(setSelectedOrder(e))
     if (e.order_status === "COMPLETE") {
       dispatch(setIsOrderConfirmed(true))
