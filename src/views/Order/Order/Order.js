@@ -76,9 +76,7 @@ const Order = (props) => {
       />
       <Breadcrumb>
         <BreadcrumbItem>
-          <Link to="/home" style={{ color: "#5e5873" }}>
-            {t("Home")}
-          </Link>
+          <Link to="/home">{t("Home")}</Link>
         </BreadcrumbItem>
         <BreadcrumbItem>
           <Link to="/Order" style={{ color: "#5e5873" }}>
