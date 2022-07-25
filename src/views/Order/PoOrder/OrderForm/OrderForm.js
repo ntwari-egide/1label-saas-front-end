@@ -545,7 +545,7 @@ const CareSection = (props) => {
             <Col xs="6" sm="6" md="6" lg="6" xl="6">
               <Row>
                 <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <Label style={{ marginTop: "12px" }}>Save/Edit:</Label>
+                  <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
                 </Col>
               </Row>
               <Row>
