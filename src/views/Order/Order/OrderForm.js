@@ -286,7 +286,7 @@ const ContentSection = (props) => {
                 {props.orderFormValidations.content ? (
                   props.orderFormValidations.content[index]
                     ?.part_key_status ? (
-                    <div style={{ fontSize: 12, color: "#ea5455" }}>
+                    <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
                       {props.orderFormValidations.content[index]?.part_msg}
                     </div>
                   ) : null
@@ -379,7 +379,7 @@ const ContentSection = (props) => {
                 {props.orderFormValidations.content ? (
                   props.orderFormValidations.content[index]
                     ?.content_key_status ? (
-                    <div style={{ fontSize: 12, color: "#ea5455" }}>
+                    <div style={{ fontSize: 12, color: "#ea5455", marginTop: '4px' }}>
                       {props.orderFormValidations.content[index]?.content_msg}
                     </div>
                   ) : null
@@ -704,7 +704,7 @@ const CareSection = (props) => {
               />
               {props.orderFormValidations.care ? (
                 props.orderFormValidations.care[index]?.care_status ? (
-                  <div style={{ fontSize: 12, color: "#ea5455" }}>
+                  <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
                     {props.orderFormValidations.care[index]?.care_msg}
                   </div>
                 ) : null
@@ -963,7 +963,7 @@ const WashCareSection = (props) => {
                     />
                     {props.orderFormValidations.icon ? (
                       props.orderFormValidations.icon[index]?.icon_status ? (
-                        <div style={{ fontSize: 12, color: "#ea5455" }}>
+                        <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
                           {props.orderFormValidations.icon[index]?.icon_msg}
                         </div>
                       ) : null
@@ -1608,7 +1608,7 @@ const OrderForm = (props) => {
                     disabled={props.isOrderConfirmed}
                   />
                   {props.orderFormValidations.expected_delivery_date?.status ? (
-                    <div style={{ fontSize: 12, color: "#ea5455" }}>
+                    <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
                       {props.orderFormValidations.expected_delivery_date?.msg}
                     </div>
                   ) : null}
