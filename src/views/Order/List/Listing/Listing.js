@@ -378,8 +378,8 @@ const Listing = (props) => {
     axios
       .post("/Order/GetOrderList", body)
       .then((res) => {
-        props.setTotalPages(Math.ceil(res.data.length / page_size))
-        props.setOrderList(res.data)
+        props.setOrderList(res.data.orders)
+        props.setTotalPages(Math.ceil((res.data.row_count || 0) / page_size))
         setLoading(false)
       })
       .catch((err) => console.log(err))
@@ -544,6 +544,7 @@ const Listing = (props) => {
                       debounceFetch(props.currentPage - 1, props.recordsPerPage)
                     }
                   }}
+                  disabled={props.currentPage === 1}
                 >
                   <ArrowLeft size={15} />
                 </Button>
@@ -551,7 +552,8 @@ const Listing = (props) => {
               <div
                 style={{
                   minWidth: "50px",
-                  maxWidth: "50px"
+                  maxWidth: "50px",
+                  marginLeft: "5px"
                 }}
               >
                 <Input
@@ -575,11 +577,9 @@ const Listing = (props) => {
                   }}
                 />
               </div>
-              {/*
               <div style={{ marginLeft: "10px", marginTop: "10px" }}>
                 of {props.totalPages}
               </div>
-                */}
               <div>
                 <Button
                   onClick={() => {
@@ -587,7 +587,8 @@ const Listing = (props) => {
                     debounceFetch(props.currentPage + 1, props.recordsPerPage)
                   }}
                   color="primary"
-                  style={{ padding: "10px" }}
+                  style={{ padding: "10px", marginLeft: "5px" }}
+                  disabled={props.totalPages === props.currentPage}
                 >
                   <ArrowRight size={15} />
                 </Button>
