@@ -25,7 +25,10 @@ import {
   ArrowLeft,
   ArrowRight,
   Search,
-  MoreVertical
+  MoreVertical,
+  Copy,
+  Mail,
+  Eye
 } from "react-feather"
 import Select from "react-select"
 import Flatpickr from "react-flatpickr"
@@ -42,6 +45,12 @@ import {
 import { getUserData } from "@utils"
 import { setLoader } from "@redux/actions/layout"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
+
+const actionOptIcons = {
+  Preview: <Eye />,
+  "Send Draft Order": <Mail />,
+  Copy: <Copy />
+}
 
 let timerId
 
@@ -154,40 +163,19 @@ const Listing = (props) => {
       selector: "update_user",
       width: "160px"
     },
-    // {
-    //   name: t("ACTIONS"),
-    //   cell: (row) => (
-    //     <div
-    //       style={{ display: "flex", minWidth: "220px", marginRight: "375px" }}
-    //     >
-    //       {row.action.map((act) => (
-    //         <div>
-    //           <Button
-    //             color="primary"
-    //             style={{ margin: "1px", padding: "5px" }}
-    //             onClick={() => handleActionButtonClick(act.label, row)}
-    //           >
-    //             {act.label}
-    //           </Button>
-    //         </div>
-    //       ))}
-    //     </div>
-    //   )
-    // },
     {
       name: t("ACTIONS"),
       cell: (row) => (
-        <UncontrolledDropdown className="dropdown-user nav-item">
+        <UncontrolledDropdown>
           <DropdownToggle
             tag="a"
-            className="nav-link dropdown-user-link"
             onClick={(e) => {
               e.preventDefault()
             }}
           >
             <MoreVertical />
           </DropdownToggle>
-          <DropdownMenu style={{ left: 0 }}>
+          <DropdownMenu end={false}>
             {row.action.map((act) => (
               <DropdownItem
                 style={{ width: "100%" }}
@@ -195,7 +183,7 @@ const Listing = (props) => {
                   handleActionButtonClick(act.label, row)
                 }}
               >
-                {act.label}
+                {actionOptIcons[`${act.label}`]} {act.label}
               </DropdownItem>
             ))}
           </DropdownMenu>
@@ -378,7 +366,9 @@ const Listing = (props) => {
     axios
       .post("/Order/GetOrderList", body)
       .then((res) => {
-        props.setOrderList(res.data.orders)
+        props.setOrderList(
+          res.data.orders.map((or, index) => ({ ...or, index }))
+        )
         props.setTotalPages(Math.ceil((res.data.row_count || 0) / page_size))
         setLoading(false)
       })
