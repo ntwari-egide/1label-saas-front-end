@@ -1016,15 +1016,13 @@ const OrderForm = (props) => {
     // assign state for options in select fields for dynamic fields of Item Info
     let tempItemInfoOptions = {}
     let tempItemInfoState = {}
-    if (fields.length > 0) {
+    if (fields.length) {
       fields.map((field) => {
         // assigns initial state to dynamic fields data.
-        if (props.isOrderNew) {
-          tempItemInfoState[field.title] = {
-            field_id: field.field,
-            field_value: "",
-            field_label: ""
-          }
+        tempItemInfoState[field.title] = {
+          field_id: field.field,
+          field_value: field.label,
+          field_label: field.label
         }
         if (field?.effect?.fetch?.action) {
           fetch(field?.effect?.fetch?.action, {
