@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import SelectItem from "./SelectItem"
-import OrderForm from "./OrderForm"
+import OrderForm from "./OrderForm/OrderForm"
 import PreviewAndSummary from "./PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDeliveryDate"
 import Payment from "./Payment"
