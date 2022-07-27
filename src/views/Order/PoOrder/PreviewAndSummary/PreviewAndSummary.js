@@ -101,7 +101,7 @@ const PreviewAndSummary = (props) => {
                 if (col.includes("QTY ITEM REF")) {
                   tempRow = {
                     ...tempRow,
-                    [`${col}`]: tempRow[col] + row[col]
+                    [`${col}`]: parseInt(tempRow[col]) + parseInt(row[col])
                   }
                 }
               })
