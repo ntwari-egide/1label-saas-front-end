@@ -23,7 +23,6 @@ import { X, Plus } from "react-feather"
 import Footer from "../../CommonFooter"
 import Flatpickr from "react-flatpickr"
 import { useTranslation } from "react-i18next"
-import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { connect, useDispatch } from "react-redux"
 import {
   setExpectedDeliveryDate,
@@ -46,11 +45,14 @@ import {
 } from "@redux/actions/views/Order/Order"
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
+import CustomFormFeedback from "@components/CustomFormFeedback"
+import "@styles/react/libs/flatpickr/flatpickr.scss"
 
 const errorStyles = {
   border: "1px solid red",
   boxShadow: 0
 }
+
 // page components
 const ContentSection = (props) => {
   const { t } = useTranslation()
@@ -162,13 +164,13 @@ const ContentSection = (props) => {
                 value={
                   props.contentGroup === "ABC"
                     ? props.contentGroupOptions["ABC"]?.filter(
-                      (opt) => opt.value === props.contentNumberData?.value
-                    )
-                    : props.contentGroup === "A/BC"
-                      ? props.contentGroupOptions["A"]?.filter(
                         (opt) => opt.value === props.contentNumberData?.value
                       )
-                      : props.contentGroupOptions["AB"]?.filter(
+                    : props.contentGroup === "A/BC"
+                    ? props.contentGroupOptions["A"]?.filter(
+                        (opt) => opt.value === props.contentNumberData?.value
+                      )
+                    : props.contentGroupOptions["AB"]?.filter(
                         (opt) => opt.value === props.contentNumberData?.value
                       )
                 }
@@ -176,8 +178,8 @@ const ContentSection = (props) => {
                   props.contentGroup === "ABC"
                     ? props.contentGroupOptions["ABC"]
                     : props.contentGroup === "A/BC"
-                      ? props.contentGroupOptions["A"]
-                      : props.contentGroupOptions["AB"]
+                    ? props.contentGroupOptions["A"]
+                    : props.contentGroupOptions["AB"]
                 }
                 onChange={(e) => {
                   dispatch(setContentNumberData(e ? e : {}))
@@ -233,134 +235,94 @@ const ContentSection = (props) => {
       </Row>
       {props.fibreInstructionData
         ? props.fibreInstructionData.map((rec, index) => (
-          <Row style={{ marginBottom: "5px" }}>
-            <Col xs="12" sm="12" md="4" lg="4" xl="4">
-              <Label>Component</Label>
-              <div
-                onMouseEnter={() => {
-                  if (
-                    props.brandSettings.content_msg_show_model === "Hover"
-                  ) {
-                    setComponentTip(`component-select-${index}`)
-                  }
-                }}
-                onMouseLeave={() => {
-                  setComponentTip("")
-                }}
-              >
-                <Select
-                  id={`component-select-${index}`}
-                  className="React"
-                  classNamePrefix="select"
-                  options={props.componentOptions}
-                  value={props.componentOptions?.filter(
-                    (opt) => opt.value === rec?.part_key
-                  )}
-                  onChange={(e) => {
-                    const tempData = props.fibreInstructionData
-                    // ternary to handle isClearable event
-                    tempData[index] = {
-                      ...props.fibreInstructionData[index],
-                      part_key: e ? e.value : "",
-                      part_translation: e ? e.label : ""
-                    }
-                    dispatch(setFibreInstructionData([...tempData]))
-                    props.handleMatchContentNumber("content")
-                  }}
-                  onFocus={() => {
+            <Row>
+              <Col xs="12" sm="12" md="4" lg="4" xl="4">
+                <Label>Component</Label>
+                <div
+                  onMouseEnter={() => {
                     if (
-                      props.brandSettings.content_msg_show_model === "Focus"
+                      props.brandSettings.content_msg_show_model === "Hover"
                     ) {
                       setComponentTip(`component-select-${index}`)
                     }
                   }}
-                  onBlur={() => {
+                  onMouseLeave={() => {
                     setComponentTip("")
                   }}
-                  isClearable={true}
-                  isDisabled={
-                    props.isOrderConfirmed ||
-                    props.brandSettings.create_content_model === "Admin"
-                  }
-                />
-                {props.orderFormValidations.content ? (
-                  props.orderFormValidations.content[index]
-                    ?.part_key_status ? (
-                    <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
-                      {props.orderFormValidations.content[index]?.part_msg}
-                    </div>
-                  ) : null
-                ) : null}
-              </div>
-              {props.tooltipStatus.part ? (
-                <div>
-                  <Popover
-                    target={`component-select-${index}`}
-                    isOpen={componentTip === `component-select-${index}`}
-                  >
-                    <PopoverHeader>Tip </PopoverHeader>
-                    <PopoverBody>
-                      <ol type="i">
-                        {props.tooltipMsg.part?.map((msg) => {
-                          if (msg.length) {
-                            return <li>{msg}</li>
-                          }
-                        })}
-                      </ol>
-                    </PopoverBody>
-                  </Popover>
-                </div>
-              ) : null}
-            </Col>
-            <Col xs="12" sm="12" md="3" lg="3" xl="3">
-              <Label>Fabric</Label>
-              <div
-                onMouseEnter={() => {
-                  if (
-                    props.brandSettings.content_msg_show_model === "Hover"
-                  ) {
-                    setFabricTip(`fabric-select-${index}`)
-                  }
-                }}
-                onMouseLeave={() => {
-                  setFabricTip("")
-                }}
-              >
-                <Select
-                  id={`fabric-select-${index}`}
-                  className="React"
-                  classNamePrefix="select"
-                  styles={{
-                    control: (base) => {
-                      if (props.orderFormValidations.content) {
-                        if (
-                          props.orderFormValidations.content[index]
-                            ?.content_key_status
-                        ) {
-                          return { ...base, border: "1px solid #ea5455" }
-                        }
+                >
+                  <Select
+                    id={`component-select-${index}`}
+                    className="React"
+                    classNamePrefix="select"
+                    options={props.componentOptions}
+                    value={props.componentOptions?.filter(
+                      (opt) => opt.value === rec?.part_key
+                    )}
+                    onChange={(e) => {
+                      const tempData = props.fibreInstructionData
+                      // ternary to handle isClearable event
+                      tempData[index] = {
+                        ...props.fibreInstructionData[index],
+                        part_key: e ? e.value : "",
+                        part_translation: e ? e.label : ""
                       }
-                      return { ...base }
+                      dispatch(setFibreInstructionData([...tempData]))
+                      props.handleMatchContentNumber("content")
+                    }}
+                    onFocus={() => {
+                      if (
+                        props.brandSettings.content_msg_show_model === "Focus"
+                      ) {
+                        setComponentTip(`component-select-${index}`)
+                      }
+                    }}
+                    onBlur={() => {
+                      setComponentTip("")
+                    }}
+                    isClearable={true}
+                    isDisabled={
+                      props.isOrderConfirmed ||
+                      props.brandSettings.create_content_model === "Admin"
                     }
-                  }}
-                  options={props.fabricOptions}
-                  value={props.fabricOptions?.filter(
-                    (opt) => opt.value === rec?.cont_key
-                  )}
-                  onChange={(e) => {
-                    handleFibreChange(e, index)
-                  }}
-                  isClearable={true}
-                  onFocus={() => {
-                    if (
-                      props.brandSettings.content_msg_show_model === "Focus"
-                    ) {
-                      setFabricTip(`fabric-select-${index}`)
-                    }
-                  }}
-                  onBlur={() => {
-                    setFabricTip("")
-                  }}
+                  />
+                  {props.orderFormValidations.content ? (
+                    props.orderFormValidations.content[index]
+                      ?.part_key_status ? (
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: "#ea5455",
+                          marginTop: "4px"
+                        }}
+                      >
+                        {props.orderFormValidations.content[index]?.part_msg}
+                      </div>
+                    ) : null
+                  ) : null}
+                </div>
+                {props.tooltipStatus.part ? (
+                  <div>
+                    <Popover
+                      target={`component-select-${index}`}
+                      isOpen={componentTip === `component-select-${index}`}
+                    >
+                      <PopoverHeader>Tip </PopoverHeader>
+                      <PopoverBody>
+                        <ol type="i">
+                          {props.tooltipMsg.part?.map((msg) => {
+                            if (msg.length) {
+                              return <li>{msg}</li>
+                            }
+                          })}
+                        </ol>
+                      </PopoverBody>
+                    </Popover>
+                  </div>
+                ) : null}
+              </Col>
+              <Col xs="12" sm="12" md="3" lg="3" xl="3">
+                <Label>Fabric</Label>
+                <div
                   onMouseEnter={() => {
                     if (
                       props.brandSettings.content_msg_show_model === "Hover"
@@ -371,151 +333,237 @@ const ContentSection = (props) => {
                   onMouseLeave={() => {
                     setFabricTip("")
                   }}
-                  isDisabled={
-                    props.isOrderConfirmed ||
-                    props.brandSettings.create_content_model === "Admin"
-                  }
-                />
-                {props.orderFormValidations.content ? (
-                  props.orderFormValidations.content[index]
-                    ?.content_key_status ? (
-                    <div style={{ fontSize: 12, color: "#ea5455", marginTop: '4px' }}>
-                      {props.orderFormValidations.content[index]?.content_msg}
-                    </div>
-                  ) : null
-                ) : null}
-              </div>
-              {props.tooltipStatus.content ? (
-                <div>
-                  <Popover
-                    target={`fabric-select-${index}`}
-                    isOpen={fabricTip === `fabric-select-${index}`}
-                  >
-                    <PopoverHeader>Tip</PopoverHeader>
-                    <PopoverBody>
-                      <ol type="i">
-                        {props.tooltipMsg.content?.map((msg) => {
-                          if (msg.length) {
-                            return <li>{msg}</li>
+                >
+                  <Select
+                    id={`fabric-select-${index}`}
+                    className="React"
+                    classNamePrefix="select"
+                    styles={{
+                      control: (base) => {
+                        if (props.orderFormValidations.content) {
+                          if (
+                            props.orderFormValidations.content[index]
+                              ?.content_key_status
+                          ) {
+                            return { ...base, border: "1px solid #ea5455" }
                           }
-                        })}
-                      </ol>
-                    </PopoverBody>
-                  </Popover>
-                </div>
-              ) : null}
-            </Col>
-            <Col xs="12" sm="12" md="2" lg="2" xl="2">
-              <Label>%</Label>
-              <div
-                onMouseEnter={() => {
-                  if (
-                    props.brandSettings.content_msg_show_model === "Hover"
-                  ) {
-                    setPercentTip(`percent-select-${index}`)
-                  }
-                }}
-                onMouseLeave={() => {
-                  setPercentTip("")
-                }}
-              >
-                <FormGroup>
-                  <Input
-                    id={`percent-select-${index}`}
-                    value={
-                      props.fibreInstructionData[index]?.percentage
-                        ? props.fibreInstructionData[index]?.percentage
-                        : ""
-                    }
-                    onChange={(e) => {
-                      const tempData = props.fibreInstructionData
-                      tempData[index] = {
-                        ...props.fibreInstructionData[index],
-                        percentage: e.target.value
+                        }
+                        return { ...base }
                       }
-                      dispatch(setFibreInstructionData([...tempData]))
-                      debounceFun()
                     }}
+                    options={props.fabricOptions}
+                    value={props.fabricOptions?.filter(
+                      (opt) => opt.value === rec?.cont_key
+                    )}
+                    onChange={(e) => {
+                      handleFibreChange(e, index)
+                    }}
+                    isClearable={true}
                     onFocus={() => {
                       if (
                         props.brandSettings.content_msg_show_model === "Focus"
                       ) {
-                        setPercentTip(`percent-select-${index}`)
+                        setFabricTip(`fabric-select-${index}`)
                       }
                     }}
                     onBlur={() => {
-                      setPercentTip("")
+                      setFabricTip("")
                     }}
-                    disabled={
+                    onMouseEnter={() => {
+                      if (
+                        props.brandSettings.content_msg_show_model === "Hover"
+                      ) {
+                        setFabricTip(`fabric-select-${index}`)
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      setFabricTip("")
+                    }}
+                    isDisabled={
                       props.isOrderConfirmed ||
                       props.brandSettings.create_content_model === "Admin"
                     }
-                    invalid={props.orderFormValidations.content ?
-                      props.orderFormValidations.content[index]?.percentage_status
-                      : null}
                   />
-                  {props.orderFormValidations.content ?
-                    props.orderFormValidations.content[index]?.percentage_status ?
-                      <FormFeedback>{props.orderFormValidations.content[index]?.percentage_msg}</FormFeedback>
-                      : null
-                    : null}
-                </FormGroup>
-              </div>
-              {props.tooltipStatus.percentage ? (
-                <div>
-                  <Popover
-                    target={`percent-select-${index}`}
-                    isOpen={percentTip === `percent-select-${index}`}
-                  >
-                    <PopoverHeader>Tip</PopoverHeader>
-                    <PopoverBody>
-                      <ol type="i">
-                        {props.tooltipMsg.percentage?.map((msg) => {
-                          if (msg.length) {
-                            return <li>{msg}</li>
+                  {props.orderFormValidations.content ? (
+                    props.orderFormValidations.content[index]
+                      ?.content_key_status ? (
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: "#ea5455",
+                          marginTop: "4px"
+                        }}
+                      >
+                        {props.orderFormValidations.content[index]?.content_msg}
+                      </div>
+                    ) : null
+                  ) : null}
+                </div>
+                {props.tooltipStatus.content ? (
+                  <div>
+                    <Popover
+                      target={`fabric-select-${index}`}
+                      isOpen={fabricTip === `fabric-select-${index}`}
+                    >
+                      <PopoverHeader>Tip</PopoverHeader>
+                      <PopoverBody>
+                        <ol type="i">
+                          {props.tooltipMsg.content?.map((msg) => {
+                            if (msg.length) {
+                              return <li>{msg}</li>
+                            }
+                          })}
+                        </ol>
+                      </PopoverBody>
+                    </Popover>
+                  </div>
+                ) : null}
+              </Col>
+              <Col xs="12" sm="12" md="2" lg="2" xl="2">
+                <Label>%</Label>
+                <div
+                  onMouseEnter={() => {
+                    if (
+                      props.brandSettings.content_msg_show_model === "Hover"
+                    ) {
+                      setPercentTip(`percent-select-${index}`)
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    setPercentTip("")
+                  }}
+                >
+                  <FormGroup>
+                    <Input
+                      id={`percent-select-${index}`}
+                      value={
+                        props.fibreInstructionData[index]?.percentage
+                          ? props.fibreInstructionData[index]?.percentage
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const tempData = props.fibreInstructionData
+                        tempData[index] = {
+                          ...props.fibreInstructionData[index],
+                          percentage: e.target.value
+                        }
+                        dispatch(setFibreInstructionData([...tempData]))
+                        debounceFun()
+                      }}
+                      onFocus={() => {
+                        if (
+                          props.brandSettings.content_msg_show_model === "Focus"
+                        ) {
+                          setPercentTip(`percent-select-${index}`)
+                        }
+                      }}
+                      onBlur={() => {
+                        setPercentTip("")
+                      }}
+                      disabled={
+                        props.isOrderConfirmed ||
+                        props.brandSettings.create_content_model === "Admin"
+                      }
+                      invalid={
+                        props.orderFormValidations.content
+                          ? props.orderFormValidations.content[index]
+                              ?.percentage_status
+                          : null
+                      }
+                    />
+                    {props.orderFormValidations.content ? (
+                      props.orderFormValidations.content[index]
+                        ?.percentage_status ? (
+                        <FormFeedback>
+                          {
+                            props.orderFormValidations.content[index]
+                              ?.percentage_msg
                           }
-                        })}
-                      </ol>
-                    </PopoverBody>
-                  </Popover>
+                        </FormFeedback>
+                      ) : null
+                    ) : null}
+                  </FormGroup>
                 </div>
-              ) : null}
-            </Col>
-            <Col
-              xs="12"
-              sm="12"
-              md="1"
-              lg="1"
-              xl="1"
-              style={{ marginTop: "23px" }}
-            >
-              <Button
-                style={{ padding: "7px" }}
-                outline
-                className="btn btn-outline-danger"
-                onClick={() => {
-                  let tempData = props.fibreInstructionData
-                  tempData.splice(index, 1)
-                  dispatch(setFibreInstructionData([...tempData]))
-                  tempData = props.defaultContentData
-                  tempData.splice(index, 1)
-                  dispatch(setDefaultContentData([...tempData]))
-                  props.handleMatchContentNumber("content")
-                }}
-                disabled={
-                  props.isOrderConfirmed ||
-                  props.brandSettings.create_content_model === "Admin"
-                }
+                {props.tooltipStatus.percentage ? (
+                  <div>
+                    <Popover
+                      target={`percent-select-${index}`}
+                      isOpen={percentTip === `percent-select-${index}`}
+                    >
+                      <PopoverHeader>Tip</PopoverHeader>
+                      <PopoverBody>
+                        <ol type="i">
+                          {props.tooltipMsg.percentage?.map((msg) => {
+                            if (msg.length) {
+                              return <li>{msg}</li>
+                            }
+                          })}
+                        </ol>
+                      </PopoverBody>
+                    </Popover>
+                  </div>
+                ) : null}
+              </Col>
+              <Col
+                xs="12"
+                sm="12"
+                md="1"
+                lg="1"
+                xl="1"
+                style={{ marginTop: "23px" }}
               >
-                <div style={{ display: "flex" }}>
-                  <X />
-                  <div style={{ marginTop: "5px" }}>Delete</div>
-                </div>
-              </Button>
-            </Col>
-          </Row>
-        ))
+                <Button
+                  style={{ padding: "7px" }}
+                  outline
+                  className="btn btn-outline-danger"
+                  onClick={() => {
+                    let tempData = props.fibreInstructionData
+                    tempData.splice(index, 1)
+                    dispatch(setFibreInstructionData([...tempData]))
+                    tempData = props.defaultContentData
+                    tempData.splice(index, 1)
+                    dispatch(setDefaultContentData([...tempData]))
+                    props.handleMatchContentNumber("content")
+                  }}
+                  disabled={
+                    props.isOrderConfirmed ||
+                    props.brandSettings.create_content_model === "Admin"
+                  }
+                >
+                  <div style={{ display: "flex" }}>
+                    <X />
+                    <div style={{ marginTop: "5px" }}>Delete</div>
+                  </div>
+                </Button>
+              </Col>
+            </Row>
+          ))
         : null}
+      <Row>
+        <Col xs="12" sm="12" md="4" lg="4" xl="4">
+          {props.orderFormValidations.content_summary?.part_status ? (
+            <CustomFormFeedback
+              errMsg={props.orderFormValidations.content_summary?.part_msg}
+            />
+          ) : null}
+        </Col>
+        <Col xs="12" sm="12" md="3" lg="3" xl="3">
+          {props.orderFormValidations.content_summary?.content_status ? (
+            <CustomFormFeedback
+              errMsg={props.orderFormValidations.content_summary?.content_msg}
+            />
+          ) : null}
+        </Col>
+        <Col xs="12" sm="12" md="2" lg="2" xl="2">
+          {props.orderFormValidations.content_summary?.percentage_status ? (
+            <CustomFormFeedback
+              errMsg={
+                props.orderFormValidations.content_summary?.percentage_msg
+              }
+            />
+          ) : null}
+        </Col>
+      </Row>
       <Row style={{ paddingTop: "5px" }}>
         <Col>
           <Button
@@ -582,13 +630,13 @@ const CareSection = (props) => {
                     value={
                       props.contentGroup === "ABC"
                         ? props.contentGroupOptions["ABC"]?.filter(
-                          (opt) => opt.value === props.careNumberData?.value
-                        )
-                        : props.contentGroup === "A/BC"
-                          ? props.contentGroupOptions["BC"]?.filter(
                             (opt) => opt.value === props.careNumberData?.value
                           )
-                          : props.contentGroupOptions["C"]?.filter(
+                        : props.contentGroup === "A/BC"
+                        ? props.contentGroupOptions["BC"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
+                        : props.contentGroupOptions["C"]?.filter(
                             (opt) => opt.value === props.careNumberData?.value
                           )
                     }
@@ -596,8 +644,8 @@ const CareSection = (props) => {
                       props.contentGroup === "ABC"
                         ? props.contentGroupOptions["ABC"]
                         : props.contentGroup === "A/BC"
-                          ? props.contentGroupOptions["BC"]
-                          : props.contentGroupOptions["C"]
+                        ? props.contentGroupOptions["BC"]
+                        : props.contentGroupOptions["C"]
                     }
                     onChange={(e) => {
                       dispatch(setCareNumberData(e ? e : {}))
@@ -704,7 +752,9 @@ const CareSection = (props) => {
               />
               {props.orderFormValidations.care ? (
                 props.orderFormValidations.care[index]?.care_status ? (
-                  <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
+                  <div
+                    style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}
+                  >
                     {props.orderFormValidations.care[index]?.care_msg}
                   </div>
                 ) : null
@@ -805,13 +855,13 @@ const WashCareSection = (props) => {
                     value={
                       props.contentGroup === "ABC"
                         ? props.contentGroupOptions["ABC"]?.filter(
-                          (opt) => opt.value === props.careNumberData?.value
-                        )
-                        : props.contentGroup === "A/BC"
-                          ? props.contentGroupOptions["BC"]?.filter(
                             (opt) => opt.value === props.careNumberData?.value
                           )
-                          : props.contentGroupOptions["C"]?.filter(
+                        : props.contentGroup === "A/BC"
+                        ? props.contentGroupOptions["BC"]?.filter(
+                            (opt) => opt.value === props.careNumberData?.value
+                          )
+                        : props.contentGroupOptions["C"]?.filter(
                             (opt) => opt.value === props.careNumberData?.value
                           )
                     }
@@ -819,8 +869,8 @@ const WashCareSection = (props) => {
                       props.contentGroup === "ABC"
                         ? props.contentGroupOptions["ABC"]
                         : props.contentGroup === "A/BC"
-                          ? props.contentGroupOptions["BC"]
-                          : props.contentGroupOptions["C"]
+                        ? props.contentGroupOptions["BC"]
+                        : props.contentGroupOptions["C"]
                     }
                     onChange={(e) => {
                       dispatch(setCareNumberData(e ? e : {}))
@@ -912,13 +962,13 @@ const WashCareSection = (props) => {
                       value={
                         props.washCareOptions[iconObj?.icon_type_id]
                           ? props.washCareOptions[
-                            iconObj?.icon_type_id
-                          ]?.filter(
-                            (opt) =>
-                              opt.value ===
-                              props.washCareData[iconObj?.icon_type_id]
-                                ?.icon_key
-                          )
+                              iconObj?.icon_type_id
+                            ]?.filter(
+                              (opt) =>
+                                opt.value ===
+                                props.washCareData[iconObj?.icon_type_id]
+                                  ?.icon_key
+                            )
                           : ""
                       }
                       onChange={(e) => {
@@ -963,7 +1013,13 @@ const WashCareSection = (props) => {
                     />
                     {props.orderFormValidations.icon ? (
                       props.orderFormValidations.icon[index]?.icon_status ? (
-                        <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
+                        <div
+                          style={{
+                            fontSize: 12,
+                            color: "#ea5455",
+                            marginTop: "4px"
+                          }}
+                        >
                           {props.orderFormValidations.icon[index]?.icon_msg}
                         </div>
                       ) : null
@@ -1608,7 +1664,13 @@ const OrderForm = (props) => {
                     disabled={props.isOrderConfirmed}
                   />
                   {props.orderFormValidations.expected_delivery_date?.status ? (
-                    <div style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        color: "#ea5455",
+                        marginTop: "4px"
+                      }}
+                    >
                       {props.orderFormValidations.expected_delivery_date?.msg}
                     </div>
                   ) : null}
