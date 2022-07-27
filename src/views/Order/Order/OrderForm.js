@@ -288,15 +288,11 @@ const ContentSection = (props) => {
                   {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]
                       ?.part_key_status ? (
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: "#ea5455",
-                          marginTop: "4px"
-                        }}
-                      >
-                        {props.orderFormValidations.content[index]?.part_msg}
-                      </div>
+                      <CustomFormFeedback
+                        errMsg={
+                          props.orderFormValidations.content[index]?.part_msg
+                        }
+                      />
                     ) : null
                   ) : null}
                 </div>
@@ -387,15 +383,11 @@ const ContentSection = (props) => {
                   {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]
                       ?.content_key_status ? (
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: "#ea5455",
-                          marginTop: "4px"
-                        }}
-                      >
-                        {props.orderFormValidations.content[index]?.content_msg}
-                      </div>
+                      <CustomFormFeedback
+                        errMsg={
+                          props.orderFormValidations.content[index]?.content_msg
+                        }
+                      />
                     ) : null
                   ) : null}
                 </div>
@@ -751,11 +743,9 @@ const CareSection = (props) => {
               />
               {props.orderFormValidations.care ? (
                 props.orderFormValidations.care[index]?.care_status ? (
-                  <div
-                    style={{ fontSize: 12, color: "#ea5455", marginTop: "4px" }}
-                  >
-                    {props.orderFormValidations.care[index]?.care_msg}
-                  </div>
+                  <CustomFormFeedback
+                    errMsg={props.orderFormValidations.care[index]?.care_msg}
+                  />
                 ) : null
               ) : null}
             </div>
@@ -1012,15 +1002,11 @@ const WashCareSection = (props) => {
                     />
                     {props.orderFormValidations.icon ? (
                       props.orderFormValidations.icon[index]?.icon_status ? (
-                        <div
-                          style={{
-                            fontSize: 12,
-                            color: "#ea5455",
-                            marginTop: "4px"
-                          }}
-                        >
-                          {props.orderFormValidations.icon[index]?.icon_msg}
-                        </div>
+                        <CustomFormFeedback
+                          errMsg={
+                            props.orderFormValidations.icon[index]?.icon_msg
+                          }
+                        />
                       ) : null
                     ) : null}
                   </div>
@@ -1663,15 +1649,11 @@ const OrderForm = (props) => {
                     disabled={props.isOrderConfirmed}
                   />
                   {props.orderFormValidations.expected_delivery_date?.status ? (
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: "#ea5455",
-                        marginTop: "4px"
-                      }}
-                    >
-                      {props.orderFormValidations.expected_delivery_date?.msg}
-                    </div>
+                    <CustomFormFeedback
+                      errMsg={
+                        props.orderFormValidations.expected_delivery_date?.msg
+                      }
+                    />
                   ) : null}
                 </FormGroup>
               </div>
