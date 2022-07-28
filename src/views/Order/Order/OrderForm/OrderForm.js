@@ -677,6 +677,20 @@ const OrderForm = (props) => {
                     <Select
                       className="React"
                       classNamePrefix="select"
+                      styles={{
+                        control: (base) => {
+                          const value = productionLocationOptions?.filter(
+                            (opt) => opt.label === props.productionLocation
+                          )
+                          if (
+                            props.validations?.content_number_status &&
+                            value.value
+                          ) {
+                            return { ...base, ...errorStyles }
+                          }
+                          return { ...base }
+                        }
+                      }}
                       options={productionLocationOptions}
                       value={productionLocationOptions?.filter(
                         (opt) => opt.label === props.productionLocation
@@ -686,6 +700,11 @@ const OrderForm = (props) => {
                       }}
                       isDisabled={props.isOrderConfirmed}
                     />
+                    {props.orderFormValidations.production_location?.status ? (
+                      <CustomFormFeedback>
+                        {props.orderFormValidations.production_location?.msg}
+                      </CustomFormFeedback>
+                    ) : null}
                   </div>
                 </div>
               ) : (
