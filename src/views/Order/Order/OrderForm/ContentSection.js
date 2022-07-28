@@ -13,7 +13,7 @@ import {
 } from "reactstrap"
 import { X, Plus } from "react-feather"
 import { useTranslation } from "react-i18next"
-import { useDispatch } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 import {
   setContentNumberData,
   setDefaultContentData,
@@ -247,7 +247,7 @@ const ContentSection = (props) => {
                       props.brandSettings.create_content_model === "Admin"
                     }
                   />
-                  {props.orderFormValidaitons.content ? (
+                  {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]
                       .part_key_status ? (
                       <CustomFormFeedback
@@ -258,7 +258,7 @@ const ContentSection = (props) => {
                       />
                     ) : null
                   ) : null}
-                  </div>
+                </div>
                 {props.tooltipStatus.part ? (
                   <div>
                     <Popover
@@ -554,4 +554,16 @@ const ContentSection = (props) => {
   )
 }
 
-export default ContentSection
+const mapStateToProps = (state) => ({
+  brand: state.orderReducer.brand,
+  contentGroup: state.orderReducer.contentGroup,
+  fibreInstructionData: state.orderReducer.fibreInstructionData,
+  contentNumberData: state.orderReducer.contentNumberData,
+  contentCustomNumber: state.orderReducer.contentCustomNumber,
+  defaultContentData: state.orderReducer.defaultContentData,
+  isOrderConfirmed: state.orderReducer.isOrderConfirmed,
+  brandSettings: state.orderReducer.brandSettings,
+  orderFormValidations: state.orderReducer.orderFormValidations
+})
+
+export default connect(mapStateToProps, null)(ContentSection)
