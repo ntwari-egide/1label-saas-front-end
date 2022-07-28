@@ -440,7 +440,7 @@ export const saveOrder = (order_status) => (dispatch) => {
       if (res.status === 200) {
         if (res.data.status && res.data.status === "Fail") {
           if (res.data.status_description === "validation") {
-            // ** validate
+            // ** highlight validatation
             const {
               setOrderFormValidations,
               setCurrentStep
@@ -448,6 +448,7 @@ export const saveOrder = (order_status) => (dispatch) => {
             dispatch(setCurrentStep(1))
             dispatch(setOrderFormValidations(res.data.fields))
           } else {
+            // ** popup validations
             sweetAlert(
               `${order_status} Order Save Failed!`,
               res.data.status_description,
@@ -738,15 +739,29 @@ export const savePOOrder = (order_status) => (dispatch) => {
     .then(async (res) => {
       dispatch(setLoader(false))
       if (res.status === 200) {
-        if (res.data.status && res.data.status === "Fail") {
-          const confirmation = await sweetAlert(
-            `${order_status} Order Save Failed!`,
-            res.data.status_description,
-            "error",
-            "danger"
-          )
-          if (store.listReducer.isOrderNew && confirmation) {
-            history.push("/List")
+        if (res.data.status === "Fail") {
+          if (
+            res.data.status_description?.length &&
+            res.data.status_description === "validation"
+          ) {
+            // ** highlight validations
+            const {
+              setOrderFormValidations,
+              setCurrentStep
+            } = require(`@redux/actions/views/Order/POOrder`)
+            dispatch(setCurrentStep(3))
+            dispatch(setOrderFormValidations(res.data.fields))
+          } else {
+            // ** popup validations
+            const confirmation = await sweetAlert(
+              `${order_status} Order Save Failed!`,
+              res.data.status_description,
+              "error",
+              "danger"
+            )
+            if (store.listReducer.isOrderNew && confirmation) {
+              history.push("/List")
+            }
           }
         } else {
           sweetAlert(
