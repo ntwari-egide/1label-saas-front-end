@@ -258,17 +258,7 @@ const ContentSection = (props) => {
                       />
                     ) : null
                   ) : null}
-                  {props.orderFormValidations.content ? (
-                    props.orderFormValidations.content[index]
-                      ?.part_key_status ? (
-                      <CustomFormFeedback
-                        errMsg={
-                          props.orderFormValidations.content[index]?.part_msg
-                        }
-                      />
-                    ) : null
-                  ) : null}
-                </div>
+                  </div>
                 {props.tooltipStatus.part ? (
                   <div>
                     <Popover
