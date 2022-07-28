@@ -436,12 +436,6 @@ const ContentSection = (props) => {
                       props.isOrderConfirmed ||
                       props.brandSettings.create_content_model === "Admin"
                     }
-                    invalid={
-                      props.orderFormValidations.content
-                        ? props.orderFormValidations.content[index]
-                            ?.percentage_status
-                        : null
-                    }
                   />
                   {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]
