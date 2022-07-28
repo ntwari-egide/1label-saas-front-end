@@ -39,6 +39,11 @@ import {
 import { matchContentNumber } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
 
+const errorStyles = {
+  border: "1px solid red",
+  boxShadow: 0
+}
+
 const OrderForm = (props) => {
   // constants
   const { t } = useTranslation()
@@ -627,9 +632,22 @@ const OrderForm = (props) => {
                 onChange={(e) => {
                   dispatch(setOrderReference(e.target.value))
                 }}
-                style={{ margin: "5px" }}
+                style={{
+                  marginTop: "5px",
+                  border: props.orderFormValidations.customer_order_reference
+                    ?.status
+                    ? "1px solid #ea5455"
+                    : "1px solid #d8d6de"
+                }}
                 disabled={props.isOrderConfirmed}
               />
+              {props.orderFormValidations.customer_order_reference?.status ? (
+                <CustomFormFeedback
+                  errMsg={
+                    props.orderFormValidations.customer_order_reference?.msg
+                  }
+                ></CustomFormFeedback>
+              ) : null}
             </Col>
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <div>
@@ -640,7 +658,13 @@ const OrderForm = (props) => {
                   value={
                     props.expectedDeliveryDate ? props.expectedDeliveryDate : ""
                   }
-                  style={{ margin: "5px" }}
+                  style={{
+                    marginTop: "5px",
+                    border: props.orderFormValidations.expected_delivery_date
+                      ?.status
+                      ? "1px solid #ea5455"
+                      : "1px solid #d8d6de"
+                  }}
                   options={{
                     minDate: props.minExpectedDeliveryDate
                   }}
@@ -649,6 +673,13 @@ const OrderForm = (props) => {
                   }}
                   disabled={props.isOrderConfirmed}
                 />
+                {props.orderFormValidations.expected_delivery_date?.status ? (
+                  <CustomFormFeedback
+                    errMsg={
+                      props.orderFormValidations.expected_delivery_date?.msg
+                    }
+                  />
+                ) : null}
               </div>
             </Col>
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
@@ -660,6 +691,20 @@ const OrderForm = (props) => {
                     <Select
                       className="React"
                       classNamePrefix="select"
+                      styles={{
+                        control: (base) => {
+                          const value = productionLocationOptions?.filter(
+                            (opt) => opt.label === props.productionLocation
+                          )
+                          if (
+                            props.validations?.content_number_status &&
+                            value.value
+                          ) {
+                            return { ...base, ...errorStyles }
+                          }
+                          return { ...base }
+                        }
+                      }}
                       options={productionLocationOptions}
                       value={productionLocationOptions?.filter(
                         (opt) => opt.label === props.productionLocation
@@ -669,6 +714,11 @@ const OrderForm = (props) => {
                       }}
                       isDisabled={props.isOrderConfirmed}
                     />
+                    {props.orderFormValidations.production_location?.status ? (
+                      <CustomFormFeedback>
+                        {props.orderFormValidations.production_location?.msg}
+                      </CustomFormFeedback>
+                    ) : null}
                   </div>
                 </div>
               ) : (
@@ -953,7 +1003,8 @@ const mapStateToProps = (state) => ({
   isOrderConfirmed: state.listReducer.isOrderConfirmed,
   isOrderNew: state.listReducer.isOrderNew,
   selectedOrder: state.listReducer.selectedOrder,
-  brandSettings: state.poOrderReducer.brandSettings
+  brandSettings: state.poOrderReducer.brandSettings,
+  orderFormValidations: state.poOrderReducer.orderFormValidations
 })
 
 export default connect(mapStateToProps, null)(OrderForm)
