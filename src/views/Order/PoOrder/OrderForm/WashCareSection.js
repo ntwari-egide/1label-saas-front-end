@@ -16,6 +16,7 @@ import {
   setFibreInstructionData,
   setCareNumberData
 } from "@redux/actions/views/Order/POOrder"
+import CustomFormFeedback from "@components/CustomFormFeedback"
 
 const WashCareSection = (props) => {
   const { t } = useTranslation()
@@ -121,6 +122,17 @@ const WashCareSection = (props) => {
                       id={`icon-select-${index}`}
                       className="React"
                       classNamePrefix="select"
+                      styles={{
+                        control: (base) => {
+                          if (
+                            props.orderFormValidations.icon &&
+                            props.orderFormValidations.icon[index]?.icon_status
+                          ) {
+                            return { ...base, border: "1px solid #ea5455" }
+                          }
+                          return { ...base }
+                        }
+                      }}
                       options={props.washCareOptions[iconObj?.icon_type_id]}
                       value={
                         props.washCareOptions[iconObj?.icon_type_id]
@@ -171,6 +183,15 @@ const WashCareSection = (props) => {
                       isClearable={true}
                       isDisabled={props.isOrderConfirmed}
                     />
+                    {props.orderFormValidations.icon ? (
+                      props.orderFormValidations.icon[index]?.icon_status ? (
+                        <CustomFormFeedback
+                          errMsg={
+                            props.orderFormValidations.icon[index]?.icon_msg
+                          }
+                        />
+                      ) : null
+                    ) : null}
                   </div>
                   {props.tooltipStatus.icon ? (
                     <div>
@@ -201,4 +222,8 @@ const WashCareSection = (props) => {
   )
 }
 
-export default WashCareSection
+const mapStateToProps = (state) => ({
+  orderFormValidations: state.poOrderReducer.orderFormValidations
+})
+
+export default connect(mapStateToProps, null)(WashCareSection)

@@ -22,6 +22,7 @@ import {
   setContentNumberData,
   setDefaultContentData
 } from "@redux/actions/views/Order/POOrder"
+import CustomFormFeedback from "@components/CustomFormFeedback"
 
 let timerId = null
 const ContentSection = (props) => {
@@ -41,7 +42,7 @@ const ContentSection = (props) => {
     }
 
     timerId = setTimeout(() => {
-      // matchContentNumber()
+      props.handleMatchContentNumber("content")
       timerId = null
     }, 400)
   }
@@ -200,6 +201,18 @@ const ContentSection = (props) => {
                     id={`component-select-${index}`}
                     className="React"
                     classNamePrefix="select"
+                    styles={{
+                      control: (base) => {
+                        if (
+                          props.orderFormValidations.content &&
+                          props.orderFormValidations.content[index]
+                            ?.part_key_status
+                        ) {
+                          return { ...base, ...errorStyles }
+                        }
+                        return { ...base }
+                      }
+                    }}
                     options={props.componentOptions}
                     value={props.componentOptions?.filter(
                       (opt) => opt.value === rec?.part_key
@@ -231,6 +244,16 @@ const ContentSection = (props) => {
                       props.brandSettings.create_content_model === "Admin"
                     }
                   />
+                  {props.orderFormValidations.content ? (
+                    props.orderFormValidations.content[index]
+                      ?.part_key_status ? (
+                      <CustomFormFeedback
+                        errMsg={
+                          props.orderFormValidations.content[index]?.part_msg
+                        }
+                      />
+                    ) : null
+                  ) : null}
                 </div>
                 {props.tooltipStatus.part ? (
                   <div>
@@ -270,6 +293,19 @@ const ContentSection = (props) => {
                     id={`fabric-select-${index}`}
                     className="React"
                     classNamePrefix="select"
+                    styles={{
+                      control: (base) => {
+                        if (props.orderFormValidations.content) {
+                          if (
+                            props.orderFormValidations.content[index]
+                              ?.content_key_status
+                          ) {
+                            return { ...base, border: "1px solid #ea5455" }
+                          }
+                        }
+                        return { ...base }
+                      }
+                    }}
                     options={props.fabricOptions}
                     value={props.fabricOptions?.filter(
                       (opt) => opt.value === rec?.cont_key
@@ -293,6 +329,16 @@ const ContentSection = (props) => {
                       props.brandSettings.create_content_model === "Admin"
                     }
                   />
+                  {props.orderFormValidations.content ? (
+                    props.orderFormValidations.content[index]
+                      ?.content_key_status ? (
+                      <CustomFormFeedback
+                        errMsg={
+                          props.orderFormValidations.content[index]?.content_msg
+                        }
+                      />
+                    ) : null
+                  ) : null}
                 </div>
                 {props.tooltipStatus.content ? (
                   <div>
@@ -318,6 +364,14 @@ const ContentSection = (props) => {
                 <Label>%</Label>
                 <Input
                   id={`percent-select-${index}`}
+                  style={{
+                    border: props.orderFormValidations.content
+                      ? props.orderFormValidations.content[index]
+                          ?.percentage_status
+                        ? "1px solid #ea5455"
+                        : "1px solid #d8d6de"
+                      : "1px solid #d8d6de"
+                  }}
                   value={
                     props.fibreInstructionData[index]?.percentage
                       ? props.fibreInstructionData[index]?.percentage
@@ -357,6 +411,18 @@ const ContentSection = (props) => {
                     props.brandSettings.create_content_model === "Admin"
                   }
                 />
+                {props.orderFormValidations.content ? (
+                  props.orderFormValidations.content[index]
+                    ?.percentage_status ? (
+                    <CustomFormFeedback
+                      errMsg={
+                        props.orderFormValidations.content[index]
+                          ?.percentage_msg
+                      }
+                    />
+                  ) : null
+                ) : null}
+
                 {props.tooltipStatus.percentage ? (
                   <div>
                     <Popover
@@ -412,6 +478,31 @@ const ContentSection = (props) => {
             </Row>
           ))
         : null}
+      <Row>
+        <Col xs="12" sm="12" md="4" lg="4" xl="4">
+          {props.orderFormValidations.content_summary?.part_status ? (
+            <CustomFormFeedback
+              errMsg={props.orderFormValidations.content_summary?.part_msg}
+            />
+          ) : null}
+        </Col>
+        <Col xs="12" sm="12" md="3" lg="3" xl="3">
+          {props.orderFormValidations.content_summary?.content_status ? (
+            <CustomFormFeedback
+              errMsg={props.orderFormValidations.content_summary?.content_msg}
+            />
+          ) : null}
+        </Col>
+        <Col xs="12" sm="12" md="2" lg="2" xl="2">
+          {props.orderFormValidations.content_summary?.percentage_status ? (
+            <CustomFormFeedback
+              errMsg={
+                props.orderFormValidations.content_summary?.percentage_msg
+              }
+            />
+          ) : null}
+        </Col>
+      </Row>
       <Row style={{ paddingTop: "5px" }}>
         <Col>
           <Button
@@ -447,4 +538,8 @@ const ContentSection = (props) => {
   )
 }
 
-export default ContentSection
+const mapStateToProps = (state) => ({
+  orderFormValidations: state.poOrderReducer.orderFormValidations
+})
+
+export default connect(mapStateToProps, null)(ContentSection)

@@ -20,6 +20,7 @@ import {
   setCareCustomNumber,
   setCareNumberData
 } from "@redux/actions/views/Order/POOrder"
+import CustomFormFeedback from "@components/CustomFormFeedback"
 
 const CareSection = (props) => {
   const { t } = useTranslation()
@@ -136,6 +137,16 @@ const CareSection = (props) => {
                 className="React"
                 id={`care-select-${index}`}
                 classNamePrefix="select"
+                styles={{
+                  control: (base) => {
+                    if (props.orderFormValidations.care) {
+                      if (props.orderFormValidations.care[index]?.care_status) {
+                        return { ...base, border: "1px solid #ea5455" }
+                      }
+                    }
+                    return { ...base }
+                  }
+                }}
                 options={props.additionalCareOptions}
                 value={props.additionalCareOptions?.filter(
                   (opt) => opt.value === rec.care_key
@@ -161,6 +172,13 @@ const CareSection = (props) => {
                 }}
                 onBlur={() => setCareTip("")}
               />
+              {props.orderFormValidations.care ? (
+                props.orderFormValidations.care[index]?.care_status ? (
+                  <CustomFormFeedback
+                    errMsg={props.orderFormValidations.care[index]?.care_msg}
+                  />
+                ) : null
+              ) : null}
             </div>
             {props.tooltipStatus.care ? (
               <div>
@@ -226,4 +244,8 @@ const CareSection = (props) => {
   )
 }
 
-export default CareSection
+const mapStateToProps = (state) => ({
+  orderFormValidations: state.poOrderReducer.orderFormValidations
+})
+
+export default connect(mapStateToProps, null)(CareSection)
