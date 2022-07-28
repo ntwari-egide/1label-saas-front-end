@@ -623,7 +623,7 @@ const OrderForm = (props) => {
           <Row style={{ width: "100%" }}>
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <Label>{t("Customer Order Reference")}</Label>
-              <span className="text-danger">*</span>
+              <span className="text-danger">{" *"}</span>
               <Input
                 value={props.orderReference}
                 onChange={(e) => {
@@ -649,7 +649,7 @@ const OrderForm = (props) => {
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <div>
                 <Label>{t("Expected Delivery Date")}</Label>
-                <span className="text-danger">*</span>
+                <span className="text-danger">{" *"}</span>
                 <Flatpickr
                   className="form-control"
                   value={
@@ -683,7 +683,7 @@ const OrderForm = (props) => {
               {props.brandDetails?.display_location_code === "Y" ? (
                 <div>
                   <Label>{t("Production Location")}</Label>
-                  <span className="text-danger">*</span>
+                  <span className="text-danger">{" *"}</span>
                   <Select
                     className="React"
                     classNamePrefix="select"
