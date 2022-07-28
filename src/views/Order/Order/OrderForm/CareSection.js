@@ -12,7 +12,7 @@ import {
 } from "reactstrap"
 import { X, Plus } from "react-feather"
 import { useTranslation } from "react-i18next"
-import { useDispatch } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 import {
   setFibreInstructionData,
   setCareData,
@@ -244,4 +244,15 @@ const CareSection = (props) => {
   )
 }
 
-export default CareSection
+const mapStateToProps = (state) => ({
+  contentGroup: state.orderReducer.contentGroup,
+  brand: state.orderReducer.brand,
+  careData: state.orderReducer.careData,
+  careCustomNumber: state.orderReducer.careCustomNumber,
+  careNumberData: state.orderReducer.careNumberData,
+  isOrderConfirmed: state.orderReducer.isOrderConfirmed,
+  brandSettings: state.orderReducer.brandSettings,
+  orderFormValidations: state.orderReducer.orderFormValidations
+})
+
+export default connect(mapStateToProps, null)(CareSection)
