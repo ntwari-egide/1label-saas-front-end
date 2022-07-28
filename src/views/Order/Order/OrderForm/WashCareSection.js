@@ -143,13 +143,11 @@ const WashCareSection = (props) => {
                       classNamePrefix="select"
                       styles={{
                         control: (base) => {
-                          if (props.orderFormValidations.icon) {
-                            if (
-                              props.orderFormValidations.icon[index]
-                                ?.icon_status
-                            ) {
-                              return { ...base, border: "1px solid #ea5455" }
-                            }
+                          if (
+                            props.orderFormValidations.icon &&
+                            props.orderFormValidations.icon[index]?.icon_status
+                          ) {
+                            return { ...base, border: "1px solid #ea5455" }
                           }
                           return { ...base }
                         }
