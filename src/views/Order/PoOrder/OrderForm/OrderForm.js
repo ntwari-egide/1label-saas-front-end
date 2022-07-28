@@ -37,10 +37,11 @@ import {
   setBrandSettings
 } from "@redux/actions/views/Order/POOrder"
 import { matchContentNumber } from "@redux/actions/views/common"
+import CustomFormFeedback from "@components/CustomFormFeedback"
 import { getUserData } from "@utils"
 
 const errorStyles = {
-  border: "1px solid red",
+  border: "1px solid #ea5455",
   boxShadow: 0
 }
 
@@ -65,10 +66,6 @@ const OrderForm = (props) => {
   const [contentName, setContentName] = useState("")
   const [careName, setCareName] = useState("")
   const [iconName, setIconName] = useState("")
-
-  // states for custom tooltip
-  const [componentTip, setComponentTip] = useState({})
-  const [fabricTip, setFabricTip] = useState({})
   // tooltip states and messages
   const [tooltipMsg, setTooltipMsg] = useState({})
   const [tooltipStatus, setTooltipStatus] = useState({})
@@ -687,39 +684,35 @@ const OrderForm = (props) => {
                 <div>
                   <Label>{t("Production Location")}</Label>
                   <span className="text-danger">*</span>
-                  <div style={{ margin: "5px" }}>
-                    <Select
-                      className="React"
-                      classNamePrefix="select"
-                      styles={{
-                        control: (base) => {
-                          const value = productionLocationOptions?.filter(
-                            (opt) => opt.label === props.productionLocation
-                          )
-                          if (
-                            props.validations?.content_number_status &&
-                            value.value
-                          ) {
-                            return { ...base, ...errorStyles }
-                          }
-                          return { ...base }
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    styles={{
+                      control: (base) => {
+                        if (
+                          props.orderFormValidations.production_location?.status
+                        ) {
+                          return { ...base, ...errorStyles, marginTop: "4px" }
                         }
-                      }}
-                      options={productionLocationOptions}
-                      value={productionLocationOptions?.filter(
-                        (opt) => opt.label === props.productionLocation
-                      )}
-                      onChange={(e) => {
-                        dispatch(setProductionLocation(e.label))
-                      }}
-                      isDisabled={props.isOrderConfirmed}
+                        return { ...base, marginTop: "4px" }
+                      }
+                    }}
+                    options={productionLocationOptions}
+                    value={productionLocationOptions?.filter(
+                      (opt) => opt.label === props.productionLocation
+                    )}
+                    onChange={(e) => {
+                      dispatch(setProductionLocation(e.label))
+                    }}
+                    isDisabled={props.isOrderConfirmed}
+                  />
+                  {props.orderFormValidations.production_location?.status ? (
+                    <CustomFormFeedback
+                      errMsg={
+                        props.orderFormValidations.production_location?.msg
+                      }
                     />
-                    {props.orderFormValidations.production_location?.status ? (
-                      <CustomFormFeedback>
-                        {props.orderFormValidations.production_location?.msg}
-                      </CustomFormFeedback>
-                    ) : null}
-                  </div>
+                  ) : null}
                 </div>
               ) : (
                 <></>
