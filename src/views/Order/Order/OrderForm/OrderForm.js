@@ -792,17 +792,9 @@ const OrderForm = (props) => {
                       additionalCareOptions={additionalCareOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentGroup={props.contentGroup}
-                      brand={props.brand}
-                      careData={props.careData}
-                      careCustomNumber={props.careCustomNumber}
-                      careNumberData={props.careNumberData}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
-                      orderFormValidations={props.orderFormValidations}
                     />
                   </div>
                 ) : props.contentGroup === "ABC" ? (
@@ -822,17 +814,9 @@ const OrderForm = (props) => {
                       contentGroupOptions={contentGroupOptions}
                       additionalCareOptions={additionalCareOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentGroup={props.contentGroup}
-                      brand={props.brand}
-                      careData={props.careData}
-                      careCustomNumber={props.careCustomNumber}
-                      careNumberData={props.careNumberData}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
-                      orderFormValidations={props.orderFormValidations}
                     />
                     <WashCareSection
                       iconSequence={iconSequence}
@@ -873,16 +857,8 @@ const OrderForm = (props) => {
                         additionalCareOptions={additionalCareOptions}
                         fetchContentNumberDetail={fetchContentNumberDetail}
                         handleMatchContentNumber={handleMatchContentNumber}
-                        contentGroup={props.contentGroup}
-                        brand={props.brand}
-                        careData={props.careData}
-                        careCustomNumber={props.careCustomNumber}
-                        careNumberData={props.careNumberData}
-                        isOrderConfirmed={props.isOrderConfirmed}
-                        brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
-                        orderFormValidations={props.orderFormValidations}
                       />
                       <WashCareSection
                         iconSequence={iconSequence}
@@ -891,14 +867,8 @@ const OrderForm = (props) => {
                         fetchContentNumberDetail={fetchContentNumberDetail}
                         handleMatchContentNumber={handleMatchContentNumber}
                         contentGroupOptions={contentGroupOptions}
-                        careNumberData={props.careNumberData}
-                        contentGroup={props.contentGroup}
-                        washCareData={props.washCareData}
-                        isOrderConfirmed={props.isOrderConfirmed}
-                        brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
-                        orderFormValidations={props.orderFormValidations}
                       />
                     </div>
                   ) : props.contentGroup === "AB/C" ? (
