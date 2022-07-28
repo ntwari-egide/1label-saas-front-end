@@ -3,8 +3,6 @@ import axios from "@axios"
 import Select from "react-select"
 import {
   Label,
-  FormGroup,
-  FormFeedback,
   Row,
   Col,
   Input,
@@ -26,7 +24,12 @@ import {
 } from "@redux/actions/views/Order/Order"
 import CustomFormFeedback from "@components/CustomFormFeedback"
 
+const errorStyles = {
+  border: "1px solid #ea5455",
+  boxShadow: 0
+}
 let timerId = null
+
 const ContentSection = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -35,8 +38,8 @@ const ContentSection = (props) => {
   const [fabricTip, setFabricTip] = useState("")
   const [percentTip, setPercentTip] = useState("")
 
-  //other funcitons
-  // debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
+  // ** other funcitons
+  // ** debounce function to fetch /ContentNumber/MatchContentNumber on percent input change event
   const debounceFun = () => {
     if (timerId !== null) {
       clearTimeout(timerId)
@@ -108,32 +111,6 @@ const ContentSection = (props) => {
               <Select
                 className="React"
                 classNamePrefix="select"
-                styles={{
-                  control: (base) => {
-                    // const value =
-                    //   props.contentGroup === "ABC"
-                    //     ? props.contentGroupOptions["ABC"]?.filter(
-                    //         (opt) =>
-                    //           opt.value === props.contentNumberData?.value
-                    //       )
-                    //     : props.contentGroup === "A/BC"
-                    //     ? props.contentGroupOptions["A"]?.filter(
-                    //         (opt) =>
-                    //           opt.value === props.contentNumberData?.value
-                    //       )
-                    //     : props.contentGroupOptions["AB"]?.filter(
-                    //         (opt) =>
-                    //           opt.value === props.contentNumberData?.value
-                    //       )
-                    // if (
-                    //   props.validations?.content_number_status &&
-                    //   value.value
-                    // ) {
-                    //   return { ...base, ...errorStyles }
-                    // }
-                    return { ...base }
-                  }
-                }}
                 value={
                   props.contentGroup === "ABC"
                     ? props.contentGroupOptions["ABC"]?.filter(
@@ -227,6 +204,18 @@ const ContentSection = (props) => {
                     id={`component-select-${index}`}
                     className="React"
                     classNamePrefix="select"
+                    styles={{
+                      control: (base) => {
+                        if (
+                          props.orderFormValidations.content &&
+                          props.orderFormValidations.content[index]
+                            ?.part_key_status
+                        ) {
+                          return { ...base, ...errorStyles }
+                        }
+                        return { ...base }
+                      }
+                    }}
                     options={props.componentOptions}
                     value={props.componentOptions?.filter(
                       (opt) => opt.value === rec?.part_key
@@ -258,6 +247,17 @@ const ContentSection = (props) => {
                       props.brandSettings.create_content_model === "Admin"
                     }
                   />
+                  {props.orderFormValidaitons.content ? (
+                    props.orderFormValidations.content[index]
+                      .part_key_status ? (
+                      <CustomFormFeedback
+                        errMsg={
+                          props.orderFormValidations.content[index]
+                            ?.part_key_msg
+                        }
+                      />
+                    ) : null
+                  ) : null}
                   {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]
                       ?.part_key_status ? (
