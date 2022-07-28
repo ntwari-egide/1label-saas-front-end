@@ -398,56 +398,62 @@ const ContentSection = (props) => {
                     setPercentTip("")
                   }}
                 >
-                  <FormGroup>
-                    <Input
-                      id={`percent-select-${index}`}
-                      value={
-                        props.fibreInstructionData[index]?.percentage
-                          ? props.fibreInstructionData[index]?.percentage
-                          : ""
+                  <Input
+                    id={`percent-select-${index}`}
+                    value={
+                      props.fibreInstructionData[index]?.percentage
+                        ? props.fibreInstructionData[index]?.percentage
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const tempData = props.fibreInstructionData
+                      tempData[index] = {
+                        ...props.fibreInstructionData[index],
+                        percentage: e.target.value
                       }
-                      onChange={(e) => {
-                        const tempData = props.fibreInstructionData
-                        tempData[index] = {
-                          ...props.fibreInstructionData[index],
-                          percentage: e.target.value
+                      dispatch(setFibreInstructionData([...tempData]))
+                      debounceFun()
+                    }}
+                    style={{
+                      border: props.orderFormValidations.content
+                        ? props.orderFormValidations.content[index]
+                            ?.percentage_status
+                          ? "1px solid #ea5455"
+                          : "1px solid #d8d6de"
+                        : "1px solid #d8d6de"
+                    }}
+                    onFocus={() => {
+                      if (
+                        props.brandSettings.content_msg_show_model === "Focus"
+                      ) {
+                        setPercentTip(`percent-select-${index}`)
+                      }
+                    }}
+                    onBlur={() => {
+                      setPercentTip("")
+                    }}
+                    disabled={
+                      props.isOrderConfirmed ||
+                      props.brandSettings.create_content_model === "Admin"
+                    }
+                    invalid={
+                      props.orderFormValidations.content
+                        ? props.orderFormValidations.content[index]
+                            ?.percentage_status
+                        : null
+                    }
+                  />
+                  {props.orderFormValidations.content ? (
+                    props.orderFormValidations.content[index]
+                      ?.percentage_status ? (
+                      <CustomFormFeedback
+                        errMsg={
+                          props.orderFormValidations.content[index]
+                            ?.percentage_msg
                         }
-                        dispatch(setFibreInstructionData([...tempData]))
-                        debounceFun()
-                      }}
-                      onFocus={() => {
-                        if (
-                          props.brandSettings.content_msg_show_model === "Focus"
-                        ) {
-                          setPercentTip(`percent-select-${index}`)
-                        }
-                      }}
-                      onBlur={() => {
-                        setPercentTip("")
-                      }}
-                      disabled={
-                        props.isOrderConfirmed ||
-                        props.brandSettings.create_content_model === "Admin"
-                      }
-                      invalid={
-                        props.orderFormValidations.content
-                          ? props.orderFormValidations.content[index]
-                              ?.percentage_status
-                          : null
-                      }
-                    />
-                    {props.orderFormValidations.content ? (
-                      props.orderFormValidations.content[index]
-                        ?.percentage_status ? (
-                        <FormFeedback>
-                          {
-                            props.orderFormValidations.content[index]
-                              ?.percentage_msg
-                          }
-                        </FormFeedback>
-                      ) : null
-                    ) : null}
-                  </FormGroup>
+                      />
+                    ) : null
+                  ) : null}
                 </div>
                 {props.tooltipStatus.percentage ? (
                   <div>

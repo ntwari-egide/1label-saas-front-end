@@ -604,30 +604,33 @@ const OrderForm = (props) => {
           <Row style={{ width: "100%" }}>
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <Label>{t("Customer Order Reference")}</Label>
-              <span className="text-danger">*</span>
-              <FormGroup>
-                <Input
-                  value={props.orderReference}
-                  onChange={(e) => {
-                    dispatch(setOrderReference(e.target.value))
-                  }}
-                  style={{ marginTop: "5px" }}
-                  disabled={props.isOrderConfirmed}
-                  invalid={
-                    props.orderFormValidations.customer_order_reference?.status
+              <span className="text-danger">{" *"}</span>
+              <Input
+                value={props.orderReference}
+                onChange={(e) => {
+                  dispatch(setOrderReference(e.target.value))
+                }}
+                style={{
+                  marginTop: "5px",
+                  border: props.orderFormValidations.customer_order_reference
+                    ?.status
+                    ? "1px solid #ea5455"
+                    : "1px solid #d8d6de"
+                }}
+                disabled={props.isOrderConfirmed}
+              />
+              {props.orderFormValidations.customer_order_reference?.status ? (
+                <CustomFormFeedback
+                  errMsg={
+                    props.orderFormValidations.customer_order_reference?.msg
                   }
-                />
-                {props.orderFormValidations.customer_order_reference?.status ? (
-                  <FormFeedback>
-                    {props.orderFormValidations.customer_order_reference?.msg}
-                  </FormFeedback>
-                ) : null}
-              </FormGroup>
+                ></CustomFormFeedback>
+              ) : null}
             </Col>
             <Col xs="12" sm="12" md="6" lg="4" xl="4">
               <div>
                 <Label>{t("Expected Delivery Date")}</Label>
-                <span className="text-danger">*</span>
+                <span className="text-danger">{" *"}</span>
                 <FormGroup
                   invalid={
                     props.orderFormValidations.expected_delivery_date?.status
@@ -669,7 +672,7 @@ const OrderForm = (props) => {
               {props.brandDetails?.display_location_code === "Y" ? (
                 <div>
                   <Label>{t("Production Location")}</Label>
-                  <span className="text-danger">*</span>
+                  <span className="text-danger">{" *"}</span>
                   <div style={{ margin: "5px" }}>
                     <Select
                       className="React"
