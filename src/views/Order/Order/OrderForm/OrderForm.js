@@ -912,14 +912,6 @@ const mapStateToProps = (state) => ({
   minExpectedDeliveryDate: state.orderReducer.minExpectedDeliveryDate,
   productionLocation: state.orderReducer.productionLocation,
   orderReference: state.orderReducer.orderReference,
-  careData: state.orderReducer.careData,
-  fibreInstructionData: state.orderReducer.fibreInstructionData,
-  washCareData: state.orderReducer.washCareData,
-  contentNumberData: state.orderReducer.contentNumberData,
-  defaultContentData: state.orderReducer.defaultContentData,
-  careNumberData: state.orderReducer.careNumberData,
-  contentCustomNumber: state.orderReducer.contentCustomNumber,
-  careCustomNumber: state.orderReducer.careCustomNumber,
   dynamicFieldData: state.orderReducer.dynamicFieldData,
   contentGroup: state.orderReducer.contentGroup,
   brandDetails: state.orderReducer.brandDetails,
@@ -927,7 +919,6 @@ const mapStateToProps = (state) => ({
   itemInfoFields: state.orderReducer.itemInfoFields,
   isOrderNew: state.listReducer.isOrderNew,
   selectedOrder: state.listReducer.selectedOrder,
-  brandSettings: state.orderReducer.brandSettings,
   orderFormValidations: state.orderReducer.orderFormValidations
 })
 
