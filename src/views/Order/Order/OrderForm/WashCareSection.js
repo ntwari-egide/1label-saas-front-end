@@ -10,7 +10,7 @@ import {
   PopoverBody
 } from "reactstrap"
 import { useTranslation } from "react-i18next"
-import { useDispatch } from "react-redux"
+import { connect, useDispatch } from "react-redux"
 import {
   setFibreInstructionData,
   setCareData,
@@ -244,4 +244,13 @@ const WashCareSection = (props) => {
   )
 }
 
-export default WashCareSection
+const mapStateToProps = (state) => ({
+  careNumberData: state.orderReducer.careNumberData,
+  contentGroup: state.orderReducer.contentGroup,
+  washCareData: state.orderReducer.washCareData,
+  isOrderConfirmed: state.orderReducer.isOrderConfirmed,
+  brandSettings: state.orderReducer.brandSettings,
+  orderFormValidations: state.orderReducer.orderFormValidations
+})
+
+export default connect(mapStateToProps, null)(WashCareSection)
