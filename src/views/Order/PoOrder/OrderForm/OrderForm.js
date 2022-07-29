@@ -803,14 +803,7 @@ const OrderForm = (props) => {
                       additionalCareOptions={additionalCareOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentGroup={props.contentGroup}
-                      brand={props.brand}
-                      careData={props.careData}
-                      careCustomNumber={props.careCustomNumber}
-                      careNumberData={props.careNumberData}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
                     />
@@ -832,14 +825,7 @@ const OrderForm = (props) => {
                       contentGroupOptions={contentGroupOptions}
                       additionalCareOptions={additionalCareOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentGroup={props.contentGroup}
-                      brand={props.brand}
-                      careData={props.careData}
-                      careCustomNumber={props.careCustomNumber}
-                      careNumberData={props.careNumberData}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
                     />
@@ -880,14 +866,7 @@ const OrderForm = (props) => {
                         contentGroupOptions={contentGroupOptions}
                         additionalCareOptions={additionalCareOptions}
                         fetchContentNumberDetail={fetchContentNumberDetail}
-                        contentGroup={props.contentGroup}
-                        brand={props.brand}
-                        careData={props.careData}
-                        careCustomNumber={props.careCustomNumber}
-                        careNumberData={props.careNumberData}
                         handleMatchContentNumber={handleMatchContentNumber}
-                        isOrderConfirmed={props.isOrderConfirmed}
-                        brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
                       />
