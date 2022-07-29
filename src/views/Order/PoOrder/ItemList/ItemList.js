@@ -186,6 +186,7 @@ const ItemList = (props) => {
               }}
               isClearable={true}
               isDisabled={loader || props.isOrderConfirmed}
+              isLoading={!itemTypeOptions.length}
             />
           </Col>
         </Row>

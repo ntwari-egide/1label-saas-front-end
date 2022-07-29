@@ -148,6 +148,13 @@ const ContentSection = (props) => {
                 }}
                 isClearable={true}
                 isDisabled={props.isOrderConfirmed}
+                isLoading={
+                  props.contentGroup === "ABC"
+                    ? !props.contentGroupOptions["ABC"]?.length
+                    : props.contentGroup === "A/BC"
+                    ? !props.contentGroupOptions["A"]?.length
+                    : !props.contentGroupOptions["AB"]?.length
+                }
               />
             </Col>
           </Row>
@@ -251,6 +258,7 @@ const ContentSection = (props) => {
                       props.isOrderConfirmed ||
                       props.brandSettings.create_content_model === "Admin"
                     }
+                    isLoading={!props.componentOptions.length}
                   />
                   {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]
@@ -344,6 +352,7 @@ const ContentSection = (props) => {
                       props.isOrderConfirmed ||
                       props.brandSettings.create_content_model === "Admin"
                     }
+                    isLoading={!props.fabricOptions.length}
                   />
                   {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]

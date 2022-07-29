@@ -338,6 +338,7 @@ const SizeTable = (props) => {
                 menuPlacement={"auto"}
                 styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                 isDisabled={props.isOrderConfirmed}
+                isLoading={!wastageOptions.length}
               />
             </Col>
             <Col xs="12" sm="12" md="7" lg="4" xl="4">

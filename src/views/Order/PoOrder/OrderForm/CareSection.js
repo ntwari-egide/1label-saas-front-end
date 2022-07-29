@@ -88,6 +88,13 @@ const CareSection = (props) => {
                     }}
                     isClearable={true}
                     isDisabled={props.isOrderConfirmed}
+                    isLoading={
+                      props.contentGroup === "ABC"
+                        ? !props.contentGroupOptions["ABC"].length
+                        : props.contentGroup === "A/BC"
+                        ? !props.contentGroupOptions["BC"].length
+                        : !props.contentGroupOptions["C"].length
+                    }
                   />
                 </Col>
               </Row>
@@ -177,6 +184,7 @@ const CareSection = (props) => {
                     setCareTip("")
                   }
                 }}
+                isLoading={!props.additionalCareOptions.length}
               />
               {props.orderFormValidations.care ? (
                 props.orderFormValidations.care[index]?.care_status ? (

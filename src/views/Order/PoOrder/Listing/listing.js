@@ -98,10 +98,10 @@ const Listing = (props) => {
               row.order_status === "COMPLETE"
                 ? "success"
                 : row.order_status === "New"
-                  ? "danger"
-                  : row.order_status === "Revised"
-                    ? "warning"
-                    : "primary"
+                ? "danger"
+                : row.order_status === "Revised"
+                ? "warning"
+                : "primary"
             }
           >
             {row.order_status}
@@ -315,13 +315,21 @@ const Listing = (props) => {
                     )
                   }}
                   isDisabled={props.isOrderConfirmed}
+                  isLoading={!brandOptions.length}
                 />
               </Col>
             </Row>
           </Col>
         </Row>
         <Row>
-          <Col xs="12" sm="12" md="6" lg="6" xl="6" style={{ marginBottom: "10px" }}>
+          <Col
+            xs="12"
+            sm="12"
+            md="6"
+            lg="6"
+            xl="6"
+            style={{ marginBottom: "10px" }}
+          >
             <Row>
               <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <CustomLabel title="CID" />
@@ -344,7 +352,14 @@ const Listing = (props) => {
               </Col>
             </Row>
           </Col>
-          <Col xs="12" sm="12" md="6" lg="6" xl="6" style={{ marginBottom: "10px" }}>
+          <Col
+            xs="12"
+            sm="12"
+            md="6"
+            lg="6"
+            xl="6"
+            style={{ marginBottom: "10px" }}
+          >
             <Row>
               <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <CustomLabel title="Factory No" />
@@ -372,8 +387,15 @@ const Listing = (props) => {
             </Row>
           </Col>
         </Row>
-        <Row >
-          <Col xs="12" sm="12" md="6" lg="6" xl="6" style={{ marginBottom: "10px" }}>
+        <Row>
+          <Col
+            xs="12"
+            sm="12"
+            md="6"
+            lg="6"
+            xl="6"
+            style={{ marginBottom: "10px" }}
+          >
             <Row>
               <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <CustomLabel title="PO No" />
@@ -396,7 +418,14 @@ const Listing = (props) => {
               </Col>
             </Row>
           </Col>
-          <Col xs="12" sm="12" md="6" lg="6" xl="6" style={{ marginBottom: "10px" }}>
+          <Col
+            xs="12"
+            sm="12"
+            md="6"
+            lg="6"
+            xl="6"
+            style={{ marginBottom: "10px" }}
+          >
             <Row>
               <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <CustomLabel title="Order Status" />
@@ -421,13 +450,21 @@ const Listing = (props) => {
                     )
                   }
                   isDisabled={props.isOrderConfirmed}
+                  isLoading={!orderStatusOptions.length}
                 />
               </Col>
             </Row>
           </Col>
         </Row>
-        <Row >
-          <Col xs="12" sm="12" md="6" lg="6" xl="6" style={{ marginBottom: "10px" }}>
+        <Row>
+          <Col
+            xs="12"
+            sm="12"
+            md="6"
+            lg="6"
+            xl="6"
+            style={{ marginBottom: "10px" }}
+          >
             <Row>
               <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <Row>
@@ -460,7 +497,14 @@ const Listing = (props) => {
               </Col>
             </Row>
           </Col>
-          <Col xs="12" sm="12" md="6" lg="6" xl="6" style={{ marginBottom: "10px" }}>
+          <Col
+            xs="12"
+            sm="12"
+            md="6"
+            lg="6"
+            xl="6"
+            style={{ marginBottom: "10px" }}
+          >
             <Row>
               <Col xs="12" sm="12" md="12" lg="12" xl="12">
                 <Row>
