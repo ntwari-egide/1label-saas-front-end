@@ -825,14 +825,8 @@ const OrderForm = (props) => {
                       contentGroupOptions={contentGroupOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      careNumberData={props.careNumberData}
-                      contentGroup={props.contentGroup}
-                      washCareData={props.washCareData}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
-                      orderFormValidations={props.orderFormValidations}
                     />
                   </div>
                 ) : null}
@@ -880,14 +874,8 @@ const OrderForm = (props) => {
                         handleMatchContentNumber={handleMatchContentNumber}
                         contentGroupOptions={contentGroupOptions}
                         fetchContentNumberDetail={fetchContentNumberDetail}
-                        careNumberData={props.careNumberData}
-                        contentGroup={props.contentGroup}
-                        washCareData={props.washCareData}
-                        isOrderConfirmed={props.isOrderConfirmed}
-                        brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
-                        orderFormValidations={props.orderFormValidations}
                       />
                     </div>
                   ) : null}
