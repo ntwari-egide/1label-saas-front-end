@@ -245,6 +245,13 @@ const CareSection = (props) => {
 }
 
 const mapStateToProps = (state) => ({
+  contentGroup: state.poOrderReducer.contentGroup,
+  brand: state.poOrderReducer.brand,
+  careData: state.poOrderReducer.careData,
+  careCustomNumber: state.poOrderReducer.careCustomNumber,
+  careNumberData: state.poOrderReducer.careNumberData,
+  isOrderConfirmed: state.poOrderReducer.isOrderConfirmed,
+  brandSettings: state.poOrderReducer.brandSettings,
   orderFormValidations: state.poOrderReducer.orderFormValidations
 })
 
