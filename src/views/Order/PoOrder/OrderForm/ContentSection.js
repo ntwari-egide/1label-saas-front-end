@@ -539,6 +539,14 @@ const ContentSection = (props) => {
 }
 
 const mapStateToProps = (state) => ({
+  brand: state.poOrderReducer.brand,
+  contentGroup: state.poOrderReducer.contentGroup,
+  fibreInstructionData: state.poOrderReducer.fibreInstructionData,
+  contentNumberData: state.poOrderReducer.contentNumberData,
+  contentCustomNumber: state.poOrderReducer.contentCustomNumber,
+  defaultContentData: state.poOrderReducer.defaultContentData,
+  isOrderConfirmed: state.poOrderReducer.isOrderConfirmed,
+  brandSettings: state.poOrderReducer.brandSettings,
   orderFormValidations: state.poOrderReducer.orderFormValidations
 })
 
