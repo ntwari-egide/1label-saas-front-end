@@ -135,7 +135,13 @@ const WashCareSection = (props) => {
                         setIconTip(`icon-select-${index}`)
                       }
                     }}
-                    onMouseLeave={() => setIconTip("")}
+                    onMouseLeave={() => {
+                      if (
+                        props.brandSettings.content_msg_show_model === "Hover"
+                      ) {
+                        setIconTip("")
+                      }
+                    }}
                   >
                     <Select
                       id={`icon-select-${index}`}
@@ -198,7 +204,13 @@ const WashCareSection = (props) => {
                           setIconTip(`icon-select-${index}`)
                         }
                       }}
-                      onBlur={() => setIconTip("")}
+                      onBlur={() => {
+                        if (
+                          props.brandSettings.content_msg_show_model === "Focus"
+                        ) {
+                          setIconTip("")
+                        }
+                      }}
                       isClearable={true}
                       isDisabled={
                         props.isOrderConfirmed ||

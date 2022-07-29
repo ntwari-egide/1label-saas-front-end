@@ -130,7 +130,9 @@ const CareSection = (props) => {
                 }
               }}
               onMouseLeave={() => {
-                setCareTip("")
+                if (props.brandSettings.content_msg_show_model === "Hover") {
+                  setCareTip("")
+                }
               }}
             >
               <Select
@@ -170,7 +172,11 @@ const CareSection = (props) => {
                     setCareTip(`care-select-${index}`)
                   }
                 }}
-                onBlur={() => setCareTip("")}
+                onBlur={() => {
+                  if (props.brandSettings.content_msg_show_model === "Focus") {
+                    setCareTip("")
+                  }
+                }}
               />
               {props.orderFormValidations.care ? (
                 props.orderFormValidations.care[index]?.care_status ? (

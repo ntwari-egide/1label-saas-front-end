@@ -197,7 +197,11 @@ const ContentSection = (props) => {
                     }
                   }}
                   onMouseLeave={() => {
-                    setComponentTip("")
+                    if (
+                      props.brandSettings.content_msg_show_model === "Hover"
+                    ) {
+                      setComponentTip("")
+                    }
                   }}
                 >
                   <Select
@@ -239,7 +243,11 @@ const ContentSection = (props) => {
                       }
                     }}
                     onBlur={() => {
-                      setComponentTip("")
+                      if (
+                        props.brandSettings.content_msg_show_model === "Focus"
+                      ) {
+                        setComponentTip("")
+                      }
                     }}
                     isClearable={true}
                     isDisabled={
@@ -290,7 +298,11 @@ const ContentSection = (props) => {
                     }
                   }}
                   onMouseLeave={() => {
-                    setFabricTip("")
+                    if (
+                      props.brandSettings.content_msg_show_model === "Hover"
+                    ) {
+                      setFabricTip("")
+                    }
                   }}
                 >
                   <Select
@@ -326,17 +338,11 @@ const ContentSection = (props) => {
                       }
                     }}
                     onBlur={() => {
-                      setFabricTip("")
-                    }}
-                    onMouseEnter={() => {
                       if (
-                        props.brandSettings.content_msg_show_model === "Hover"
+                        props.brandSettings.content_msg_show_model === "Focus"
                       ) {
-                        setFabricTip(`fabric-select-${index}`)
+                        setFabricTip("")
                       }
-                    }}
-                    onMouseLeave={() => {
-                      setFabricTip("")
                     }}
                     isDisabled={
                       props.isOrderConfirmed ||
@@ -385,7 +391,11 @@ const ContentSection = (props) => {
                     }
                   }}
                   onMouseLeave={() => {
-                    setPercentTip("")
+                    if (
+                      props.brandSettings.content_msg_show_model === "Hover"
+                    ) {
+                      setPercentTip("")
+                    }
                   }}
                 >
                   <Input
@@ -420,7 +430,11 @@ const ContentSection = (props) => {
                       }
                     }}
                     onBlur={() => {
-                      setPercentTip("")
+                      if (
+                        props.brandSettings.content_msg_show_model === "Focus"
+                      ) {
+                        setPercentTip("")
+                      }
                     }}
                     disabled={
                       props.isOrderConfirmed ||

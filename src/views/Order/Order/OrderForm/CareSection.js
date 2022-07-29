@@ -131,7 +131,11 @@ const CareSection = (props) => {
                   setCareTip(`care-select-${index}`)
                 }
               }}
-              onMouseLeave={() => setCareTip("")}
+              onMouseLeave={() => {
+                if (props.brandSettings.content_msg_show_model === "Hover") {
+                  setCareTip("")
+                }
+              }}
             >
               <Select
                 className="React"
@@ -166,7 +170,11 @@ const CareSection = (props) => {
                     setCareTip(`care-select-${index}`)
                   }
                 }}
-                onBlur={() => setCareTip("")}
+                onBlur={() => {
+                  if (props.brandSettings.content_msg_show_model === "Focus") {
+                    setCareTip("")
+                  }
+                }}
                 isDisabled={
                   props.isOrderConfirmed ||
                   props.brandSettings.create_content_model === "Admin"
