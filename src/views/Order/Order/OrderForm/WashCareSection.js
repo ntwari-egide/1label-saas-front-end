@@ -87,6 +87,13 @@ const WashCareSection = (props) => {
                     }}
                     isClearable={true}
                     isDisabled={props.isOrderConfirmed}
+                    isLoading={
+                      props.contentGroup === "ABC"
+                        ? !props.contentGroupOptions["ABC"]?.length
+                        : props.contentGroup === "A/BC"
+                        ? !props.contentGroupOptions["BC"]?.length
+                        : !props.contentGroupOptions["C"]?.length
+                    }
                   />
                 </Col>
               </Row>
@@ -215,6 +222,9 @@ const WashCareSection = (props) => {
                       isDisabled={
                         props.isOrderConfirmed ||
                         props.brandSettings.create_content_model === "Admin"
+                      }
+                      isLoading={
+                        !props.washCareOptions[iconObj?.icon_type_id]?.length
                       }
                     />
                     {props.orderFormValidations.icon ? (

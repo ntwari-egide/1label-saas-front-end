@@ -476,6 +476,7 @@ const OrderForm = (props) => {
                       dispatch(setDynamicFieldData({ ...tempState }))
                     }}
                     isDisabled={props.isOrderConfirmed}
+                    isLoading={!itemInfoOptions[field.title]?.length}
                   />
                 </Col>
               </Row>
@@ -695,6 +696,7 @@ const OrderForm = (props) => {
                         dispatch(setProductionLocation(e.label))
                       }}
                       isDisabled={props.isOrderConfirmed}
+                      isLoading={!productionLocationOptions.length}
                     />
                     {props.orderFormValidations.production_location?.status ? (
                       <CustomFormFeedback
