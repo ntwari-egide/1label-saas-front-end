@@ -453,7 +453,7 @@ const Listing = (props) => {
             {loading ? (
               <div
                 style={{
-                  minHeight: "455px",
+                  minHeight: "445px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center"
