@@ -835,12 +835,7 @@ const OrderForm = (props) => {
                       iconName={iconName}
                       contentGroupOptions={contentGroupOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      careNumberData={props.careNumberData}
-                      contentGroup={props.contentGroup}
-                      washCareData={props.washCareData}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
                     />
@@ -876,12 +871,7 @@ const OrderForm = (props) => {
                         iconName={iconName}
                         contentGroupOptions={contentGroupOptions}
                         fetchContentNumberDetail={fetchContentNumberDetail}
-                        careNumberData={props.careNumberData}
-                        contentGroup={props.contentGroup}
-                        washCareData={props.washCareData}
                         handleMatchContentNumber={handleMatchContentNumber}
-                        isOrderConfirmed={props.isOrderConfirmed}
-                        brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
                       />
@@ -894,12 +884,7 @@ const OrderForm = (props) => {
                         iconName={iconName}
                         contentGroupOptions={contentGroupOptions}
                         fetchContentNumberDetail={fetchContentNumberDetail}
-                        careNumberData={props.careNumberData}
-                        contentGroup={props.contentGroup}
-                        washCareData={props.washCareData}
                         handleMatchContentNumber={handleMatchContentNumber}
-                        isOrderConfirmed={props.isOrderConfirmed}
-                        brandSettings={props.brandSettings}
                         tooltipStatus={tooltipStatus}
                         tooltipMsg={tooltipMsg}
                       />
