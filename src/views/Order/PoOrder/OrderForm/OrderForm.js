@@ -776,40 +776,24 @@ const OrderForm = (props) => {
               <CardBody style={{ paddingTop: 0 }}>
                 {props.contentGroup === "A/BC" ? (
                   <ContentSection
-                    brand={props.brand}
                     contentName={contentName}
                     contentGroupOptions={contentGroupOptions}
                     componentOptions={componentOptions}
                     fabricOptions={fabricOptions}
                     fetchContentNumberDetail={fetchContentNumberDetail}
-                    contentGroup={props.contentGroup}
-                    fibreInstructionData={props.fibreInstructionData}
-                    contentNumberData={props.contentNumberData}
-                    contentCustomNumber={props.contentCustomNumber}
-                    defaultContentData={props.defaultContentData}
                     handleMatchContentNumber={handleMatchContentNumber}
-                    isOrderConfirmed={props.isOrderConfirmed}
-                    brandSettings={props.brandSettings}
                     tooltipStatus={tooltipStatus}
                     tooltipMsg={tooltipMsg}
                   />
                 ) : props.contentGroup === "AB/C" ? (
                   <div>
                     <ContentSection
-                      brand={props.brand}
                       contentName={contentName}
                       contentGroupOptions={contentGroupOptions}
                       componentOptions={componentOptions}
                       fabricOptions={fabricOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentGroup={props.contentGroup}
-                      fibreInstructionData={props.fibreInstructionData}
-                      contentNumberData={props.contentNumberData}
-                      contentCustomNumber={props.contentCustomNumber}
-                      defaultContentData={props.defaultContentData}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
                     />
@@ -834,20 +818,12 @@ const OrderForm = (props) => {
                 ) : props.contentGroup === "ABC" ? (
                   <div>
                     <ContentSection
-                      brand={props.brand}
                       contentName={contentName}
                       contentGroupOptions={contentGroupOptions}
                       componentOptions={componentOptions}
                       fabricOptions={fabricOptions}
                       fetchContentNumberDetail={fetchContentNumberDetail}
-                      contentGroup={props.contentGroup}
-                      fibreInstructionData={props.fibreInstructionData}
-                      contentNumberData={props.contentNumberData}
-                      contentCustomNumber={props.contentCustomNumber}
-                      defaultContentData={props.defaultContentData}
                       handleMatchContentNumber={handleMatchContentNumber}
-                      isOrderConfirmed={props.isOrderConfirmed}
-                      brandSettings={props.brandSettings}
                       tooltipStatus={tooltipStatus}
                       tooltipMsg={tooltipMsg}
                     />
