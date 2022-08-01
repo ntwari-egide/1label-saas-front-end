@@ -265,7 +265,7 @@ const ContentSection = (props) => {
                   />
                   {props.orderFormValidations.content ? (
                     props.orderFormValidations.content[index]
-                      .part_key_status ? (
+                      ?.part_key_status ? (
                       <CustomFormFeedback
                         errMsg={
                           props.orderFormValidations.content[index]
