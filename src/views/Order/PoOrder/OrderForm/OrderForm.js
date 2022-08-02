@@ -238,36 +238,6 @@ const OrderForm = (props) => {
     }
   }
 
-  const handleFibreChange = (e, index) => {
-    // updating the fibreInstructionData state.
-    const tempData = props.fibreInstructionData
-    tempData[index] = {
-      ...props.fibreInstructionData[index],
-      cont_key: e ? e.value : "",
-      cont_translation: e ? e.label : ""
-    }
-    dispatch(setFibreInstructionData([...tempData]))
-    // fetching default content for fabric and updating default content state
-    let tempDefData = props.defaultContentData
-    const body = {
-      brand_key: props.brand ? props.brand.value : "",
-      cont_key: e ? e.value : "",
-      page_type: "content"
-    }
-
-    axios
-      .post("/Translation/GetDefaultContentByContentKey", body)
-      .then((res) => {
-        if (res.status === 200) {
-          tempDefData[index] = {
-            cont_key: res.data[0]?.guid_key,
-            cont_translation: res.data[0]?.gb_translation
-          }
-          dispatch(setDefaultContentData([...tempDefData]))
-          dispatch(matchContentNumber("POOrder"))
-        }
-      })
-      .catch((err) => console.log(err))
   }
 
   // API services
@@ -321,24 +291,16 @@ const OrderForm = (props) => {
           // fetch select fields and respective data for wash care symbol section
           if (res.data[0]?.display_footwear_icon?.length) {
             fetchIconSequenceList(res.data[0]?.display_footwear_icon)
-          } else {
-            console.log("Err Msg:", "Footwear display status not received")
           }
           // assign section titles
           if (res.data[0]?.acontent_title) {
             setContentName(res.data[0]?.acontent_title)
-          } else {
-            console.log("Err Msg:", "acontent_title not received")
           }
           if (res.data[0]?.bcontent_title) {
             setCareName(res.data[0]?.bcontent_title)
-          } else {
-            console.log("Err Msg:", "bcontent_title not received")
           }
           if (res.data[0]?.ccontent_title) {
             setIconName(res.data[0]?.ccontent_title)
-          } else {
-            console.log("Err Msg:", "ccontent_title not received")
           }
           // tooltip
           const tempTooltipStatus = {}
@@ -474,9 +436,7 @@ const OrderForm = (props) => {
     let tempIconTranslation = {}
     iconGroups.map((iconGroup) => {
       // do not fetch for footwear if not required
-      console.log(showFootwear, iconGroup)
       if (showFootwear === "N" && iconGroup === "B") {
-        console.log("ret")
         return
       }
       const body = {
