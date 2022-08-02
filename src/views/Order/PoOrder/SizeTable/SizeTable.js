@@ -4,6 +4,7 @@ import {
   Spinner,
   Col,
   Card,
+  Label,
   Button,
   Input,
   CardHeader,
@@ -303,11 +304,39 @@ const SizeTable = (props) => {
           <div>
             {props.sizeData.map((data, index) => (
               <Row style={{ margin: 0, marginBottom: "20px" }}>
-                <DataTable
-                  data={data.size_content}
-                  columns={props.cols[index]}
-                  noHeader={true}
-                />
+                <Col>
+                  <Row style={{ paddingBottom: "5px" }}>
+                    <Col
+                      xs={12}
+                      sm={12}
+                      md={6}
+                      lg={3}
+                      xl={3}
+                      style={{ paddingLeft: 0 }}
+                    >
+                      <Label>Size Matrix Type</Label>
+                      <h5>{data.size_matrix_type}</h5>
+                    </Col>
+                    <Col
+                      xs={12}
+                      sm={12}
+                      md={6}
+                      lg={3}
+                      xl={3}
+                      style={{ paddingLeft: 0 }}
+                    >
+                      <Label>EDI Order no.</Label>
+                      <h5>{data.edi_order_no}</h5>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <DataTable
+                      data={data.size_content}
+                      columns={props.cols[index]}
+                      noHeader={true}
+                    />
+                  </Row>
+                </Col>
               </Row>
             ))}
           </div>

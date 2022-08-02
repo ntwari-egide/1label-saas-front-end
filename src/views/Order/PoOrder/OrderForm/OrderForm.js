@@ -69,7 +69,10 @@ const OrderForm = (props) => {
   // tooltip states and messages
   const [tooltipMsg, setTooltipMsg] = useState({})
   const [tooltipStatus, setTooltipStatus] = useState({})
+  // EDI order state
+  const [ediOrderStr, setEdiOrderStr] = useState("")
 
+  // other functions
   const handleMatchContentNumber = (section) => {
     let content_group
     if (props.contentGroup === "ABC") {
@@ -238,6 +241,10 @@ const OrderForm = (props) => {
     }
   }
 
+  const processEdiOrderName = () => {
+    setEdiOrderStr(
+      [...new Set(props.sizeData.map((data) => data.edi_order_no))].join(", ")
+    )
   }
 
   // API services
@@ -567,6 +574,7 @@ const OrderForm = (props) => {
     fetchContentNumberSettings()
     fetchContentTranslationList()
     fetchProductLocationList()
+    processEdiOrderName()
   }, [])
 
   return (
@@ -578,6 +586,14 @@ const OrderForm = (props) => {
               <Col xs="12" sm="12" md="6" lg="4" xl="4">
                 <Label>{t("Order No.")}</Label>
                 <h5>{props.selectedOrder?.order_no}</h5>
+              </Col>
+            </Row>
+          ) : null}
+          {props.sizeData.length ? (
+            <Row style={{ marginBottom: "5px" }}>
+              <Col>
+                <Label>EDI Order No.</Label>
+                <h5>{ediOrderStr}</h5>
               </Col>
             </Row>
           ) : null}
@@ -899,7 +915,8 @@ const mapStateToProps = (state) => ({
   isOrderNew: state.listReducer.isOrderNew,
   selectedOrder: state.listReducer.selectedOrder,
   brandSettings: state.poOrderReducer.brandSettings,
-  orderFormValidations: state.poOrderReducer.orderFormValidations
+  orderFormValidations: state.poOrderReducer.orderFormValidations,
+  sizeData: state.poOrderReducer.sizeData
 })
 
 export default connect(mapStateToProps, null)(OrderForm)
