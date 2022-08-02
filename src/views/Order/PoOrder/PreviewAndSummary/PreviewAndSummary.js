@@ -80,14 +80,14 @@ const PreviewAndSummary = (props) => {
     const tempState = {} // init temp state for summary data
     try {
       // get all unique content groups
-      const contentGroups = [
-        ...new Set(sizeData.map((data) => data.group_type))
+      const sizeMatrixTypes = [
+        ...new Set(sizeData.map((data) => data.size_matrix_type))
       ]
       // for each group calculate summary table
-      contentGroups.map((group) => {
+      sizeMatrixTypes.map((smt) => {
         //get all the table with same group
         const tables = sizeData
-          .filter((data) => data.group_type === group)
+          .filter((data) => data.size_matrix_type === smt)
           .map((data) => data.size_content)
         // calculate summary table
         const tempTable = []
@@ -109,7 +109,7 @@ const PreviewAndSummary = (props) => {
             }
           })
         })
-        tempState[group] = tempTable
+        tempState[smt] = tempTable
       })
     } catch (err) {
       console.log("Something went wrong while processing summary table", err)
@@ -273,57 +273,57 @@ const PreviewAndSummary = (props) => {
           ))}
         </Row>
         {props.brandDetails.display_SizeTable === "Y" ? (
-          <div>
-            <Row style={{ marginBottom: "10px", marginTop: "10px" }}>
-              <Col
-                xs="12"
-                sm="12"
-                md="3"
-                lg="1.5"
-                xl="1.5"
-                style={{
-                  marginRight: "0px",
-                  paddingRight: "0px",
-                  maxWidth: "150px"
-                }}
-              >
-                <div
+          Object.keys(props.summaryTable).map((key) => (
+            <>
+              <Row style={{ marginBottom: "10px", marginTop: "10px" }}>
+                <Col
+                  xs="12"
+                  sm="12"
+                  md="3"
+                  lg="1.5"
+                  xl="1.5"
                   style={{
-                    display: "flex",
-                    justifyContent: "end",
-                    width: "100%",
-                    height: "100%",
-                    alignItems: "center"
+                    marginRight: "0px",
+                    paddingRight: "0px",
+                    maxWidth: "150px"
                   }}
                 >
-                  <div>Size Matrix Type</div>
-                </div>
-              </Col>
-              <Col xs="12" sm="12" md="5" lg="5" xl="5">
-                <Input
-                  value={props.sizeMatrixType || ""}
-                  onChange={(e) => {
-                    // setLoading(true)
-                    // fetchSizeTableDetails(e.value)
-                    dispatch(setSizeMatrixType(e.target.value))
-                  }}
-                  disabled={true}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                {Object.keys(props.summaryTable).map((key) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "end",
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center"
+                    }}
+                  >
+                    <div>Size Matrix Type</div>
+                  </div>
+                </Col>
+                <Col xs="12" sm="12" md="5" lg="5" xl="5">
+                  <Input
+                    value={key}
+                    onChange={(e) => {
+                      // setLoading(true)
+                      // fetchSizeTableDetails(e.value)
+                      dispatch(setSizeMatrixType(e.target.value))
+                    }}
+                    disabled={true}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
                   <DataTable
                     key={`data-table-${key}`}
                     data={props.summaryTable[key]}
                     columns={summaryCols}
                     noHeader={true}
                   />
-                ))}
-              </Col>
-            </Row>
-          </div>
+                </Col>
+              </Row>
+            </>
+          ))
         ) : (
           <></>
         )}
