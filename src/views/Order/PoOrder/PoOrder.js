@@ -102,7 +102,7 @@ const PoOrder = (props) => {
         setCurrentStep={setCurrentStepHelper}
         brandDetails={props.brandDetails}
       />
-      {props.currentStep === 0 ? (
+      {props.currentStep === "Listing" ? (
         <Listing
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
@@ -111,13 +111,13 @@ const PoOrder = (props) => {
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
         />
-      ) : props.currentStep === 1 ? (
+      ) : props.currentStep === "Item List" ? (
         <ItemList
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
           lastStep={lastStep}
         />
-      ) : props.currentStep === 3 ? (
+      ) : props.currentStep === "Order Form" ? (
         <OrderForm
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
@@ -125,7 +125,7 @@ const PoOrder = (props) => {
           isPoOrderTemp={isPoOrderTemp}
           combinedPOOrderKey={combinedPOOrderKey}
         />
-      ) : props.currentStep === 2 ? (
+      ) : props.currentStep === "PO Order Size Table" ? (
         <SizeTable
           isPoOrderTemp={isPoOrderTemp}
           currentStep={props.currentStep}
@@ -134,14 +134,14 @@ const PoOrder = (props) => {
           combinedPOOrderKey={combinedPOOrderKey}
           cols={props.cols}
         />
-      ) : props.currentStep === 4 ? (
+      ) : props.currentStep === "Preview Item & Summary Size Table" ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
           cols={props.cols}
         />
-      ) : props.currentStep === 5 ? (
+      ) : props.currentStep === "Invoice & Delivery Date" ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}

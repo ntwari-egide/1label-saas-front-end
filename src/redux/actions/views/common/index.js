@@ -133,9 +133,9 @@ export const populateData =
       setContentGroup
     } = require(`@redux/actions/views/Order/${module}`)
     if (module === "POOrder") {
-      dispatch(setCurrentStep(1))
+      dispatch(setCurrentStep("Item List"))
     } else {
-      dispatch(setCurrentStep(0))
+      dispatch(setCurrentStep("Select Item"))
     }
     // set order_no for draft||confirm order
     dispatch(setOrderNo(order_no))

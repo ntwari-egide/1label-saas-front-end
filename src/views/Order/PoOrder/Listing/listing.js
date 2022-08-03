@@ -152,7 +152,7 @@ const Listing = (props) => {
       .then((res) => {
         if (res.status === 200) {
           dispatch(populateData("POOrder", res.data[0]))
-          props.setCurrentStep(1)
+          props.setCurrentStep("Item List")
         }
         setOrderLoader(false)
         dispatch(setLoader(false))

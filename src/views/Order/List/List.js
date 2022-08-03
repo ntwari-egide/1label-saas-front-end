@@ -8,7 +8,7 @@ import Details from "./Details/Details"
 
 const List = () => {
   const { t } = useTranslation()
-  const [currentStep, setCurrentStep] = useState(0)
+  const [currentStep, setCurrentStep] = useState("Listing")
   const stepper = ["Listing", "Details"]
   // data for listing page
   const [orderList, setOrderList] = useState([])
@@ -42,7 +42,7 @@ const List = () => {
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
       />
-      {currentStep === 0 ? (
+      {currentStep === "Listing" ? (
         <Listing
           setCurrentStep={setCurrentStep}
           orderList={orderList}
@@ -58,7 +58,7 @@ const List = () => {
           totalPages={totalPages}
           setTotalPages={setTotalPages}
         />
-      ) : currentStep === 1 ? (
+      ) : currentStep === "Details" ? (
         <Details />
       ) : null}
     </div>

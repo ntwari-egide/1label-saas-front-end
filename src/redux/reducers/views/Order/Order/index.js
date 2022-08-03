@@ -38,7 +38,7 @@ const initialState = {
   deliveryAddressDetails: {},
   contactDetails: {},
   // misc
-  currentStep: 0,
+  currentStep: "Select Item",
   shrinkagePercentage: ""
 }
 

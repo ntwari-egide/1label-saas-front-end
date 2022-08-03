@@ -2,7 +2,7 @@ import { formatDateYMD } from "@utils"
 
 const initialState = {
   // ** gobal states
-  currentStep: 0,
+  currentStep: "Listing",
   // ** listing data
   poSelectedOrders: [],
   searchParams: {
@@ -49,7 +49,7 @@ const initialState = {
   invoiceAddressDetails: {},
   deliveryAddressDetails: {},
   contactDetails: {},
-  //anno
+  // misc
   shrinkagePercentage: "",
   sizeTableTrigger: true
 }

@@ -6,6 +6,7 @@ import InvoiceAndDelivery from "./InvoiceAndDeliveryDate"
 import Payment from "./Payment"
 import Stepper from "../../Stepper"
 import DirectPrint from "./DirectPrint"
+import POSizeTable from "./POSizeTable"
 import { Link } from "react-router-dom"
 import { Breadcrumb, BreadcrumbItem } from "reactstrap"
 import { useTranslation } from "react-i18next"
@@ -18,6 +19,7 @@ import { saveOrder } from "@redux/actions/views/common"
 const stepperMenu = [
   "Select Item",
   "Order Form",
+  "PO Size Table",
   "Preview Item & Summary Size Table",
   "Invoice & Delivery Date",
   "Payment",
@@ -106,8 +108,9 @@ const Order = (props) => {
         orderFormManFields={orderFormManFields}
         setOrderFormManFields={setOrderFormManFields}
         brandDetails={props.brandDetails}
+        isOrderNew={props.isOrderNew}
       />
-      {props.currentStep === 0 ? (
+      {props.currentStep === "Select Item" ? (
         <SelectItem
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
@@ -117,7 +120,7 @@ const Order = (props) => {
           itemRef={itemRef}
           setItemRef={setItemRef}
         />
-      ) : props.currentStep === 1 ? (
+      ) : props.currentStep === "Order Form" ? (
         <OrderForm
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
@@ -125,25 +128,27 @@ const Order = (props) => {
           itemType={itemType}
           orderFormManFields={orderFormManFields}
         />
-      ) : props.currentStep === 2 ? (
+      ) : props.currentStep === "PO Size Table" ? (
+        <POSizeTable />
+      ) : props.currentStep === "Preview Item & Summary Size Table" ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
         />
-      ) : props.currentStep === 3 ? (
+      ) : props.currentStep === "Invoice & Delivery Date" ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
         />
-      ) : props.currentStep === 4 ? (
+      ) : props.currentStep === "Payment" ? (
         <Payment
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
           lastStep={lastStep}
         />
-      ) : props.currentStep === 5 ? (
+      ) : props.currentStep === "Direct Print" ? (
         <DirectPrint
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
@@ -160,7 +165,8 @@ const mapStateToProps = (state) => ({
   orderReference: state.orderReducer.orderReference,
   expectedDeliveryDate: state.orderReducer.expectedDeliveryDate,
   currentStep: state.orderReducer.currentStep,
-  brandDetails: state.orderReducer.brandDetails
+  brandDetails: state.orderReducer.brandDetails,
+  isOrderNew: state.listReducer.isOrderNew
 })
 
 export default connect(mapStateToProps, null)(Order)

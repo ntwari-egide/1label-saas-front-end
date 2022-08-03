@@ -6,6 +6,12 @@ import { sweetAlert } from "@utils"
 
 const Stepper = (props) => {
   const { t } = useTranslation()
+  // ** to change style of step icon and text ** //
+  const [currentMenuIndex, setCurrentMenuIndex] = useState(null)
+
+  const evalCurrencMenuIndex = (menuItem) => {
+    return props.stepperMenu.indexOf(menuItem)
+  }
 
   const normalSelectedItemValidation = (menuItem) => {
     if (
@@ -148,53 +154,67 @@ const Stepper = (props) => {
     return localFlag
   }
 
+  useEffect(() => {
+    // ** to change style of step icon and text ** //
+    setCurrentMenuIndex(evalCurrencMenuIndex(props.currentStep))
+  }, [props.currentStep])
+
   return (
     <div style={{ paddingBottom: "10px" }}>
       <Breadcrumb>
-        {props.stepperMenu.map((menuItem, index) => (
-          <BreadcrumbItem>
-            <div
-              className="custom-stepper"
-              onClick={() => {
-                if (
-                  normalSelectedItemValidation(menuItem) &&
-                  poSelectedOrdersValidation(menuItem) &&
-                  normalOrderFormManFieldsValidation(menuItem) &&
-                  poItemListValidation(menuItem) &&
-                  poOrderFormManFieldsValidation(menuItem)
-                ) {
-                  props.setCurrentStep(index)
-                }
-              }}
-            >
+        {props.stepperMenu.map((menuItem, index) => {
+          if (
+            props.isOrderNew &&
+            menuItem === "PO Size Table" &&
+            props.component === "Order"
+          ) {
+            return <></>
+          }
+          return (
+            <BreadcrumbItem>
               <div
-                id="selectItemIcon"
-                className={
-                  props.currentStep === index
-                    ? "stepper-active-icon"
-                    : props.currentStep > index
-                    ? "stepper-passed-icon"
-                    : "stepper-pending-icon"
-                }
+                className="custom-stepper"
+                onClick={() => {
+                  if (
+                    normalSelectedItemValidation(menuItem) &&
+                    poSelectedOrdersValidation(menuItem) &&
+                    normalOrderFormManFieldsValidation(menuItem) &&
+                    poItemListValidation(menuItem) &&
+                    poOrderFormManFieldsValidation(menuItem)
+                  ) {
+                    props.setCurrentStep(menuItem)
+                  }
+                }}
               >
-                <FileMinus size={25} />
-              </div>
-              <div>
-                <h5
+                <div
+                  id="selectItemIcon"
                   className={
-                    props.currentStep === index
-                      ? "stepper-active-text"
-                      : props.currentStep > index
-                      ? "stepper-passed-text"
-                      : "stepper-pending-text"
+                    props.currentStep === menuItem
+                      ? "stepper-active-icon"
+                      : currentMenuIndex > index
+                      ? "stepper-passed-icon"
+                      : "stepper-pending-icon"
                   }
                 >
-                  {t(`${menuItem}`)}
-                </h5>
+                  <FileMinus size={25} />
+                </div>
+                <div>
+                  <h5
+                    className={
+                      props.currentStep === index
+                        ? "stepper-active-text"
+                        : currentMenuIndex > index
+                        ? "stepper-passed-text"
+                        : "stepper-pending-text"
+                    }
+                  >
+                    {t(`${menuItem}`)}
+                  </h5>
+                </div>
               </div>
-            </div>
-          </BreadcrumbItem>
-        ))}
+            </BreadcrumbItem>
+          )
+        })}
       </Breadcrumb>
     </div>
   )
