@@ -132,11 +132,7 @@ export const populateData =
       setOrderNo,
       setContentGroup
     } = require(`@redux/actions/views/Order/${module}`)
-    if (module === "POOrder") {
-      dispatch(setCurrentStep("Item List"))
-    } else {
-      dispatch(setCurrentStep("Select Item"))
-    }
+    dispatch(setCurrentStep("Order Form"))
     // set order_no for draft||confirm order
     dispatch(setOrderNo(order_no))
     if (data.brand_key) {
