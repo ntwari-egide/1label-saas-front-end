@@ -39,7 +39,8 @@ const Stepper = (props) => {
       ].includes(menuItem) &&
       props.component === "POOrder" &&
       props.validationFields?.poSelectedOrders &&
-      props.validationFields?.poSelectedOrders?.length <= 0
+      props.validationFields?.poSelectedOrders?.length <= 0 &&
+      props.isOrderNew
     ) {
       sweetAlert("", "Please select an order to continue", "warning", "warning")
       return false

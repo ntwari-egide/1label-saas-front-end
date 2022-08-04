@@ -162,7 +162,8 @@ const mapStateToProps = (state) => ({
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
   brandDetails: state.poOrderReducer.brandDetails,
   cols: state.poOrderReducer.cols,
-  poSelectedOrders: state.poOrderReducer.poSelectedOrders
+  poSelectedOrders: state.poOrderReducer.poSelectedOrders,
+  isOrderNew: state.listReducer.isOrderNew
 })
 
 export default connect(mapStateToProps, null)(PoOrder)
