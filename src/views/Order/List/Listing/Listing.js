@@ -209,7 +209,12 @@ const Listing = (props) => {
     }
   }
 
-  const fetchOrderDetails = (brand_key, order_no, is_po_order_temp) => {
+  const fetchOrderDetails = (
+    brand_key,
+    order_no,
+    is_po_order_temp,
+    is_po_order
+  ) => {
     const body = {
       order_user: getUserData().admin,
       brand_key,
@@ -223,7 +228,7 @@ const Listing = (props) => {
         if (res.status === 200) {
           if (res.data[0]) {
             let module = "Order"
-            if (is_po_order_temp === "Y") {
+            if (is_po_order === "Y") {
               module = "POOrder"
             }
             // populate state ap per data received
@@ -318,7 +323,12 @@ const Listing = (props) => {
       dispatch(setIsOrderConfirmed(true))
     }
     dispatch(setIsOrderNew(false))
-    fetchOrderDetails(e.brand_guid_key, e.order_no, e.is_po_order_temp)
+    fetchOrderDetails(
+      e.brand_guid_key,
+      e.order_no,
+      e.is_po_order_temp,
+      e.is_po_order
+    )
   }
 
   // API Services
