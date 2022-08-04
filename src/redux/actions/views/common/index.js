@@ -704,12 +704,12 @@ export const savePOOrder = (order_status) => (dispatch) => {
     po_last_update_time: "",
     option_id: "",
     po_size_tables: data.sizeData?.map((sizeData, index) => ({
-      guid_key: "",
-      order_key: "",
-      brand_key: "",
-      edi_order_no: "",
-      consolidated_id: "",
-      group_type: "",
+      guid_key: sizeData.guid_key,
+      order_key: sizeData.order_key,
+      brand_key: sizeData.brand_key,
+      edi_order_no: sizeData.edi_order_no,
+      consolidated_id: sizeData.consolidated_id,
+      group_type: sizeData.group_type,
       item_ref: data.selectedItems
         .filter((item) => item.is_non_size === "N")
         .map((item) => ({
@@ -719,14 +719,14 @@ export const savePOOrder = (order_status) => (dispatch) => {
           price: item.price || "",
           currency: item.currency || ""
         })),
-      size_matrix_type: data.sizeMatrixType,
+      size_matrix_type: data.size_matrix_type,
       size_content: buildXML(
         formatRowToCol(
           processSizeTable(sizeData.size_content, "POOrder", index)
         )
       ),
-      send_date: "",
-      create_date: ""
+      send_date: sizeData.send_date,
+      create_date: sizeData.create_date
     }))
   }
 
