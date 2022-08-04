@@ -220,25 +220,6 @@ const Listing = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchOrderDetails = () => {
-    if (props.searchParams.brand && props.searchParams.poNo) {
-      const body = {
-        brand_key: props.searchParams.brand,
-        order_no: "ASLL-PO2022050001",
-        order_user: getUserData().admin,
-        is_po_order_temp: ""
-      }
-
-      axios
-        .post("/Order/GetOrderDetail", body)
-        .then((res) => {
-          if (res.status === 200) {
-          }
-        })
-        .catch((err) => console.log(err))
-    }
-  }
-
   const addPoOrder = () => {
     const body = {
       brand_key: props.searchParams.brand ? props.searchParams.brand : "",
@@ -545,7 +526,6 @@ const Listing = (props) => {
               color="primary"
               onClick={() => {
                 fetchPoOrderList(props.searchParams)
-                fetchOrderDetails()
                 dispatch(setPoSelectedOrders([]))
               }}
             >
