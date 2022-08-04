@@ -162,59 +162,51 @@ const Stepper = (props) => {
   return (
     <div style={{ paddingBottom: "10px" }}>
       <Breadcrumb>
-        {props.stepperMenu.map((menuItem, index) => {
-          if (
-            props.isOrderNew &&
-            menuItem === "PO Size Table" &&
-            props.component === "Order"
-          ) {
-            return <></>
-          }
-          return (
-            <BreadcrumbItem>
+        {props.stepperMenu.map((menuItem, index) => (
+          <BreadcrumbItem>
+            <div
+              className="custom-stepper"
+              onClick={() => {
+                if (
+                  normalSelectedItemValidation(menuItem) &&
+                  poSelectedOrdersValidation(menuItem) &&
+                  normalOrderFormManFieldsValidation(menuItem) &&
+                  poItemListValidation(menuItem) &&
+                  poOrderFormManFieldsValidation(menuItem)
+                ) {
+                  props.setCurrentStep(menuItem)
+                }
+              }}
+            >
               <div
-                className="custom-stepper"
-                onClick={() => {
-                  if (
-                    normalSelectedItemValidation(menuItem) &&
-                    poSelectedOrdersValidation(menuItem) &&
-                    normalOrderFormManFieldsValidation(menuItem) &&
-                    poItemListValidation(menuItem) &&
-                    poOrderFormManFieldsValidation(menuItem)
-                  ) {
-                    props.setCurrentStep(menuItem)
-                  }
-                }}
+                id="selectItemIcon"
+                className={
+                  props.currentStep === menuItem
+                    ? "stepper-active-icon"
+                    : currentMenuIndex > index
+                    ? "stepper-passed-icon"
+                    : "stepper-pending-icon"
+                }
               >
-                <div
-                  id="selectItemIcon"
+                <FileMinus size={25} />
+              </div>
+              <div>
+                <h5
                   className={
-                    props.currentStep === menuItem
-                      ? "stepper-active-icon"
+                    props.currentStep === index
+                      ? "stepper-active-text"
                       : currentMenuIndex > index
-                      ? "stepper-passed-icon"
-                      : "stepper-pending-icon"
+                      ? "stepper-passed-text"
+                      : "stepper-pending-text"
                   }
                 >
-                  <FileMinus size={25} />
-                </div>
-                <div>
-                  <h5
-                    className={
-                      props.currentStep === index
-                        ? "stepper-active-text"
-                        : currentMenuIndex > index
-                        ? "stepper-passed-text"
-                        : "stepper-pending-text"
-                    }
-                  >
-                    {t(`${menuItem}`)}
-                  </h5>
-                </div>
+                  {t(`${menuItem}`)}
+                </h5>
               </div>
-            </BreadcrumbItem>
-          )
-        })}
+            </div>
+          </BreadcrumbItem>
+        ))}
+        )
       </Breadcrumb>
     </div>
   )

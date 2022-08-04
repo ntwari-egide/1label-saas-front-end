@@ -19,7 +19,6 @@ import { saveOrder } from "@redux/actions/views/common"
 const stepperMenu = [
   "Select Item",
   "Order Form",
-  "PO Size Table",
   "Preview Item & Summary Size Table",
   "Invoice & Delivery Date",
   "Payment",
