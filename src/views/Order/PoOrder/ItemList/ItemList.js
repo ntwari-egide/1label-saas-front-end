@@ -269,7 +269,7 @@ const ItemList = (props) => {
           selectedItems={props.selectedItems}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
-          lastStep={props.lastStep}
+          stepperMenu={props.stepperMenu}
         />
       </CardFooter>
     </Card>

@@ -135,7 +135,7 @@ const DirectPrint = (props) => {
         <Footer
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
-          lastStep={props.lastStep}
+          stepperMenu={props.stepperMenu}
         />
       </CardFooter>
     </Card>

@@ -650,7 +650,7 @@ const Listing = (props) => {
           poSelectedOrders={props.poSelectedOrders}
           currentStep={props.currentStep}
           setCurrentStep={props.setCurrentStep}
-          lastStep={props.lastStep}
+          stepperMenu={props.stepperMenu}
         />
       </CardFooter>
     </Card>

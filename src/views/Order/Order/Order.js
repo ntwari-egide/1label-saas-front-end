@@ -32,7 +32,6 @@ const Order = (props) => {
   // item list states
   const [itemType, setItemType] = useState({})
   const [itemRef, setItemRef] = useState("")
-  const [lastStep] = useState(stepperMenu.length - 1)
 
   // validations for OrderForm Component
   const [orderFormManFields, setOrderFormManFields] = useState({
@@ -113,45 +112,43 @@ const Order = (props) => {
         <SelectItem
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
           itemType={itemType}
           setItemType={setItemType}
           itemRef={itemRef}
           setItemRef={setItemRef}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Order Form" ? (
         <OrderForm
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
           itemType={itemType}
           orderFormManFields={orderFormManFields}
+          stepperMenu={stepperMenu}
         />
-      ) : props.currentStep === "PO Size Table" ? (
-        <POSizeTable />
       ) : props.currentStep === "Preview Item & Summary Size Table" ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Invoice & Delivery Date" ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Payment" ? (
         <Payment
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Direct Print" ? (
         <DirectPrint
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
+          stepperMenu={stepperMenu}
         />
       ) : null}
     </div>

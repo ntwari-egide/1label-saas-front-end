@@ -31,7 +31,6 @@ const PoOrder = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   // app states
-  const [lastStep, setLastStep] = useState(stepperMenu.length - 1)
 
   // listing data
   const [combinedPOOrderKey, setCombinedPOOrderkey] = useState("")
@@ -106,47 +105,47 @@ const PoOrder = (props) => {
         <Listing
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
-          lastStep={lastStep}
           setCombinedPOOrderkey={setCombinedPOOrderkey}
           isPoOrderTemp={isPoOrderTemp}
           setIsPoOrderTemp={setIsPoOrderTemp}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Item List" ? (
         <ItemList
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
-          lastStep={lastStep}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Order Form" ? (
         <OrderForm
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
-          lastStep={lastStep}
           isPoOrderTemp={isPoOrderTemp}
           combinedPOOrderKey={combinedPOOrderKey}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "PO Order Size Table" ? (
         <SizeTable
           isPoOrderTemp={isPoOrderTemp}
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
-          lastStep={lastStep}
           combinedPOOrderKey={combinedPOOrderKey}
           cols={props.cols}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Preview Item & Summary Size Table" ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
           cols={props.cols}
+          stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Invoice & Delivery Date" ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          lastStep={lastStep}
           combinedPOOrderKey={combinedPOOrderKey}
+          stepperMenu={stepperMenu}
         />
       ) : null}
     </div>

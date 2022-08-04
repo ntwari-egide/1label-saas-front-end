@@ -890,7 +890,6 @@ const OrderForm = (props) => {
           <Footer
             currentStep={props.currentStep}
             setCurrentStep={props.setCurrentStep}
-            lastStep={props.lastStep}
             validationFields={{
               orderFormManFields: {
                 orderReference: props.orderReference,
@@ -900,6 +899,7 @@ const OrderForm = (props) => {
             }}
             brandDetails={props.brandDetails}
             isOrderConfirmed={props.isOrderConfirmed}
+            stepperMenu={props.stepperMenu}
           />
         </CardFooter>
       </Card>

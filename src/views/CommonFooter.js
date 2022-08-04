@@ -59,12 +59,13 @@ const Footer = (props) => {
     return localFlag
   }
 
-  const checkBoundary = () => {
-    // checks for boundary conditions.
-    if (props.currentStep < props.lastStep) {
-      return true
+  const handleStep = (direction) => {
+    const index = props.stepperMenu.indexOf(props.currentStep)
+    if (direction === "back") {
+      props.setCurrentStep(props.stepperMenu[index - 1])
+    } else {
+      props.setCurrentStep(props.stepperMenu[index + 1])
     }
-    return false
   }
 
   return (
@@ -72,12 +73,8 @@ const Footer = (props) => {
       <Col>
         <Button
           color="primary"
-          onClick={() => {
-            if (props.currentStep > 0) {
-              props.setCurrentStep(props.currentStep - 1)
-            }
-          }}
-          disabled={props.currentStep === 0}
+          onClick={() => handleStep("back")}
+          disabled={props.currentStep === props.stepperMenu[0]}
         >
           <div style={{ display: "flex" }}>
             <div>
@@ -95,13 +92,15 @@ const Footer = (props) => {
               if (
                 selectedItemsValidation() &&
                 poSelectedOrderValidation() &&
-                orderFormManFieldValidation() &&
-                checkBoundary()
+                orderFormManFieldValidation()
               ) {
-                props.setCurrentStep(props.currentStep + 1)
+                handleStep("forward")
               }
             }}
-            disabled={props.currentStep === props.lastStep}
+            disabled={
+              props.currentStep ===
+              props.stepperMenu[props.stepperMenu.length - 1]
+            }
           >
             <div style={{ display: "flex" }}>
               <div style={{ marginTop: "2px" }}>{t("Next")}</div>
