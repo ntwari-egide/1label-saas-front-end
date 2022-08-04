@@ -617,8 +617,8 @@ export const savePOOrder = (order_status) => (dispatch) => {
     ),
     invoice_address: [
       {
-        invoice_address_id: data.invoiceAddressDetails?.dyn_address_id || "",
-        invoice_contact_id: data.invoiceAddressDetails?.dyn_customer_id || "",
+        invoice_address_id: data.invoiceAddressDetails?.address_id || "",
+        invoice_contact_id: data.invoiceAddressDetails?.customer_id || "",
         invoice_cpyname: data.invoiceAddressDetails?.name || "",
         invoice_contact: data.invoiceAddressDetails?.contact_person || "",
         invoice_phone: data.invoiceAddressDetails?.phone || "",
@@ -631,8 +631,8 @@ export const savePOOrder = (order_status) => (dispatch) => {
     ],
     delivery_address: [
       {
-        delivery_address_id: data.deliveryAddressDetails?.dyn_address_id || "",
-        delivery_contact_id: data.deliveryAddressDetails?.dyn_customer_id || "",
+        delivery_address_id: data.deliveryAddressDetails?.address_id || "",
+        delivery_contact_id: data.deliveryAddressDetails?.contact_id || "",
         delivery_cpyname: data.deliveryAddressDetails?.name || "",
         delivery_contact: data.deliveryAddressDetails?.contact_person || "",
         delivery_phone: data.deliveryAddressDetails?.phone || "",
