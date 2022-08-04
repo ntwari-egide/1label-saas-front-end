@@ -441,7 +441,7 @@ export const saveOrder = (order_status) => (dispatch) => {
               setOrderFormValidations,
               setCurrentStep
             } = require(`@redux/actions/views/Order/Order`)
-            dispatch(setCurrentStep(1))
+            dispatch(setCurrentStep("Order Form"))
             dispatch(setOrderFormValidations(res.data.fields))
           } else {
             // ** popup validations
@@ -745,7 +745,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
               setOrderFormValidations,
               setCurrentStep
             } = require(`@redux/actions/views/Order/POOrder`)
-            dispatch(setCurrentStep(3))
+            dispatch(setCurrentStep("Order Form"))
             dispatch(setOrderFormValidations(res.data.fields))
           } else {
             // ** popup validations
