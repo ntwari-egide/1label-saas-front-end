@@ -507,7 +507,6 @@ const formatRowToCol = (table) => {
     console.log("Something went while transposing size data", err)
     return null
   }
-  console.log("newTab", newTable)
   return {
     SizeMatrix: {
       Table: newTable
@@ -543,7 +542,6 @@ const processSizeTable = (table, module, index) => {
             }
           }
           // for upc/ean code
-          console.log(key)
           if (key === "UPC/EAN CODE" && !row[key]) {
             row[key] = ""
           }
