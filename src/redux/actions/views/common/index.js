@@ -47,7 +47,6 @@ export const matchContentNumber =
           setContentNumberData,
           setCareNumberData
         } = require(`@redux/actions/views/Order/${module}`)
-        console.log(content_group, section)
         if (content_group === "ABC") {
           dispatch(
             setContentNumberData({
@@ -249,6 +248,9 @@ export const populateData =
       if (module === "Order") {
         dispatch(setSizeData(await formatColToRow(data.size_content)))
       }
+    }
+    if (data.po_size_tables) {
+      // TODO
     }
     if (data.default_size_content) {
       dispatch(setDefaultSizeTable(data.default_size_content))
@@ -696,13 +698,13 @@ export const savePOOrder = (order_status) => (dispatch) => {
         }))
       }
     ],
-    edi_order_no: "",
-    consolidated_id: "",
-    supplier_code: "",
-    send_date: "",
-    production_description: "",
-    po_last_update_time: "",
-    option_id: "",
+    edi_order_no: data.sizeData[0]?.edi_order_no,
+    consolidated_id: data.sizeData[0]?.consolidated_id,
+    supplier_code: data.sizeData[0]?.supplier_code,
+    send_date: data.sizeData[0]?.send_date,
+    production_description: data.sizeData[0]?.production_description,
+    po_last_update_time: data.sizeData[0]?.po_last_update_time,
+    option_id: data.sizeData[0]?.option_id,
     po_size_tables: data.sizeData?.map((sizeData, index) => ({
       guid_key: sizeData.guid_key,
       order_key: sizeData.order_key,
