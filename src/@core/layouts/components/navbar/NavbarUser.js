@@ -121,7 +121,7 @@ const NavbarUser = (props) => {
           <NavItem className="d-none d-lg-block">
             <NavLink
               className="nav-link-style"
-              disabled={props.isOrderConfirmed}
+              disabled={props.isOrderConfirmed || props.isSaveDraftBtnDisabled}
             >
               <Save
                 className="ficon"
@@ -135,7 +135,10 @@ const NavbarUser = (props) => {
           </NavItem>
         ) : null}
         <NavItem className="d-none d-lg-block">
-          <NavLink className="nav-link-style" disabled={props.isOrderConfirmed}>
+          <NavLink
+            className="nav-link-style"
+            disabled={props.isOrderConfirmed || props.isSaveConfirmBtnDisabled}
+          >
             <Save
               className="ficon"
               id="Save-Confirm"
@@ -226,7 +229,9 @@ const NavbarUser = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  isSaveDraftBtnDisabled: state.layout.isSaveDraftBtnDisabled,
+  isSaveConfirmBtnDisabled: state.layout.isSaveConfirmBtnDisabled
 })
 
 export default connect(mapStateToProps, null)(NavbarUser)

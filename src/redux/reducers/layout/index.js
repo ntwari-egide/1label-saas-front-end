@@ -16,7 +16,8 @@ const initialState = {
   contentWidth: themeConfig.layout.contentWidth,
   status: false,
   sidebarLeftLoading: false,
-  renderSaveDraftOrderButton: false
+  isSaveDraftBtnDisabled: true,
+  isSaveConfirmBtnDisabled: true
 }
 
 const layoutReducer = (state = initialState, action) => {
@@ -36,6 +37,10 @@ const layoutReducer = (state = initialState, action) => {
       return { ...state, sidebarLeftLoading: action.payload }
     case "TOGGLE_SAVE_BTN_STATUS":
       return { ...state, renderSaveDraftOrderButton: action.payload }
+    case "SET_SAVE_DRAFT_BTN_STATUS":
+      return { ...state, isSaveDraftBtnDisabled: action.payload }
+    case "SET_SAVE_CONFIRM_BTN_STATUS":
+      return { ...state, isSaveConfirmBtnDisabled: action.payload }
     default:
       return state
   }

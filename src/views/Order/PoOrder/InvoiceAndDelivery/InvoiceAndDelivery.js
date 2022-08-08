@@ -22,6 +22,10 @@ import {
   setContactDetails,
   setClientDetails
 } from "@redux/actions/views/Order/POOrder"
+import {
+  setIsSaveDraftBtnDisabled,
+  setIsSaveConfirmBtnDisabled
+} from "@redux/actions/layout"
 
 const InvoiceAndDelivery = (props) => {
   const { t } = useTranslation()
@@ -161,6 +165,15 @@ const InvoiceAndDelivery = (props) => {
   useEffect(() => {
     fetchUserInfo()
     fetchClientAddressList()
+    dispatch(setIsSaveConfirmBtnDisabled(false))
+    dispatch(setIsSaveDraftBtnDisabled(false))
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      dispatch(setIsSaveConfirmBtnDisabled(true))
+      dispatch(setIsSaveDraftBtnDisabled(true))
+    }
   }, [])
 
   return (

@@ -24,3 +24,11 @@ export const toggleSaveBtnStatus = (value) => (dispatch) => {
 export const setLoader = (value) => (dispatch) => {
   dispatch({ type: "SET_LEFTLOADER", payload: value })
 }
+
+export const setIsSaveDraftBtnDisabled = (value) => (dispatch) => {
+  dispatch({ type: "SET_SAVE_DRAFT_BTN_STATUS", payload: value })
+}
+
+export const setIsSaveConfirmBtnDisabled = (value) => (dispatch) => {
+  dispatch({ type: "SET_SAVE_CONFIRM_BTN_STATUS", payload: value })
+}

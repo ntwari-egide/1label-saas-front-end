@@ -168,15 +168,15 @@ const Stepper = (props) => {
             <div
               className="custom-stepper"
               onClick={() => {
-                if (
-                  normalSelectedItemValidation(menuItem) &&
-                  poSelectedOrdersValidation(menuItem) &&
-                  normalOrderFormManFieldsValidation(menuItem) &&
-                  poItemListValidation(menuItem) &&
-                  poOrderFormManFieldsValidation(menuItem)
-                ) {
-                  props.setCurrentStep(menuItem)
-                }
+                // if (
+                //   normalSelectedItemValidation(menuItem) &&
+                //   poSelectedOrdersValidation(menuItem) &&
+                //   normalOrderFormManFieldsValidation(menuItem) &&
+                //   poItemListValidation(menuItem) &&
+                //   poOrderFormManFieldsValidation(menuItem)
+                // ) {
+                //   props.setCurrentStep(menuItem)
+                // }
               }}
             >
               <div
