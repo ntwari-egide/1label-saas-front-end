@@ -99,7 +99,8 @@ const Footer = (props) => {
             }}
             disabled={
               props.currentStep ===
-              props.stepperMenu[props.stepperMenu.length - 1]
+                props.stepperMenu[props.stepperMenu.length - 1] ||
+              props.currentStep === "Invoice & Delivery"
             }
           >
             <div style={{ display: "flex" }}>

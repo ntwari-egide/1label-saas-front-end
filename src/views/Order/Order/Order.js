@@ -20,7 +20,7 @@ const stepperMenu = [
   "Select Item",
   "Order Form",
   "Preview Item & Summary Size Table",
-  "Invoice & Delivery Date",
+  "Invoice & Delivery",
   "Payment",
   "Direct Print"
 ]
@@ -132,7 +132,7 @@ const Order = (props) => {
           currentStep={props.currentStep}
           stepperMenu={stepperMenu}
         />
-      ) : props.currentStep === "Invoice & Delivery Date" ? (
+      ) : props.currentStep === "Invoice & Delivery" ? (
         <InvoiceAndDelivery
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
