@@ -726,10 +726,10 @@ export const savePOOrder = (order_status) => (dispatch) => {
       group_type: sizeData.group_type,
       item_ref: data.selectedItems
         .filter((item) => item.is_non_size === "N")
-        .map((item) => ({
+        .map((item, itmIndex) => ({
           item_key: item.guid_key || "",
           item_ref: item.item_ref || "",
-          qty: item.qty || 0,
+          qty: calculateItemTotal(sizeData?.size_content, itmIndex),
           price: item.price || "",
           currency: item.currency || ""
         })),
