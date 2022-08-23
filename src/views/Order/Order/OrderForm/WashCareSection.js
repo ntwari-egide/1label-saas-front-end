@@ -99,26 +99,28 @@ const WashCareSection = (props) => {
               </Row>
             </Col>
           </Row>
-          <Row style={{ marginBottom: "10px" }}>
-            <Col xs="6" sm="6" md="6" lg="6" xl="6">
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <Input
-                    value={props.careCustomNumber}
-                    onChange={(e) =>
-                      dispatch(setCareCustomNumber(e.target.value))
-                    }
-                    disabled={props.isOrderConfirmed}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+          {props.brandSettings?.display_custom_content_number === "Y" ? (
+            <Row style={{ marginBottom: "10px" }}>
+              <Col xs="6" sm="6" md="6" lg="6" xl="6">
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Label style={{ marginTop: "12px" }}>Save/Edit</Label>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Input
+                      value={props.careCustomNumber}
+                      onChange={(e) =>
+                        dispatch(setCareCustomNumber(e.target.value))
+                      }
+                      disabled={props.isOrderConfirmed}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          ) : null}
         </>
       ) : null}
       {props.iconSequence?.map((iconObj, index) => {
