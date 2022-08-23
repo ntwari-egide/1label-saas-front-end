@@ -7,6 +7,20 @@ import history from "@src/history"
 import { formatColToRow } from "@utils"
 import xml2js from "xml2js"
 
+const calculateItemTotal = (table, itmIndex) => {
+  let total = 0
+  if (table) {
+    table.forEach((row) => {
+      if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
+        total += parseInt(row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`])
+      } else if (row[`QTY ITEM REF ${itmIndex + 1}`]) {
+        total += parseInt(row[`QTY ITEM REF ${itmIndex + 1}`])
+      }
+    })
+  }
+  return total
+}
+
 export const matchContentNumber =
   (module, content_group, section) => (dispatch) => {
     let state
