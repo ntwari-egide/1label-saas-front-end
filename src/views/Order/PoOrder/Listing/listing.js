@@ -625,14 +625,6 @@ const Listing = (props) => {
           </Col>
         </Row>
       </CardBody>
-      <CardFooter>
-        <Footer
-          poSelectedOrders={props.poSelectedOrders}
-          currentStep={props.currentStep}
-          setCurrentStep={props.setCurrentStep}
-          stepperMenu={props.stepperMenu}
-        />
-      </CardFooter>
     </Card>
   )
 }
