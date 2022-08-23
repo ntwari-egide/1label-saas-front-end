@@ -719,7 +719,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
           price: item.price || "",
           currency: item.currency || ""
         })),
-      size_matrix_type: data.size_matrix_type,
+      size_matrix_type: sizeData.size_matrix_type,
       size_content: buildXML(
         formatRowToCol(
           processSizeTable(sizeData.size_content, "POOrder", index)
