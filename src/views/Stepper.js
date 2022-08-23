@@ -207,7 +207,6 @@ const Stepper = (props) => {
             </div>
           </BreadcrumbItem>
         ))}
-        )
       </Breadcrumb>
     </div>
   )
