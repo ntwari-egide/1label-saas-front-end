@@ -576,42 +576,56 @@ const processSizeTable = (table, module, index) => {
 
 const processSummarySizeTable = (data) => {
   if (data.summaryTable) {
-    return Object.keys(data.summaryTable).map((key) => {
-      const returnDict = {
-        group_type: key,
-        size_matrix_type: key.split(",")[1] ? key.split(",")[1] : ""
-      }
-      if (!data.wastageApplied) {
-        return {
-          ...returnDict,
-          size_content: buildXML(formatRowToCol(data.summaryTable[key])),
-          default_size_content: buildXML(formatRowToCol(data.summaryTable[key]))
+    let processedSummaryTable
+    try {
+      processedSummaryTable = Object.keys(data.summaryTable).map((key) => {
+        const returnDict = {
+          group_type: key,
+          size_matrix_type: key.split(",")[1] ? key.split(",")[1] : ""
         }
-      } else {
-        // just remove "QTY ITEM REF 1 WITH WASTAGE" col for default_size_content
-        const processedDefault = data.summaryTable[key].map((row) => {
+        const processedDefault = data.summaryTable[key]?.map((row) => {
           const tempRow = { ...row }
-          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
+          // remove any quantity with wastage, in case it was applied and then reset.
+          Object.keys(tempRow).forEach((key) => {
+            if (key.includes("WITH WASTAGE")) {
+              delete tempRow[key]
+            }
+          })
           return tempRow
         })
-        // to xml string
-        const processedDefaultXML = buildXML(formatRowToCol(processedDefault))
-        // preprocess for size_content
-        const processedWastage = data.summaryTable[key].map((row) => {
-          const tempRow = { ...row }
-          tempRow["QTY ITEM REF 1"] = tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-          delete tempRow["QTY ITEM REF 1 WITH WASTAGE"]
-          return tempRow
-        })
-        // to xml string
-        const processedWastageXML = buildXML(formatRowToCol(processedWastage))
-        return {
-          ...returnDict,
-          size_content: processedWastageXML,
-          default_size_content: processedDefaultXML
+        if (data.wastageApplied === "N") {
+          return {
+            ...returnDict,
+            default_size_content: buildXML(formatRowToCol(processedDefault)),
+            size_content: buildXML(formatRowToCol(processedDefault))
+          }
+        } else {
+          const processedWithWastage = data.summaryTable[key]?.map((row) => {
+            const tempRow = { ...row }
+            Object.keys(tempRow).forEach((key) => {
+              if (
+                key.includes("QTY ITEM REF") &&
+                !key.includes("WITH WASTAGE")
+              ) {
+                // swap values
+                tempRow[key] = tempRow[`${key} WITH WASTAGE`]
+                // delete from row
+                delete tempRow[`${key} WITH WASTAGE`]
+              }
+            })
+            return tempRow
+          })
+          return {
+            ...returnDict,
+            default_size_content: buildXML(formatRowToCol(processedDefault)),
+            size_content: buildXML(formatRowToCol(processedWithWastage))
+          }
         }
-      }
-    })
+      })
+    } catch (err) {
+      conosle.log(err)
+    }
+    return processedSummaryTable
   }
 }
 
