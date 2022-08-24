@@ -80,14 +80,12 @@ const PreviewAndSummary = (props) => {
     const tempState = {} // init temp state for summary data
     try {
       // get all unique content groups
-      const sizeMatrixTypes = [
-        ...new Set(sizeData.map((data) => data.size_matrix_type))
-      ]
+      const groupTypes = [...new Set(sizeData.map((data) => data.group_type))]
       // for each group calculate summary table
-      sizeMatrixTypes.map((smt) => {
+      groupTypes.map((groupType) => {
         //get all the table with same group
         const tables = sizeData
-          .filter((data) => data.size_matrix_type === smt)
+          .filter((data) => data.group_type === groupType)
           .map((data) => data.size_content)
         // calculate summary table
         const tempTable = []
@@ -109,7 +107,7 @@ const PreviewAndSummary = (props) => {
             }
           })
         })
-        tempState[smt] = tempTable
+        tempState[groupType] = tempTable
       })
     } catch (err) {
       console.log("Something went wrong while processing summary table", err)
@@ -302,12 +300,7 @@ const PreviewAndSummary = (props) => {
                 </Col>
                 <Col xs="12" sm="12" md="5" lg="5" xl="5">
                   <Input
-                    value={key}
-                    onChange={(e) => {
-                      // setLoading(true)
-                      // fetchSizeTableDetails(e.value)
-                      dispatch(setSizeMatrixType(e.target.value))
-                    }}
+                    value={key.split(",")[1] ? key.split(",")[1] : ""}
                     disabled={true}
                   />
                 </Col>
