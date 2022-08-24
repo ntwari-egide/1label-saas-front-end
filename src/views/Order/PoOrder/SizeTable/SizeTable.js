@@ -41,7 +41,7 @@ const SizeTable = (props) => {
     let tempRow = tempTable[index]
     tempRow = {
       ...tempRow,
-      [`${col.selector}`]: isNaN(parseInt(value)) ? 0 : parseInt(value)
+      [`${col.selector}`]: isNaN(parseInt(value)) ? "0" : parseInt(value)
     }
     tempTable[index] = tempRow
     tempState[tabIndex] = {
@@ -158,20 +158,22 @@ const SizeTable = (props) => {
                 !key.includes("WITH WASTAGE")
               ) {
                 if (props.wastageApplied === "N") {
-                  row[`${key} WITH WASTAGE`] = Math.round(
+                  const value = Math.round(
                     parseInt(row[key]) +
                       parseInt(row[key]) * props.wastage -
                       0.05
                   )
+                  row[`${key} WITH WASTAGE`] = value ? value : "0"
                 }
               }
               if (
                 key.includes("WITH WASTAGE") &&
                 props.wastageApplied === "Y"
               ) {
-                row[`${key}`] = Math.round(
+                const value = Math.round(
                   parseInt(row[key]) + parseInt(row[key]) * props.wastage - 0.05
                 )
+                row[`${key}`] = value ? value : "0"
               }
             })
             return row
