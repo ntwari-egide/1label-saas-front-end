@@ -138,9 +138,8 @@ export const deleteCookie = (name) => {
 }
 
 export const sweetAlert = async (title, text, icon, btnType) => {
-  return await MySwal.fire({
-    title,
-    html: (
+  const html =
+    text.split("\r\n")?.length > 1 ? (
       <ul>
         {text.split("\r\n").map((str) => {
           if (str.length) {
@@ -148,7 +147,12 @@ export const sweetAlert = async (title, text, icon, btnType) => {
           }
         })}
       </ul>
-    ),
+    ) : (
+      <div style={{ paddingTop: "5px" }}> {text.split("\r\n")[0]}</div>
+    )
+  return await MySwal.fire({
+    title,
+    html,
     icon,
     customClass: {
       confirmButton: `btn btn-${btnType}`
