@@ -9,14 +9,18 @@ import xml2js from "xml2js"
 
 const calculateItemTotal = (table, itmIndex) => {
   let total = 0
-  if (table) {
-    table.forEach((row) => {
-      if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
-        total += parseInt(row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`])
-      } else if (row[`QTY ITEM REF ${itmIndex + 1}`]) {
-        total += parseInt(row[`QTY ITEM REF ${itmIndex + 1}`])
-      }
-    })
+  try {
+    if (table) {
+      table.forEach((row) => {
+        if (row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`]) {
+          total += parseInt(row[`QTY ITEM REF ${itmIndex + 1} WITH WASTAGE`])
+        } else if (row[`QTY ITEM REF ${itmIndex + 1}`]) {
+          total += parseInt(row[`QTY ITEM REF ${itmIndex + 1}`])
+        }
+      })
+    }
+  } catch (err) {
+    console.log(err)
   }
   return total
 }
@@ -445,6 +449,8 @@ export const saveOrder = (order_status) => (dispatch) => {
     ]
   }
 
+  dispatch(setLoader(true))
+
   axios
     .post("Order/SaveOrder", body)
     .then(async (res) => {
@@ -572,7 +578,7 @@ const processSummarySizeTable = (data) => {
   if (data.summaryTable) {
     return Object.keys(data.summaryTable).map((key) => {
       const returnDict = {
-        group_type: key, 
+        group_type: key,
         size_matrix_type: key.split(",")[1] ? key.split(",")[1] : ""
       }
       if (!data.wastageApplied) {
@@ -610,138 +616,150 @@ const processSummarySizeTable = (data) => {
 }
 
 export const savePOOrder = (order_status) => (dispatch) => {
-  dispatch(setLoader(true))
   const data = store.getState().poOrderReducer
 
-  const body = {
-    brand_key: data.brand ? data.brand.value : "",
-    order_user: getUserData().admin,
-    order_no: data.orderNo.length ? data.orderNo : "",
-    guid_key: data.combinedPOOrderKey,
-    num: "",
-    order_status,
-    is_copy_order: "N",
-    po_number: data.orderReference,
-    factory_code: "",
-    location_code: data.productionLocation ? data.productionLocation : "",
-    draft_order_email: data.clientDetails?.draft_email || "",
-    approver_email_address: "",
-    order_expdate_delivery_date: formatDateYMD(
-      new Date(data.expectedDeliveryDate)
-    ),
-    invoice_address: [
-      {
-        invoice_address_id: data.invoiceAddressDetails?.address_id || "",
-        invoice_contact_id: data.invoiceAddressDetails?.customer_id || "",
-        invoice_cpyname: data.invoiceAddressDetails?.name || "",
-        invoice_contact: data.invoiceAddressDetails?.contact_person || "",
-        invoice_phone: data.invoiceAddressDetails?.phone || "",
-        invoice_fax: data.invoiceAddressDetails?.fax || "",
-        invoice_email: data.invoiceAddressDetails?.email || "",
-        invoice_addr: data.invoiceAddressDetails?.address || "",
-        invoice_addr2: data.invoiceAddressDetails?.address2 || "",
-        invoice_addr3: data.invoiceAddressDetails?.address3 || ""
-      }
-    ],
-    delivery_address: [
-      {
-        delivery_address_id: data.deliveryAddressDetails?.address_id || "",
-        delivery_contact_id: data.deliveryAddressDetails?.contact_id || "",
-        delivery_cpyname: data.deliveryAddressDetails?.name || "",
-        delivery_contact: data.deliveryAddressDetails?.contact_person || "",
-        delivery_phone: data.deliveryAddressDetails?.phone || "",
-        delivery_fax: data.deliveryAddressDetails?.fax || "",
-        delivery_email: data.deliveryAddressDetails?.email || "",
-        delivery_city: data.deliveryAddressDetails?.city || "",
-        delivery_country: data.deliveryAddressDetails?.country || "",
-        delivery_post_code: data.deliveryAddressDetails?.post_code || "",
-        delivery_addr: data.deliveryAddressDetails?.address || "",
-        delivery_addr2: data.deliveryAddressDetails?.address2 || "",
-        delivery_addr3: data.deliveryAddressDetails?.address3 || ""
-      }
-    ],
-    dynamic_field: Object.values(data.dynamicFieldData),
-    summary_size_tables: processSummarySizeTable(data) || "",
-    coo: data.coo,
-    shrinkage_percentage: "",
-    item_ref: data.selectedItems.map((item) => ({
-      item_key: item.guid_key || "",
-      item_ref: item.item_ref || "",
-      qty: item.qty || 0,
-      price: item.price || "",
-      currency: item.currency || ""
-    })),
-    is_wastage: data.wastageApplied || "",
-    update_user: "innoa",
-    update_date: formatDateYMD(new Date()),
-    customer_id: "",
-    contents: [
-      {
-        brand_key: data.brand?.value,
-        order_user: getUserData().admin,
-        content_custom_number: data.contentCustomNumber,
-        content_number: data.contentNumberData?.label,
-        content_number_key: data.contentNumberData?.value,
-        care_custom_number: data.careCustomNumber,
-        care_number: data.careNumberData?.label,
-        care_number_key: data.careNumberData?.value,
-        content_group: data.contentGroup,
-        content: data.fibreInstructionData?.map((data, index) => ({
-          cont_key: data.cont_key,
-          cont_translation: data.cont_translation,
-          part_key: data.part_key,
-          part_translation: data.part_translation,
-          percentage: data.percentage,
-          seqno: (index + 1) * 10
-        })),
-        default_content: data.defaultContentData?.map((cont, index) => ({
-          cont_key: cont.cont_key || "",
-          seqno: (index + 1) * 10
-        })),
-        care: data.careData.map((data, index) => ({
-          care_key: data.care_key,
-          seqno: (index + 1) * 10
-        })),
-        icon: Object.values(data.washCareData)?.map((obj, index) => ({
-          icon_group: obj.icon_group,
-          icon_type_id: obj.icon_type_id,
-          icon_key: obj.icon_key,
-          seqno: (index + 1) * 10
-        }))
-      }
-    ],
-    edi_order_no: data.sizeData[0]?.edi_order_no,
-    consolidated_id: data.sizeData[0]?.consolidated_id,
-    supplier_code: data.sizeData[0]?.supplier_code,
-    send_date: data.sizeData[0]?.send_date,
-    production_description: data.sizeData[0]?.production_description,
-    po_last_update_time: data.sizeData[0]?.po_last_update_time,
-    option_id: data.sizeData[0]?.option_id,
-    po_size_tables: data.sizeData?.map((sizeData, index) => ({
-      guid_key: sizeData.guid_key,
-      order_key: sizeData.order_key,
-      brand_key: sizeData.brand_key,
-      edi_order_no: sizeData.edi_order_no,
-      consolidated_id: sizeData.consolidated_id,
-      group_type: sizeData.group_type,
-      item_ref: data.selectedItems
-        .filter((item) => item.is_non_size === "N")
-        .map((item, itmIndex) => ({
-          item_key: item.guid_key || "",
-          item_ref: item.item_ref || "",
-          qty: calculateItemTotal(sizeData?.size_content, itmIndex),
-          price: item.price || "",
-          currency: item.currency || ""
-        })),
-      size_matrix_type: sizeData.size_matrix_type,
-      size_content: buildXML(
-        formatRowToCol(
-          processSizeTable(sizeData.size_content, "POOrder", index)
-        )
+  let body
+
+  try {
+    body = {
+      brand_key: data.brand ? data.brand.value : "",
+      order_user: getUserData().admin,
+      order_no: data.orderNo.length ? data.orderNo : "",
+      guid_key: data.combinedPOOrderKey,
+      num: "",
+      order_status,
+      is_copy_order: "N",
+      po_number: data.orderReference,
+      factory_code: "",
+      location_code: data.productionLocation ? data.productionLocation : "",
+      draft_order_email: data.clientDetails?.draft_email || "",
+      approver_email_address: "",
+      order_expdate_delivery_date: formatDateYMD(
+        new Date(data.expectedDeliveryDate)
       ),
-      send_date: sizeData.send_date,
-      create_date: sizeData.create_date
-    }))
+      invoice_address: [
+        {
+          invoice_address_id: data.invoiceAddressDetails?.address_id || "",
+          invoice_contact_id: data.invoiceAddressDetails?.customer_id || "",
+          invoice_cpyname: data.invoiceAddressDetails?.name || "",
+          invoice_contact: data.invoiceAddressDetails?.contact_person || "",
+          invoice_phone: data.invoiceAddressDetails?.phone || "",
+          invoice_fax: data.invoiceAddressDetails?.fax || "",
+          invoice_email: data.invoiceAddressDetails?.email || "",
+          invoice_addr: data.invoiceAddressDetails?.address || "",
+          invoice_addr2: data.invoiceAddressDetails?.address2 || "",
+          invoice_addr3: data.invoiceAddressDetails?.address3 || ""
+        }
+      ],
+      delivery_address: [
+        {
+          delivery_address_id: data.deliveryAddressDetails?.address_id || "",
+          delivery_contact_id: data.deliveryAddressDetails?.contact_id || "",
+          delivery_cpyname: data.deliveryAddressDetails?.name || "",
+          delivery_contact: data.deliveryAddressDetails?.contact_person || "",
+          delivery_phone: data.deliveryAddressDetails?.phone || "",
+          delivery_fax: data.deliveryAddressDetails?.fax || "",
+          delivery_email: data.deliveryAddressDetails?.email || "",
+          delivery_city: data.deliveryAddressDetails?.city || "",
+          delivery_country: data.deliveryAddressDetails?.country || "",
+          delivery_post_code: data.deliveryAddressDetails?.post_code || "",
+          delivery_addr: data.deliveryAddressDetails?.address || "",
+          delivery_addr2: data.deliveryAddressDetails?.address2 || "",
+          delivery_addr3: data.deliveryAddressDetails?.address3 || ""
+        }
+      ],
+      dynamic_field: Object.values(data.dynamicFieldData),
+      summary_size_tables: processSummarySizeTable(data) || "",
+      coo: data.coo,
+      shrinkage_percentage: "",
+      item_ref: data.selectedItems.map((item) => ({
+        item_key: item.guid_key || "",
+        item_ref: item.item_ref || "",
+        qty: item.qty || 0,
+        price: item.price || "",
+        currency: item.currency || ""
+      })),
+      is_wastage: data.wastageApplied || "",
+      update_user: "innoa",
+      update_date: formatDateYMD(new Date()),
+      customer_id: "",
+      contents: [
+        {
+          brand_key: data.brand?.value,
+          order_user: getUserData().admin,
+          content_custom_number: data.contentCustomNumber,
+          content_number: data.contentNumberData?.label,
+          content_number_key: data.contentNumberData?.value,
+          care_custom_number: data.careCustomNumber,
+          care_number: data.careNumberData?.label,
+          care_number_key: data.careNumberData?.value,
+          content_group: data.contentGroup,
+          content: data.fibreInstructionData?.map((data, index) => ({
+            cont_key: data.cont_key,
+            cont_translation: data.cont_translation,
+            part_key: data.part_key,
+            part_translation: data.part_translation,
+            percentage: data.percentage,
+            seqno: (index + 1) * 10
+          })),
+          default_content: data.defaultContentData?.map((cont, index) => ({
+            cont_key: cont.cont_key || "",
+            seqno: (index + 1) * 10
+          })),
+          care: data.careData.map((data, index) => ({
+            care_key: data.care_key,
+            seqno: (index + 1) * 10
+          })),
+          icon: Object.values(data.washCareData)?.map((obj, index) => ({
+            icon_group: obj.icon_group,
+            icon_type_id: obj.icon_type_id,
+            icon_key: obj.icon_key,
+            seqno: (index + 1) * 10
+          }))
+        }
+      ],
+      edi_order_no: data.sizeData[0]?.edi_order_no,
+      consolidated_id: data.sizeData[0]?.consolidated_id,
+      supplier_code: data.sizeData[0]?.supplier_code,
+      send_date: data.sizeData[0]?.send_date,
+      production_description: data.sizeData[0]?.production_description,
+      po_last_update_time: data.sizeData[0]?.po_last_update_time,
+      option_id: data.sizeData[0]?.option_id,
+      po_size_tables: data.sizeData?.map((sizeData, index) => ({
+        guid_key: sizeData.guid_key,
+        order_key: sizeData.order_key,
+        brand_key: sizeData.brand_key,
+        edi_order_no: sizeData.edi_order_no,
+        consolidated_id: sizeData.consolidated_id,
+        group_type: sizeData.group_type,
+        item_ref: data.selectedItems
+          .filter((item) => item.is_non_size === "N")
+          .map((item, itmIndex) => ({
+            item_key: item.guid_key || "",
+            item_ref: item.item_ref || "",
+            qty: calculateItemTotal(sizeData?.size_content, itmIndex),
+            price: item.price || "",
+            currency: item.currency || ""
+          })),
+        size_matrix_type: sizeData.size_matrix_type,
+        size_content: buildXML(
+          formatRowToCol(
+            processSizeTable(sizeData.size_content, "POOrder", index)
+          )
+        ),
+        send_date: sizeData.send_date,
+        create_date: sizeData.create_date
+      }))
+    }
+  } catch (err) {
+    sweetAlert(
+      `${order_status} Order Save Failed!`,
+      "Something went wrong while saving order please try again later.",
+      "error",
+      "danger"
+    )
+    console.log("caught in main: ", err)
+    return
   }
 
   axios
