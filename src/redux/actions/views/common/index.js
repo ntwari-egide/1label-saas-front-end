@@ -572,8 +572,8 @@ const processSummarySizeTable = (data) => {
   if (data.summaryTable) {
     return Object.keys(data.summaryTable).map((key) => {
       const returnDict = {
-        group_type: key,
-        size_matrix_type: data.size_matrix_type
+        group_type: key, 
+        size_matrix_type: key.split(",")[1] ? key.split(",")[1] : ""
       }
       if (!data.wastageApplied) {
         return {
