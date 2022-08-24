@@ -65,7 +65,7 @@ const UserDropdown = () => {
           <span
             style={{ color: "white", fontWeight: 500, marginBottom: "3px" }}
           >
-            {user.admin}
+            {user?.admin}
           </span>
         </div>
         {userProfile ? (
