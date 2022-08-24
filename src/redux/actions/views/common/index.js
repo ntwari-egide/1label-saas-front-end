@@ -661,7 +661,7 @@ export const savePOOrder = (order_status) => (dispatch) => {
       }
     ],
     dynamic_field: Object.values(data.dynamicFieldData),
-    summary_size_table: processSummarySizeTable(data) || "",
+    summary_size_tables: processSummarySizeTable(data) || "",
     coo: data.coo,
     shrinkage_percentage: "",
     item_ref: data.selectedItems.map((item) => ({
