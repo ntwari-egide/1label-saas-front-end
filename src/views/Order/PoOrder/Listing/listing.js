@@ -27,7 +27,9 @@ import {
   setBrand,
   resetData,
   setPoSelectedOrders,
-  setSearchParams
+  setSearchParams,
+  setSizeData,
+  setCols
 } from "@redux/actions/views/Order/POOrder"
 import { populateData } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
@@ -254,6 +256,9 @@ const Listing = (props) => {
   useEffect(() => {
     if (!props.setSizeTableTrigger) {
       dispatch(setSizeTableTrigger(true))
+      // very critical for re-calculation of dynamic cols
+      dispatch(setCols([]))
+      dispatch(setSizeData([]))
     }
   }, [props.poSelectedOrders])
 

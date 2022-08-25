@@ -229,14 +229,6 @@ const SizeTable = (props) => {
           )
           dispatch(setSizeData(tempState))
         }
-        // process and assign dynamic cols
-        const tempCols = []
-        props.sizeData.map((data, index) => {
-          if (data.size_content?.length) {
-            tempCols[index] = populateCols(data.size_content, index)
-          }
-        })
-        dispatch(setCols(tempCols))
         dispatch(setSizeTableTrigger(false))
         setLoader(false)
       })
