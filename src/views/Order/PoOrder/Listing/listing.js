@@ -262,10 +262,6 @@ const Listing = (props) => {
     }
   }, [props.poSelectedOrders])
 
-  // useEffect(() => {
-  //   console.log("se", props.searchParams)
-  // }, [props.searchParams])
-
   useEffect(() => {
     fetchOrderStatus()
     fetchBrandList()
