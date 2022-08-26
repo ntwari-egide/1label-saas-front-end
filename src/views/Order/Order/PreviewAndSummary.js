@@ -224,16 +224,21 @@ const PreviewAndSummary = (props) => {
       try {
         // re calculate total for selected items in case wastage was applied
         if (props.wastageApplied === "Y") {
+          let tempTable
           const tempRefState = props.selectedItems.map((item, index) => {
             let total = 0
-            props.sizeData.map((row) => {
-              if (row[`QTY_ITEM_REF_${index}`]) {
-                total += row[`QTY_ITEM_REF_${index}`]
+            tempTable = props.sizeData.map((row) => {
+              const value = row[`QTY ITEM REF ${index + 1}`]
+              if (row[`QTY ITEM REF ${index + 1}`] && value) {
+                total += parseInt(value)
               }
+              delete row[`QTY ITEM REF ${index + 1} WITH WASTAGE`]
+              return row
             })
-            return { ...item, qty: total }
+            return { ...item, qty: total.toString() }
           })
           dispatch(setSelectedItems(tempRefState))
+          dispatch(setSizeData(tempTable))
         }
         // will need to recalculate cols since change in selector field
         populateCols(props.sizeTable, "N")
