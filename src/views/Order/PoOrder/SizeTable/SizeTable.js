@@ -36,19 +36,22 @@ const SizeTable = (props) => {
 
   // other functions
   const handleQtyChange = (value, col, index, tabIndex) => {
-    const tempState = [...props.sizeData]
-    const tempTable = tempState[tabIndex].size_content
-    let tempRow = tempTable[index]
-    tempRow = {
-      ...tempRow,
-      [`${col.selector}`]: isNaN(parseInt(value)) ? "0" : parseInt(value)
+    if (parseInt(value) || value === "0" || value === "") {
+      // update the table
+      const tempState = [...props.sizeData]
+      const tempTable = tempState[tabIndex].size_content
+      let tempRow = tempTable[index]
+      tempRow = {
+        ...tempRow,
+        [`${col.selector}`]: value
+      }
+      tempTable[index] = tempRow
+      tempState[tabIndex] = {
+        ...tempState[tabIndex],
+        size_content: [...tempTable]
+      }
+      dispatch(setSizeData(tempState))
     }
-    tempTable[index] = tempRow
-    tempState[tabIndex] = {
-      ...tempState[tabIndex],
-      size_content: [...tempTable]
-    }
-    dispatch(setSizeData(tempState))
   }
 
   const populateCols = (table, tabIndex, wastageStatus) => {
@@ -89,15 +92,7 @@ const SizeTable = (props) => {
           return (
             <div>
               <Input
-                value={
-                  props.sizeData[tabIndex]
-                    ? props.sizeData[tabIndex].size_content[index][col.selector]
-                      ? props.sizeData[tabIndex].size_content[index][
-                          col.selector
-                        ]
-                      : ""
-                    : ""
-                }
+                value={row[col.selector] ? row[col.selector] : ""}
                 onChange={(e) => {
                   handleQtyChange(e.target.value, col, index, tabIndex)
                 }}
@@ -163,7 +158,7 @@ const SizeTable = (props) => {
                       parseInt(row[key]) * props.wastage -
                       0.05
                   )
-                  row[`${key} WITH WASTAGE`] = value ? value : "0"
+                  row[`${key} WITH WASTAGE`] = value.toString()
                 }
               }
               if (
@@ -173,7 +168,7 @@ const SizeTable = (props) => {
                 const value = Math.round(
                   parseInt(row[key]) + parseInt(row[key]) * props.wastage - 0.05
                 )
-                row[`${key}`] = value ? value : "0"
+                row[`${key}`] = value.toString()
               }
             })
             return row
