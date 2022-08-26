@@ -342,6 +342,7 @@ body {
 // to get around double horizontal scrollbar issue for react-datatable-component
 .rdt_TableBody {
   overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
 // override block ui css to cover entire page
