@@ -795,23 +795,23 @@ export const savePOOrder = (order_status) => (dispatch) => {
             dispatch(setOrderFormValidations(res.data.fields))
           } else {
             // ** popup validations
-            const confirmation = await sweetAlert(
+            sweetAlert(
               `${order_status} Order Save Failed!`,
               res.data.status_description,
               "error",
               "danger"
             )
-            if (store.listReducer.isOrderNew && confirmation) {
-              history.push("/List")
-            }
           }
         } else {
-          sweetAlert(
+          const confirmation = await sweetAlert(
             `${order_status} Order Save Successful`,
             "",
             "success",
             "success"
           )
+          if (store.getState().listReducer.isOrderNew && confirmation) {
+            history.push("/List")
+          }
         }
       }
     })
