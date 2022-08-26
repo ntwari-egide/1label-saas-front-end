@@ -49,11 +49,13 @@ const PreviewAndSummary = (props) => {
   }
 
   const handleQtyChange = (value, row, col, index) => {
-    const tempState = [...store.getState().orderReducer.sizeData]
-    // update the table
-    row = { ...row, [`${col.selector}`]: parseInt(value) }
-    tempState[index] = row
-    dispatch(setSizeData(tempState))
+    if (parseInt(value) || value === "0" || value === "") {
+      // update the table
+      const tempState = [...store.getState().orderReducer.sizeData]
+      row = { ...row, [`${col.selector}`]: value }
+      tempState[index] = row
+      dispatch(setSizeData(tempState))
+    }
   }
 
   const calculateTotal = (col, itm_index) => {
@@ -64,9 +66,9 @@ const PreviewAndSummary = (props) => {
       .orderReducer.sizeData.map((row) => row[col.selector])
       .reduce((a, b) => {
         if (a && b) {
-          return a + b
+          return parseInt(a) + parseInt(b)
         } else {
-          return a ? a : b ? b : 0
+          return a ? parseInt(a) : b ? parseInt(b) : 0
         }
       })
     tempRef[itm_index] = {
@@ -172,20 +174,22 @@ const PreviewAndSummary = (props) => {
         // iterates throuch size content data and returns the same object with modifications to size_content field
         const tempState = props.sizeData.map((row) => {
           Object.keys(row).map((key) => {
-            // subtracting 0.06 because want to round at 0.55 instead of 0.5
+            // subtracting 0.05 because want to round at 0.55 instead of 0.5
             if (key.includes("QTY ITEM REF")) {
-              if (props.wastageApplied === "N") {
+              const value = row[key]
+              if (props.wastageApplied === "N" && value) {
                 row[`${key} WITH WASTAGE`] = Math.round(
-                  row[key] + row[key] * props.wastage - 0.05
-                )
+                  parseInt(value) + parseInt(value) * props.wastage - 0.05
+                ).toString()
               }
               if (
                 props.wastageApplied === "Y" &&
-                key.includes("WITH WASTAGE")
+                key.includes("WITH WASTAGE") &&
+                value
               ) {
                 row[`${key}`] = Math.round(
-                  row[key] + row[key] * props.wastage - 0.05
-                )
+                  parseInt(value) + parseInt(value) * props.wastage - 0.05
+                ).toString()
               }
             }
           })
@@ -198,10 +202,10 @@ const PreviewAndSummary = (props) => {
           let total = 0
           tempState.map((row) => {
             if (row[`QTY ITEM REF ${index + 1} WITH WASTAGE`]) {
-              total += row[`QTY ITEM REF ${index + 1} WITH WASTAGE`]
+              total += parseInt(row[`QTY ITEM REF ${index + 1} WITH WASTAGE`])
             }
           })
-          return { ...item, qty: total }
+          return { ...item, qty: total.toString() }
         })
         dispatch(setSelectedItems(tempRefState))
         // will need to re-calculate cols to render latest changes
