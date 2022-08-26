@@ -192,9 +192,24 @@ const SizeTable = (props) => {
       }
     } else {
       const tempCols = []
-      props.sizeData.map((data, index) => {
+      const tempTable = props.sizeData.map((data, index) => {
+        // recalculate dynamic cols
         tempCols[index] = populateCols(data.size_content, index, "N")
+        // get rid of values with wastage
+        const size_content = data.size_content.map((row) => {
+          Object.keys(row).forEach((key) => {
+            if (key.includes("WITH WASTAGE")) {
+              delete row[key]
+            }
+          })
+          return row
+        })
+        return {
+          ...data,
+          size_content
+        }
       })
+      dispatch(setSizeData(tempTable))
       dispatch(setCols(tempCols))
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
