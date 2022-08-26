@@ -20,7 +20,6 @@ import Select from "react-select"
 import Flatpickr from "react-flatpickr"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import { formatDateYMD } from "@utils"
-import Footer from "../../../CommonFooter"
 import { connect, useDispatch } from "react-redux"
 import {
   setSizeTableTrigger,
@@ -269,364 +268,371 @@ const Listing = (props) => {
   }, [])
 
   return (
-    <Card>
-      <CardHeader style={{ display: "block" }}>
-        <Row style={{ marginBottom: "10px" }}>
-          <Col xs="12" sm="12" md="6" lg="6" xl="6">
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <CustomLabel title="Brand" />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Select
-                  className="React"
-                  classNamePrefix="select"
-                  options={brandOptions}
-                  value={
-                    brandOptions.filter(
-                      (opt) => opt.value === props.searchParams.brand
-                    ) || ""
-                  }
-                  onChange={(e) => {
-                    dispatch(resetData())
-                    dispatch(setBrand(e))
-                    dispatch(
-                      setSearchParams({ ...props.searchParams, brand: e.value })
-                    )
-                  }}
-                  isDisabled={props.isOrderConfirmed}
-                  isLoading={!brandOptions.length}
-                />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col
-            xs="12"
-            sm="12"
-            md="6"
-            lg="6"
-            xl="6"
-            style={{ marginBottom: "10px" }}
-          >
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <CustomLabel title="CID" />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Input
-                  value={props.searchParams.cid ? props.searchParams.cid : ""}
-                  onChange={(e) =>
-                    dispatch(
-                      setSearchParams({
-                        ...props.searchParams,
-                        cid: e.target.value
-                      })
-                    )
-                  }
-                  disabled={props.isOrderConfirmed}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            xs="12"
-            sm="12"
-            md="6"
-            lg="6"
-            xl="6"
-            style={{ marginBottom: "10px" }}
-          >
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <CustomLabel title="Factory No" />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Input
-                  value={
-                    props.searchParams.factoryNo
-                      ? props.searchParams.factoryNo
-                      : ""
-                  }
-                  onChange={(e) =>
-                    dispatch(
-                      setSearchParams({
-                        ...props.searchParams,
-                        factoryNo: e.target.value
-                      })
-                    )
-                  }
-                  disabled={props.isOrderConfirmed}
-                />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col
-            xs="12"
-            sm="12"
-            md="6"
-            lg="6"
-            xl="6"
-            style={{ marginBottom: "10px" }}
-          >
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <CustomLabel title="PO No" />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Input
-                  value={props.searchParams.poNo ? props.searchParams.poNo : ""}
-                  onChange={(e) =>
-                    dispatch(
-                      setSearchParams({
-                        ...props.searchParams,
-                        poNo: e.target.value
-                      })
-                    )
-                  }
-                  disabled={props.isOrderConfirmed}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            xs="12"
-            sm="12"
-            md="6"
-            lg="6"
-            xl="6"
-            style={{ marginBottom: "10px" }}
-          >
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <CustomLabel title="Order Status" />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Select
-                  className="React"
-                  classNamePrefix="select"
-                  options={orderStatusOptions}
-                  value={orderStatusOptions.filter(
-                    (opt) =>
-                      opt.value.toString() === props.searchParams.orderStatus
-                  )}
-                  onChange={(e) =>
-                    dispatch(
-                      setSearchParams({
-                        ...props.searchParams,
-                        orderStatus: e.value.toString()
-                      })
-                    )
-                  }
-                  isDisabled={props.isOrderConfirmed}
-                  isLoading={!orderStatusOptions.length}
-                />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col
-            xs="12"
-            sm="12"
-            md="6"
-            lg="6"
-            xl="6"
-            style={{ marginBottom: "10px" }}
-          >
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Row>
-                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                    <CustomLabel title="Order Date From" />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                    <Flatpickr
-                      className="form-control"
-                      value={
-                        props.searchParams.fromDate
-                          ? new Date(props.searchParams.fromDate)
-                          : ""
-                      }
-                      onChange={(e) => {
-                        dispatch(
-                          setSearchParams({
-                            ...props.searchParams,
-                            fromDate: formatDateYMD(new Date(e))
-                          })
-                        )
-                      }}
-                      options={{ dateFormat: "d-m-Y" }}
-                      disabled={props.isOrderConfirmed}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            xs="12"
-            sm="12"
-            md="6"
-            lg="6"
-            xl="6"
-            style={{ marginBottom: "10px" }}
-          >
-            <Row>
-              <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                <Row>
-                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                    <CustomLabel title="Order Date To" />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                    <Flatpickr
-                      className="form-control"
-                      value={
-                        props.searchParams.toDate
-                          ? new Date(props.searchParams.toDate)
-                          : ""
-                      }
-                      onChange={(e) => {
-                        dispatch(
-                          setSearchParams({
-                            ...props.searchParams,
-                            toDate: formatDateYMD(new Date(e))
-                          })
-                        )
-                      }}
-                      options={{ dateFormat: "d-m-Y" }}
-                      disabled={props.isOrderConfirmed}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Button
-              style={{ margin: "3px" }}
-              color="primary"
-              onClick={() => {
-                fetchPoOrderList(props.searchParams)
-                dispatch(setPoSelectedOrders([]))
-              }}
+    <div style={{ minHeight: "calc(100vh - 245px)" }}>
+      <Card>
+        <CardHeader style={{ display: "block" }}>
+          <Row style={{ marginBottom: "10px" }}>
+            <Col xs="12" sm="12" md="6" lg="6" xl="6">
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <CustomLabel title="Brand" />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    options={brandOptions}
+                    value={
+                      brandOptions.filter(
+                        (opt) => opt.value === props.searchParams.brand
+                      ) || ""
+                    }
+                    onChange={(e) => {
+                      dispatch(resetData())
+                      dispatch(setBrand(e))
+                      dispatch(
+                        setSearchParams({
+                          ...props.searchParams,
+                          brand: e.value
+                        })
+                      )
+                    }}
+                    isDisabled={props.isOrderConfirmed}
+                    isLoading={!brandOptions.length}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row>
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="6"
+              style={{ marginBottom: "10px" }}
             >
-              Search
-            </Button>
-            <Button
-              style={{ margin: "3px" }}
-              color="primary"
-              onClick={() => {
-                dispatch(setSearchParams({}))
-                fetchPoOrderList()
-                dispatch(setPoSelectedOrders([]))
-              }}
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <CustomLabel title="CID" />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Input
+                    value={props.searchParams.cid ? props.searchParams.cid : ""}
+                    onChange={(e) =>
+                      dispatch(
+                        setSearchParams({
+                          ...props.searchParams,
+                          cid: e.target.value
+                        })
+                      )
+                    }
+                    disabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="6"
+              style={{ marginBottom: "10px" }}
             >
-              Cancel
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <hr></hr>
-        </Row>
-      </CardHeader>
-      <CardBody>
-        <Row style={{ marginBottom: "10px" }}>
-          <Col>
-            <div
-              style={{
-                display: "flex",
-                height: "100%",
-                width: "100%",
-                justifyContent: "space-between"
-              }}
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <CustomLabel title="Factory No" />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Input
+                    value={
+                      props.searchParams.factoryNo
+                        ? props.searchParams.factoryNo
+                        : ""
+                    }
+                    onChange={(e) =>
+                      dispatch(
+                        setSearchParams({
+                          ...props.searchParams,
+                          factoryNo: e.target.value
+                        })
+                      )
+                    }
+                    disabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row>
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="6"
+              style={{ marginBottom: "10px" }}
             >
-              <div>
-                <h4>PO Order</h4>
-              </div>
-              <div>
-                <Button color="primary" onClick={handleOrder}>
-                  Order
-                  {orderLoader ? (
-                    <Spinner size="sm" style={{ marginLeft: "3px" }} />
-                  ) : null}
-                </Button>
-              </div>
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            {!poOrderLoader ? (
-              <DataTable
-                data={poOrderData}
-                columns={cols}
-                noHeader={true}
-                selectableRows={true}
-                selectableRowsComponent={CheckBox}
-                selectableRowsComponentProps={{
-                  color: "primary",
-                  icon: <Check className="vx-icon" size={15} />,
-                  label: "",
-                  size: "md",
-                  disabled: props.isOrderConfirmed
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <CustomLabel title="PO No" />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Input
+                    value={
+                      props.searchParams.poNo ? props.searchParams.poNo : ""
+                    }
+                    onChange={(e) =>
+                      dispatch(
+                        setSearchParams({
+                          ...props.searchParams,
+                          poNo: e.target.value
+                        })
+                      )
+                    }
+                    disabled={props.isOrderConfirmed}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="6"
+              style={{ marginBottom: "10px" }}
+            >
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <CustomLabel title="Order Status" />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Select
+                    className="React"
+                    classNamePrefix="select"
+                    options={orderStatusOptions}
+                    value={orderStatusOptions.filter(
+                      (opt) =>
+                        opt.value.toString() === props.searchParams.orderStatus
+                    )}
+                    onChange={(e) =>
+                      dispatch(
+                        setSearchParams({
+                          ...props.searchParams,
+                          orderStatus: e.value.toString()
+                        })
+                      )
+                    }
+                    isDisabled={props.isOrderConfirmed}
+                    isLoading={!orderStatusOptions.length}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row>
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="6"
+              style={{ marginBottom: "10px" }}
+            >
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Row>
+                    <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                      <CustomLabel title="Order Date From" />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                      <Flatpickr
+                        className="form-control"
+                        value={
+                          props.searchParams.fromDate
+                            ? new Date(props.searchParams.fromDate)
+                            : ""
+                        }
+                        onChange={(e) => {
+                          dispatch(
+                            setSearchParams({
+                              ...props.searchParams,
+                              fromDate: formatDateYMD(new Date(e))
+                            })
+                          )
+                        }}
+                        options={{ dateFormat: "d-m-Y" }}
+                        disabled={props.isOrderConfirmed}
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              lg="6"
+              xl="6"
+              style={{ marginBottom: "10px" }}
+            >
+              <Row>
+                <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                  <Row>
+                    <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                      <CustomLabel title="Order Date To" />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                      <Flatpickr
+                        className="form-control"
+                        value={
+                          props.searchParams.toDate
+                            ? new Date(props.searchParams.toDate)
+                            : ""
+                        }
+                        onChange={(e) => {
+                          dispatch(
+                            setSearchParams({
+                              ...props.searchParams,
+                              toDate: formatDateYMD(new Date(e))
+                            })
+                          )
+                        }}
+                        options={{ dateFormat: "d-m-Y" }}
+                        disabled={props.isOrderConfirmed}
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button
+                style={{ margin: "3px" }}
+                color="primary"
+                onClick={() => {
+                  fetchPoOrderList(props.searchParams)
+                  dispatch(setPoSelectedOrders([]))
                 }}
-                // pagination={true}
-                fixedHeader={true}
-                fixedHeaderScrollHeight={"350px"}
-                selectableRowSelected={(e) =>
-                  props.poSelectedOrders
-                    .map((item) => item.guid_key)
-                    .includes(e.guid_key)
-                }
-                onSelectedRowsChange={(e) => {
-                  dispatch(setPoSelectedOrders(e.selectedRows))
+              >
+                Search
+              </Button>
+              <Button
+                style={{ margin: "3px" }}
+                color="primary"
+                onClick={() => {
+                  dispatch(setSearchParams({}))
+                  fetchPoOrderList()
+                  dispatch(setPoSelectedOrders([]))
                 }}
-                style={{ minHeight: "300px" }}
-                persistTableHead={true}
-                noDataComponent={
-                  <div style={{ padding: "20px", paddingTop: "30px" }}>
-                    <h5>Search using the form to display data.</h5>
-                  </div>
-                }
-              />
-            ) : (
+              >
+                Cancel
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <hr></hr>
+          </Row>
+        </CardHeader>
+        <CardBody>
+          <Row style={{ marginBottom: "10px" }}>
+            <Col>
               <div
                 style={{
                   display: "flex",
-                  height: "300px",
-                  justifyContent: "center",
-                  alignItems: "center"
+                  height: "100%",
+                  width: "100%",
+                  justifyContent: "space-between"
                 }}
               >
                 <div>
-                  <Spinner color="primary" />
+                  <h4>PO Order</h4>
+                </div>
+                <div>
+                  <Button color="primary" onClick={handleOrder}>
+                    Order
+                    {orderLoader ? (
+                      <Spinner size="sm" style={{ marginLeft: "3px" }} />
+                    ) : null}
+                  </Button>
                 </div>
               </div>
-            )}
-          </Col>
-        </Row>
-      </CardBody>
-    </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {!poOrderLoader ? (
+                <DataTable
+                  data={poOrderData}
+                  columns={cols}
+                  noHeader={true}
+                  selectableRows={true}
+                  selectableRowsComponent={CheckBox}
+                  selectableRowsComponentProps={{
+                    color: "primary",
+                    icon: <Check className="vx-icon" size={15} />,
+                    label: "",
+                    size: "md",
+                    disabled: props.isOrderConfirmed
+                  }}
+                  // pagination={true}
+                  fixedHeader={true}
+                  fixedHeaderScrollHeight={"350px"}
+                  selectableRowSelected={(e) =>
+                    props.poSelectedOrders
+                      .map((item) => item.guid_key)
+                      .includes(e.guid_key)
+                  }
+                  onSelectedRowsChange={(e) => {
+                    dispatch(setPoSelectedOrders(e.selectedRows))
+                  }}
+                  style={{ minHeight: "300px" }}
+                  persistTableHead={true}
+                  noDataComponent={
+                    <div style={{ padding: "20px", paddingTop: "30px" }}>
+                      <h5>Search using the form to display data.</h5>
+                    </div>
+                  }
+                />
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    height: "300px",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <div>
+                    <Spinner color="primary" />
+                  </div>
+                </div>
+              )}
+            </Col>
+          </Row>
+        </CardBody>
+      </Card>
+    </div>
   )
 }
 

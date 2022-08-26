@@ -395,209 +395,216 @@ const Listing = (props) => {
   }, [])
 
   return (
-    <Card>
-      <CardHeader>
-        <h3>Order List</h3>
-      </CardHeader>
-      <CardBody>
-        <Row style={{ marginBottom: "10px" }}>
-          <Col xs="12" sm="12" md="5" lg="4" xl="3">
-            <Row>
-              <Col>Order Date From</Col>
-            </Row>
-            <Row>
-              <Col>
-                <Flatpickr
-                  className="form-control"
-                  value={props.orderDateFrom}
-                  onChange={(e) =>
-                    props.setOrderDateFrom(formatDateYMD(new Date(e[0])))
-                  }
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col xs="12" sm="12" md="5" lg="4" xl="3">
-            <Row>
-              <Col>Order Date To</Col>
-            </Row>
-            <Row>
-              <Col>
-                <Flatpickr
-                  className="form-control"
-                  value={props.orderDateTo}
-                  onChange={(e) =>
-                    props.setOrderDateTo(formatDateYMD(new Date(e[0])))
-                  }
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            xs="12"
-            sm="12"
-            md="2"
-            lg="4"
-            xl="3"
-            style={{ display: "flex", alignItems: "end" }}
-          >
-            <Button
-              color="primary"
-              onClick={() =>
-                fetchOrderList(
-                  props.currentPage,
-                  props.recordsPerPage.value,
-                  props.orderDateFrom,
-                  props.orderDateTo
-                )
-              }
-              style={{ paddingLeft: "12px", paddingRight: "12px" }}
+    <div style={{ minHeight: "calc(100vh - 245px)" }}>
+      <Card>
+        <CardHeader>
+          <h3>Order List</h3>
+        </CardHeader>
+        <CardBody>
+          <Row style={{ marginBottom: "10px" }}>
+            <Col xs="12" sm="12" md="5" lg="4" xl="3">
+              <Row>
+                <Col>Order Date From</Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Flatpickr
+                    className="form-control"
+                    value={props.orderDateFrom}
+                    onChange={(e) =>
+                      props.setOrderDateFrom(formatDateYMD(new Date(e[0])))
+                    }
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col xs="12" sm="12" md="5" lg="4" xl="3">
+              <Row>
+                <Col>Order Date To</Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Flatpickr
+                    className="form-control"
+                    value={props.orderDateTo}
+                    onChange={(e) =>
+                      props.setOrderDateTo(formatDateYMD(new Date(e[0])))
+                    }
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              xs="12"
+              sm="12"
+              md="2"
+              lg="4"
+              xl="3"
+              style={{ display: "flex", alignItems: "end" }}
             >
-              <Search size={16} style={{ maringRight: "5px" }} />
-              Search
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            {loading ? (
-              <div
-                style={{
-                  minHeight: "445px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
+              <Button
+                color="primary"
+                onClick={() =>
+                  fetchOrderList(
+                    props.currentPage,
+                    props.recordsPerPage.value,
+                    props.orderDateFrom,
+                    props.orderDateTo
+                  )
+                }
+                style={{ paddingLeft: "12px", paddingRight: "12px" }}
               >
-                <Spinner color="primary" />
-              </div>
-            ) : (
-              <DataTable
-                data={props.orderList}
-                columns={cols}
-                noHeader={true}
-                fixedHeader
-                fixedHeaderScrollHeight="42vh"
-                selectableRows={true}
-                selectableRowsComponent={CheckBox}
-                selectableRowsComponentProps={{
-                  color: "primary",
-                  icon: <Check className="vx-icon" size={15} />,
-                  label: "",
-                  size: "md"
-                }}
-                onRowDoubleClicked={(e) => {
-                  handleRowDoubleClick(e)
-                }}
-              />
-            )}
-          </Col>
-        </Row>
-      </CardBody>
-      <CardFooter>
-        <Row
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            margin: 0
-          }}
-        >
-          <Col xs="6" sm="6" md="4" lg="2">
-            <Row>
-              <div style={{ display: "flex" }}>
+                <Search size={16} style={{ maringRight: "5px" }} />
+                Search
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {loading ? (
                 <div
                   style={{
-                    minWidth: "120px",
-                    paddingRight: "2%",
-                    paddingTop: "10px"
+                    minHeight: "445px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
                   }}
                 >
-                  <Label>{t("Records Per Page")}</Label>
+                  <Spinner color="primary" />
                 </div>
-                <div style={{ minWidth: "70px" }}>
-                  <Select
-                    classNamePrefix="select"
-                    name="clear"
-                    value={recordsPerPageOptions.filter(
-                      (opt) => opt.value === props.recordsPerPage.value
-                    )}
-                    menuPlacement={"auto"}
-                    options={recordsPerPageOptions}
-                    onChange={(e) => {
-                      props.setRecordsPerPage(e)
-                      debounceFetch(props.currentPage, e)
+              ) : (
+                <DataTable
+                  data={props.orderList}
+                  columns={cols}
+                  noHeader={true}
+                  fixedHeader
+                  fixedHeaderScrollHeight="42vh"
+                  selectableRows={true}
+                  selectableRowsComponent={CheckBox}
+                  selectableRowsComponentProps={{
+                    color: "primary",
+                    icon: <Check className="vx-icon" size={15} />,
+                    label: "",
+                    size: "md"
+                  }}
+                  onRowDoubleClicked={(e) => {
+                    handleRowDoubleClick(e)
+                  }}
+                />
+              )}
+            </Col>
+          </Row>
+        </CardBody>
+        <CardFooter>
+          <Row
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              margin: 0
+            }}
+          >
+            <Col xs="6" sm="6" md="4" lg="2">
+              <Row>
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      minWidth: "120px",
+                      paddingRight: "2%",
+                      paddingTop: "10px"
                     }}
-                  />
+                  >
+                    <Label>{t("Records Per Page")}</Label>
+                  </div>
+                  <div style={{ minWidth: "70px" }}>
+                    <Select
+                      classNamePrefix="select"
+                      name="clear"
+                      value={recordsPerPageOptions.filter(
+                        (opt) => opt.value === props.recordsPerPage.value
+                      )}
+                      menuPlacement={"auto"}
+                      options={recordsPerPageOptions}
+                      onChange={(e) => {
+                        props.setRecordsPerPage(e)
+                        debounceFetch(props.currentPage, e)
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            </Row>
-          </Col>
-          <Col xs="6" sm="6" md="4" lg="2">
-            <div style={{ display: "flex", float: "right" }}>
-              <div>
-                <Button
-                  color="primary"
-                  style={{ padding: "10px" }}
-                  onClick={() => {
-                    if (props.currentPage > 1) {
-                      props.setCurrentPage(props.currentPage - 1)
-                      debounceFetch(props.currentPage - 1, props.recordsPerPage)
-                    }
-                  }}
-                  disabled={props.currentPage === 1}
-                >
-                  <ArrowLeft size={15} />
-                </Button>
-              </div>
-              <div
-                style={{
-                  minWidth: "50px",
-                  maxWidth: "50px",
-                  marginLeft: "5px"
-                }}
-              >
-                <Input
-                  value={props.currentPage}
-                  style={{ textAlign: "center" }}
-                  onChange={(e) => {
-                    if (
-                      parseInt(e.target.value) ||
-                      e.target.value.length <= 0
-                    ) {
-                      props.setCurrentPage(
-                        parseInt(e.target.value) ? parseInt(e.target.value) : ""
-                      )
-                      if (parseInt(e.target.value)) {
+              </Row>
+            </Col>
+            <Col xs="6" sm="6" md="4" lg="2">
+              <div style={{ display: "flex", float: "right" }}>
+                <div>
+                  <Button
+                    color="primary"
+                    style={{ padding: "10px" }}
+                    onClick={() => {
+                      if (props.currentPage > 1) {
+                        props.setCurrentPage(props.currentPage - 1)
                         debounceFetch(
-                          parseInt(e.target.value),
+                          props.currentPage - 1,
                           props.recordsPerPage
                         )
                       }
-                    }
+                    }}
+                    disabled={props.currentPage === 1}
+                  >
+                    <ArrowLeft size={15} />
+                  </Button>
+                </div>
+                <div
+                  style={{
+                    minWidth: "50px",
+                    maxWidth: "50px",
+                    marginLeft: "5px"
                   }}
-                />
-              </div>
-              <div style={{ marginLeft: "10px", marginTop: "10px" }}>
-                of {props.totalPages}
-              </div>
-              <div>
-                <Button
-                  onClick={() => {
-                    props.setCurrentPage(props.currentPage + 1)
-                    debounceFetch(props.currentPage + 1, props.recordsPerPage)
-                  }}
-                  color="primary"
-                  style={{ padding: "10px", marginLeft: "5px" }}
-                  disabled={props.totalPages === props.currentPage}
                 >
-                  <ArrowRight size={15} />
-                </Button>
+                  <Input
+                    value={props.currentPage}
+                    style={{ textAlign: "center" }}
+                    onChange={(e) => {
+                      if (
+                        parseInt(e.target.value) ||
+                        e.target.value.length <= 0
+                      ) {
+                        props.setCurrentPage(
+                          parseInt(e.target.value)
+                            ? parseInt(e.target.value)
+                            : ""
+                        )
+                        if (parseInt(e.target.value)) {
+                          debounceFetch(
+                            parseInt(e.target.value),
+                            props.recordsPerPage
+                          )
+                        }
+                      }
+                    }}
+                  />
+                </div>
+                <div style={{ marginLeft: "10px", marginTop: "10px" }}>
+                  of {props.totalPages}
+                </div>
+                <div>
+                  <Button
+                    onClick={() => {
+                      props.setCurrentPage(props.currentPage + 1)
+                      debounceFetch(props.currentPage + 1, props.recordsPerPage)
+                    }}
+                    color="primary"
+                    style={{ padding: "10px", marginLeft: "5px" }}
+                    disabled={props.totalPages === props.currentPage}
+                  >
+                    <ArrowRight size={15} />
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Col>
-        </Row>
-      </CardFooter>
-    </Card>
+            </Col>
+          </Row>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }
 

@@ -194,153 +194,155 @@ const SelectItem = (props) => {
   }, [])
 
   return (
-    <Card>
-      <CardHeader style={{ flexGrow: 1 }}>
-        <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Select
-            className="React"
-            classNamePrefix="select"
-            placeholder={t("BRAND")}
-            value={
-              props.brand
-                ? brandOptions.filter((br) => br.value === props.brand.value)
-                : ""
-            }
-            options={brandOptions}
-            onChange={(e) => {
-              dispatch(resetData())
-              dispatch(setBrand(e ? e : {}))
-              fetchItemList(e ? e : {}, props.itemType)
-            }}
-            isClearable={true}
-            isDisabled={loader || !props.isOrderNew}
-            isLoading={!brandOptions.length}
-          />
-        </Col>
-        <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Input
-            placeholder={t("ITEM")}
-            value={props.itemRef}
-            onChange={(e) => {
-              props.setItemRef(e.target.value)
-              debounceSearch(e.target.value)
-            }}
-            disabled={(loader && !refSearch) || props.isOrderConfirmed}
-          />
-        </Col>
-        <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
-          <Select
-            className="React"
-            classNamePrefix="select"
-            placeholder={t("ITEM TYPE")}
-            value={itemTypeOptions.filter(
-              (opt) => opt.value === props.itemType?.value
-            )}
-            options={itemTypeOptions}
-            onChange={(e) => {
-              props.setItemType(e ? e : {})
-              fetchItemList(props.brand, e ? e : {}, props.itemRef)
-            }}
-            isClearable={true}
-            isDisabled={loader || props.isOrderConfirmed}
-            isLoading={!itemTypeOptions.length}
-          />
-        </Col>
-      </CardHeader>
-      <CardBody style={{ minHeight: "520px" }}>
-        <Row style={{ margin: "0rem", minHeight: "520px" }}>
-          {props.brand.value ? (
-            !loader ? (
-              itemList
-                .slice(visibleCardIndex, visibleCardIndex + 6)
-                .map((item, index) => (
-                  <Col xs="12" sm="6" md="2" lg="2" key={`${item}-${index}`}>
-                    <Card style={{ minHeight: "493px" }}>
-                      <CardHeader>
-                        <div>{item.brand_name}</div>
-                        <div>{visibleCardIndex + index}</div>
-                      </CardHeader>
-                      <CardBody>
-                        <Row style={{ marginBottom: "10px" }}>
-                          <Col style={{ fontWeight: "700" }}>
-                            <h7>{item.item_ref}</h7>
-                          </Col>
-                        </Row>
-                        <Row style={{ marginBottom: "10px" }}>
-                          <Col>{item.item_ref_desc}</Col>
-                        </Row>
-                      </CardBody>
-                      <CardFooter>
-                        <CheckBox
-                          color="primary"
-                          icon={<Check className="vx-icon" size={16} />}
-                          checked={props.selectedItems
-                            .map((item) => item.guid_key)
-                            .includes(item.guid_key)}
-                          onChange={() => {
-                            handleSelectedItemsChange(item)
-                          }}
-                          disabled={props.isOrderConfirmed}
-                        />
-                      </CardFooter>
-                    </Card>
-                  </Col>
-                ))
-            ) : (
-              <CardBody style={{ minHeight: "520px" }}>
-                <div style={{ textAlign: "center", padding: "14% 0" }}>
-                  <Spinner color="primary" />
-                </div>
-              </CardBody>
-            )
-          ) : (
-            <div style={{ textAlign: "center", width: "100%" }}>
-              <div style={{ marginTop: "20px" }}>
-                <h5>Please select a brand to display items.</h5>
-              </div>
-            </div>
-          )}
-        </Row>
-        <Row>
-          <Col>
-            <Button
-              color="primary"
-              style={{ padding: "5px" }}
-              onClick={() => {
-                setVisibleCardIndex(visibleCardIndex - 6)
+    <div style={{ minHeight: "calc(100vh - 245px)" }}>
+      <Card>
+        <CardHeader style={{ flexGrow: 1 }}>
+          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
+            <Select
+              className="React"
+              classNamePrefix="select"
+              placeholder={t("BRAND")}
+              value={
+                props.brand
+                  ? brandOptions.filter((br) => br.value === props.brand.value)
+                  : ""
+              }
+              options={brandOptions}
+              onChange={(e) => {
+                dispatch(resetData())
+                dispatch(setBrand(e ? e : {}))
+                fetchItemList(e ? e : {}, props.itemType)
               }}
-              disabled={visibleCardIndex === 0}
-            >
-              <ArrowLeft size={20} />
-            </Button>
+              isClearable={true}
+              isDisabled={loader || !props.isOrderNew}
+              isLoading={!brandOptions.length}
+            />
           </Col>
-          <Col>
-            <div style={{ float: "right" }}>
+          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
+            <Input
+              placeholder={t("ITEM")}
+              value={props.itemRef}
+              onChange={(e) => {
+                props.setItemRef(e.target.value)
+                debounceSearch(e.target.value)
+              }}
+              disabled={(loader && !refSearch) || props.isOrderConfirmed}
+            />
+          </Col>
+          <Col xs="12" sm="6" md="4" lg="4" style={{ padding: "5px" }}>
+            <Select
+              className="React"
+              classNamePrefix="select"
+              placeholder={t("ITEM TYPE")}
+              value={itemTypeOptions.filter(
+                (opt) => opt.value === props.itemType?.value
+              )}
+              options={itemTypeOptions}
+              onChange={(e) => {
+                props.setItemType(e ? e : {})
+                fetchItemList(props.brand, e ? e : {}, props.itemRef)
+              }}
+              isClearable={true}
+              isDisabled={loader || props.isOrderConfirmed}
+              isLoading={!itemTypeOptions.length}
+            />
+          </Col>
+        </CardHeader>
+        <CardBody style={{ minHeight: "520px" }}>
+          <Row style={{ margin: "0rem", minHeight: "520px" }}>
+            {props.brand.value ? (
+              !loader ? (
+                itemList
+                  .slice(visibleCardIndex, visibleCardIndex + 6)
+                  .map((item, index) => (
+                    <Col xs="12" sm="6" md="2" lg="2" key={`${item}-${index}`}>
+                      <Card style={{ minHeight: "493px" }}>
+                        <CardHeader>
+                          <div>{item.brand_name}</div>
+                          <div>{visibleCardIndex + index}</div>
+                        </CardHeader>
+                        <CardBody>
+                          <Row style={{ marginBottom: "10px" }}>
+                            <Col style={{ fontWeight: "700" }}>
+                              <h7>{item.item_ref}</h7>
+                            </Col>
+                          </Row>
+                          <Row style={{ marginBottom: "10px" }}>
+                            <Col>{item.item_ref_desc}</Col>
+                          </Row>
+                        </CardBody>
+                        <CardFooter>
+                          <CheckBox
+                            color="primary"
+                            icon={<Check className="vx-icon" size={16} />}
+                            checked={props.selectedItems
+                              .map((item) => item.guid_key)
+                              .includes(item.guid_key)}
+                            onChange={() => {
+                              handleSelectedItemsChange(item)
+                            }}
+                            disabled={props.isOrderConfirmed}
+                          />
+                        </CardFooter>
+                      </Card>
+                    </Col>
+                  ))
+              ) : (
+                <CardBody style={{ minHeight: "520px" }}>
+                  <div style={{ textAlign: "center", padding: "14% 0" }}>
+                    <Spinner color="primary" />
+                  </div>
+                </CardBody>
+              )
+            ) : (
+              <div style={{ textAlign: "center", width: "100%" }}>
+                <div style={{ marginTop: "20px" }}>
+                  <h5>Please select a brand to display items.</h5>
+                </div>
+              </div>
+            )}
+          </Row>
+          <Row>
+            <Col>
               <Button
                 color="primary"
                 style={{ padding: "5px" }}
                 onClick={() => {
-                  if (visibleCardIndex + 6 < itemList.length) {
-                    setVisibleCardIndex(visibleCardIndex + 6)
-                  }
+                  setVisibleCardIndex(visibleCardIndex - 6)
                 }}
-                disabled={visibleCardIndex + 6 > itemList.length}
+                disabled={visibleCardIndex === 0}
               >
-                <ArrowRight size={20} />
+                <ArrowLeft size={20} />
               </Button>
-            </div>
-          </Col>
-        </Row>
-      </CardBody>
-      <CardFooter>
-        <Footer
-          selectedItems={props.selectedItems}
-          currentStep={props.currentStep}
-          setCurrentStep={props.setCurrentStep}
-          stepperMenu={props.stepperMenu}
-        />
-      </CardFooter>
-    </Card>
+            </Col>
+            <Col>
+              <div style={{ float: "right" }}>
+                <Button
+                  color="primary"
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    if (visibleCardIndex + 6 < itemList.length) {
+                      setVisibleCardIndex(visibleCardIndex + 6)
+                    }
+                  }}
+                  disabled={visibleCardIndex + 6 > itemList.length}
+                >
+                  <ArrowRight size={20} />
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </CardBody>
+        <CardFooter>
+          <Footer
+            selectedItems={props.selectedItems}
+            currentStep={props.currentStep}
+            setCurrentStep={props.setCurrentStep}
+            stepperMenu={props.stepperMenu}
+          />
+        </CardFooter>
+      </Card>
+    </div>
   )
 }
 
