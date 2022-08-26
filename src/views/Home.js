@@ -134,27 +134,25 @@ const Home = () => {
           />
         </Col>
         <Col sm="12" md="6" lg="8">
-          <Card style={{ height: "95%" }}>
+          <Card>
             <CardHeader>
               <CardTitle>{t("Listing")}</CardTitle>
             </CardHeader>
             <CardBody>
               {!orderListLoader ? (
-                <Row>
-                  <DataTable
-                    data={ordersData}
-                    columns={orderListCol}
-                    noHeader
-                    fixedHeader
-                    fixedHeaderScrollHeight="430px"
-                  />
-                </Row>
+                <DataTable
+                  data={ordersData}
+                  columns={orderListCol}
+                  noHeader
+                  fixedHeader
+                  fixedHeaderScrollHeight="500px"
+                />
               ) : (
                 <Row
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
-                    minHeight: "486px"
+                    minHeight: "536px"
                   }}
                 >
                   <div style={{ width: "50px", height: "50px" }}>

@@ -60,11 +60,10 @@ const OrderSummaryChart = (props) => {
   // const [series, setSeries] = useState([1, 3, 3])
 
   return (
-    <div style={{ height: "100%" }}>
-      <Card style={{ height: "95%", minHeight: "95%" }}>
-        <CardHeader>
-          <CardTitle>{t("Summary")}</CardTitle>
-          {/*}
+    <Card >
+      <CardHeader>
+        <CardTitle>{t("Summary")}</CardTitle>
+        {/*}
         <UncontrolledDropdown>
           <DropdownToggle tag="small" className="text-bold-500 cursor-pointer">
             Last 7 days <ChevronDown size={10} />
@@ -76,55 +75,52 @@ const OrderSummaryChart = (props) => {
           </DropdownMenu>
         </UncontrolledDropdown>
     */}
-        </CardHeader>
-        <CardBody className="pt-0">
-          {props.data.length > 0 ? (
-            <Chart
-              options={options}
-              series={props.data.map((ord) => ord.total)}
-              type="pie"
-              // height={485}
-            />
-          ) : (
-            <Row
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: "505px"
-              }}
-            >
-              <div style={{ width: "50px", height: "50px" }}>
-                <Spinner color="primary" />
-              </div>
-            </Row>
-          )}
-        </CardBody>
-        <ListGroup flush>
-          {props.data.map((ord, index) => (
-            <ListGroupItem className="d-flex justify-content-between">
-              <div className="item-info">
-                <div
-                  className={`bg-${seq[index]}`}
-                  style={{
-                    height: "10px",
-                    width: "10px",
-                    borderRadius: "50%",
-                    display: "inline-block",
-                    margin: "0 5px"
-                  }}
-                />
-                <span className="text-bold-600">
-                  {t(`${ord.order_status}`)}
-                </span>
-              </div>
-              <div className="product-result">
-                <span>{ord.total}</span>
-              </div>
-            </ListGroupItem>
-          ))}
-        </ListGroup>
-      </Card>
-    </div>
+      </CardHeader>
+      <CardBody className="pt-0">
+        {props.data.length > 0 ? (
+          <Chart
+            options={options}
+            series={props.data.map((ord) => ord.total)}
+            type="pie"
+            // height={485}
+          />
+        ) : (
+          <Row
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "505px"
+            }}
+          >
+            <div style={{ width: "50px", height: "50px" }}>
+              <Spinner color="primary" />
+            </div>
+          </Row>
+        )}
+      </CardBody>
+      <ListGroup flush>
+        {props.data.map((ord, index) => (
+          <ListGroupItem className="d-flex justify-content-between">
+            <div className="item-info">
+              <div
+                className={`bg-${seq[index]}`}
+                style={{
+                  height: "10px",
+                  width: "10px",
+                  borderRadius: "50%",
+                  display: "inline-block",
+                  margin: "0 5px"
+                }}
+              />
+              <span className="text-bold-600">{t(`${ord.order_status}`)}</span>
+            </div>
+            <div className="product-result">
+              <span>{ord.total}</span>
+            </div>
+          </ListGroupItem>
+        ))}
+      </ListGroup>
+    </Card>
   )
 }
 export default OrderSummaryChart
