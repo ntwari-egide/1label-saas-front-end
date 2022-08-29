@@ -51,6 +51,7 @@ const Listing = (props) => {
   const [poOrderData, setPoOrderData] = useState([])
   const [poOrderLoader, setPoOrderLoader] = useState(false)
   const [orderLoader, setOrderLoader] = useState(false)
+  const [totalPages, setTotalPages] = useState("...")
   // select options
   const [brandOptions, setBrandOptions] = useState([])
   const [orderStatusOptions, setOrderStatusOptions] = useState([])
@@ -209,6 +210,7 @@ const Listing = (props) => {
           setPoOrderData(res.data.orders || [])
         }
         setPoOrderLoader(false)
+        setTotalPages(Math.ceil(res.data.row_count / page_size))
       })
       .catch((err) => console.log(err))
   }
@@ -694,9 +696,9 @@ const Listing = (props) => {
                 </div>
               </Row>
             </Col>
-            <Col xs="6" sm="6" md="4" lg="2">
+            <Col xs="6" sm="6" md="4" lg="3">
               <div style={{ display: "flex", float: "right" }}>
-                <div>
+                <div style={{ marginRight: "5px" }}>
                   <Button
                     color="primary"
                     style={{ padding: "10px" }}
@@ -741,7 +743,10 @@ const Listing = (props) => {
                     }}
                   />
                 </div>
-                <div>
+                <div style={{ marginLeft: "10px", marginTop: "10px" }}>
+                  of {totalPages}
+                </div>
+                <div style={{ marginLeft: "5px" }}>
                   <Button
                     onClick={() => {
                       dispatch(
