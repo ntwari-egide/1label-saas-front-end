@@ -164,7 +164,7 @@ const Stepper = (props) => {
     <div style={{ paddingBottom: "10px" }}>
       <Breadcrumb>
         {props.stepperMenu.map((menuItem, index) => (
-          <BreadcrumbItem>
+          <BreadcrumbItem style={{ margin: "3px" }}>
             <div
               className="custom-stepper"
               onClick={() => {
