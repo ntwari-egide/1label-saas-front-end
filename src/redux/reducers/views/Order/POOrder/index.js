@@ -9,7 +9,9 @@ const initialState = {
     fromDate: formatDateYMD(
       new Date(new Date().setMonth(new Date().getMonth() - 1))
     ),
-    toDate: formatDateYMD(new Date())
+    toDate: formatDateYMD(new Date()),
+    currentPage: 1,
+    recordsPerPage: { value: 10, label: 10 }
   },
   // po item list states
   selectedItems: [],

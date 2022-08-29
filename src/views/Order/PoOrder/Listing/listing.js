@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Check } from "react-feather"
+import { Check, ArrowLeft, ArrowRight } from "react-feather"
 import {
   Card,
   Badge,
@@ -10,6 +10,7 @@ import {
   Spinner,
   CardHeader,
   Row,
+  Label,
   Col
 } from "reactstrap"
 import CheckBox from "@components/CheckBox/CheckBox"
@@ -34,6 +35,13 @@ import { populateData } from "@redux/actions/views/common"
 import { getUserData } from "@utils"
 import { setLoader } from "@redux/actions/layout"
 import { sweetAlert } from "@utils"
+
+let timerId
+const recordsPerPageOptions = [
+  { value: 5, label: 5 },
+  { value: 10, label: 10 },
+  { value: 20, label: 20 }
+]
 
 const Listing = (props) => {
   // constants
@@ -140,6 +148,17 @@ const Listing = (props) => {
     addPoOrder()
   }
 
+  // Other functions
+  const debounceFetch = (currPage, recPerPage) => {
+    if (timerId) {
+      clearTimeout(timerId)
+    }
+    timerId = setTimeout(() => {
+      fetchPoOrderList(currPage, recPerPage)
+      timerId = null
+    }, 400)
+  }
+
   // API Services
   const fetchPOOrderDetails = (combKey, isTemp) => {
     const body = {
@@ -161,8 +180,15 @@ const Listing = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchPoOrderList = () => {
+  const fetchPoOrderList = (currentPage, recordsPerPage) => {
     setPoOrderLoader(true)
+    console.log({ currentPage, recordsPerPage })
+    const page_size = recordsPerPage
+      ? recordsPerPage.value
+      : props.searchParams.recordsPerPage.value
+    const page_index = currentPage
+      ? currentPage
+      : props.searchParams.currentPage
     let body = {
       order_user: getUserData().admin,
       brand_key: props.searchParams.brand || "",
@@ -171,14 +197,16 @@ const Listing = (props) => {
       order_status: props.searchParams.orderStatus || "",
       factory_code: props.searchParams.factoryNo || "",
       consolidated_id: props.searchParams.cid || "",
-      order_no: props.searchParams.poNo || ""
+      order_no: props.searchParams.poNo || "",
+      page_size,
+      page_index
     }
 
     axios
-      .post("/order/GetPOOrderList", body)
+      .post("/order/GetPOOrderListPagination", body)
       .then((res) => {
         if (res.status === 200) {
-          setPoOrderData(res.data)
+          setPoOrderData(res.data.orders || [])
         }
         setPoOrderLoader(false)
       })
@@ -597,7 +625,7 @@ const Listing = (props) => {
                   }}
                   // pagination={true}
                   fixedHeader={true}
-                  fixedHeaderScrollHeight={"350px"}
+                  fixedHeaderScrollHeight="500px"
                   selectableRowSelected={(e) =>
                     props.poSelectedOrders
                       .map((item) => item.guid_key)
@@ -631,6 +659,113 @@ const Listing = (props) => {
             </Col>
           </Row>
         </CardBody>
+        <CardFooter>
+          <Row style={{ display: "flex", justifyContent: "space-between" }}>
+            <Col xs="6" sm="6" md="4" lg="2">
+              <Row>
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      minWidth: "120px",
+                      paddingRight: "2%",
+                      paddingTop: "10px"
+                    }}
+                  >
+                    <Label>{t("Records Per Page")}</Label>
+                  </div>
+                  <div style={{ minWidth: "70px" }}>
+                    <Select
+                      classNamePrefix="select"
+                      defaultValue={recordsPerPageOptions[1]}
+                      name="clear"
+                      menuPlacement={"auto"}
+                      options={recordsPerPageOptions}
+                      onChange={(e) => {
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            recordsPerPage: e
+                          })
+                        )
+                        debounceFetch(props.searchParams.currentPage, e)
+                      }}
+                    />
+                  </div>
+                </div>
+              </Row>
+            </Col>
+            <Col xs="6" sm="6" md="4" lg="2">
+              <div style={{ display: "flex", float: "right" }}>
+                <div>
+                  <Button
+                    color="primary"
+                    style={{ padding: "10px" }}
+                    onClick={() => {
+                      if (props.searchParams.currentPage > 1) {
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            currentPage:
+                              parseInt(props.searchParams.currentPage) - 1
+                          })
+                        )
+                        debounceFetch(
+                          props.searchParams.currentPage - 1,
+                          props.searchParams.recordsPerPage
+                        )
+                      }
+                    }}
+                  >
+                    <ArrowLeft size={15} />
+                  </Button>
+                </div>
+                <div style={{ minWidth: "50px", maxWidth: "50px" }}>
+                  <Input
+                    value={props.searchParams.currentPage}
+                    style={{ textAlign: "center" }}
+                    onChange={(e) => {
+                      if (parseInt(e.target.value) || e.target.value === "") {
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            currentPage: e.target.value
+                          })
+                        )
+                        if (parseInt(e.target.value)) {
+                          debounceFetch(
+                            parseInt(e.target.value),
+                            props.searchParams.recordsPerPage
+                          )
+                        }
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  <Button
+                    onClick={() => {
+                      dispatch(
+                        setSearchParams({
+                          ...props.searchParams,
+                          currentPage:
+                            parseInt(props.searchParams.currentPage) + 1
+                        })
+                      )
+                      debounceFetch(
+                        props.searchParams.currentPage + 1,
+                        props.searchParams.recordsPerPage
+                      )
+                    }}
+                    color="primary"
+                    style={{ padding: "10px" }}
+                  >
+                    <ArrowRight size={15} />
+                  </Button>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </CardFooter>
       </Card>
     </div>
   )
