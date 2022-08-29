@@ -29,6 +29,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage, setRecordsPerPage] = useState({ value: 10, label: 10 })
   const [orderListLoader, setOrderListLoader] = useState(false)
+  const [totalPages, setTotalPages] = useState("...")
 
   // APP constants
   const recordsPerPageOptions = [
@@ -89,15 +90,17 @@ const Home = () => {
   // API servics
   const fetchOrdersList = (currPage, recPerPage) => {
     setOrderListLoader(true)
+    const page_size = recPerPage.value
     const body = {
       order_user: "innoa",
       page_index: currPage,
-      page_size: recPerPage.value
+      page_size
     }
     axios.post("/Order/OrderListPaginationQuery", body).then((res) => {
       if (res.status === 200) {
         setOrderListLoader(false)
         setOrdersData(res.data.orders)
+        setTotalPages(Math.ceil(res.data.row_count / page_size))
       }
     })
   }
@@ -192,9 +195,9 @@ const Home = () => {
                     </div>
                   </Row>
                 </Col>
-                <Col xs="6" sm="6" md="4" lg="2">
+                <Col xs="6" sm="6" md="6" lg="5">
                   <div style={{ display: "flex", float: "right" }}>
-                    <div>
+                    <div style={{ marginRight: "5px" }}>
                       <Button
                         color="primary"
                         style={{ padding: "10px" }}
@@ -232,7 +235,10 @@ const Home = () => {
                         }}
                       />
                     </div>
-                    <div>
+                    <div style={{ marginLeft: "10px", marginTop: "10px" }}>
+                      of {totalPages}
+                    </div>
+                    <div style={{ marginLeft: "5px" }}>
                       <Button
                         onClick={() => {
                           setCurrentPage(currentPage + 1)
