@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react"
-import { Check, ArrowLeft, ArrowRight } from "react-feather"
+import {
+  Check,
+  ArrowLeft,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp
+} from "react-feather"
 import {
   Card,
   Badge,
@@ -10,6 +16,7 @@ import {
   Spinner,
   CardHeader,
   Row,
+  Collapse,
   Label,
   Col
 } from "reactstrap"
@@ -52,6 +59,7 @@ const Listing = (props) => {
   const [poOrderLoader, setPoOrderLoader] = useState(false)
   const [orderLoader, setOrderLoader] = useState(false)
   const [totalPages, setTotalPages] = useState("...")
+  const [advanceSearchCollapse, setAdvanceSearchCollapse] = useState(false)
   // select options
   const [brandOptions, setBrandOptions] = useState([])
   const [orderStatusOptions, setOrderStatusOptions] = useState([])
@@ -347,143 +355,6 @@ const Listing = (props) => {
             >
               <Row>
                 <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <CustomLabel title="CID" />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <Input
-                    value={props.searchParams.cid ? props.searchParams.cid : ""}
-                    onChange={(e) =>
-                      dispatch(
-                        setSearchParams({
-                          ...props.searchParams,
-                          cid: e.target.value
-                        })
-                      )
-                    }
-                    disabled={props.isOrderConfirmed}
-                  />
-                </Col>
-              </Row>
-            </Col>
-            <Col
-              xs="12"
-              sm="12"
-              md="6"
-              lg="6"
-              xl="6"
-              style={{ marginBottom: "10px" }}
-            >
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <CustomLabel title="Factory No" />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <Input
-                    value={
-                      props.searchParams.factoryNo
-                        ? props.searchParams.factoryNo
-                        : ""
-                    }
-                    onChange={(e) =>
-                      dispatch(
-                        setSearchParams({
-                          ...props.searchParams,
-                          factoryNo: e.target.value
-                        })
-                      )
-                    }
-                    disabled={props.isOrderConfirmed}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row>
-            <Col
-              xs="12"
-              sm="12"
-              md="6"
-              lg="6"
-              xl="6"
-              style={{ marginBottom: "10px" }}
-            >
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <CustomLabel title="PO No" />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <Input
-                    value={
-                      props.searchParams.poNo ? props.searchParams.poNo : ""
-                    }
-                    onChange={(e) =>
-                      dispatch(
-                        setSearchParams({
-                          ...props.searchParams,
-                          poNo: e.target.value
-                        })
-                      )
-                    }
-                    disabled={props.isOrderConfirmed}
-                  />
-                </Col>
-              </Row>
-            </Col>
-            <Col
-              xs="12"
-              sm="12"
-              md="6"
-              lg="6"
-              xl="6"
-              style={{ marginBottom: "10px" }}
-            >
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <CustomLabel title="Order Status" />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
-                  <Select
-                    className="React"
-                    classNamePrefix="select"
-                    options={orderStatusOptions}
-                    value={orderStatusOptions.filter(
-                      (opt) =>
-                        opt.value.toString() === props.searchParams.orderStatus
-                    )}
-                    onChange={(e) =>
-                      dispatch(
-                        setSearchParams({
-                          ...props.searchParams,
-                          orderStatus: e.value.toString()
-                        })
-                      )
-                    }
-                    isDisabled={props.isOrderConfirmed}
-                    isLoading={!orderStatusOptions.length}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row>
-            <Col
-              xs="12"
-              sm="12"
-              md="6"
-              lg="6"
-              xl="6"
-              style={{ marginBottom: "10px" }}
-            >
-              <Row>
-                <Col xs="12" sm="12" md="12" lg="12" xl="12">
                   <Row>
                     <Col xs="12" sm="12" md="12" lg="12" xl="12">
                       <CustomLabel title="Order Date From" />
@@ -555,6 +426,165 @@ const Listing = (props) => {
               </Row>
             </Col>
           </Row>
+          <Row
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px",
+              cursor: "pointer"
+            }}
+            onClick={() => setAdvanceSearchCollapse(!advanceSearchCollapse)}
+          >
+            <Col style={{ color: "var(--primary)" }}>
+              {advanceSearchCollapse ? "Hide" : "Show"} Advance Search
+            </Col>
+            <Col>
+              <div style={{ float: "right", color: "var(--primary)" }}>
+                {advanceSearchCollapse ? <ChevronUp /> : <ChevronDown />}
+              </div>
+            </Col>
+          </Row>
+          <Collapse isOpen={advanceSearchCollapse}>
+            <Row>
+              <Col
+                xs="12"
+                sm="12"
+                md="6"
+                lg="6"
+                xl="6"
+                style={{ marginBottom: "10px" }}
+              >
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <CustomLabel title="CID" />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Input
+                      value={
+                        props.searchParams.cid ? props.searchParams.cid : ""
+                      }
+                      onChange={(e) =>
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            cid: e.target.value
+                          })
+                        )
+                      }
+                      disabled={props.isOrderConfirmed}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+              <Col
+                xs="12"
+                sm="12"
+                md="6"
+                lg="6"
+                xl="6"
+                style={{ marginBottom: "10px" }}
+              >
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <CustomLabel title="Factory No" />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Input
+                      value={
+                        props.searchParams.factoryNo
+                          ? props.searchParams.factoryNo
+                          : ""
+                      }
+                      onChange={(e) =>
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            factoryNo: e.target.value
+                          })
+                        )
+                      }
+                      disabled={props.isOrderConfirmed}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row>
+              <Col
+                xs="12"
+                sm="12"
+                md="6"
+                lg="6"
+                xl="6"
+                style={{ marginBottom: "10px" }}
+              >
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <CustomLabel title="PO No" />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Input
+                      value={
+                        props.searchParams.poNo ? props.searchParams.poNo : ""
+                      }
+                      onChange={(e) =>
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            poNo: e.target.value
+                          })
+                        )
+                      }
+                      disabled={props.isOrderConfirmed}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+              <Col
+                xs="12"
+                sm="12"
+                md="6"
+                lg="6"
+                xl="6"
+                style={{ marginBottom: "10px" }}
+              >
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <CustomLabel title="Order Status" />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" sm="12" md="12" lg="12" xl="12">
+                    <Select
+                      className="React"
+                      classNamePrefix="select"
+                      options={orderStatusOptions}
+                      value={orderStatusOptions.filter(
+                        (opt) =>
+                          opt.value.toString() ===
+                          props.searchParams.orderStatus
+                      )}
+                      onChange={(e) =>
+                        dispatch(
+                          setSearchParams({
+                            ...props.searchParams,
+                            orderStatus: e.value.toString()
+                          })
+                        )
+                      }
+                      isDisabled={props.isOrderConfirmed}
+                      isLoading={!orderStatusOptions.length}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Collapse>
           <Row>
             <Col>
               <Button
