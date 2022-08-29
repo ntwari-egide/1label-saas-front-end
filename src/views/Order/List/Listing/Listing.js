@@ -478,7 +478,7 @@ const Listing = (props) => {
                   columns={cols}
                   noHeader={true}
                   fixedHeader
-                  fixedHeaderScrollHeight="42vh"
+                  fixedHeaderScrollHeight="500px"
                   selectableRows={true}
                   selectableRowsComponent={CheckBox}
                   selectableRowsComponentProps={{
