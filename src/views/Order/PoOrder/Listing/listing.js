@@ -191,7 +191,6 @@ const Listing = (props) => {
 
   const fetchPoOrderList = (currentPage, recordsPerPage) => {
     setPoOrderLoader(true)
-    console.log({ currentPage, recordsPerPage })
     const page_size = recordsPerPage
       ? recordsPerPage.value
       : props.searchParams.recordsPerPage.value
@@ -655,7 +654,6 @@ const Listing = (props) => {
                     size: "md",
                     disabled: props.isOrderConfirmed
                   }}
-                  // pagination={true}
                   fixedHeader={true}
                   fixedHeaderScrollHeight="500px"
                   selectableRowSelected={(e) =>
@@ -664,7 +662,12 @@ const Listing = (props) => {
                       .includes(e.guid_key)
                   }
                   onSelectedRowsChange={(e) => {
-                    dispatch(setPoSelectedOrders(e.selectedRows))
+                    dispatch(
+                      setPoSelectedOrders([
+                        ...e.selectedRows,
+                        ...props.poSelectedOrders
+                      ])
+                    )
                   }}
                   style={{ minHeight: "300px" }}
                   persistTableHead={true}
