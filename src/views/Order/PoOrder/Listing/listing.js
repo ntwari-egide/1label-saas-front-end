@@ -191,7 +191,6 @@ const Listing = (props) => {
   }
 
   const fetchPoOrderList = (searchParams, currentPage, recordsPerPage) => {
-    console.log({ searchParams })
     setPoOrderLoader(true)
     const page_size = recordsPerPage
       ? recordsPerPage.value
