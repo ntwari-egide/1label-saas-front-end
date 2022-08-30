@@ -52,7 +52,10 @@ const PreviewAndSummary = (props) => {
     if (parseInt(value) || value === "0" || value === "") {
       // update the table
       const tempState = [...store.getState().orderReducer.sizeData]
-      row = { ...row, [`${col.selector}`]: value }
+      row = {
+        ...row,
+        [`${col.selector}`]: value.length ? parseInt(value).toString() : value
+      }
       tempState[index] = row
       dispatch(setSizeData(tempState))
     }

@@ -43,7 +43,7 @@ const SizeTable = (props) => {
       let tempRow = tempTable[index]
       tempRow = {
         ...tempRow,
-        [`${col.selector}`]: value
+        [`${col.selector}`]: value.length ? parseInt(value).toString() : value
       }
       tempTable[index] = tempRow
       tempState[tabIndex] = {
