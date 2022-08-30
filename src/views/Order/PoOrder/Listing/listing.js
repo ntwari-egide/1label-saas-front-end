@@ -60,6 +60,7 @@ const Listing = (props) => {
   const [orderLoader, setOrderLoader] = useState(false)
   const [totalPages, setTotalPages] = useState("...")
   const [advanceSearchCollapse, setAdvanceSearchCollapse] = useState(false)
+  const [initSearchParams, setInitSearchParams] = useState({})
   // select options
   const [brandOptions, setBrandOptions] = useState([])
   const [orderStatusOptions, setOrderStatusOptions] = useState([])
@@ -163,7 +164,7 @@ const Listing = (props) => {
       clearTimeout(timerId)
     }
     timerId = setTimeout(() => {
-      fetchPoOrderList(currPage, recPerPage)
+      fetchPoOrderList(props.searchParams, currPage, recPerPage)
       timerId = null
     }, 400)
   }
@@ -189,23 +190,22 @@ const Listing = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const fetchPoOrderList = (currentPage, recordsPerPage) => {
+  const fetchPoOrderList = (searchParams, currentPage, recordsPerPage) => {
+    console.log({ searchParams })
     setPoOrderLoader(true)
     const page_size = recordsPerPage
       ? recordsPerPage.value
-      : props.searchParams.recordsPerPage.value
-    const page_index = currentPage
-      ? currentPage
-      : props.searchParams.currentPage
+      : searchParams.recordsPerPage.value
+    const page_index = currentPage ? currentPage : searchParams.currentPage
     let body = {
       order_user: getUserData().admin,
-      brand_key: props.searchParams.brand || "",
-      order_date_from: props.searchParams.fromDate || "",
-      order_date_to: props.searchParams.toDate || "",
-      order_status: props.searchParams.orderStatus || "",
-      factory_code: props.searchParams.factoryNo || "",
-      consolidated_id: props.searchParams.cid || "",
-      order_no: props.searchParams.poNo || "",
+      brand_key: searchParams.brand || "",
+      order_date_from: searchParams.fromDate || "",
+      order_date_to: searchParams.toDate || "",
+      order_status: searchParams.orderStatus || "",
+      factory_code: searchParams.factoryNo || "",
+      consolidated_id: searchParams.cid || "",
+      order_no: searchParams.poNo || "",
       page_size,
       page_index
     }
@@ -309,7 +309,8 @@ const Listing = (props) => {
   useEffect(() => {
     fetchOrderStatus()
     fetchBrandList()
-    fetchPoOrderList()
+    fetchPoOrderList(props.searchParams)
+    setInitSearchParams({ ...props.searchParams })
   }, [])
 
   return (
@@ -608,8 +609,8 @@ const Listing = (props) => {
                 style={{ margin: "3px" }}
                 color="primary"
                 onClick={() => {
-                  dispatch(setSearchParams({}))
-                  fetchPoOrderList()
+                  dispatch(setSearchParams({ ...initSearchParams }))
+                  fetchPoOrderList(initSearchParams)
                   dispatch(setPoSelectedOrders([]))
                 }}
               >
