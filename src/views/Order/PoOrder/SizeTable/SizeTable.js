@@ -135,10 +135,6 @@ const SizeTable = (props) => {
   }
 
   const handleAddResetWastage = (operation) => {
-    // just to avoid computation
-    if (props.wastage === 0) {
-      return
-    }
     if (operation === "add") {
       try {
         // actual algo
@@ -149,10 +145,7 @@ const SizeTable = (props) => {
             Object.keys(row).map((key) => {
               if (row[key]) {
                 // subtracting 0.05 because want to round at 0.55 instead of 0.5
-                if (
-                  key.includes("QTY ITEM REF") &&
-                  !key.includes("WITH WASTAGE")
-                ) {
+                if (key.includes("QTY ITEM REF")) {
                   if (props.wastageApplied === "N") {
                     const value = Math.round(
                       parseInt(row[key]) +
@@ -161,17 +154,17 @@ const SizeTable = (props) => {
                     )
                     row[`${key} WITH WASTAGE`] = value.toString()
                   }
-                }
-                if (
-                  key.includes("WITH WASTAGE") &&
-                  props.wastageApplied === "Y"
-                ) {
-                  const value = Math.round(
-                    parseInt(row[key]) +
-                      parseInt(row[key]) * props.wastage -
-                      0.05
-                  )
-                  row[`${key}`] = value.toString()
+                  if (
+                    key.includes("WITH WASTAGE") &&
+                    props.wastageApplied === "Y"
+                  ) {
+                    const value = Math.round(
+                      parseInt(row[key]) +
+                        parseInt(row[key]) * props.wastage -
+                        0.05
+                    )
+                    row[`${key}`] = value.toString()
+                  }
                 }
               }
             })
@@ -195,23 +188,12 @@ const SizeTable = (props) => {
         dispatch(setWastage(0))
       }
     } else {
+      setLoader(true)
+      fetchSizeTable()
       const tempCols = []
       const tempTable = props.sizeData.map((data, index) => {
         // recalculate dynamic cols
         tempCols[index] = populateCols(data.size_content, index, "N")
-        // get rid of values with wastage
-        const size_content = data.size_content.map((row) => {
-          Object.keys(row).forEach((key) => {
-            if (key.includes("WITH WASTAGE")) {
-              delete row[key]
-            }
-          })
-          return row
-        })
-        return {
-          ...data,
-          size_content
-        }
       })
       dispatch(setSizeData(tempTable))
       dispatch(setCols(tempCols))
@@ -323,7 +305,7 @@ const SizeTable = (props) => {
                       style={{ paddingLeft: 0 }}
                     >
                       <Label>Size Matrix Type</Label>
-                      <h5>{data.size_matrix_type}</h5>
+                      <h5>{data?.size_matrix_type}</h5>
                     </Col>
                     <Col
                       xs={12}
@@ -334,12 +316,12 @@ const SizeTable = (props) => {
                       style={{ paddingLeft: 0 }}
                     >
                       <Label>EDI Order no.</Label>
-                      <h5>{data.edi_order_no}</h5>
+                      <h5>{data?.edi_order_no}</h5>
                     </Col>
                   </Row>
                   <Row>
                     <DataTable
-                      data={data.size_content}
+                      data={data?.size_content}
                       columns={props.cols[index]}
                       noHeader={true}
                     />
