@@ -594,31 +594,6 @@ const Listing = (props) => {
             </Row>
           </Collapse>
           <Row>
-            <Col>
-              <Button
-                style={{ margin: "3px" }}
-                color="primary"
-                onClick={() => {
-                  fetchPoOrderList(props.searchParams)
-                  dispatch(setPoSelectedOrders({}))
-                }}
-              >
-                Search
-              </Button>
-              <Button
-                style={{ margin: "3px" }}
-                color="primary"
-                onClick={() => {
-                  dispatch(setSearchParams({ ...initSearchParams }))
-                  fetchPoOrderList(initSearchParams)
-                  dispatch(setPoSelectedOrders([]))
-                }}
-              >
-                Cancel
-              </Button>
-            </Col>
-          </Row>
-          <Row>
             <hr></hr>
           </Row>
         </CardHeader>
@@ -637,6 +612,27 @@ const Listing = (props) => {
                   <h4>PO Order</h4>
                 </div>
                 <div>
+                  <Button
+                    style={{ margin: "3px" }}
+                    color="primary"
+                    onClick={() => {
+                      fetchPoOrderList(props.searchParams)
+                      dispatch(setPoSelectedOrders({}))
+                    }}
+                  >
+                    Search
+                  </Button>
+                  <Button
+                    style={{ margin: "3px" }}
+                    color="primary"
+                    onClick={() => {
+                      dispatch(setSearchParams({ ...initSearchParams }))
+                      fetchPoOrderList(initSearchParams)
+                      dispatch(setPoSelectedOrders([]))
+                    }}
+                  >
+                    Cancel
+                  </Button>
                   <Button color="primary" onClick={handleOrder}>
                     Order
                     {orderLoader ? (
