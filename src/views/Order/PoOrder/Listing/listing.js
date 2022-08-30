@@ -147,7 +147,7 @@ const Listing = (props) => {
   )
 
   const handleOrder = () => {
-    if (props.poSelectedOrders.length <= 0) {
+    if (Object.keys(props.poSelectedOrders).length <= 0) {
       sweetAlert("", "Please select an order to continue", "warning", "warning")
       return
     }
@@ -259,10 +259,18 @@ const Listing = (props) => {
   }
 
   const addPoOrder = () => {
+    let orderList = []
+    Object.keys(props.poSelectedOrders).map((key) => {
+      orderList = [
+        ...orderList,
+        ...props.poSelectedOrders[key]?.map((item) => item?.guid_key)
+      ]
+    })
+
     const body = {
       brand_key: props.searchParams.brand ? props.searchParams.brand : "",
       order_user: getUserData().admin,
-      order_keys: props.poSelectedOrders.map((item) => item.guid_key)
+      order_keys: orderList
     }
 
     axios
@@ -591,7 +599,7 @@ const Listing = (props) => {
                 color="primary"
                 onClick={() => {
                   fetchPoOrderList(props.searchParams)
-                  dispatch(setPoSelectedOrders([]))
+                  dispatch(setPoSelectedOrders({}))
                 }}
               >
                 Search
@@ -656,18 +664,19 @@ const Listing = (props) => {
                   }}
                   fixedHeader={true}
                   fixedHeaderScrollHeight="500px"
-                  selectableRowSelected={(e) =>
-                    props.poSelectedOrders
+                  selectableRowSelected={(e) => {
+                    let orderList = []
+                    Object.keys(props.poSelectedOrders).map((key) => {
+                      orderList = [...orderList, ...props.poSelectedOrders[key]]
+                    })
+                    return orderList
                       .map((item) => item.guid_key)
                       .includes(e.guid_key)
-                  }
+                  }}
                   onSelectedRowsChange={(e) => {
-                    dispatch(
-                      setPoSelectedOrders([
-                        ...e.selectedRows,
-                        ...props.poSelectedOrders
-                      ])
-                    )
+                    const tempState = { ...props.poSelectedOrders }
+                    tempState[props.searchParams.currentPage] = e.selectedRows
+                    dispatch(setPoSelectedOrders({ ...tempState }))
                   }}
                   style={{ minHeight: "300px" }}
                   persistTableHead={true}

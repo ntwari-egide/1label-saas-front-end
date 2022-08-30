@@ -4,7 +4,7 @@ const initialState = {
   // ** gobal states
   currentStep: "Listing",
   // ** listing data
-  poSelectedOrders: [],
+  poSelectedOrders: {},
   searchParams: {
     fromDate: formatDateYMD(
       new Date(new Date().setMonth(new Date().getMonth() - 1))
