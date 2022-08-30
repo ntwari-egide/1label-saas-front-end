@@ -147,28 +147,32 @@ const SizeTable = (props) => {
           ...data,
           size_content: data.size_content.map((row) => {
             Object.keys(row).map((key) => {
-              // subtracting 0.05 because want to round at 0.55 instead of 0.5
-              if (
-                key.includes("QTY ITEM REF") &&
-                !key.includes("WITH WASTAGE")
-              ) {
-                if (props.wastageApplied === "N") {
+              if (row[key]) {
+                // subtracting 0.05 because want to round at 0.55 instead of 0.5
+                if (
+                  key.includes("QTY ITEM REF") &&
+                  !key.includes("WITH WASTAGE")
+                ) {
+                  if (props.wastageApplied === "N") {
+                    const value = Math.round(
+                      parseInt(row[key]) +
+                        parseInt(row[key]) * props.wastage -
+                        0.05
+                    )
+                    row[`${key} WITH WASTAGE`] = value.toString()
+                  }
+                }
+                if (
+                  key.includes("WITH WASTAGE") &&
+                  props.wastageApplied === "Y"
+                ) {
                   const value = Math.round(
                     parseInt(row[key]) +
                       parseInt(row[key]) * props.wastage -
                       0.05
                   )
-                  row[`${key} WITH WASTAGE`] = value.toString()
+                  row[`${key}`] = value.toString()
                 }
-              }
-              if (
-                key.includes("WITH WASTAGE") &&
-                props.wastageApplied === "Y"
-              ) {
-                const value = Math.round(
-                  parseInt(row[key]) + parseInt(row[key]) * props.wastage - 0.05
-                )
-                row[`${key}`] = value.toString()
               }
             })
             return row

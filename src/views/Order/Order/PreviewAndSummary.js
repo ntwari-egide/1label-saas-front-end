@@ -177,22 +177,23 @@ const PreviewAndSummary = (props) => {
         // iterates throuch size content data and returns the same object with modifications to size_content field
         const tempState = props.sizeData.map((row) => {
           Object.keys(row).map((key) => {
-            // subtracting 0.05 because want to round at 0.55 instead of 0.5
-            if (key.includes("QTY ITEM REF")) {
-              const value = row[key]
-              if (props.wastageApplied === "N" && value) {
-                row[`${key} WITH WASTAGE`] = Math.round(
-                  parseInt(value) + parseInt(value) * props.wastage - 0.05
-                ).toString()
-              }
-              if (
-                props.wastageApplied === "Y" &&
-                key.includes("WITH WASTAGE") &&
-                value
-              ) {
-                row[`${key}`] = Math.round(
-                  parseInt(value) + parseInt(value) * props.wastage - 0.05
-                ).toString()
+            if (row[key]) {
+              // subtracting 0.05 because to round at 0.55 instead of 0.5
+              if (key.includes("QTY ITEM REF")) {
+                const value = row[key]
+                if (props.wastageApplied === "N") {
+                  row[`${key} WITH WASTAGE`] = Math.round(
+                    parseInt(value) + parseInt(value) * props.wastage - 0.05
+                  ).toString()
+                }
+                if (
+                  props.wastageApplied === "Y" &&
+                  key.includes("WITH WASTAGE")
+                ) {
+                  row[`${key}`] = Math.round(
+                    parseInt(value) + parseInt(value) * props.wastage - 0.05
+                  ).toString()
+                }
               }
             }
           })
