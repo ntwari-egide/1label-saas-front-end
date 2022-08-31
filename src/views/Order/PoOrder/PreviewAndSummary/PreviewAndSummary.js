@@ -25,7 +25,7 @@ const PreviewAndSummary = (props) => {
   const calculateSummaryCols = (sizeCols) => {
     const cols = []
     try {
-      if (sizeCols.length) {
+      if (sizeCols?.length) {
         sizeCols.forEach((col) => {
           const tempCol = { ...col }
           if (
