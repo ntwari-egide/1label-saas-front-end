@@ -592,9 +592,6 @@ const Listing = (props) => {
               </Col>
             </Row>
           </Collapse>
-          <Row>
-            <hr></hr>
-          </Row>
         </CardHeader>
         <CardBody>
           <Row style={{ marginBottom: "10px" }}>
