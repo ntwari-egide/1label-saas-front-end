@@ -143,17 +143,19 @@ const InvoiceAndDelivery = (props) => {
       .post("/Client/GetClientAddressDetail", body)
       .then((res) => {
         if (res.status === 200) {
-          // set initial data in form
-          if (index === 0) {
-            dispatch(dispatchFun(res?.data[0]))
-          }
-          // to open card of initial address
-          if (addType === "invoice" && index === 0) {
-            setInvoiceId(res.data[0].guid_key)
-          }
-          // to open card of initial address
-          if (addType === "delivery" && index === 0) {
-            setDeliveryId(res.data[0].guid_key)
+          if (props.isOrderNew) {
+            // set initial data in form
+            if (index === 0) {
+              dispatch(dispatchFun(res?.data[0]))
+            }
+            // to open card of initial address
+            if (addType === "invoice" && index === 0) {
+              setInvoiceId(res.data[0].address_id)
+            }
+            // to open card of initial address
+            if (addType === "delivery" && index === 0) {
+              setDeliveryId(res.data[0].address_id)
+            }
           }
           tempDetailsList[index] = res.data[0]
           setDetailsListFun([...tempDetailsList])
@@ -167,6 +169,13 @@ const InvoiceAndDelivery = (props) => {
     fetchClientAddressList()
     dispatch(setIsSaveConfirmBtnDisabled(false))
     dispatch(setIsSaveDraftBtnDisabled(false))
+    // set ids of active addressed to expand card
+    if (props.invoiceAddressDetails.address_id) {
+      setInvoiceId(props.invoiceAddressDetails.address_id)
+    }
+    if (props.deliveryAddressDetails.address_id) {
+      setDeliveryId(props.deliveryAddressDetails.address_id)
+    }
   }, [])
 
   useEffect(() => {
@@ -345,16 +354,16 @@ const InvoiceAndDelivery = (props) => {
                 <Card
                   key={data?.guid_key}
                   onClick={() => {
-                    if (invoiceId === data?.guid_key) {
+                    if (invoiceId === data?.address_id) {
                       setInvoiceId("")
                     } else {
-                      setInvoiceId(data?.guid_key)
+                      setInvoiceId(data?.address_id)
                       dispatch(setInvoiceAddressDetails(data))
                     }
                   }}
                 >
                   <CardHeader>{data?.name}</CardHeader>
-                  <Collapse isOpen={invoiceId === data?.guid_key}>
+                  <Collapse isOpen={invoiceId === data?.address_id}>
                     <CardBody>
                       <div>
                         <p>{data?.address}</p>
@@ -598,25 +607,22 @@ const InvoiceAndDelivery = (props) => {
                 <Card
                   key={data?.guid_key}
                   onClick={() => {
-                    if (deliveryId === data?.guid_key) {
+                    if (deliveryId === data?.address_id) {
                       setDeliveryId("")
                     } else {
-                      setDeliveryId(data?.guid_key)
+                      setDeliveryId(data?.address_id)
                       dispatch(setDeliveryAddressDetails(data))
                     }
                   }}
                 >
                   <CardHeader>{data?.name}</CardHeader>
-                  <Collapse isOpen={deliveryId === data?.guid_key}>
+                  <Collapse isOpen={deliveryId === data?.address_id}>
                     <CardBody>
                       <div>
                         <p>{data?.address}</p>
                         <p>
                           {data?.city}, {data?.country}
                         </p>
-                        {/*
-                    <p>(86) 0755-8215 5991</p>
-              */}
                         <div>
                           <Button style={{ width: "100%" }} color="primary">
                             {t("Delivery To This Address")}
@@ -646,7 +652,8 @@ const mapStateToProps = (state) => ({
   deliveryAddressDetails: state.poOrderReducer.deliveryAddressDetails,
   invoiceAddressDetails: state.poOrderReducer.invoiceAddressDetails,
   contactDetails: state.poOrderReducer.contactDetails,
-  isOrderConfirmed: state.listReducer.isOrderConfirmed
+  isOrderConfirmed: state.listReducer.isOrderConfirmed,
+  isOrderNew: state.listReducer.isOrderNew
 })
 
 export default connect(mapStateToProps, null)(InvoiceAndDelivery)
