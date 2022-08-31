@@ -168,31 +168,32 @@ const Home = () => {
               <Row style={{ display: "flex", justifyContent: "space-between" }}>
                 <Col xs="6" sm="6" md="4" lg="2">
                   <Row>
-                    <div style={{ display: "flex" }}>
-                      <div
-                        style={{
-                          minWidth: "120px",
-                          paddingRight: "2%",
-                          paddingTop: "10px"
-                        }}
-                      >
-                        <Label>{t("Records Per Page")}</Label>
-                      </div>
-                      <div style={{ minWidth: "70px" }}>
-                        <Select
-                          classNamePrefix="select"
-                          defaultValue={recordsPerPageOptions[1]}
-                          name="clear"
-                          menuPlacement={"auto"}
-                          options={recordsPerPageOptions}
-                          onChange={(e) => {
-                            console.log("changed")
-                            setRecordsPerPage(e)
-                            debounceFetch(currentPage, e)
+                    <Col>
+                      <div style={{ display: "flex" }}>
+                        <div
+                          style={{
+                            minWidth: "120px",
+                            paddingRight: "2%",
+                            paddingTop: "10px"
                           }}
-                        />
+                        >
+                          <Label>{t("Records Per Page")}</Label>
+                        </div>
+                        <div style={{ minWidth: "70px" }}>
+                          <Select
+                            classNamePrefix="select"
+                            defaultValue={recordsPerPageOptions[1]}
+                            name="clear"
+                            menuPlacement={"auto"}
+                            options={recordsPerPageOptions}
+                            onChange={(e) => {
+                              setRecordsPerPage(e)
+                              debounceFetch(currentPage, e)
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    </Col>
                   </Row>
                 </Col>
                 <Col xs="6" sm="6" md="6" lg="5">

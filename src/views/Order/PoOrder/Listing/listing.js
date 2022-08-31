@@ -700,35 +700,37 @@ const Listing = (props) => {
           <Row style={{ display: "flex", justifyContent: "space-between" }}>
             <Col xs="6" sm="6" md="4" lg="2">
               <Row>
-                <div style={{ display: "flex" }}>
-                  <div
-                    style={{
-                      minWidth: "120px",
-                      paddingRight: "2%",
-                      paddingTop: "10px"
-                    }}
-                  >
-                    <Label>{t("Records Per Page")}</Label>
-                  </div>
-                  <div style={{ minWidth: "70px" }}>
-                    <Select
-                      classNamePrefix="select"
-                      defaultValue={recordsPerPageOptions[1]}
-                      name="clear"
-                      menuPlacement={"auto"}
-                      options={recordsPerPageOptions}
-                      onChange={(e) => {
-                        dispatch(
-                          setSearchParams({
-                            ...props.searchParams,
-                            recordsPerPage: e
-                          })
-                        )
-                        debounceFetch(props.searchParams.currentPage, e)
+                <Col>
+                  <div style={{ display: "flex" }}>
+                    <div
+                      style={{
+                        minWidth: "120px",
+                        paddingRight: "2%",
+                        paddingTop: "10px"
                       }}
-                    />
+                    >
+                      <Label>{t("Records Per Page")}</Label>
+                    </div>
+                    <div style={{ minWidth: "70px" }}>
+                      <Select
+                        classNamePrefix="select"
+                        defaultValue={recordsPerPageOptions[1]}
+                        name="clear"
+                        menuPlacement={"auto"}
+                        options={recordsPerPageOptions}
+                        onChange={(e) => {
+                          dispatch(
+                            setSearchParams({
+                              ...props.searchParams,
+                              recordsPerPage: e
+                            })
+                          )
+                          debounceFetch(props.searchParams.currentPage, e)
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
+                </Col>
               </Row>
             </Col>
             <Col xs="6" sm="6" md="4" lg="3">
