@@ -82,69 +82,69 @@ const OrderForm = (props) => {
             content_group = "C"
           } else {
             content_group = "AB"
-            }
-          } else if (props.contentGroup === "A/BC") {
-            if (section === "content") {
-              content_group = "A"
-            } else {
-              content_group = "BC"
-            }
+          }
+        } else if (props.contentGroup === "A/BC") {
+          if (section === "content") {
+            content_group = "A"
+          } else {
+            content_group = "BC"
           }
         }
       }
-      if (content_group) {
-        dispatch(matchContentNumber("Order", content_group, section))
-      }
     }
-
-    // API services
-    const fetchBrandDetails = () => {
-      const body = {
-        brand_key: props.brand ? props.brand.value : ""
-      }
-      axios
-        .post("/brand/GetBrandDetail", body)
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(setBrandDetails(res.data))
-          }
-        })
-        .catch((err) => console.log(err))
+    if (content_group) {
+      dispatch(matchContentNumber("Order", content_group, section))
     }
+  }
 
-    const fetchDefaultContentData = (contKey, index, tempData) => {
-      // fetches default Content Data as per option selected in fabric select field.
-      const body = {
-        brand_key: props.brand.value || "",
-        cont_key: contKey,
-        page_type: "content"
-      }
-
-      axios
-        .post("/Translation/GetDefaultContentByContentKey", body)
-        .then((res) => {
-          if (res.status === 200) {
-            tempData[index] = {
-              cont_key: res.data[0]?.guid_key,
-              cont_translation: res.data[0]?.gb_translation
-            }
-            dispatch(setDefaultContentData([...tempData]))
-          }
-        })
-        .catch((err) => console.log(err))
+  // API services
+  const fetchBrandDetails = () => {
+    const body = {
+      brand_key: props.brand ? props.brand.value : ""
     }
-
-    const fetchContentNumberDetail = (content_number_key, style_number) => {
-      // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
-      const body = {
-        order_user: "innoa",
-        content_number_key,
-        brand_key: props.brand.value || "",
-        style_number
-      }
-      axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
+    axios
+      .post("/brand/GetBrandDetail", body)
+      .then((res) => {
         if (res.status === 200) {
-          if (res.data.content) {
+          dispatch(setBrandDetails(res.data))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const fetchDefaultContentData = (contKey, index, tempData) => {
+    // fetches default Content Data as per option selected in fabric select field.
+    const body = {
+      brand_key: props.brand.value || "",
+      cont_key: contKey,
+      page_type: "content"
+    }
+
+    axios
+      .post("/Translation/GetDefaultContentByContentKey", body)
+      .then((res) => {
+        if (res.status === 200) {
+          tempData[index] = {
+            cont_key: res.data[0]?.guid_key,
+            cont_translation: res.data[0]?.gb_translation
+          }
+          dispatch(setDefaultContentData([...tempData]))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const fetchContentNumberDetail = (content_number_key, style_number) => {
+    // fetches props.fibreInstructionData and props.careData for a selected content and care select fields respectively.
+    const body = {
+      order_user: "innoa",
+      content_number_key,
+      brand_key: props.brand.value || "",
+      style_number
+    }
+    axios.post("/ContentNumber/GetContentNumberDetail", body).then((res) => {
+      if (res.status === 200) {
+        if (res.data.content) {
           dispatch(
             setFibreInstructionData(
               res.data.content.map((data, index) => ({ ...data, id: index }))
@@ -428,7 +428,7 @@ const OrderForm = (props) => {
       .catch((err) => console.log(err))
   }
 
-  const renderSwitch = (field) => {
+  const renderInputField = (field) => {
     // renders dynamic fields under Item Info
     switch (field.type) {
       case "select":
@@ -731,7 +731,7 @@ const OrderForm = (props) => {
                       <Collapse isOpen={itemInfoCollapse}>
                         <CardBody style={{ paddingTop: 0 }}>
                           {props.itemInfoFields?.map((field) => {
-                            return renderSwitch(field)
+                            return renderInputField(field)
                           })}
                         </CardBody>
                       </Collapse>

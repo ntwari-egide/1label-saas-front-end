@@ -99,7 +99,7 @@ const OrderForm = (props) => {
     }
   }
 
-  const renderSwitch = (field) => {
+  const renderInputField = (field) => {
     // renders dynamic fields under Item Info
     switch (field.type) {
       case "select":
@@ -716,7 +716,7 @@ const OrderForm = (props) => {
                       <Collapse isOpen={itemInfoCollapse}>
                         <CardBody style={{ paddingTop: 0 }}>
                           {props.itemInfoFields?.map((field) => {
-                            return renderSwitch(field)
+                            return renderInputField(field)
                           })}
                         </CardBody>
                       </Collapse>
