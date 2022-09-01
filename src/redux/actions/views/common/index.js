@@ -268,7 +268,19 @@ export const populateData =
       }
     }
     if (data.po_size_tables) {
-      // TODO
+      const {
+        setSizeTableTrigger
+      } = require(`@redux/actions/views/Order/POOrder`)
+      dispatch(setSizeTableTrigger(false))
+      const tempPOTables = await Promise.all(
+        data.po_size_tables.map(async (data) => {
+          return await {
+            ...data,
+            size_content: await formatColToRow(data.size_content)
+          }
+        })
+      )
+      dispatch(setSizeData(tempPOTables))
     }
     if (data.default_size_content) {
       dispatch(setDefaultSizeTable(data.default_size_content))
