@@ -66,6 +66,10 @@ export const setSizeData = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_SIZE_CONTENT_DATA", payload: data })
 }
 
+export const setOriginalSizeData = (data) => (dispatch) => {
+  dispatch({ type: "SET_PO_ORIGINAL_SIZE_DATA", payload: data })
+}
+
 export const setWastage = (value) => (dispatch) => {
   dispatch({ type: "SET_PO_WASTAGE", payload: value })
 }
