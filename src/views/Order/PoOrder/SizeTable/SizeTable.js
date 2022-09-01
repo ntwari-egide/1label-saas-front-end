@@ -191,14 +191,17 @@ const SizeTable = (props) => {
         dispatch(setWastage(0))
       }
     } else {
-      setLoader(true)
-      fetchSizeTable()
+      if (!props.originalSizeData.length) {
+        setLoader(true)
+        fetchSizeTable()
+      } else {
+        dispatch(setSizeData([...props.originalSizeData]))
+      }
+      // recalculate dynamic cols
       const tempCols = []
-      const tempTable = props.sizeData.map((data, index) => {
-        // recalculate dynamic cols
+      props.sizeData.forEach((data, index) => {
         tempCols[index] = populateCols(data.size_content, index, "N")
       })
-      dispatch(setSizeData(tempTable))
       dispatch(setCols(tempCols))
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
@@ -402,6 +405,7 @@ const SizeTable = (props) => {
 const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   sizeData: state.poOrderReducer.sizeData,
+  originalSizeData: state.poOrderReducer.originalSizeData,
   wastage: state.poOrderReducer.wastage,
   sizeTableTrigger: state.poOrderReducer.sizeTableTrigger,
   wastageApplied: state.poOrderReducer.wastageApplied,

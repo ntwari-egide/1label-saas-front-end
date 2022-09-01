@@ -269,7 +269,8 @@ export const populateData =
     }
     if (data.po_size_tables) {
       const {
-        setSizeTableTrigger
+        setSizeTableTrigger,
+        setOriginalSizeData
       } = require(`@redux/actions/views/Order/POOrder`)
       dispatch(setSizeTableTrigger(false))
       const tempPOTables = await Promise.all(
@@ -281,6 +282,11 @@ export const populateData =
         })
       )
       dispatch(setSizeData(tempPOTables))
+      const deepCopiedData = tempPOTables.map((data) => ({
+        ...data,
+        size_content: data.size_content?.map((row) => ({ ...row }))
+      }))
+      dispatch(setOriginalSizeData(deepCopiedData))
     }
     if (data.default_size_content) {
       dispatch(setDefaultSizeTable(data.default_size_content))
