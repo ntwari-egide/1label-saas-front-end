@@ -71,7 +71,11 @@ const SizeTable = (props) => {
     // pushing size col
     if (table.length) {
       Object.keys(table[0]).map((key) => {
-        if (!key.includes("QTY ITEM REF") && !key.includes("Sequence")) {
+        if (
+          !key.includes("QTY ITEM REF") &&
+          !key.includes("Sequence") &&
+          !key.includes("UPC/EAN CODE")
+        ) {
           cols.push({
             name: key,
             selector: key
@@ -79,7 +83,6 @@ const SizeTable = (props) => {
         }
       })
     }
-
     // pushing item ref cols
     props.selectedItems.map((item, itm_index) => {
       cols.push({
