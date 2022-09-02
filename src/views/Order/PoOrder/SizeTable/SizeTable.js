@@ -54,13 +54,7 @@ const SizeTable = (props) => {
     }
   }
 
-  const populateCols = (table, tabIndex, wastageStatus) => {
-    let wastageApplied
-    if (wastageStatus) {
-      wastageApplied = wastageStatus
-    } else {
-      wastageApplied = props.wastageApplied
-    }
+  const populateCols = (table, tabIndex, wastageApplied) => {
     // dynamically assigning cols to data-table
     const cols = []
     // pushing sr no
@@ -177,11 +171,12 @@ const SizeTable = (props) => {
         dispatch(setWastageApplied("Y"))
         dispatch(setSizeData([...tempState]))
         // will have to recalculate cols to render
-        const tempCols = []
-        props.sizeData.map((data, index) => {
-          tempCols[index] = populateCols(data.size_content, index, "Y")
-        })
-        dispatch(setCols(tempCols))
+        // const tempCols = []
+        // props.sizeData.map((data, index) => {
+        //   tempCols[index] = populateCols(data.size_content, index, "Y")
+        // })
+        // dispatch(setCols(tempCols))
+        dispatch(setCols(props.sizeData, populateCols, "Y"))
         toast(`${props.wastage * 100}% Wastage Applied.`)
       } catch (err) {
         alert(
@@ -198,11 +193,12 @@ const SizeTable = (props) => {
         dispatch(setSizeData([...props.originalSizeData]))
       }
       // recalculate dynamic cols
-      const tempCols = []
-      props.sizeData.forEach((data, index) => {
-        tempCols[index] = populateCols(data.size_content, index, "N")
-      })
-      dispatch(setCols(tempCols))
+      // const tempCols = []
+      // props.sizeData.forEach((data, index) => {
+      //   tempCols[index] = populateCols(data.size_content, index, "N")
+      // })
+      // dispatch(setCols(tempCols))
+      dispatch(setCols(props.sizeData, populateCols, "N"))
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
       toast("Wastage Reset.")
@@ -267,13 +263,13 @@ const SizeTable = (props) => {
 
   useEffect(() => {
     if (!props.cols.length && props.sizeData.length) {
-      const tempCols = []
-      props.sizeData.map((data, index) => {
-        if (data.size_content?.length) {
-          tempCols[index] = populateCols(data.size_content, index)
-        }
-      })
-      dispatch(setCols(tempCols))
+      // const tempCols = []
+      // props.sizeData.map((data, index) => {
+      //   if (data.size_content?.length) {
+      //     tempCols[index] = populateCols(data.size_content, index)
+      //   }
+      // })
+      dispatch(setCols(props.sizeData, populateCols, props.wastageApplied))
     }
   }, [props.sizeData])
 

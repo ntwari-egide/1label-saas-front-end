@@ -1,3 +1,5 @@
+import { store } from "@redux/storeConfig/store"
+
 export const setBrand = (e) => (dispatch) => {
   dispatch({ type: "SET_PO_BRAND", payload: e })
 }
@@ -130,10 +132,6 @@ export const setItemInfoFields = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_ITEM_INFO_FIELDS", payload: data })
 }
 
-export const setCols = (data) => (dispatch) => {
-  dispatch({ type: "SET_PO_COLS", payload: data })
-}
-
 export const resetData = () => (dispatch) => {
   dispatch({ type: "RESET_PO_DATA" })
 }
@@ -157,3 +155,92 @@ export const setBrandSettings = (data) => (dispatch) => {
 export const setOrderFormValidations = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_ORDER_FORM_VALIDATIONS", payload: data })
 }
+
+const populateCols = (table, tabIndex, wastageApplied) => {
+  const isOrderConfirmed = store.getState().listReducer.isOrderConfirmed
+  // dynamically assigning cols to data-table
+  const cols = []
+  // pushing sr no
+  cols.push({
+    name: "Sr No.",
+    selector: "Sequence"
+  })
+  // pushing size col
+  if (table.length) {
+    Object.keys(table[0]).map((key) => {
+      if (
+        !key.includes("QTY ITEM REF") &&
+        !key.includes("Sequence") &&
+        !key.includes("UPC/EAN CODE")
+      ) {
+        cols.push({
+          name: key,
+          selector: key
+        })
+      }
+    })
+  }
+  // pushing item ref cols
+  props.selectedItems.map((item, itm_index) => {
+    cols.push({
+      name: item.item_ref,
+      selector:
+        wastageApplied === "N"
+          ? `QTY ITEM REF ${itm_index + 1}`
+          : `QTY ITEM REF ${itm_index + 1} WITH WASTAGE`,
+      cell: (row, index, col) => {
+        return (
+          <div>
+            <Input
+              value={row[col.selector] ? row[col.selector] : ""}
+              onChange={(e) => {
+                handleQtyChange(e.target.value, col, index, tabIndex)
+              }}
+              disable={isOrderConfirmed}
+            />
+          </div>
+        )
+      }
+    })
+  })
+  cols.push({
+    name: "UPC/EAN CODE",
+    selector: "UPC/EAN CODE",
+    cell: (row, index, col) => {
+      return (
+        <div>
+          <Input
+            value={row[col.selector] ? row[col.selector] : ""}
+            onChange={(e) => {
+              const tempState = [...props.sizeData]
+              const tempTable = tempState[tabIndex].size_content
+              tempTable[index] = {
+                ...tempTable[index],
+                [`${col.selector}`]: e.target.value
+              }
+              tempState[tabIndex] = {
+                ...tempState[tabIndex],
+                size_content: [...tempTable]
+              }
+              dispatch(setSizeData(tempState))
+            }}
+            disable={isOrderConfirmed}
+          />
+        </div>
+      )
+    }
+  })
+  // finally assign it to state
+  return cols
+}
+
+export const setCols =
+  (sizeData, populateCols, wastageApplied) => (dispatch) => {
+    const tempCols = []
+    sizeData.map((data, index) => {
+      if (data.size_content?.length) {
+        tempCols[index] = populateCols(data.size_content, index, wastageApplied)
+      }
+    })
+    dispatch({ type: "SET_PO_COLS", payload: tempCols })
+  }
