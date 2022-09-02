@@ -109,29 +109,29 @@ const SizeTable = (props) => {
     cols.push({
       name: "UPC/EAN CODE",
       selector: "UPC/EAN CODE",
-      cell: (row, index, col) => (
-        <div>
-          <Input
-            value={
-              props.sizeData[tabIndex]
-                ? props.sizeData[tabIndex].size_content[index][col.selector]
-                : ""
-            }
-            onChange={(e) => {
-              const tempState = [...props.sizeData]
-              const tempTable = tempState[tabIndex].size_content
-              row[col.selector] = e.target.value
-              tempTable[index] = row
-              tempState[tabIndex] = {
-                ...tempState[tabIndex],
-                size_content: [...tempTable]
-              }
-              dispatch(setSizeData(tempState))
-            }}
-            disable={props.isOrderConfirmed}
-          />
-        </div>
-      )
+      cell: (row, index, col) => {
+        return (
+          <div>
+            <Input
+              value={row[col.selector] ? row[col.selector] : ""}
+              onChange={(e) => {
+                const tempState = [...props.sizeData]
+                const tempTable = tempState[tabIndex].size_content
+                tempTable[index] = {
+                  ...tempTable[index],
+                  [`${col.selector}`]: e.target.value
+                }
+                tempState[tabIndex] = {
+                  ...tempState[tabIndex],
+                  size_content: [...tempTable]
+                }
+                dispatch(setSizeData(tempState))
+              }}
+              disable={props.isOrderConfirmed}
+            />
+          </div>
+        )
+      }
     })
     // finally assign it to state
     return cols
