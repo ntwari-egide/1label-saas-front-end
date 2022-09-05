@@ -406,6 +406,7 @@ const mapStateToProps = (state) => ({
   sizeTableTrigger: state.poOrderReducer.sizeTableTrigger,
   wastageApplied: state.poOrderReducer.wastageApplied,
   selectedItems: state.poOrderReducer.selectedItems,
+  cols: state.poOrderReducer.cols,
   isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 

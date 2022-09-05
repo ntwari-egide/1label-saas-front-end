@@ -341,6 +341,7 @@ const mapStateToProps = (state) => ({
   wastageApplied: state.poOrderReducer.wastageApplied,
   brandDetails: state.poOrderReducer.brandDetails,
   sizeMatrixType: state.poOrderReducer.sizeMatrixType,
+  cols: state.poOrderReducer.cols,
   isOrderConfirmed: state.listReducer.isOrderConfirmed
 })
 

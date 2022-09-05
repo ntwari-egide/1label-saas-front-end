@@ -130,14 +130,12 @@ const PoOrder = (props) => {
           currentStep={props.currentStep}
           setCurrentStep={setCurrentStepHelper}
           combinedPOOrderKey={combinedPOOrderKey}
-          cols={props.cols}
           stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Preview Item & Summary Size Table" ? (
         <PreviewAndSummary
           setCurrentStep={setCurrentStepHelper}
           currentStep={props.currentStep}
-          cols={props.cols}
           stepperMenu={stepperMenu}
         />
       ) : props.currentStep === "Invoice & Delivery" ? (
@@ -160,7 +158,6 @@ const mapStateToProps = (state) => ({
   productionLocation: state.poOrderReducer.productionLocation,
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
   brandDetails: state.poOrderReducer.brandDetails,
-  cols: state.poOrderReducer.cols,
   poSelectedOrders: state.poOrderReducer.poSelectedOrders,
   isOrderNew: state.listReducer.isOrderNew
 })
