@@ -12,7 +12,7 @@ import {
   Button,
   Collapse
 } from "reactstrap"
-import Footer from "../../CommonFooter"
+import Footer from "../../../CommonFooter"
 import { useTranslation } from "react-i18next"
 import { connect, useDispatch } from "react-redux"
 import { getUserData } from "@utils"

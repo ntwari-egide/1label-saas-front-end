@@ -10,7 +10,7 @@ import {
 } from "reactstrap"
 import { ArrowRight, ArrowLeft, Users } from "react-feather"
 import DataTable from "react-data-table-component"
-import Footer from "../../CommonFooter"
+import Footer from "../../../CommonFooter"
 import Radio from "@components/Radio/Radio"
 import { useTranslation } from "react-i18next"
 const visaMasterCard =

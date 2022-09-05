@@ -11,7 +11,7 @@ import {
 } from "reactstrap"
 import { ArrowRight, ArrowLeft, Printer } from "react-feather"
 import DataTable from "react-data-table-component"
-import Footer from "../../CommonFooter"
+import Footer from "../../../CommonFooter"
 import { useTranslation } from "react-i18next"
 
 const DirectPrint = (props) => {

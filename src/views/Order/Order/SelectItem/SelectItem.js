@@ -4,7 +4,7 @@ import { Check } from "react-feather"
 import axios from "@axios"
 import CheckBox from "@components/CheckBox/CheckBox"
 import Select from "react-select"
-import Footer from "../../CommonFooter"
+import Footer from "../../../CommonFooter"
 import {
   Card,
   CardHeader,
