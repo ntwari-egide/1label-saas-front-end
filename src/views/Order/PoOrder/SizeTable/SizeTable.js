@@ -35,102 +35,6 @@ const SizeTable = (props) => {
   const [loader, setLoader] = useState(true)
 
   // other functions
-  const handleQtyChange = (value, col, index, tabIndex) => {
-    if (parseInt(value) || value === "0" || value === "") {
-      // update the table
-      const tempState = [...props.sizeData]
-      const tempTable = tempState[tabIndex].size_content
-      let tempRow = tempTable[index]
-      tempRow = {
-        ...tempRow,
-        [`${col.selector}`]: value.length ? parseInt(value).toString() : value
-      }
-      tempTable[index] = tempRow
-      tempState[tabIndex] = {
-        ...tempState[tabIndex],
-        size_content: [...tempTable]
-      }
-      dispatch(setSizeData(tempState))
-    }
-  }
-
-  const populateCols = (table, tabIndex, wastageApplied) => {
-    // dynamically assigning cols to data-table
-    const cols = []
-    // pushing sr no
-    cols.push({
-      name: "Sr No.",
-      selector: "Sequence"
-    })
-    // pushing size col
-    if (table.length) {
-      Object.keys(table[0]).map((key) => {
-        if (
-          !key.includes("QTY ITEM REF") &&
-          !key.includes("Sequence") &&
-          !key.includes("UPC/EAN CODE")
-        ) {
-          cols.push({
-            name: key,
-            selector: key
-          })
-        }
-      })
-    }
-    // pushing item ref cols
-    props.selectedItems.map((item, itm_index) => {
-      cols.push({
-        name: item.item_ref,
-        selector:
-          wastageApplied === "N"
-            ? `QTY ITEM REF ${itm_index + 1}`
-            : `QTY ITEM REF ${itm_index + 1} WITH WASTAGE`,
-        cell: (row, index, col) => {
-          return (
-            <div>
-              <Input
-                value={row[col.selector] ? row[col.selector] : ""}
-                onChange={(e) => {
-                  handleQtyChange(e.target.value, col, index, tabIndex)
-                }}
-                disable={props.isOrderConfirmed}
-              />
-            </div>
-          )
-        }
-      })
-    })
-    cols.push({
-      name: "UPC/EAN CODE",
-      selector: "UPC/EAN CODE",
-      cell: (row, index, col) => {
-        return (
-          <div>
-            <Input
-              value={row[col.selector] ? row[col.selector] : ""}
-              onChange={(e) => {
-                const tempState = [...props.sizeData]
-                const tempTable = tempState[tabIndex].size_content
-                tempTable[index] = {
-                  ...tempTable[index],
-                  [`${col.selector}`]: e.target.value
-                }
-                tempState[tabIndex] = {
-                  ...tempState[tabIndex],
-                  size_content: [...tempTable]
-                }
-                dispatch(setSizeData(tempState))
-              }}
-              disable={props.isOrderConfirmed}
-            />
-          </div>
-        )
-      }
-    })
-    // finally assign it to state
-    return cols
-  }
-
   const handleAddResetWastage = (operation) => {
     if (operation === "add") {
       try {
@@ -176,7 +80,7 @@ const SizeTable = (props) => {
         //   tempCols[index] = populateCols(data.size_content, index, "Y")
         // })
         // dispatch(setCols(tempCols))
-        dispatch(setCols(props.sizeData, populateCols, "Y"))
+        dispatch(setCols(props.sizeData, "Y"))
         toast(`${props.wastage * 100}% Wastage Applied.`)
       } catch (err) {
         alert(
@@ -198,7 +102,7 @@ const SizeTable = (props) => {
       //   tempCols[index] = populateCols(data.size_content, index, "N")
       // })
       // dispatch(setCols(tempCols))
-      dispatch(setCols(props.sizeData, populateCols, "N"))
+      dispatch(setCols(props.sizeData, "N"))
       dispatch(setWastage(0))
       dispatch(setWastageApplied("N"))
       toast("Wastage Reset.")
@@ -256,6 +160,7 @@ const SizeTable = (props) => {
     if (props.sizeTableTrigger) {
       fetchSizeTable()
     } else {
+      // because its true by default
       setLoader(false)
     }
     fetchWastageList()
@@ -269,7 +174,7 @@ const SizeTable = (props) => {
       //     tempCols[index] = populateCols(data.size_content, index)
       //   }
       // })
-      dispatch(setCols(props.sizeData, populateCols, props.wastageApplied))
+      dispatch(setCols(props.sizeData, props.wastageApplied))
     }
   }, [props.sizeData])
 

@@ -1,4 +1,5 @@
 import { store } from "@redux/storeConfig/store"
+import { Input } from "reactstrap"
 
 export const setBrand = (e) => (dispatch) => {
   dispatch({ type: "SET_PO_BRAND", payload: e })
@@ -156,8 +157,31 @@ export const setOrderFormValidations = (data) => (dispatch) => {
   dispatch({ type: "SET_PO_ORDER_FORM_VALIDATIONS", payload: data })
 }
 
-const populateCols = (table, tabIndex, wastageApplied) => {
-  const isOrderConfirmed = store.getState().listReducer.isOrderConfirmed
+const handleQtyChange = (value, col, index, tabIndex, props, dispatch) => {
+  if (parseInt(value) || value === "0" || value === "") {
+    // update the table
+    const tempState = [...props.sizeData]
+    const tempTable = tempState[tabIndex].size_content
+    let tempRow = tempTable[index]
+    tempRow = {
+      ...tempRow,
+      [`${col.selector}`]: value.length ? parseInt(value).toString() : value
+    }
+    tempTable[index] = tempRow
+    tempState[tabIndex] = {
+      ...tempState[tabIndex],
+      size_content: [...tempTable]
+    }
+    dispatch(setSizeData(tempState))
+  }
+}
+
+const populateCols = (table, tabIndex, wastageApplied, dispatch) => {
+  const props = {
+    ...store.getState().listReducer,
+    ...store.getState().poOrderReducer
+  }
+
   // dynamically assigning cols to data-table
   const cols = []
   // pushing sr no
@@ -194,9 +218,16 @@ const populateCols = (table, tabIndex, wastageApplied) => {
             <Input
               value={row[col.selector] ? row[col.selector] : ""}
               onChange={(e) => {
-                handleQtyChange(e.target.value, col, index, tabIndex)
+                handleQtyChange(
+                  e.target.value,
+                  col,
+                  index,
+                  tabIndex,
+                  props,
+                  dispatch
+                )
               }}
-              disable={isOrderConfirmed}
+              disable={props.isOrderConfirmed}
             />
           </div>
         )
@@ -224,7 +255,7 @@ const populateCols = (table, tabIndex, wastageApplied) => {
               }
               dispatch(setSizeData(tempState))
             }}
-            disable={isOrderConfirmed}
+            disable={props.isOrderConfirmed}
           />
         </div>
       )
@@ -234,13 +265,17 @@ const populateCols = (table, tabIndex, wastageApplied) => {
   return cols
 }
 
-export const setCols =
-  (sizeData, populateCols, wastageApplied) => (dispatch) => {
-    const tempCols = []
-    sizeData.map((data, index) => {
-      if (data.size_content?.length) {
-        tempCols[index] = populateCols(data.size_content, index, wastageApplied)
-      }
-    })
-    dispatch({ type: "SET_PO_COLS", payload: tempCols })
-  }
+export const setCols = (sizeData, wastageApplied) => (dispatch) => {
+  const tempCols = []
+  sizeData.map((data, index) => {
+    if (data.size_content?.length) {
+      tempCols[index] = populateCols(
+        data.size_content,
+        index,
+        wastageApplied,
+        dispatch
+      )
+    }
+  })
+  dispatch({ type: "SET_PO_COLS", payload: tempCols })
+}
