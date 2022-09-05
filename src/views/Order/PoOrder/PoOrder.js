@@ -10,7 +10,11 @@ import SizeTable from "./SizeTable/SizeTable"
 import ItemList from "./ItemList/ItemList"
 import PreviewAndSummary from "./PreviewAndSummary/PreviewAndSummary"
 import InvoiceAndDelivery from "./InvoiceAndDelivery/InvoiceAndDelivery"
-import { setCurrentStep, resetData } from "@redux/actions/views/Order/POOrder"
+import {
+  setCurrentStep,
+  resetData,
+  setCols
+} from "@redux/actions/views/Order/POOrder"
 import { resetData as resetListData } from "@redux/actions/views/Order/List"
 import { savePOOrder } from "@redux/actions/views/common"
 import { toggleSaveBtnStatus } from "@redux/actions/layout"
@@ -44,13 +48,24 @@ const PoOrder = (props) => {
 
   useEffect(() => {
     dispatch(toggleSaveBtnStatus(true))
-
     return () => {
       dispatch(toggleSaveBtnStatus(false))
       dispatch(resetData())
       dispatch(resetListData())
     }
   }, [])
+
+  useEffect(() => {
+    // populate dynamic cols while visiting from listing page
+    // to avoid visiting size table page before summary page for dynamic cols
+    if (
+      props.sizeData.length &&
+      !props.cols.length &&
+      props.selectedItems.length
+    ) {
+      dispatch(setCols(props.sizeData, "N"))
+    }
+  }, [props.sizeData, props.selectedItems])
 
   return (
     <div>
@@ -159,7 +174,9 @@ const mapStateToProps = (state) => ({
   expectedDeliveryDate: state.poOrderReducer.expectedDeliveryDate,
   brandDetails: state.poOrderReducer.brandDetails,
   poSelectedOrders: state.poOrderReducer.poSelectedOrders,
-  isOrderNew: state.listReducer.isOrderNew
+  isOrderNew: state.listReducer.isOrderNew,
+  sizeData: state.poOrderReducer.sizeData,
+  cols: state.poOrderReducer.cols
 })
 
 export default connect(mapStateToProps, null)(PoOrder)
