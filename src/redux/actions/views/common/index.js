@@ -553,6 +553,7 @@ const formatRowToCol = (table) => {
 }
 
 const processSizeTable = (table, module, index) => {
+  // process the data and initialize the data if empty
   let cols
   if (module === "Order") {
     cols = store.getState().orderReducer.cols
