@@ -350,7 +350,7 @@ const InvoiceAndDelivery = (props) => {
           </Col>
           <Col xs="12" sm="12" md="4" lg="4" xl="4">
             {invoiceDetailsList.map((data) => (
-              <div className="address-card">
+              <div className="address-card" key={data?.address_id}>
                 <Card
                   key={data?.guid_key}
                   onClick={() => {
@@ -603,7 +603,7 @@ const InvoiceAndDelivery = (props) => {
           </Col>
           <Col xs="12" sm="12" md="4" lg="4" xl="4">
             {deliveryDetailsList.map((data) => (
-              <div className="address-card">
+              <div className="address-card" key={data?.address_id}>
                 <Card
                   key={data?.guid_key}
                   onClick={() => {

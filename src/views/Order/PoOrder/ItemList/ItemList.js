@@ -203,7 +203,7 @@ const ItemList = (props) => {
             itemList
               .slice(visibleCardIndex, visibleCardIndex + 6)
               .map((item, index) => (
-                <Col xs="12" sm="6" md="2" lg="2">
+                <Col xs="12" sm="6" md="2" lg="2" key={item?.item_ref}>
                   <Card style={{ minHeight: "493px" }}>
                     <CardHeader>
                       <div>{item.brand_name}</div>

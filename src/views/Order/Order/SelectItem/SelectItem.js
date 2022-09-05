@@ -255,7 +255,13 @@ const SelectItem = (props) => {
                 itemList
                   .slice(visibleCardIndex, visibleCardIndex + 6)
                   .map((item, index) => (
-                    <Col xs="12" sm="6" md="2" lg="2" key={`${item}-${index}`}>
+                    <Col
+                      xs="12"
+                      sm="6"
+                      md="2"
+                      lg="2"
+                      key={`${item?.guid_key}-${index}`}
+                    >
                       <Card style={{ minHeight: "493px" }}>
                         <CardHeader>
                           <div>{item.brand_name}</div>

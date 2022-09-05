@@ -182,6 +182,7 @@ const Listing = (props) => {
                 onClick={() => {
                   handleActionButtonClick(act.label, row)
                 }}
+                key={act?.label}
               >
                 {actionOptIcons[`${act.label}`]} {act.label}
               </DropdownItem>

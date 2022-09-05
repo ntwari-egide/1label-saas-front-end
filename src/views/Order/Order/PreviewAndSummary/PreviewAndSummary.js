@@ -127,7 +127,7 @@ const PreviewAndSummary = (props) => {
             : `QTY ITEM REF ${itm_index + 1} WITH WASTAGE`,
         cell: (row, index, col) => {
           return (
-            <div>
+            <div key={item?.item_ref}>
               <Input
                 key={`${index}-${col?.selector}`}
                 id={`${index}-${col?.selector}`}
@@ -357,7 +357,15 @@ const PreviewAndSummary = (props) => {
       <CardBody>
         <Row>
           {props.selectedItems.map((itm, index) => (
-            <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              md="4"
+              lg="3"
+              xl="3"
+              key={itm?.item_ref}
+            >
               <Card>
                 <CardBody style={{ minHeight: "450px", maxHeight: "450px" }}>
                   <div

@@ -75,11 +75,6 @@ const SizeTable = (props) => {
         dispatch(setWastageApplied("Y"))
         dispatch(setSizeData([...tempState]))
         // will have to recalculate cols to render
-        // const tempCols = []
-        // props.sizeData.map((data, index) => {
-        //   tempCols[index] = populateCols(data.size_content, index, "Y")
-        // })
-        // dispatch(setCols(tempCols))
         dispatch(setCols(props.sizeData, "Y"))
         toast(`${props.wastage * 100}% Wastage Applied.`)
       } catch (err) {
@@ -168,12 +163,6 @@ const SizeTable = (props) => {
 
   useEffect(() => {
     if (!props.cols.length && props.sizeData.length) {
-      // const tempCols = []
-      // props.sizeData.map((data, index) => {
-      //   if (data.size_content?.length) {
-      //     tempCols[index] = populateCols(data.size_content, index)
-      //   }
-      // })
       dispatch(setCols(props.sizeData, props.wastageApplied))
     }
   }, [props.sizeData])
@@ -200,7 +189,10 @@ const SizeTable = (props) => {
         ) : (
           <div>
             {props.sizeData.map((data, index) => (
-              <Row style={{ margin: 0, marginBottom: "20px" }}>
+              <Row
+                style={{ margin: 0, marginBottom: "20px" }}
+                key={data?.size_matrix_type}
+              >
                 <Col>
                   <Row style={{ paddingBottom: "5px" }}>
                     <Col

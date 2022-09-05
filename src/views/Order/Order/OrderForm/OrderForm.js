@@ -433,7 +433,10 @@ const OrderForm = (props) => {
     switch (field.type) {
       case "select":
         return (
-          <Row style={{ margin: "5px", marginBottom: "10px" }}>
+          <Row
+            style={{ margin: "5px", marginBottom: "10px" }}
+            key={field?.title}
+          >
             <Col xs="6" sm="6" md="6" lg="6" xl="6">
               <Row>
                 <Col
@@ -485,7 +488,7 @@ const OrderForm = (props) => {
         )
       case "input":
         return (
-          <Row style={{ margin: "5px", marginBottom: "10px" }}>
+          <Row style={{ margin: "5px", marginBottom: "10px" }} key={field?.key}>
             <Col xs="6" sm="6" md="6" lg="6" xl="6">
               <Row>
                 <Col

@@ -137,7 +137,7 @@ const Details = (props) => {
           <Row>
             <Col xs="12" sm="12" md="12" lg="8" xl="8">
               {itemList.map((item, index) => (
-                <Row>
+                <Row key={item?.brand_guid_key}>
                   <Col>
                     <Card>
                       <CardBody>

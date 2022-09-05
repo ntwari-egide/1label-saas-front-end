@@ -190,7 +190,15 @@ const PreviewAndSummary = (props) => {
       <CardBody>
         <Row>
           {props.selectedItems.map((item) => (
-            <Col xs="12" sm="12" md="6" md="4" lg="3" xl="3">
+            <Col
+              xs="12"
+              sm="12"
+              md="6"
+              md="4"
+              lg="3"
+              xl="3"
+              key={item?.item_ref}
+            >
               <Card>
                 <CardBody style={{ minHeight: "450px", maxHeight: "450px" }}>
                   <div
@@ -273,7 +281,10 @@ const PreviewAndSummary = (props) => {
         {props.brandDetails.display_SizeTable === "Y" ? (
           Object.keys(props.summaryTable).map((key) => (
             <>
-              <Row style={{ marginBottom: "10px", marginTop: "10px" }}>
+              <Row
+                style={{ marginBottom: "10px", marginTop: "10px" }}
+                key={key}
+              >
                 <Col
                   xs="12"
                   sm="12"
