@@ -20,8 +20,8 @@ import { ArrowRight, ArrowLeft } from "react-feather"
 import { connect, useDispatch } from "react-redux"
 import {
   setSelectedItems,
-  setSizeTableTrigger,
-  setSizeData
+  setSizeData,
+  setCols
 } from "@redux/actions/views/Order/POOrder"
 import { getUserData } from "@utils"
 
@@ -156,10 +156,10 @@ const ItemList = (props) => {
     fetchItemList(props.brand, props.item_type)
   }, [])
 
-  // to enable fetching size table only when selected items are changed
+  // recalculate dynamic cols for new selected items
   useEffect(() => {
-    if (!props.setSizeTableTrigger) {
-      dispatch(setSizeTableTrigger(true))
+    if (props.sizeData.length && props.selectedItems.length) {
+      dispatch(setCols(props.sizeData, props.wastageApplied))
     }
   }, [props.selectedItems])
 
@@ -280,7 +280,8 @@ const mapStateToProps = (state) => ({
   brand: state.poOrderReducer.brand,
   selectedItems: state.poOrderReducer.selectedItems,
   isOrderConfirmed: state.listReducer.isOrderConfirmed,
-  sizeData: state.poOrderReducer.sizeData
+  sizeData: state.poOrderReducer.sizeData,
+  wastageApplied: state.poOrderReducer.wastageApplied
 })
 
 export default connect(mapStateToProps, null)(ItemList)
