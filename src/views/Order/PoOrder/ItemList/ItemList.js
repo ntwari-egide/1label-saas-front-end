@@ -34,23 +34,41 @@ const ItemList = (props) => {
   const [loader, setLoader] = useState(false)
 
   // other functions
-  const fetchItemRefDetails = (item, index, latestState) => {
-    const body = {
-      guid_key: item.guid_key
-    }
 
-    axios
-      .post("/Item/GetItemRefDetail", body)
-      .then((res) => {
-        if (res.status === 200) {
-          latestState[index] = {
-            ...latestState[index],
-            is_non_size: res.data[0].is_non_size
+  const processSizeData = (index) => {
+    // recalculate size table data after change in selected items
+    // works for both case with wastage and without wastage
+    const tempData = [...props.sizeData]
+    tempData.forEach((data, tIndex) => {
+      data.size_content.forEach((row, rIndex) => {
+        Object.keys(row).forEach((colName) => {
+          if (colName.includes("QTY ITEM REF")) {
+            const itemNo = parseInt(colName.split(" ")[3]) - 1
+            // no need to rename previous cols
+            if (itemNo < index) {
+              return
+            }
+            // delete the item
+            if (itemNo === index) {
+              delete tempData[tIndex].size_content[rIndex][colName]
+              return
+            }
+            // rename all the other columns
+            // calculate the new name
+            const oldName = colName.split(" ")
+            // decrement the count in the name
+            oldName[3] = itemNo
+            const newName = oldName.join(" ")
+            // create entry with new name
+            tempData[tIndex].size_content[rIndex][newName] =
+              tempData[tIndex].size_content[rIndex][colName]
+            // delete old entry
+            delete tempData[tIndex].size_content[rIndex][colName]
           }
-          dispatch(setSelectedItems(latestState))
-        }
+        })
       })
-      .catch((err) => console.log(err))
+    })
+    return tempData
   }
 
   const handleCheckListChange = (item) => {
@@ -68,43 +86,13 @@ const ItemList = (props) => {
         1
       )
       dispatch(setSelectedItems([...tempList]))
+      let tempData
       try {
-        // recalculate size table data
-        // works for both case with wastage and without wastage
-        const tempData = [...props.sizeData]
-        tempData.forEach((data, tIndex) => {
-          data.size_content.forEach((row, rIndex) => {
-            Object.keys(row).forEach((colName) => {
-              if (colName.includes("QTY ITEM REF")) {
-                const itemNo = parseInt(colName.split(" ")[3]) - 1
-                // no need to rename previous cols
-                if (itemNo < index) {
-                  return
-                }
-                // delete the item
-                if (itemNo === index) {
-                  delete tempData[tIndex].size_content[rIndex][colName]
-                  return
-                }
-                // rename all the other columns
-                // calculate the new name
-                const oldName = colName.split(" ")
-                // decrement the count in the name
-                oldName[3] = itemNo
-                const newName = oldName.join(" ")
-                // create entry with new name
-                tempData[tIndex].size_content[rIndex][newName] =
-                  tempData[tIndex].size_content[rIndex][colName]
-                // delete old entry
-                delete tempData[tIndex].size_content[rIndex][colName]
-              }
-            })
-          })
-        })
-        // finally dispatch the data
-        dispatch(setSizeData([...tempData]))
+        tempData = processSizeData(index)
       } catch (err) {
-        console.log("Something went wrong while re-calculating size data", err)
+        console.log("Something went wrong while processing size data", err)
+      } finally {
+        dispatch(setSizeData([...tempData]))
       }
     } else {
       const finState = [...tempList, item]
@@ -115,6 +103,24 @@ const ItemList = (props) => {
   }
 
   // API Services
+  const fetchItemRefDetails = (item, index, latestState) => {
+    const body = {
+      guid_key: item.guid_key
+    }
+    axios
+      .post("/Item/GetItemRefDetail", body)
+      .then((res) => {
+        if (res.status === 200) {
+          latestState[index] = {
+            ...latestState[index],
+            is_non_size: res.data[0].is_non_size
+          }
+          dispatch(setSelectedItems(latestState))
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+
   const fetchItemTypeOptions = () => {
     axios
       .post("/Item/GetItemTypeList")
