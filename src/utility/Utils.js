@@ -166,24 +166,16 @@ export const formatColToRow = async (xmlStr) => {
     return
   }
   let jsObj
+  let nRows
+  let data = [] // initialized data to fill row by row
   try {
     const parser = new xml2js.Parser({ explicitArray: false })
     jsObj = await parser.parseStringPromise(xmlStr)
-  } catch (err) {
-    console.log("something went wrong while parsing xml", err)
-  }
-  try {
     // actual algo
-    const nRows = jsObj?.SizeMatrix?.Table[0]
+    nRows = jsObj?.SizeMatrix?.Table[0]
       ? Object.keys(jsObj?.SizeMatrix?.Table[0]).length - 2 // sometimes good
       : Object.keys(jsObj?.SizeMatrix?.Table).length - 2 // sometimes shit // gets the no of rows
-    let data = [] // initialized data to fill row by row
-    let currentRow // because actual data begins at Column2
-    if (jsObj?.SizeMatrix?.Table[0]) {
-      currentRow = 0 + 2 // because actual data begins at Column2
-    } else {
-      currentRow = 0 + 2
-    }
+    let currentRow = 2 // because actual data begins at Column2
     for (let i = 0; i < nRows; i++) {
       let row = {} // initialise empty row
       // if table is array
@@ -199,9 +191,10 @@ export const formatColToRow = async (xmlStr) => {
       data.push(row) // push the row to data
       currentRow += 1 // increment row count
     }
-    return data
   } catch (err) {
     console.log("something went wrong while processing parsed xml", err)
+  } finally {
+    return data
   }
 }
 
