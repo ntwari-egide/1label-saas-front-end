@@ -15,7 +15,6 @@ import Footer from "../../../CommonFooter"
 import axios from "@axios"
 import { useTranslation } from "react-i18next"
 import { useDispatch, connect } from "react-redux"
-import { XMLParser } from "fast-xml-parser"
 import { toast } from "react-toastify"
 import {
   setSizeMatrixType,
@@ -31,6 +30,7 @@ import {
 import { formatColToRow } from "@utils"
 import { store } from "@redux/storeConfig/store"
 import { resetTotal } from "@utils"
+import xml2js from "xml2js"
 
 const PreviewAndSummary = (props) => {
   const { t } = useTranslation()
@@ -81,7 +81,7 @@ const PreviewAndSummary = (props) => {
     dispatch(setSelectedItems(tempRef))
   }
 
-  const populateCols = (xmlStr, wastageStatus) => {
+  const populateCols = async (xmlStr, wastageStatus) => {
     let wastageApp
     if (wastageStatus) {
       wastageApp = wastageStatus
@@ -89,8 +89,8 @@ const PreviewAndSummary = (props) => {
       wastageApp = props.wastageApplied
     }
     // dynamically assigning cols to data-table
-    const parser = new XMLParser()
-    const jsObj = parser.parse(xmlStr)
+    const parser = new xml2js.Parser({ explicitArray: false })
+    const jsObj = await parser.parseStringPromise(xmlStr)
     const cols = []
     // pushing known static cols
     cols.push({
@@ -165,7 +165,7 @@ const PreviewAndSummary = (props) => {
     dispatch(setCols(cols))
   }
 
-  const handleAddResetWastage = (operation) => {
+  const handleAddResetWastage = async (operation) => {
     // just to avoid computation
     if (props.wastage === 0) {
       return
@@ -213,7 +213,7 @@ const PreviewAndSummary = (props) => {
         })
         dispatch(setSelectedItems(tempRefState))
         // will need to re-calculate cols to render latest changes
-        populateCols(props.sizeTable, "Y")
+        await populateCols(props.sizeTable, "Y")
         dispatch(setWastageApplied("Y"))
       } catch (err) {
         console.log("Something went wrong while processing wastage", err)
@@ -245,7 +245,7 @@ const PreviewAndSummary = (props) => {
           dispatch(setSizeData(tempTable))
         }
         // will need to recalculate cols since change in selector field
-        populateCols(props.sizeTable, "N")
+        await populateCols(props.sizeTable, "N")
         dispatch(setWastage(0))
         dispatch(setWastageApplied("N"))
         toast("Wastage Reset.")
@@ -573,14 +573,14 @@ const PreviewAndSummary = (props) => {
                         paddingLeft: "10px",
                         paddingRight: "10px"
                       }}
-                      onClick={() => handleAddResetWastage("add")}
+                      onClick={async () => await handleAddResetWastage("add")}
                     >
                       Add Wastage
                     </Button>
                     <Button
                       color="primary"
                       style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                      onClick={() => handleAddResetWastage("reset")}
+                      onClick={async () => await handleAddResetWastage("reset")}
                       disabled={props.wastaje === 0}
                     >
                       Reset Wastage
