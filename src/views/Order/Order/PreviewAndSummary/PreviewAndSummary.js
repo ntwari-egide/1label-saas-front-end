@@ -172,13 +172,15 @@ const PreviewAndSummary = (props) => {
     }
     if (operation === "add") {
       // adding wastage to sizeData
+      let tempState
+      let tempRefState
       try {
         // actual algo
         // iterates throuch size content data and returns the same object with modifications to size_content field
-        const tempState = props.sizeData.map((row) => {
+        tempState = props.sizeData.map((row) => {
           Object.keys(row).map((key) => {
             if (row[key]) {
-              // subtracting 0.05 because to round at 0.55 instead of 0.5
+              // subtracting 0.05 to round at 0.55 instead of 0.5
               if (key.includes("QTY ITEM REF")) {
                 const value = row[key]
                 if (props.wastageApplied === "N") {
@@ -199,10 +201,8 @@ const PreviewAndSummary = (props) => {
           })
           return row
         })
-        // dispatch new state
-        dispatch(setSizeData([...tempState]))
         // re-calculate total for itemRef
-        const tempRefState = props.selectedItems.map((item, index) => {
+        tempRefState = props.selectedItems.map((item, index) => {
           let total = 0
           tempState.map((row) => {
             if (row[`QTY ITEM REF ${index + 1} WITH WASTAGE`]) {
@@ -211,10 +211,6 @@ const PreviewAndSummary = (props) => {
           })
           return { ...item, qty: total.toString() }
         })
-        dispatch(setSelectedItems(tempRefState))
-        // will need to re-calculate cols to render latest changes
-        await populateCols(props.sizeTable, "Y")
-        dispatch(setWastageApplied("Y"))
       } catch (err) {
         console.log("Something went wrong while processing wastage", err)
         alert(
@@ -222,14 +218,22 @@ const PreviewAndSummary = (props) => {
         )
         dispatch(setWastage(0))
         return
+      } finally {
+        // dispatch new state
+        dispatch(setSizeData([...tempState]))
+        dispatch(setSelectedItems(tempRefState))
+        // will need to re-calculate cols to render latest changes
+        await populateCols(props.sizeTable, "Y")
+        dispatch(setWastageApplied("Y"))
+        toast(`${props.wastage * 100}% Wastage Applied.`)
       }
-      toast(`${props.wastage * 100}% Wastage Applied.`)
     } else {
+      let tempTable
+      let tempRefState
       try {
         // re calculate total for selected items in case wastage was applied
         if (props.wastageApplied === "Y") {
-          let tempTable
-          const tempRefState = props.selectedItems.map((item, index) => {
+          tempRefState = props.selectedItems.map((item, index) => {
             let total = 0
             tempTable = props.sizeData.map((row) => {
               const value = row[`QTY ITEM REF ${index + 1}`]
@@ -241,19 +245,20 @@ const PreviewAndSummary = (props) => {
             })
             return { ...item, qty: total.toString() }
           })
-          dispatch(setSelectedItems(tempRefState))
-          dispatch(setSizeData(tempTable))
         }
-        // will need to recalculate cols since change in selector field
-        await populateCols(props.sizeTable, "N")
-        dispatch(setWastage(0))
-        dispatch(setWastageApplied("N"))
-        toast("Wastage Reset.")
       } catch (err) {
         console.log("Something went wrong while resetting wastage", err)
         alert(
           "Something went wrong while resetting wastage. Please try again later"
         )
+      } finally {
+        dispatch(setSelectedItems(tempRefState))
+        dispatch(setSizeData(tempTable))
+        // will need to recalculate cols since change in selector field
+        await populateCols(props.sizeTable, "N")
+        dispatch(setWastage(0))
+        dispatch(setWastageApplied("N"))
+        toast("Wastage Reset.")
       }
     }
   }
