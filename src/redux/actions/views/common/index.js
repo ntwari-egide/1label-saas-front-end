@@ -21,8 +21,9 @@ const calculateItemTotal = (table, itmIndex) => {
     }
   } catch (err) {
     console.log(err)
+  } finally {
+    return total
   }
-  return total
 }
 
 export const matchContentNumber =
@@ -512,14 +513,13 @@ export const saveOrder = (order_status) => (dispatch) => {
 }
 
 const buildXML = (jsObj) => {
+  let builder
   try {
-    const builder = new xml2js.Builder({ explicitArray: false })
-    return builder.buildObject(jsObj)
+    builder = new xml2js.Builder({ explicitArray: false })
   } catch (err) {
     console.log("err", err)
-    // alert(
-    //   "Something went wrong while processing size table please try again later"
-    // )
+  } finally {
+    return builder.buildObject(jsObj)
   }
 }
 
@@ -544,10 +544,11 @@ const formatRowToCol = (table) => {
   } catch (err) {
     console.log("Something went while transposing size data", err)
     return null
-  }
-  return {
-    SizeMatrix: {
-      Table: newTable
+  } finally {
+    return {
+      SizeMatrix: {
+        Table: newTable
+      }
     }
   }
 }
@@ -589,8 +590,9 @@ const processSizeTable = (table, module, index) => {
     })
   } catch (err) {
     console.log("Something went wrong while preprocessing sizetable", err)
+  } finally {
+    return processedTable
   }
-  return processedTable
 }
 
 const processSummarySizeTable = (data) => {
@@ -643,8 +645,9 @@ const processSummarySizeTable = (data) => {
       })
     } catch (err) {
       conosle.log(err)
+    } finally {
+      return processedSummaryTable
     }
-    return processedSummaryTable
   }
 }
 
